@@ -1,0 +1,89 @@
+'''
+Unit and reference tests for helper functions
+Remember to add the location of the package to PYTHONPATH
+environment variable so that imports work correctly
+'''
+
+# Standard library imports
+import unittest
+import os
+from pathlib import Path
+
+# External library imports
+import pandas as pd
+
+# Module under test
+from demonstrator.core import utils as tm
+
+class helperTests(unittest.TestCase):
+    '''
+    Doc string
+    '''
+
+    def test_path_checker_raises_exception_on_incorrect_path(self):
+        '''
+        All arguments entered at command line are type-cast
+        by argparse as strings by default.
+        '''
+        self.assertRaises(FileNotFoundError, tm.path_checker, '123')
+
+    def test_path_checker_returns_path_object(self):
+        '''
+        A directory is a valid path too; we're checking
+        that the source is a file that can be read into
+        a dataframe in a separate test
+        '''
+        self.assertIsInstance(
+            tm.path_checker(os.getcwd()),
+            Path)
+
+    def test_truncated_normal_returns_bounded_numbers(self):
+        '''
+        Built on top of truncnorm from scipy.stats package;
+        this function is just a convernience wrapper.
+        '''
+        result = tm.truncated_normal(0, 5, 0, 5, 100000)
+
+        self.assertTrue((result.min() >= 0 & result.max() < 5))
+
+    def test_date_parser(self):
+        '''
+        Pandas date parser needs to explicitly know which columns
+        to parse; this is impossible to pass at runtime.
+        '''
+
+        test_cases = [
+            ("A", 31),
+            ("B", "01-01-2019"),
+            ("C", "MRSA/MSSA"),
+            ("D", "2019/01/01")
+            ]
+
+        expected = ["B", "D"]
+        result = [tm.date_parser(t) for t in test_cases
+                  if not tm.date_parser(t) is None]
+
+        self.assertEqual(expected, result)
+
+    def test_date_frequency_guesser(self):
+        '''
+        Generate a few common time series using Pandas 
+        frequency aliases and test the frequency guesser
+        returns correct values.
+        '''
+        
+        test_frequencies = ["D", "M", "MS", "Q", "QS", "BA-MAR"]
+        test_cases = [pd.Series(pd.date_range(start="2015/01/01", periods=12, freq=f))
+                      for f in test_frequencies]
+
+        result = [tm.guess_date_frequency(x) for x in test_cases]
+
+        expected = ["day", "month", "month", "quarter", "quarter", "year"]
+
+        self.assertEqual(result, expected)
+
+
+if __name__ == "__main__" and __package__ is None:
+    #overwrite __package__ builtin as per PEP 366
+    __package__ = "demonstrator"
+    unittest.main(warnings='ignore')

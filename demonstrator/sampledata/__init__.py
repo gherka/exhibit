@@ -1,0 +1,3 @@
+'''
+Demonstrator package
+'''
