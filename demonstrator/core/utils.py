@@ -9,12 +9,12 @@ import re
 import dateutil
 
 # External library imports
-from scipy.stats import truncnorm
 import pandas as pd
 
 def path_checker(string):
     '''
-    Improves error message for user if wrong path entered
+    Improves error message for user if wrong path entered.
+    Returns Path object.
     '''
     if not exists(string):
         msg = "can't find specified file"
@@ -34,19 +34,6 @@ def package_dir(*args):
     the project.
     '''
     return abspath(join(dirname(__file__), "..", *args))
-
-def truncated_normal(mean, sigma, lower, upper, size, decimal=False):
-    '''
-    Returns a numpy array with numbers drawn from a normal
-    distribution truncated by lower and upper parameters.
-    '''
-    
-    a = (lower - mean) / sigma
-    b = (upper - mean) / sigma
-
-    if decimal:
-        return truncnorm(a, b, loc=mean, scale=sigma).rvs(size=size)
-    return truncnorm(a, b, loc=mean, scale=sigma).rvs(size=size).astype(int)
 
 def date_parser(row_tuple):
     '''

@@ -88,7 +88,7 @@ class newDemonstrator:
 
     def output_spec(self, spec):
         '''
-        Doc String
+        Write the spec to file specified in command line
         '''
 
         with open(self.args.output, 'w') as f:

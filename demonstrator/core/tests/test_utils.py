@@ -37,15 +37,6 @@ class helperTests(unittest.TestCase):
             tm.path_checker(os.getcwd()),
             Path)
 
-    def test_truncated_normal_returns_bounded_numbers(self):
-        '''
-        Built on top of truncnorm from scipy.stats package;
-        this function is just a convernience wrapper.
-        '''
-        result = tm.truncated_normal(0, 5, 0, 5, 100000)
-
-        self.assertTrue((result.min() >= 0 & result.max() < 5))
-
     def test_date_parser(self):
         '''
         Pandas date parser needs to explicitly know which columns

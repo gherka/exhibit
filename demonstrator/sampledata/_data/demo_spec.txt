@@ -1,0 +1,105 @@
+columns:
+  Location:
+    type: categorical
+    anonymise: true
+    anonymising_pattern: random
+    value_bounds:
+      Date:
+      - Angus:
+        - 2015
+        - 2016
+      - Fife:
+        - 2015
+        - 2016
+      Count:
+      - Angus:
+        - 1.0
+        - 49.0
+      - Fife:
+        - 1.0
+        - 50.0
+  Admission Condition:
+    type: categorical
+    anonymise: true
+    anonymising_pattern: random
+    value_bounds:
+      Date:
+      - Asthma:
+        - 2015
+        - 2016
+      - COPD:
+        - 2015
+        - 2016
+      Count:
+      - Asthma:
+        - 1.0
+        - 50.0
+      - COPD:
+        - 2.0
+        - 49.0
+  Admission Type:
+    type: categorical
+    anonymise: true
+    anonymising_pattern: random
+    value_bounds:
+      Date:
+      - Elective:
+        - 2015
+        - 2016
+      - Non-Elective:
+        - 2015
+        - 2016
+      Count:
+      - Elective:
+        - 1.0
+        - 50.0
+      - Non-Elective:
+        - 1.0
+        - 49.0
+  Date:
+    type: continuous
+    anonymise: true
+    anonymising_pattern: random
+    mean: 2015.5
+    sigma: 0.5052911526399113
+  Age:
+    type: categorical
+    anonymise: true
+    anonymising_pattern: random
+    value_bounds:
+      Date:
+      - Middle:
+        - 2015
+        - 2016
+      - Old:
+        - 2015
+        - 2016
+      - Young:
+        - 2015
+        - 2016
+      Count:
+      - Middle:
+        - 1.0
+        - 49.0
+      - Old:
+        - 1.0
+        - 49.0
+      - Young:
+        - 3.0
+        - 50.0
+  Count:
+    type: continuous
+    anonymise: true
+    anonymising_pattern: random
+    mean: 22.72340425531915
+    sigma: 15.715821614814708
+  MY:
+    type: date
+    anonymise: true
+    anonymising_pattern: random
+    from: '2015-01-31'
+    to: '2015-12-31'
+    number_of_periods: 12
+    frequency: month
+constraints: {}
+demo_records: {}
