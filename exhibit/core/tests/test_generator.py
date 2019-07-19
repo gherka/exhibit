@@ -5,7 +5,7 @@ Test various generating functions
 import unittest
 
 # Module under test
-from demonstrator.core import generator as tm
+from exhibit.core import generator as tm
 
 class generatorTests(unittest.TestCase):
     '''
@@ -25,16 +25,23 @@ class generatorTests(unittest.TestCase):
         '''
         User might enter an invalid path - this is checked separately
         '''
+
         self.assertRaises(
             TypeError,
             tm.read_spec,
-            path=r"sampledata/_data/demo_spec.txt"
+            path=r"exhibit/sampledata/_data/demo_spec.txt"
         )
 
     def test_read_spec_reads_yaml_spec_from_user_input(self):
         '''
         User might enter an invalid path - this is checked separately
         '''
-        output = tm.read_spec(path=r"sampledata/_data/demo_spec.yml")
+        output = tm.read_spec(path=r"exhibit/sampledata/_data/demo_spec.yml")
 
         self.assertIsInstance(output, dict)
+
+
+if __name__ == "__main__" and __package__ is None:
+    #overwrite __package__ builtin as per PEP 366
+    __package__ = "exhibit"
+    unittest.main(warnings='ignore')

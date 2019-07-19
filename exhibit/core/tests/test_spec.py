@@ -8,8 +8,8 @@ import unittest
 import pandas as pd
 
 # Module under test
-from demonstrator.core import specs as tm
-from demonstrator.sampledata.data import basic as ref_df
+from exhibit.core import specs as tm
+from exhibit.sampledata.data import basic as ref_df
 
 
 class specsTests(unittest.TestCase):
@@ -30,5 +30,5 @@ class specsTests(unittest.TestCase):
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
-    __package__ = "demonstrator"
+    __package__ = "exhibit"
     unittest.main(warnings='ignore')

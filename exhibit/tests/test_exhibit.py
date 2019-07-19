@@ -1,7 +1,5 @@
 '''
-Unit and reference tests for the Demonstrator package
-Remember to add the location of the package to PYTHONPATH
-environment variable so that imports work correctly
+Unit and reference tests for the Exhibit package
 '''
 
 # Standard library imports
@@ -13,14 +11,14 @@ import argparse
 import pandas as pd
 import yaml
 
-# Demonstrator imports
-from demonstrator.sampledata.data import basic as ref_df
-from demonstrator.core.utils import package_dir
+# Exhibit imports
+from exhibit.sampledata.data import basic as ref_df
+from exhibit.core.utils import package_dir
 
 # Module under test
-from demonstrator import demodata as tm
+from exhibit import exhibit as tm
 
-class demonstratorTests(unittest.TestCase):
+class exhibitTests(unittest.TestCase):
     '''
     Main test suite; command line arguments are mocked
     via @patch decorator; internal intermediate functions
@@ -37,10 +35,10 @@ class demonstratorTests(unittest.TestCase):
             source=package_dir('sampledata', '_data', 'basic.csv')
         )
 
-        tdm = tm.newDemonstrator()
-        tdm.read_data()
+        xA = tm.newExhibit()
+        xA.read_data()
         
-        assert isinstance(tdm.df, pd.DataFrame)
+        assert isinstance(xA.df, pd.DataFrame)
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_generate_spec_was_called_when_mode_is_set_to_gen(self, mock_args):
@@ -54,15 +52,15 @@ class demonstratorTests(unittest.TestCase):
             mode='gen',
         )
 
-        tdm = tm.newDemonstrator()
+        xA = tm.newExhibit()
 
-        tdm.read_data = Mock()
-        tdm.output_spec = Mock()
-        tdm.generate_spec = Mock(name='generate_spec')
+        xA.read_data = Mock()
+        xA.output_spec = Mock()
+        xA.generate_spec = Mock(name='generate_spec')
 
-        tdm.main()
+        xA.main()
 
-        tdm.generate_spec.assert_called()
+        xA.generate_spec.assert_called()
 
 
     @patch('argparse.ArgumentParser.parse_args')
@@ -77,12 +75,12 @@ class demonstratorTests(unittest.TestCase):
             mode='exe'
         )
 
-        tdm = tm.newDemonstrator()
-        tdm.read_data = Mock()
-        tdm.execute_spec = Mock(name='execute_spec')
-        tdm.main()
+        xA = tm.newExhibit()
+        xA.read_data = Mock()
+        xA.execute_spec = Mock(name='execute_spec')
+        xA.main()
 
-        tdm.execute_spec.assert_called()
+        xA.execute_spec.assert_called()
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_generate_spec_returns_valid_yaml(self, mock_args):
@@ -99,10 +97,10 @@ class demonstratorTests(unittest.TestCase):
             output='spec.yml',
         )
 
-        tdm = tm.newDemonstrator()
-        tdm.df = ref_df
+        xA = tm.newExhibit()
+        xA.df = ref_df
 
-        self.assertIsInstance(yaml.safe_load(tdm.generate_spec()), dict)
+        self.assertIsInstance(yaml.safe_load(xA.generate_spec()), dict)
 
 
     @patch('argparse.ArgumentParser.parse_args')
@@ -132,15 +130,15 @@ class demonstratorTests(unittest.TestCase):
             output='test.yml'
         )
 
-        with patch("demonstrator.demodata.open", new=mock_open()) as mo:
+        with patch("exhibit.exhibit.open", new=mock_open()) as mo:
            
-            tdm = tm.newDemonstrator()
-            tdm.output_spec('hello')
+            xA = tm.newExhibit()
+            xA.output_spec('hello')
 
             mo.assert_called_with('test.yml', 'w')
             mo.return_value.__enter__.return_value.write.assert_called_with('hello')
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
-    __package__ = "demonstrator"
+    __package__ = "exhibit"
     unittest.main(warnings='ignore')

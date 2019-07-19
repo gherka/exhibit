@@ -1,9 +1,10 @@
 '''
 -------------------------------------------------
-Main demonstrator program
+Main Exhibit code
 
 Make sure the directory where it's installed is 
 included in your PYTHONPATH environment variable
+or install the program using setup.py
 -------------------------------------------------
 '''
 
@@ -14,13 +15,13 @@ import textwrap
 # External imports
 import yaml
 
-# Demonstrator imports
-from demonstrator.core.utils import path_checker, read_with_date_parser
-from demonstrator.core.specs import newSpec
+# Exhibit imports
+from exhibit.core.utils import path_checker, read_with_date_parser
+from exhibit.core.specs import newSpec
 
-class newDemonstrator:
+class newExhibit:
     '''
-    A demonstrator class to make unit-testing easier
+    An exhbit class to make unit-testing easier
     '''
 
     def __init__(self):
@@ -31,12 +32,12 @@ class newDemonstrator:
         desc = textwrap.dedent('''\
             ------------------------------------------
             Generate user-defined demonstrator records
-            in the context of anonymised source data.
+            from the context of anonymised source data.
             ------------------------------------------
             ''')
 
         self.parser = argparse.ArgumentParser(
-            prog='Demonstrator data',
+            prog='Exhibit data generator',
             description=desc,
             formatter_class=argparse.RawDescriptionHelpFormatter
             )
@@ -50,7 +51,7 @@ class newDemonstrator:
         self.parser.add_argument(
             'mode',
             type=str, choices=['gen', 'exe'],
-            help='[gen]erate demonstrator spec or [exe]cute existing spec plan',
+            help='[gen]erate exhibit spec or [exe]cute existing spec plan',
             metavar='mode'
             )
 
@@ -116,5 +117,5 @@ class newDemonstrator:
 
 
 if __name__ == "__main__":
-    dm = newDemonstrator()
-    dm.main()
+    xA = newExhibit()
+    xA.main()

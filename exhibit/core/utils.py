@@ -17,7 +17,7 @@ def path_checker(string):
     Returns Path object.
     '''
     if not exists(string):
-        msg = "can't find specified file"
+        msg = "Can't find specified file"
         raise FileNotFoundError(msg)
     return Path(string)
     

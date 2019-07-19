@@ -1,12 +1,12 @@
 '''
-Class encapsulating specificatons for the demonstrator
+Class encapsulating specificatons for a new exhibit
 '''
 # External imports
 from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
-# Demonstrator imports
-from demonstrator.core.utils import guess_date_frequency
+# Exhibit imports
+from exhibit.core.utils import guess_date_frequency
 
 class newSpec:
     '''

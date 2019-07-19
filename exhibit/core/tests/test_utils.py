@@ -13,7 +13,7 @@ from pathlib import Path
 import pandas as pd
 
 # Module under test
-from demonstrator.core import utils as tm
+from exhibit.core import utils as tm
 
 class helperTests(unittest.TestCase):
     '''
@@ -76,5 +76,5 @@ class helperTests(unittest.TestCase):
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
-    __package__ = "demonstrator"
+    __package__ = "exhibit"
     unittest.main(warnings='ignore')

@@ -1,13 +1,13 @@
 '''
-Various functions to generator anonymised data
+Various functions to generate anonymised data
 '''
 
 # External library imports
 from scipy.stats import truncnorm
 import yaml
 
-# Demonstrator imports
-from demonstrator.core.utils import path_checker
+# Exhibit imports
+from exhibit.core.utils import path_checker
 
 def truncated_normal(mean, sigma, lower, upper, size, decimal=False):
     '''
