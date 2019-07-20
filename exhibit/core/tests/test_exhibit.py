@@ -4,7 +4,7 @@ Unit and reference tests for the Exhibit package
 
 # Standard library imports
 import unittest
-from unittest.mock import patch, Mock, mock_open
+from unittest.mock import patch, mock_open
 import argparse
 
 # External imports
@@ -16,7 +16,7 @@ from exhibit.sampledata.data import basic as ref_df
 from exhibit.core.utils import package_dir
 
 # Module under test
-from exhibit import exhibit as tm
+from exhibit.core import exhibit  as tm
 
 class exhibitTests(unittest.TestCase):
     '''
@@ -24,6 +24,26 @@ class exhibitTests(unittest.TestCase):
     via @patch decorator; internal intermediate functions
     are mocked inside each test.
     '''
+
+    # @patch('argparse.ArgumentParser.parse_args')
+    # def test_specout_argument_generates_a_spec(self, mock_args):
+    #     '''
+    #     NEW
+    #     '''
+    #     mock_args.return_value = argparse.Namespace(
+    #         specout=package_dir('sampledata', '_data', 'basic.csv'),
+    #     )
+
+    #     xA = tm.newExhibit()
+
+    #     xA.read_data = Mock()
+    #     xA.output_spec = Mock()
+    #     xA.generate_spec = Mock(name='generate_spec')
+
+    #     xA.main()
+
+    #     xA.generate_spec.assert_called()
+
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
@@ -39,48 +59,6 @@ class exhibitTests(unittest.TestCase):
         xA.read_data()
         
         assert isinstance(xA.df, pd.DataFrame)
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_generate_spec_was_called_when_mode_is_set_to_gen(self, mock_args):
-        '''
-        Mock up intermediate functions and check program logic to
-        see if mocked generate_spec function was called 
-        by the main function when mode argument is 'gen'.
-        '''
-
-        mock_args.return_value = argparse.Namespace(
-            mode='gen',
-        )
-
-        xA = tm.newExhibit()
-
-        xA.read_data = Mock()
-        xA.output_spec = Mock()
-        xA.generate_spec = Mock(name='generate_spec')
-
-        xA.main()
-
-        xA.generate_spec.assert_called()
-
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_execute_spec_was_called_when_mode_is_set_to_exe(self, mock_args):
-        '''
-        Mock up intermediate functions and check program logic to
-        see if mocked execute_spec function was called 
-        by the main function when mode argument is 'exe'.
-        '''
-
-        mock_args.return_value = argparse.Namespace(
-            mode='exe'
-        )
-
-        xA = tm.newExhibit()
-        xA.read_data = Mock()
-        xA.execute_spec = Mock(name='execute_spec')
-        xA.main()
-
-        xA.execute_spec.assert_called()
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_generate_spec_returns_valid_yaml(self, mock_args):
@@ -130,7 +108,7 @@ class exhibitTests(unittest.TestCase):
             output='test.yml'
         )
 
-        with patch("exhibit.exhibit.open", new=mock_open()) as mo:
+        with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
            
             xA = tm.newExhibit()
             xA.output_spec('hello')

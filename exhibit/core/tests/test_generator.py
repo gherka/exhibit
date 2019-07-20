@@ -3,6 +3,10 @@ Test various generating functions
 '''
 # Standard library imports
 import unittest
+import os
+
+# Exhibit imports
+from exhibit.core.utils import package_dir
 
 # Module under test
 from exhibit.core import generator as tm
@@ -17,6 +21,8 @@ class generatorTests(unittest.TestCase):
         Built on top of truncnorm from scipy.stats package;
         this function is just a convernience wrapper.
         '''
+
+        print(os.getcwd())
         result = tm.truncated_normal(0, 5, 0, 5, 100000)
 
         self.assertTrue((result.min() >= 0 & result.max() < 5))
@@ -29,14 +35,14 @@ class generatorTests(unittest.TestCase):
         self.assertRaises(
             TypeError,
             tm.read_spec,
-            path=r"exhibit/sampledata/_data/demo_spec.txt"
+            path=package_dir('sampledata', '_data', 'demo_spec.txt')
         )
 
     def test_read_spec_reads_yaml_spec_from_user_input(self):
         '''
         User might enter an invalid path - this is checked separately
         '''
-        output = tm.read_spec(path=r"exhibit/sampledata/_data/demo_spec.yml")
+        output = tm.read_spec(path=package_dir('sampledata', '_data', 'demo_spec.yml'))
 
         self.assertIsInstance(output, dict)
 

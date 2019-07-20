@@ -1,16 +1,13 @@
 '''
 -------------------------------------------------
-Main Exhibit code
-
-Make sure the directory where it's installed is 
-included in your PYTHONPATH environment variable
-or install the program using setup.py
+Main Exhibit class
 -------------------------------------------------
 '''
 
 # Standard library imports
 import argparse
 import textwrap
+import sys
 
 # External imports
 import yaml
@@ -31,16 +28,22 @@ class newExhibit:
 
         desc = textwrap.dedent('''\
             ------------------------------------------
+            Exhibit: Data generator fit for a museum \n
             Generate user-defined demonstrator records
-            from the context of anonymised source data.
+            in the context of anonymised source data.
             ------------------------------------------
             ''')
 
         self.parser = argparse.ArgumentParser(
-            prog='Exhibit data generator',
             description=desc,
             formatter_class=argparse.RawDescriptionHelpFormatter
             )
+
+        # self.parser.add_argument(
+        #     'specout',
+        #     type=path_checker,
+        #     help='generate spec from source file'
+        #     )
 
         self.parser.add_argument(
             'source',
@@ -61,7 +64,7 @@ class newExhibit:
             help='output the generated spec to a given file name',
             )
  
-        self.args = self.parser.parse_args()
+        self.args = self.parser.parse_args(sys.argv[1:])
         self.df = None
         self.numerical_cols = None
 
@@ -101,21 +104,3 @@ class newExhibit:
         '''
     
         print("executed")
-
-    def main(self):
-        '''
-        TO DO: Document main program logic
-        '''
-        self.read_data()
-
-        if self.args.mode == 'gen':
-            
-            self.output_spec(self.generate_spec())
-
-        else:
-            self.execute_spec()
-
-
-if __name__ == "__main__":
-    xA = newExhibit()
-    xA.main()
