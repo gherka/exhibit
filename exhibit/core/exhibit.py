@@ -39,11 +39,12 @@ class newExhibit:
             formatter_class=argparse.RawDescriptionHelpFormatter
             )
 
-        # self.parser.add_argument(
-        #     'specout',
-        #     type=path_checker,
-        #     help='generate spec from source file'
-        #     )
+        self.parser.add_argument(
+            'command',
+            type=str, choices=['fromdata', 'fromspec'],
+            help='fromdata outputs spec; fromspec outputs anonymised data',
+            metavar='command'
+            )
 
         self.parser.add_argument(
             'source',
@@ -52,15 +53,7 @@ class newExhibit:
             )
 
         self.parser.add_argument(
-            'mode',
-            type=str, choices=['gen', 'exe'],
-            help='[gen]erate exhibit spec or [exe]cute existing spec plan',
-            metavar='mode'
-            )
-
-        self.parser.add_argument(
             '--output', '-o',
-            default='spec.yml',
             help='output the generated spec to a given file name',
             )
  
@@ -94,8 +87,15 @@ class newExhibit:
         '''
         Write the spec to file specified in command line
         '''
+        if self.args.output is None:
+            if self.args.command == 'fromdata':
+                output = self.args.source.stem + "_SPEC" + ".yml"
+            else:
+                output = self.args.source.stem + "_DEMO" + ".csv"
+        else:
+            output = self.args.output
 
-        with open(self.args.output, 'w') as f:
+        with open(output, 'w') as f:
             f.write(spec)
 
     def execute_spec(self):

@@ -22,7 +22,7 @@ def main():
 
     xA.read_data()
 
-    if xA.args.mode == 'gen':
+    if xA.args.command == 'fromdata':
         xA.output_spec(xA.generate_spec())
 
     else:

@@ -15,7 +15,7 @@ class bootstrapTests(unittest.TestCase):
     Test command line arguments and running logic of Exhibit
     '''
 
-    def test_generate_spec_was_called_when_mode_is_set_to_gen(self):
+    def test_generate_spec_was_called_when_command_is_set_to_fromdata(self):
         '''
         Mocked functions are set on the instance of mockExhibit,
         not on the class itself.
@@ -32,7 +32,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.generate_spec = Mock(name='generate_spec')
 
             mockExhibit.return_value.args = argparse.Namespace(
-                mode='gen',
+                command='fromdata',
             )
             
             tm.main()
@@ -40,7 +40,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.generate_spec.assert_called()
 
 
-    def test_execute_spec_was_called_when_mode_is_set_to_exe(self):
+    def test_execute_spec_was_called_when_command_is_set_to_fromspec(self):
         '''
         Mocked functions are set on the instance of mockExhibit,
         not on the class itself.
@@ -57,7 +57,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.execute_spec = Mock(name='execute_spec')
 
             mockExhibit.return_value.args = argparse.Namespace(
-                mode='exe',
+                command='fromspec',
             )
             
             tm.main()

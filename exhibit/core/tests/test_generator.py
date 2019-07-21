@@ -3,7 +3,6 @@ Test various generating functions
 '''
 # Standard library imports
 import unittest
-import os
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
@@ -22,7 +21,6 @@ class generatorTests(unittest.TestCase):
         this function is just a convernience wrapper.
         '''
 
-        print(os.getcwd())
         result = tm.truncated_normal(0, 5, 0, 5, 100000)
 
         self.assertTrue((result.min() >= 0 & result.max() < 5))

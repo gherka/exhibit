@@ -5,6 +5,7 @@ Unit and reference tests for the Exhibit package
 # Standard library imports
 import unittest
 from unittest.mock import patch, mock_open
+from pathlib import Path
 import argparse
 
 # External imports
@@ -24,26 +25,6 @@ class exhibitTests(unittest.TestCase):
     via @patch decorator; internal intermediate functions
     are mocked inside each test.
     '''
-
-    # @patch('argparse.ArgumentParser.parse_args')
-    # def test_specout_argument_generates_a_spec(self, mock_args):
-    #     '''
-    #     NEW
-    #     '''
-    #     mock_args.return_value = argparse.Namespace(
-    #         specout=package_dir('sampledata', '_data', 'basic.csv'),
-    #     )
-
-    #     xA = tm.newExhibit()
-
-    #     xA.read_data = Mock()
-    #     xA.output_spec = Mock()
-    #     xA.generate_spec = Mock(name='generate_spec')
-
-    #     xA.main()
-
-    #     xA.generate_spec.assert_called()
-
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
@@ -71,7 +52,7 @@ class exhibitTests(unittest.TestCase):
         '''
 
         mock_args.return_value = argparse.Namespace(
-            mode='gen',
+            command='fromdata',
             output='spec.yml',
         )
 
@@ -104,7 +85,7 @@ class exhibitTests(unittest.TestCase):
         '''
 
         mock_args.return_value = argparse.Namespace(
-            mode='gen',
+            command='fromdata',
             output='test.yml'
         )
 
@@ -114,6 +95,28 @@ class exhibitTests(unittest.TestCase):
             xA.output_spec('hello')
 
             mo.assert_called_with('test.yml', 'w')
+            mo.return_value.__enter__.return_value.write.assert_called_with('hello')
+
+    @patch('argparse.ArgumentParser.parse_args')
+    def test_output_spec_creates_file_without_o_argument(self, mock_args):
+        '''
+        If no destination is set from the CLI, output the file
+        in the current working directory, with a suffix based on
+        the command: fromdata or fromspec.
+        '''
+
+        mock_args.return_value = argparse.Namespace(
+            command='fromdata',
+            source=Path('source_dataset.csv'),
+            output=None
+        )
+        
+        with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
+                
+            xA = tm.newExhibit()
+            xA.output_spec('hello')
+
+            mo.assert_called_with('source_dataset_SPEC.yml', 'w')
             mo.return_value.__enter__.return_value.write.assert_called_with('hello')
 
 if __name__ == "__main__" and __package__ is None:
