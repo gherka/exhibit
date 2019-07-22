@@ -1,4 +1,3 @@
-# demonstrator
-[![Build Status](https://travis-ci.com/gherka/demonstrator.svg?branch=master)](https://travis-ci.com/gherka/demonstrator)
+[![Build Status](https://travis-ci.com/gherka/exhibit.svg?branch=master)](https://travis-ci.com/gherka/exhibit)
 
-Command line tool for generating demonstrator data
+Command line tool for generating anonymised demonstrator data
