@@ -36,13 +36,18 @@ class newExhibit:
 
         self.parser = argparse.ArgumentParser(
             description=desc,
-            formatter_class=argparse.RawDescriptionHelpFormatter
+            formatter_class=argparse.RawTextHelpFormatter
             )
 
         self.parser.add_argument(
             'command',
             type=str, choices=['fromdata', 'fromspec'],
-            help='fromdata outputs spec; fromspec outputs anonymised data',
+            help=textwrap.dedent('''\
+            fromdata:
+            Use the source data to generate specification\n
+            fromspec:
+            Use the source spec to generate anonymised data\n
+            '''),
             metavar='command'
             )
 
@@ -53,6 +58,12 @@ class newExhibit:
             )
 
         self.parser.add_argument(
+            '--verbose', '-v',
+            default=False,
+            action='store_true',
+            help='control traceback length for debugging errors',
+            )
+        self.parser.add_argument(
             '--output', '-o',
             help='output the generated spec to a given file name',
             )
@@ -60,6 +71,10 @@ class newExhibit:
         self.args = self.parser.parse_args(sys.argv[1:])
         self.df = None
         self.numerical_cols = None
+        
+        #Default verbosity is set in the boostrap.py to 0
+        if self.args.verbose:
+            sys.tracebacklimit = 1000
 
     def read_data(self):
         '''

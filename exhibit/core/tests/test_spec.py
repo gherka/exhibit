@@ -17,15 +17,26 @@ class specsTests(unittest.TestCase):
     Doc string
     '''
 
-    def test_specs_initialised_correctly(self):
+    def test_specs_read_df_when_initialised(self):
         '''
         New Specification class instance should have
-        a dataframe and numerical columns attributes.
+        own copy of the dataframe
         '''
         test_spec = tm.newSpec(ref_df)
 
         self.assertIsInstance(test_spec.df, pd.DataFrame)
-        self.assertIsNotNone(test_spec.numerical_cols)
+
+    def test_specs_has_correct_dict_structure(self):
+        '''
+        Add tests looking at deeper structure
+        '''
+        test_spec = tm.newSpec(ref_df)
+
+        expected_keys = ['metadata', 'columns', 'constraints', 'demo_records']
+
+        self.assertListEqual(
+            sorted(test_spec.output.keys()),
+            sorted(expected_keys))
 
 
 if __name__ == "__main__" and __package__ is None:

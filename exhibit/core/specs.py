@@ -17,7 +17,12 @@ class newSpec:
 
         self.df = data.copy()
         self.numerical_cols = self.df.select_dtypes(include=np.number).columns.values
-        self.output = {'columns': {}, 'constraints':{}, 'demo_records': {},}
+        self.output = {
+            'metadata': {},
+            'columns': {},
+            'constraints':{},
+            'demo_records': {},
+            }
 
     def categorical_dict(self, col):
         '''
@@ -35,11 +40,21 @@ class newSpec:
             #unpack the tuple (value, min, max) into a dictionary
             value_bounds[num_col] = [{x[0]:(x[1], x[2])} for x in
                                      group.itertuples(name=None)]
-
+                                     
+        #missing values mean completely missing from the data, across all values
         categorical_d = {
             'type': 'categorical',
+            'uniques': self.df[col].nunique(),
+            'original_values': self.df[col].unique().tolist(),
+            'probability_vector': (self.df[col]
+                                   .value_counts()
+                                   .apply(lambda x: x / len(self.df))
+                                   .values
+                                   .tolist()),
+            'allow_missing_values': False,
+            'miss_probability': 0,
             'anonymise':True,
-            'anonymising_pattern':'random',
+            'anonymising_set':'random',
             'value_bounds':value_bounds,
         }
 

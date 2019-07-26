@@ -33,7 +33,8 @@ class exhibitTests(unittest.TestCase):
         and assert that the program reads the same data as ref_df.
         '''
         mock_args.return_value = argparse.Namespace(
-            source=package_dir('sampledata', '_data', 'basic.csv')
+            source=package_dir('sampledata', '_data', 'basic.csv'),
+            verbose=True,
         )
 
         xA = tm.newExhibit()
@@ -54,6 +55,7 @@ class exhibitTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             command='fromdata',
             output='spec.yml',
+            verbose=True,
         )
 
         xA = tm.newExhibit()
@@ -86,7 +88,8 @@ class exhibitTests(unittest.TestCase):
 
         mock_args.return_value = argparse.Namespace(
             command='fromdata',
-            output='test.yml'
+            output='test.yml',
+            verbose=True,
         )
 
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
@@ -108,7 +111,8 @@ class exhibitTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             command='fromdata',
             source=Path('source_dataset.csv'),
-            output=None
+            output=None,
+            verbose=True,
         )
         
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
