@@ -137,9 +137,11 @@ columns:
     type: date
     anonymise: true
     anonymising_pattern: random
+    allow_missing_values: false
+    miss_probability: 0
     from: '2015-01-31'
     to: '2015-12-31'
-    number_of_unique_periods: 12
+    uniques: 12
     frequency: month
 constraints: {}
 demo_records: {}

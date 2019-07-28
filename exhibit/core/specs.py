@@ -73,9 +73,11 @@ class newSpec:
             'type': 'date',
             'anonymise':True,
             'anonymising_pattern':'random',
+            'allow_missing_values': False,
+            'miss_probability': 0,
             'from': self.df[col].min().date().isoformat(),
             'to': self.df[col].max().date().isoformat(),
-            'number_of_unique_periods': int(self.df[col].nunique()),
+            'uniques': int(self.df[col].nunique()),
             'frequency': guess_date_frequency(self.df[col]),
         }
 

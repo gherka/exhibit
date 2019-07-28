@@ -33,4 +33,6 @@ class validatorTests(unittest.TestCase):
         #check the user isn't under-shooting with the number of rows
         test_spec['metadata']['number_of_rows'] = 4
 
-        self.assertFalse(tm.validate_number_of_rows(test_spec))
+        tvi = tm.newValidator(test_spec)
+
+        self.assertFalse(tvi.validate_number_of_rows(test_spec))

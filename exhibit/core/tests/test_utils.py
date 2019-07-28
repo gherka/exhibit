@@ -11,6 +11,10 @@ from pathlib import Path
 
 # External library imports
 import pandas as pd
+import yaml
+
+# Exhibit imports
+from exhibit.core.utils import package_dir
 
 # Module under test
 from exhibit.core import utils as tm
@@ -73,6 +77,23 @@ class helperTests(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
+    def test_get_attr_values(self):
+        '''
+        This test might fail as the test_spec is updated
+        because of "magic" test numbers, like 7.
+        '''
+        
+        with open(package_dir("tests", "test_spec.yml")) as f:
+            test_spec = yaml.safe_load(f)
+
+        #there are 7 columns in the test spec
+        test_list = tm.get_attr_values(test_spec, "uniques")
+        self.assertEqual(len(test_list), 7)
+
+        #non-existant attributes are saved as None values; no error
+        test_list = tm.get_attr_values(test_spec, "spam")
+        assert test_list.count(None) == len(test_list)
+        
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

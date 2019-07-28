@@ -110,3 +110,22 @@ def guess_date_frequency(timeseries):
         
     else:
         return None
+
+def get_attr_values(spec, attr):
+    '''
+    Assuming the spec was generated correctly,
+    go through all columns and capture given
+    attribute's value; None if attribute is 
+    missing. Returns a list with values
+    from columns in order of appearance in the
+    spec.
+    '''
+    
+    attrs = []
+    
+    for col in spec['columns']:
+        attrs.append(None)
+        for a in spec['columns'][col]:
+            if a == attr:
+                attrs[-1] = spec['columns'][col][attr]
+    return attrs
