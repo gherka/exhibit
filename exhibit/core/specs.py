@@ -18,7 +18,9 @@ class newSpec:
         self.df = data.copy()
         self.numerical_cols = self.df.select_dtypes(include=np.number).columns.values
         self.output = {
-            'metadata': {},
+            'metadata': {
+                "number_of_rows": self.df.shape[0],
+            },
             'columns': {},
             'constraints':{},
             'demo_records': {},
@@ -73,7 +75,7 @@ class newSpec:
             'anonymising_pattern':'random',
             'from': self.df[col].min().date().isoformat(),
             'to': self.df[col].max().date().isoformat(),
-            'number_of_periods': int(self.df[col].nunique()),
+            'number_of_unique_periods': int(self.df[col].nunique()),
             'frequency': guess_date_frequency(self.df[col]),
         }
 

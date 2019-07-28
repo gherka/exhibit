@@ -33,14 +33,14 @@ class generatorTests(unittest.TestCase):
         self.assertRaises(
             TypeError,
             tm.read_spec,
-            path=package_dir('sampledata', '_data', 'demo_spec.txt')
+            path=package_dir('tests', 'basic_spec.txt')
         )
 
     def test_read_spec_reads_yaml_spec_from_user_input(self):
         '''
         User might enter an invalid path - this is checked separately
         '''
-        output = tm.read_spec(path=package_dir('sampledata', '_data', 'demo_spec.yml'))
+        output = tm.read_spec(path=package_dir('sampledata', '_data', 'basic_spec.yml'))
 
         self.assertIsInstance(output, dict)
 

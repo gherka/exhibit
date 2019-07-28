@@ -1,8 +1,18 @@
+metadata: {}
 columns:
   Location:
     type: categorical
+    uniques: 2
+    original_values:
+    - Angus
+    - Fife
+    probability_vector:
+    - 0.5
+    - 0.5
+    allow_missing_values: false
+    miss_probability: 0
     anonymise: true
-    anonymising_pattern: random
+    anonymising_set: random
     value_bounds:
       Date:
       - Angus:
@@ -20,8 +30,17 @@ columns:
         - 50.0
   Admission Condition:
     type: categorical
+    uniques: 2
+    original_values:
+    - Asthma
+    - COPD
+    probability_vector:
+    - 0.5
+    - 0.5
+    allow_missing_values: false
+    miss_probability: 0
     anonymise: true
-    anonymising_pattern: random
+    anonymising_set: random
     value_bounds:
       Date:
       - Asthma:
@@ -39,8 +58,17 @@ columns:
         - 49.0
   Admission Type:
     type: categorical
+    uniques: 2
+    original_values:
+    - Elective
+    - Non-Elective
+    probability_vector:
+    - 0.5
+    - 0.5
+    allow_missing_values: false
+    miss_probability: 0
     anonymise: true
-    anonymising_pattern: random
+    anonymising_set: random
     value_bounds:
       Date:
       - Elective:
@@ -64,8 +92,19 @@ columns:
     sigma: 0.5052911526399113
   Age:
     type: categorical
+    uniques: 3
+    original_values:
+    - Middle
+    - Old
+    - Young
+    probability_vector:
+    - 0.3333333333333333
+    - 0.3333333333333333
+    - 0.3333333333333333
+    allow_missing_values: false
+    miss_probability: 0
     anonymise: true
-    anonymising_pattern: random
+    anonymising_set: random
     value_bounds:
       Date:
       - Middle:
