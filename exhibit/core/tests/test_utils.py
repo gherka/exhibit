@@ -60,6 +60,13 @@ class helperTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_read_with_date_parser(self):
+        '''
+        Currently only .csv files are supported
+        '''
+        self.assertRaises(TypeError, tm.read_with_date_parser, Path('basic.xlsx'))
+
+
     def test_date_frequency_guesser(self):
         '''
         Generate a few common time series using Pandas 

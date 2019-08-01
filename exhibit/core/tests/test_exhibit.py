@@ -33,7 +33,7 @@ class exhibitTests(unittest.TestCase):
         and assert that the program reads the same data as ref_df.
         '''
         mock_args.return_value = argparse.Namespace(
-            source=package_dir('sampledata', '_data', 'basic.csv'),
+            source=Path(package_dir('sampledata', '_data', 'basic.csv')),
             verbose=True,
         )
 
@@ -61,7 +61,7 @@ class exhibitTests(unittest.TestCase):
         xA = tm.newExhibit()
         xA.df = ref_df
 
-        self.assertIsInstance(yaml.safe_load(xA.generate_spec()), dict)
+        self.assertIsInstance(yaml.safe_load(xA.generate_YAML_string()), dict)
 
 
     @patch('argparse.ArgumentParser.parse_args')
@@ -95,7 +95,7 @@ class exhibitTests(unittest.TestCase):
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
            
             xA = tm.newExhibit()
-            xA.output_spec('hello')
+            xA.write_spec('hello')
 
             mo.assert_called_with('test.yml', 'w')
             mo.return_value.__enter__.return_value.write.assert_called_with('hello')
@@ -118,7 +118,7 @@ class exhibitTests(unittest.TestCase):
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
                 
             xA = tm.newExhibit()
-            xA.output_spec('hello')
+            xA.write_spec('hello')
 
             mo.assert_called_with('source_dataset_SPEC.yml', 'w')
             mo.return_value.__enter__.return_value.write.assert_called_with('hello')

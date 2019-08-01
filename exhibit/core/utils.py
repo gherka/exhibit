@@ -56,14 +56,18 @@ def read_with_date_parser(path):
     detect and parse datetime columns.
     '''
 
-    df = pd.read_csv(path)
+    if path.suffix in ['.csv',]:
 
-    for x in df.loc[0, :].iteritems():
-        time_col = date_parser(x)
-        if not time_col is None:
-            df[time_col] = pd.to_datetime(df[time_col])
-            
-    return df
+        df = pd.read_csv(path)
+
+        for x in df.loc[0, :].iteritems():
+            time_col = date_parser(x)
+            if not time_col is None:
+                df[time_col] = pd.to_datetime(df[time_col])
+                
+        return df
+    
+    raise TypeError("Only .csv file format is supported")
 
 def guess_date_frequency(timeseries):
     '''
@@ -111,8 +115,11 @@ def guess_date_frequency(timeseries):
     else:
         return None
 
-def get_attr_values(spec, attr):
+def get_attr_values(spec_dict, attr):
     '''
+    spec should be YAML de-serialised into
+    dictionary.
+
     Assuming the spec was generated correctly,
     go through all columns and capture given
     attribute's value; None if attribute is 
@@ -123,9 +130,9 @@ def get_attr_values(spec, attr):
     
     attrs = []
     
-    for col in spec['columns']:
+    for col in spec_dict['columns']:
         attrs.append(None)
-        for a in spec['columns'][col]:
+        for a in spec_dict['columns'][col]:
             if a == attr:
-                attrs[-1] = spec['columns'][col][attr]
+                attrs[-1] = spec_dict['columns'][col][attr]
     return attrs

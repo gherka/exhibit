@@ -24,10 +24,9 @@ def main():
     xA = newExhibit()
 
     #Call methods on the instance of newExhibit to drive the tool
-    xA.read_data()
-
     if xA.args.command == 'fromdata':
-        xA.output_spec(xA.generate_spec())
+        xA.read_data()
+        xA.write_spec(xA.generate_YAML_string())
 
     else:
         xA.execute_spec()

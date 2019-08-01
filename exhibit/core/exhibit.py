@@ -15,6 +15,7 @@ import yaml
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser
 from exhibit.core.specs import newSpec
+from exhibit.core.validator import newValidator
 
 class newExhibit:
     '''
@@ -79,43 +80,46 @@ class newExhibit:
     def read_data(self):
         '''
         Read whatever file has been selected as source, accounting for format.
+        Only called on fromdata CLI command.
         '''
 
         self.df = read_with_date_parser(self.args.source)
     
-    def generate_spec(self):
+    def generate_YAML_string(self):
         '''
         Returns a string formatted to a YAML spec
         '''
 
-        result = newSpec(self.df).output_spec()
+        spec_dict = newSpec(self.df).output_spec_dict()
 
         #overwrite ignore_aliases() to output identical dictionaries
         #and not have them replaced by aliases like *id001
         yaml.SafeDumper.ignore_aliases = lambda *args: True
         
-        spec = yaml.safe_dump(result, sort_keys=False)
+        spec_yaml = yaml.safe_dump(spec_dict, sort_keys=False)
 
-        return spec
+        return spec_yaml
 
-    def output_spec(self, spec):
+    def write_spec(self, spec_yaml):
         '''
-        Write the spec to file specified in command line
+        Write the spec (as YAML string) to file specified in command line
         '''
+
         if self.args.output is None:
             if self.args.command == 'fromdata':
-                output = self.args.source.stem + "_SPEC" + ".yml"
+                output_path = self.args.source.stem + "_SPEC" + ".yml"
             else:
-                output = self.args.source.stem + "_DEMO" + ".csv"
+                output_path = self.args.source.stem + "_DEMO" + ".csv"
         else:
-            output = self.args.output
+            output_path = self.args.output
 
-        with open(output, 'w') as f:
-            f.write(spec)
+        with open(output_path, 'w') as f:
+            f.write(spec_yaml)
 
     def execute_spec(self):
         '''
         Doc string
         '''
-    
-        print("executed")
+
+        if newValidator(self.args.source).run_validator():
+            print("executed")

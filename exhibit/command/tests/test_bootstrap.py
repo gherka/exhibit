@@ -29,7 +29,7 @@ class bootstrapTests(unittest.TestCase):
 
             mockExhibit.return_value.read_data = Mock()
             mockExhibit.return_value.output_spec = Mock()
-            mockExhibit.return_value.generate_spec = Mock(name='generate_spec')
+            mockExhibit.return_value.generate_YAML_string = Mock(name='generate_yaml')
 
             mockExhibit.return_value.args = argparse.Namespace(
                 command='fromdata',
@@ -37,7 +37,7 @@ class bootstrapTests(unittest.TestCase):
             
             tm.main()
             
-            mockExhibit.return_value.generate_spec.assert_called()
+            mockExhibit.return_value.generate_YAML_string.assert_called()
 
 
     def test_execute_spec_was_called_when_command_is_set_to_fromspec(self):

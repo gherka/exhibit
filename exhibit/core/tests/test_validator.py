@@ -4,6 +4,7 @@ Unit and reference tests for the Exhibit package
 
 # Standard library imports
 import unittest
+from unittest.mock import Mock
 
 # External library imports
 import yaml
@@ -33,6 +34,9 @@ class validatorTests(unittest.TestCase):
         #check the user isn't under-shooting with the number of rows
         test_spec['metadata']['number_of_rows'] = 4
 
-        tvi = tm.newValidator(test_spec)
+        #mock up a validator class just to satisfy function parameters
+        validatorMock = Mock()
 
-        self.assertFalse(tvi.validate_number_of_rows(test_spec))
+        test_func = tm.newValidator.validate_number_of_rows(validatorMock, test_spec)
+
+        self.assertFalse(test_func)

@@ -98,7 +98,7 @@ class newSpec:
 
         return cont_d
 
-    def output_spec(self):
+    def output_spec_dict(self):
         '''
         Main method; based on column dtype, 
         populate the output with the releavnt info.

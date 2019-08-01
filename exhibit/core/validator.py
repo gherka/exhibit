@@ -9,6 +9,9 @@ before a new spec is sent to the execution
 from operator import mul
 from functools import reduce
 
+# External library imports
+import yaml
+
 # Exhibit imports
 from exhibit.core.utils import get_attr_values
 
@@ -19,11 +22,18 @@ class newValidator:
     start with "validate" will be run before data is generated.
     '''
 
-    def __init__(self, spec):
+    def __init__(self, spec_path):
         '''
-        Save the spec object as class attribute
+        Save the spec path as class attribute and validate
+        the format of the spec
         '''
-        self.spec = spec
+
+        if spec_path.suffix == '.yml':
+            with open(spec_path) as f:
+                self.spec_dict = yaml.safe_load(f)
+        else:
+            raise TypeError('Specification is not in .yml format')
+        
 
     def run_validator(self):
         '''
@@ -37,7 +47,7 @@ class newValidator:
                 return False
         return True
 
-    def validate_number_of_rows(self, spec=None):
+    def validate_number_of_rows(self, spec_dict=None):
         '''
         The number of rows requested by the user can't 
         be fewer than the multiplication of numbers of
@@ -51,11 +61,11 @@ class newValidator:
 
         fail_msg = "VALIDATION FAIL: Requested number of rows exceeds possible maximum"
 
-        if spec is None:
-            spec = self.spec 
+        if spec_dict is None:
+            spec_dict = self.spec_dict
         
-        miss = get_attr_values(spec, 'allow_missing_values')
-        uniques = get_attr_values(spec, 'uniques')
+        miss = get_attr_values(spec_dict, 'allow_missing_values')
+        uniques = get_attr_values(spec_dict, 'uniques')
 
         nums = []
 
@@ -63,7 +73,7 @@ class newValidator:
             if miss_flag == False:
                 nums.append(value)
         
-        if spec['metadata']['number_of_rows'] < reduce(mul, nums):
+        if spec_dict['metadata']['number_of_rows'] < reduce(mul, nums):
             print(fail_msg)
             return False
         return True

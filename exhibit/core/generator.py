@@ -4,10 +4,6 @@ Various functions to generate anonymised data
 
 # External library imports
 from scipy.stats import truncnorm
-import yaml
-
-# Exhibit imports
-from exhibit.core.utils import path_checker
 
 def truncated_normal(mean, sigma, lower, upper, size, decimal=False):
     '''
@@ -21,25 +17,3 @@ def truncated_normal(mean, sigma, lower, upper, size, decimal=False):
     if decimal:
         return truncnorm(a, b, loc=mean, scale=sigma).rvs(size=size)
     return truncnorm(a, b, loc=mean, scale=sigma).rvs(size=size).astype(int)
-
-
-def read_spec(path=None):
-    '''
-    Prompt user for spec file and attempt to de-serialise YAML to
-    Python objects; function takes an optional path argument
-    for passing in a test .yml spec; normal usage is through
-    user input providing a file path via CLI.
-    '''
-    if not path is None:
-        spec_path = path
-    else:
-        spec_path = input("Please enter the path for the spec file:")
-
-    clean_path = path_checker(spec_path.strip())
-
-    #Print out a nice error message in case file isn't .YML
-    if clean_path.suffix != ".yml":
-        raise TypeError("Incorrect file extension: only .YML files are valid")
-
-    with open(clean_path) as f:
-        return yaml.safe_load(f)
