@@ -6,6 +6,7 @@ A collection of helper functions to keep the main module tidy
 from os.path import abspath, dirname, join, exists
 from pathlib import Path
 import re
+from itertools import combinations
 import dateutil
 
 # External library imports
@@ -117,7 +118,7 @@ def guess_date_frequency(timeseries):
 
 def get_attr_values(spec_dict, attr):
     '''
-    spec should be YAML de-serialised into
+    spec_dict should be YAML de-serialised into
     dictionary.
 
     Assuming the spec was generated correctly,
@@ -136,3 +137,23 @@ def get_attr_values(spec_dict, attr):
             if a == attr:
                 attrs[-1] = spec_dict['columns'][col][attr]
     return attrs
+
+def find_linked_columns(df):
+    '''
+    Given a dataframe df, return a list
+    of column name pairs where values in 
+    one column are always paired with the 
+    same value in another, as in, for example,
+    an NHS Board and NHS Board Code.
+    '''
+    linked = []
+    
+    cols = [col for col in df.columns if df[col].nunique() > 1]
+    
+    for col1, col2 in combinations(cols, 2):
+
+        if df.groupby(col1)[col2].nunique().max() == 1:
+            linked.append((col1, col2))
+            
+    return linked
+    

@@ -6,7 +6,7 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.utils import guess_date_frequency
+from exhibit.core.utils import guess_date_frequency, find_linked_columns
 
 class newSpec:
     '''
@@ -43,7 +43,6 @@ class newSpec:
             value_bounds[num_col] = [{x[0]:(x[1], x[2])} for x in
                                      group.itertuples(name=None)]
                                      
-        #missing values mean completely missing from the data, across all values
         categorical_d = {
             'type': 'categorical',
             'uniques': self.df[col].nunique(),
@@ -53,10 +52,11 @@ class newSpec:
                                    .apply(lambda x: x / len(self.df))
                                    .values
                                    .tolist()),
-            'allow_missing_values': False,
+            'allow_missing_values': bool(self.df[col].isna().any()),
             'miss_probability': 0,
             'anonymise':True,
             'anonymising_set':'random',
+            'anonymised_values':[],
             'value_bounds':value_bounds,
         }
 
@@ -71,9 +71,7 @@ class newSpec:
 
         time_d = {
             'type': 'date',
-            'anonymise':True,
-            'anonymising_pattern':'random',
-            'allow_missing_values': False,
+            'allow_missing_values': bool(self.df[col].isna().any()),
             'miss_probability': 0,
             'from': self.df[col].min().date().isoformat(),
             'to': self.df[col].max().date().isoformat(),
@@ -92,6 +90,8 @@ class newSpec:
             'type': 'continuous',
             'anonymise':True,
             'anonymising_pattern':'random',
+            'allow_missing_values': bool(self.df[col].isna().any()),
+            'miss_probability': 0,
             'mean': float(self.df[col].mean()),
             'sigma': float(self.df[col].std()),
         }
@@ -100,9 +100,14 @@ class newSpec:
 
     def output_spec_dict(self):
         '''
-        Main method; based on column dtype, 
-        populate the output with the releavnt info.
+        Main function to generate spec from data
+
+        The basic structure of the spec is established
+        as part of the __init__ so here's we're just
+        populating it with df-specific values.
         '''
+
+        #PART 1: COLUMN-SPECIFIC INFORMATION
         for col in self.df.columns:
 
             if is_datetime64_dtype(self.df.dtypes[col]):
@@ -111,5 +116,8 @@ class newSpec:
                 self.output['columns'][col] = self.continuous_dict(col)
             else:
                 self.output['columns'][col] = self.categorical_dict(col)
+
+        #PART 2: DATASET-WIDE CONSTRAINTS
+        self.output['constraints']['linked_columns'] = find_linked_columns(self.df)
 
         return self.output

@@ -11,6 +11,7 @@ from pathlib import Path
 
 # External library imports
 import pandas as pd
+import numpy as np
 import yaml
 
 # Exhibit imports
@@ -66,7 +67,6 @@ class helperTests(unittest.TestCase):
         '''
         self.assertRaises(TypeError, tm.read_with_date_parser, Path('basic.xlsx'))
 
-
     def test_date_frequency_guesser(self):
         '''
         Generate a few common time series using Pandas 
@@ -100,7 +100,23 @@ class helperTests(unittest.TestCase):
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")
         assert test_list.count(None) == len(test_list)
+
+    def test_find_linked_columns(self):
+        '''
+        Add more test cases if need be
+        '''
         
+        test_df1 = pd.DataFrame(
+            data=np.transpose([list('ABCD'), range(4), ['a']*4]),
+            columns=list('ABC')
+            )
+        test_df2 = pd.DataFrame(
+            data=np.transpose([list('AABCD'), range(5), ['a']*5]),
+            columns=list('ABC')
+            )
+        
+        assert tm.find_linked_columns(test_df1) == [('A', 'B')]
+        assert tm.find_linked_columns(test_df2) == []
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

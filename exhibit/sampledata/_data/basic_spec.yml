@@ -14,6 +14,7 @@ columns:
     miss_probability: 0
     anonymise: true
     anonymising_set: random
+    anonymised_values: []
     value_bounds:
       Date:
       - Angus:
@@ -42,6 +43,7 @@ columns:
     miss_probability: 0
     anonymise: true
     anonymising_set: random
+    anonymised_values: []
     value_bounds:
       Date:
       - Asthma:
@@ -70,6 +72,7 @@ columns:
     miss_probability: 0
     anonymise: true
     anonymising_set: random
+    anonymised_values: []
     value_bounds:
       Date:
       - Elective:
@@ -89,6 +92,8 @@ columns:
     type: continuous
     anonymise: true
     anonymising_pattern: random
+    allow_missing_values: false
+    miss_probability: 0
     mean: 2015.5
     sigma: 0.5052911526399113
   Age:
@@ -106,6 +111,7 @@ columns:
     miss_probability: 0
     anonymise: true
     anonymising_set: random
+    anonymised_values: []
     value_bounds:
       Date:
       - Middle:
@@ -131,14 +137,16 @@ columns:
     type: continuous
     anonymise: true
     anonymising_pattern: random
+    allow_missing_values: true
+    miss_probability: 0
     mean: 22.72340425531915
     sigma: 15.715821614814708
   MY:
     type: date
-    anonymise: true
-    anonymising_pattern: random
     allow_missing_values: false
     miss_probability: 0
+    allow_missing_periods: false
+    mising_period_probability: 0
     from: '2015-01-31'
     to: '2015-12-31'
     uniques: 12
