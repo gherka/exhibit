@@ -77,3 +77,18 @@ class newValidator:
             print(fail_msg)
             return False
         return True
+
+    def validate_probability_vector(self, spec_dict=None):
+        '''
+        Each columns's probability vector should always sum up to 1
+        '''
+        fail_msg = f"VALIDATION FAIL: the probability vector of err_col is not 1"
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        for c, v in get_attr_values(spec_dict, 'probability_vector', col_names=True):
+            if not sum(v) == 1:
+                print(fail_msg.replace("err_col", c))
+                return False
+        return True

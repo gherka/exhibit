@@ -116,7 +116,7 @@ def guess_date_frequency(timeseries):
     else:
         return None
 
-def get_attr_values(spec_dict, attr):
+def get_attr_values(spec_dict, attr, col_names=False):
     '''
     spec_dict should be YAML de-serialised into
     dictionary.
@@ -124,18 +124,34 @@ def get_attr_values(spec_dict, attr):
     Assuming the spec was generated correctly,
     go through all columns and capture given
     attribute's value; None if attribute is 
-    missing. Returns a list with values
+    missing.
+    
+    Returns a list with values
     from columns in order of appearance in the
     spec.
+
+    Optional argument to return a col_name, attribute value
+    instead of just a list of attribute values
     '''
     
     attrs = []
-    
-    for col in spec_dict['columns']:
-        attrs.append(None)
-        for a in spec_dict['columns'][col]:
-            if a == attr:
-                attrs[-1] = spec_dict['columns'][col][attr]
+
+    if col_names:
+
+        for col in spec_dict['columns']:
+        #append None as a placeholder; overwrite if attr exists
+            attrs.append((col, None))
+            for a in spec_dict['columns'][col]:
+                if a == attr:
+                    attrs[-1] = (col, spec_dict['columns'][col][attr])
+
+    else:
+        for col in spec_dict['columns']:
+            attrs.append(None)
+            for a in spec_dict['columns'][col]:
+                if a == attr:
+                    attrs[-1] = spec_dict['columns'][col][attr]
+
     return attrs
 
 def find_linked_columns(df):

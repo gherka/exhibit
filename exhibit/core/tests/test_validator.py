@@ -13,7 +13,7 @@ import yaml
 from exhibit.core.utils import package_dir
 
 # Module under test
-from exhibit.core import validator as tm
+from exhibit.core.validator import newValidator as tm
 
 
 class validatorTests(unittest.TestCase):
@@ -37,6 +37,23 @@ class validatorTests(unittest.TestCase):
         #mock up a validator class just to satisfy function parameters
         validatorMock = Mock()
 
-        test_func = tm.newValidator.validate_number_of_rows(validatorMock, test_spec)
+        test_func = tm.validate_number_of_rows(validatorMock, test_spec)
+
+        self.assertFalse(test_func)
+
+    def test_probability_vector_validator(self):
+        '''
+        The sum of all probability values should equal 1
+        '''
+
+        with open(package_dir("tests", "test_spec.yml")) as f:
+            test_spec = yaml.safe_load(f)
+        
+        test_vector = [0.5, 0.8]
+        test_spec['columns']['Location']['probability_vector'] = test_vector
+
+        validatorMock = Mock()
+
+        test_func = tm.validate_probability_vector(validatorMock, test_spec)
 
         self.assertFalse(test_func)
