@@ -13,7 +13,7 @@ from exhibit.core.utils import package_dir
 # Module under test
 from exhibit.core import sql  as tm
 
-class exhibitTests(unittest.TestCase):
+class sqlTests(unittest.TestCase):
     '''
     Doc string
     '''
@@ -40,6 +40,19 @@ class exhibitTests(unittest.TestCase):
 
         assert output == expected
 
+    def test_temp_table_insertion(self):
+        '''
+        Doc string
+        '''
+        expected = [(1, 2), (1, 2)]
+        output = tm.create_temp_table(
+            table_name='test_table',
+            col_names=list('AB'),
+            data=[(1, 2), (1, 2)],
+            db_uri="file:test_db?mode=memory",
+            return_table=True)
+
+        self.assertListEqual(expected, output)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
