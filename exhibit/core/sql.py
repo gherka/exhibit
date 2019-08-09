@@ -44,6 +44,8 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
     Specialty has the correct Specialty Group, we can store this
     information in a temporary table in the anon.db
 
+    The "1" in the "1-to-many" should always be the first column.
+
     Make sure you add "temp_" prefix to your table if you
     want it to be discovered by the automatic clean-up.
 

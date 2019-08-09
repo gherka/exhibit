@@ -7,6 +7,7 @@ import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import guess_date_frequency, find_linked_columns
+from exhibit.core.utils import linkedColumnsTree
 
 class newSpec:
     '''
@@ -118,6 +119,9 @@ class newSpec:
                 self.output['columns'][col] = self.categorical_dict(col)
 
         #PART 2: DATASET-WIDE CONSTRAINTS
-        self.output['constraints']['linked_columns'] = find_linked_columns(self.df)
+        linked_cols = find_linked_columns(self.df)
+        linked_tree = linkedColumnsTree(linked_cols).tree
+
+        self.output['constraints']['linked_columns'] = linked_tree
 
         return self.output

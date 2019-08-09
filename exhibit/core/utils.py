@@ -6,7 +6,7 @@ A collection of helper functions to keep the main module tidy
 from os.path import abspath, dirname, join, exists
 from pathlib import Path
 import re
-from itertools import combinations
+from itertools import chain, combinations
 import dateutil
 
 # External library imports
@@ -157,10 +157,15 @@ def get_attr_values(spec_dict, attr, col_names=False):
 def find_linked_columns(df):
     '''
     Given a dataframe df, return a list
-    of column name pairs where values in 
+    of tuples with column names where values in 
     one column are always paired with the 
     same value in another, as in, for example,
     an NHS Board and NHS Board Code.
+
+    Columns with the same value in all rows are skipped.
+
+    The column that maps 1 to many is appended first,
+    juding by the number of unique values it has.
     '''
     linked = []
     
@@ -168,8 +173,97 @@ def find_linked_columns(df):
     
     for col1, col2 in combinations(cols, 2):
 
-        if df.groupby(col1)[col2].nunique().max() == 1:
-            linked.append((col1, col2))
+        if ( 
+                df.groupby(col1)[col2].nunique().max() == 1 or
+                df.groupby(col2)[col1].nunique().max() == 1
+            ): 
             
+            if df[col1].nunique() <= df[col2].nunique():
+
+                linked.append((col1, col2))
+
+            else:
+
+                linked.append((col2, col1))
+
     return linked
+
+class linkedColumnsTree:
+    '''
+    Organizes a list of tuples into a matrix of sorts
+    where each row is a list of columns ordered from
+    ancestor to descendants.
     
+    connection tuples should come in ancestor first.
+
+    Think of a good test to make sure this class
+    is working as intended.
+    
+    '''
+
+    def __init__(self, connections):
+        '''
+        Doc string
+        '''
+        self._tree = []
+        self.add_connections(connections)
+        self.tree = [list(chain(*x)) for x in self._tree]
+
+    def add_connections(self, connections):
+        '''
+        Doc string
+        '''
+        for node1, node2 in connections:
+            self.add_node(node1, node2)
+        
+    def find_element_pos(self, e, source_list):
+        '''
+        The tree is a list implementation of a (mutable)
+        matrix and finding position involves simply
+        traversing i and j dimensions.
+        '''
+        #vertical position is i
+        for i, l in enumerate(source_list):
+            #horizontal position is j
+            for j, sublist in enumerate(l):
+                if e in sublist:
+                    return (i, j)
+        return None
+    
+    def add_node(self, node1, node2):
+        '''
+        There are three possible outcome when processing a
+        linked columns tuple:
+
+        - Neither columns are in the tree already
+        - Ancestor (node1) column is in the tree
+        - Descendant (node2) column is in the tree
+
+        The fourth possible situation, both columns already
+        in the tree, isn't possible because duplicates are
+        filtered out by find_linked_columns.
+        
+        '''
+        
+        apos = self.find_element_pos(node1, self._tree)
+        dpos = self.find_element_pos(node2, self._tree)
+        
+        #add a new completely new row with both nodes
+        if (apos is None) & (dpos is None):
+            self._tree.append([[node1], [node2]])
+        
+        #if found ancestor in the tree, add descendant
+        elif (not apos is None) & (dpos is None):
+            ai, aj = apos
+            if isinstance(self._tree[ai][aj], list):
+                self._tree[ai][aj+1].append(node2)
+            else:
+                self._tree[ai][aj+1].append([node2])
+                
+        #if found descendant in the tree, add ancestor
+        elif (apos is None) & (not dpos is None):
+            di, dj = dpos
+            if isinstance(self._tree[di][dj], list):
+                self._tree[di][dj-1].append(node1)
+            else:
+                self._tree[di][dj-1].append([node1])

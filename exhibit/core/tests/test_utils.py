@@ -106,17 +106,25 @@ class helperTests(unittest.TestCase):
         Add more test cases if need be
         '''
         
+        #1 to 1 relationship between A and B; C discounted
         test_df1 = pd.DataFrame(
             data=np.transpose([list('ABCD'), range(4), ['a']*4]),
             columns=list('ABC')
             )
+        #1 to many relationship between A and B
         test_df2 = pd.DataFrame(
-            data=np.transpose([list('AABCD'), range(5), ['a']*5]),
+            data=np.transpose([list('AABCD'), [1, 1, 2, 3, 4], [1, 2, 5, 5, 1]]),
             columns=list('ABC')
             )
-        
+        #no relationships
+        test_df3 = pd.DataFrame(
+            data=np.transpose([list('AACDABCD'), [1, 2]*4, list('abdd')*2]),
+            columns=list('ABC')
+            )
+
         assert tm.find_linked_columns(test_df1) == [('A', 'B')]
-        assert tm.find_linked_columns(test_df2) == []
+        assert tm.find_linked_columns(test_df2) == [('A', 'B')]
+        assert tm.find_linked_columns(test_df3) == []
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
