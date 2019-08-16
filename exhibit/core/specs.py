@@ -7,7 +7,8 @@ import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import guess_date_frequency, find_linked_columns
-from exhibit.core.utils import linkedColumnsTree
+from exhibit.core.utils import linkedColumnsTree, generate_id
+from exhibit.core.sql import create_temp_table
 
 class newSpec:
     '''
@@ -17,10 +18,12 @@ class newSpec:
     def __init__(self, data):
 
         self.df = data.copy()
+        self.id = generate_id()
         self.numerical_cols = self.df.select_dtypes(include=np.number).columns.values
         self.output = {
             'metadata': {
                 "number_of_rows": self.df.shape[0],
+                "id":self.id
             },
             'columns': {},
             'constraints':{},
@@ -124,4 +127,16 @@ class newSpec:
 
         self.output['constraints']['linked_columns'] = linked_tree
 
+        #Add linked column values to the temp tables in anon_db
+        for linked_group_tuple in linked_tree:
+
+            data = list(self.df.groupby(linked_group_tuple[1]).groups.keys())
+            #Column names can't have spaces; replace with $ and then back when
+            #reading the data from the SQLite DB at execution stage. 
+            create_temp_table(
+                table_name="temp_" + self.id + f"_{linked_group_tuple[0]}",
+                col_names=[x.replace(" ", "$") for x in linked_group_tuple[1]],
+                data=data                
+            )
+        
         return self.output

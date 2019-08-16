@@ -72,8 +72,29 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
         c = conn.cursor()
         c.execute(create_sql)
         c.executemany(insert_sql, data)
+        conn.commit()
 
         if return_table:
             c.execute(f"SELECT * FROM {table_name}")
             return c.fetchall()
     return True
+
+def purge_temp_tables(db_uri=None):
+    '''
+    db_uri is added as function paramter so that we 
+    can test it using SQLite in-memory DB.
+    '''
+    if db_uri is None:
+        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+
+    conn = sqlite3.connect(db_uri, uri=True)
+    
+    with closing(conn):
+        c = conn.cursor()
+        c.execute('SELECT name from sqlite_master where type= "table"')
+        table_names = c.fetchall()
+
+        for table in table_names:
+            if 'temp' in table[0]:
+                c.execute(f"DROP TABLE {table[0]}")
+        conn.commit()

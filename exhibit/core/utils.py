@@ -7,6 +7,7 @@ from os.path import abspath, dirname, join, exists
 from pathlib import Path
 import re
 from itertools import chain, combinations
+import datetime
 import dateutil
 
 # External library imports
@@ -203,11 +204,13 @@ class linkedColumnsTree:
 
     def __init__(self, connections):
         '''
-        Doc string
+        Main output of the class is stored in the tree attribute
+        as a list of tuples of the form (linked columns group number,
+        list of grouped columns)
         '''
         self._tree = []
         self.add_connections(connections)
-        self.tree = [list(chain(*x)) for x in self._tree]
+        self.tree = [(i, list(chain(*x))) for i, x in enumerate(self._tree)]
 
     def add_connections(self, connections):
         '''
@@ -267,3 +270,11 @@ class linkedColumnsTree:
                 self._tree[di][dj-1].append(node1)
             else:
                 self._tree[di][dj-1].append([node1])
+
+def generate_id():
+    '''
+    Generate a 5-digit pseudo-unique ID based on current time
+    '''
+    id = str(hex(int(datetime.datetime.now().timestamp()*10))[6:])
+
+    return id
