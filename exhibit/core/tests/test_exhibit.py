@@ -10,10 +10,8 @@ import argparse
 
 # External imports
 import pandas as pd
-import yaml
 
 # Exhibit imports
-from exhibit.sampledata.data import basic as ref_df
 from exhibit.core.utils import package_dir
 
 # Module under test
@@ -41,28 +39,6 @@ class exhibitTests(unittest.TestCase):
         xA.read_data()
         
         assert isinstance(xA.df, pd.DataFrame)
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_generate_spec_returns_valid_yaml(self, mock_args):
-        '''
-        Mock up intermediate read_data function and check if mocked
-        generate_spec function was called by the main function.
-
-        COMPLETE ONCE MAIN IS EMITTING PROPER SPEC
-
-        '''
-
-        mock_args.return_value = argparse.Namespace(
-            command='fromdata',
-            output='spec.yml',
-            verbose=True,
-        )
-
-        xA = tm.newExhibit()
-        xA.df = ref_df
-
-        self.assertIsInstance(yaml.safe_load(xA.generate_YAML_string()), dict)
-
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_output_spec_creates_file_with_o_argument(self, mock_args):

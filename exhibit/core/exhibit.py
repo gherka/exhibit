@@ -9,11 +9,8 @@ import argparse
 import textwrap
 import sys
 
-# External imports
-import yaml
-
 # Exhibit imports
-from exhibit.core.utils import path_checker, read_with_date_parser
+from exhibit.core.utils import path_checker, read_with_date_parser, generate_YAML_string
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 
@@ -70,6 +67,7 @@ class newExhibit:
             )
  
         self.args = self.parser.parse_args(sys.argv[1:])
+        self.spec_dict = None
         self.df = None
         self.numerical_cols = None
         
@@ -84,26 +82,28 @@ class newExhibit:
         '''
 
         self.df = read_with_date_parser(self.args.source)
+
+    def generate_spec(self):
+        '''
+        Generating spec needs a dataframe so should only be run
+        after read_data()
+        '''
+        if not self.df is None:
+            
+            new_spec = newSpec(self.df)
+
+            self.spec_dict = new_spec.output_spec_dict()
+            
     
-    def generate_YAML_string(self):
+    def write_spec(self, spec_yaml=None):
         '''
-        Returns a string formatted to a YAML spec
+        Write the spec (as YAML string) to file specified in command line.
+        The YAML string that is generated from spec_dict saved
+        as Exhibit instance attribute.
         '''
 
-        spec_dict = newSpec(self.df).output_spec_dict()
-
-        #overwrite ignore_aliases() to output identical dictionaries
-        #and not have them replaced by aliases like *id001
-        yaml.SafeDumper.ignore_aliases = lambda *args: True
-        
-        spec_yaml = yaml.safe_dump(spec_dict, sort_keys=False)
-
-        return spec_yaml
-
-    def write_spec(self, spec_yaml):
-        '''
-        Write the spec (as YAML string) to file specified in command line
-        '''
+        if spec_yaml is None:
+            spec_yaml = generate_YAML_string(self.spec_dict)
 
         if self.args.output is None:
             if self.args.command == 'fromdata':

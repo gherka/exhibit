@@ -12,6 +12,7 @@ import dateutil
 
 # External library imports
 import pandas as pd
+import yaml
 
 def path_checker(string):
     '''
@@ -70,6 +71,22 @@ def read_with_date_parser(path):
         return df
     
     raise TypeError("Only .csv file format is supported")
+
+
+def generate_YAML_string(spec_dict):
+    '''
+    Returns a string formatted to a YAML spec
+    from a passed in dictionary
+
+    We overwrite ignore_aliases() to output identical dictionaries
+    and not have them replaced by aliases like *id001
+    '''
+
+    yaml.SafeDumper.ignore_aliases = lambda *args: True
+    
+    spec_yaml = yaml.safe_dump(spec_dict, sort_keys=False)
+
+    return spec_yaml
 
 def guess_date_frequency(timeseries):
     '''
@@ -275,6 +292,6 @@ def generate_id():
     '''
     Generate a 5-digit pseudo-unique ID based on current time
     '''
-    id = str(hex(int(datetime.datetime.now().timestamp()*10))[6:])
+    new_id = str(hex(int(datetime.datetime.now().timestamp()*10))[6:])
 
-    return id
+    return new_id

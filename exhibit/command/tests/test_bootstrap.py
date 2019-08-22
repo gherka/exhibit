@@ -15,7 +15,7 @@ class bootstrapTests(unittest.TestCase):
     Test command line arguments and running logic of Exhibit
     '''
 
-    def test_generate_spec_was_called_when_command_is_set_to_fromdata(self):
+    def test_sequence_was_called_when_command_is_set_to_fromdata(self):
         '''
         Mocked functions are set on the instance of mockExhibit,
         not on the class itself.
@@ -28,8 +28,8 @@ class bootstrapTests(unittest.TestCase):
         with patch('exhibit.command.bootstrap.newExhibit') as mockExhibit:
 
             mockExhibit.return_value.read_data = Mock()
-            mockExhibit.return_value.output_spec = Mock()
-            mockExhibit.return_value.generate_YAML_string = Mock(name='generate_yaml')
+            mockExhibit.return_value.generate_spec = Mock()
+            mockExhibit.return_value.write_spec = Mock()
 
             mockExhibit.return_value.args = argparse.Namespace(
                 command='fromdata',
@@ -37,7 +37,9 @@ class bootstrapTests(unittest.TestCase):
             
             tm.main()
             
-            mockExhibit.return_value.generate_YAML_string.assert_called()
+            mockExhibit.return_value.read_data.assert_called()
+            mockExhibit.return_value.generate_spec.assert_called()
+            mockExhibit.return_value.write_spec.assert_called()
 
 
     def test_execute_spec_was_called_when_command_is_set_to_fromspec(self):
