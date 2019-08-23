@@ -8,6 +8,8 @@ Main Exhibit class
 import argparse
 import textwrap
 import sys
+from functools import reduce
+from operator import add
 
 # External library imports
 import yaml
@@ -15,8 +17,10 @@ import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser, generate_YAML_string
+from exhibit.core.utils import get_attr_values
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
+from exhibit.core.generator import generate_linked_anon_df, generate_anon_series
 
 class newExhibit:
     '''
@@ -134,12 +138,51 @@ class newExhibit:
     def execute_spec(self):
         '''
         Function only runs if validate_spec returned True
+        WRITE REFERENCE TESTS!
         '''
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
-        print(self.spec_dict['metadata']['number_of_rows'] /
-              self.spec_dict['columns']['Month']['uniques'])
+        #core rows are generated from probability vectors and then
+        #repeated for each column that has "allow_missing_values" as false
+        cols = [c for c, v in get_attr_values(
+            self.spec_dict,
+            "allow_missing_values",
+            col_names=True, 
+            types=['categorical', 'date']) if not v]
 
+        uniques = [
+            v['uniques'] for c, v in self.spec_dict['columns'].items() if c in cols
+            ]
+
+        unique_count = reduce(add, uniques)
+
+        core_rows = int(self.spec_dict['metadata']['number_of_rows'] / unique_count)
+
+        #2) CREATE PLACEHOLDER LIST OF GENERATED LINKED DFs
+        linked_dfs = []
+
+        #3) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
+        for linked_group in self.spec_dict['constraints']['linked_columns']:
+       
+            df = generate_linked_anon_df(self.spec_dict, linked_group[0], core_rows)
+            linked_dfs.append(df)
+        
+        #4) GENERATE ANON SERIES
+
+
+        #5) CONCAT LINKED DFs AND SERIES
+
+
+        #6) GENERATE DF WITH "COMPLETE" COLUMNS
+
+
+        #7) OUTER JOIN
+
+
+        #8) GENERATE CONTINUOUS VARIABLES
+
+
+        #9) WRITE THE ANONYMISED DATAFRAME TO .CSV
         # if self.args.output is None:
         #     output_path = self.args.source.stem + "_DEMO" + ".csv"
         # else:
@@ -148,4 +191,4 @@ class newExhibit:
         # anon_df.to_csv(output_path)
                 
 
-        print("executed")
+        print("done")

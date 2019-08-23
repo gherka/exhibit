@@ -50,9 +50,10 @@ class newSpec:
         categorical_d = {
             'type': 'categorical',
             'uniques': self.df[col].nunique(),
-            'original_values': self.df[col].unique().tolist(),
+            'original_values': sorted(self.df[col].unique().tolist()),
             'probability_vector': (self.df[col]
                                    .value_counts()
+                                   .sort_index(kind="mergesort")
                                    .apply(lambda x: x / len(self.df))
                                    .values
                                    .tolist()),
