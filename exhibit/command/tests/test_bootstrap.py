@@ -42,7 +42,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.write_spec.assert_called()
 
 
-    def test_execute_spec_was_called_when_command_is_set_to_fromspec(self):
+    def test_sequence_was_called_when_command_is_set_to_fromspec(self):
         '''
         Mocked functions are set on the instance of mockExhibit,
         not on the class itself.
@@ -54,9 +54,9 @@ class bootstrapTests(unittest.TestCase):
         
         with patch('exhibit.command.bootstrap.newExhibit') as mockExhibit:
 
-            mockExhibit.return_value.read_data = Mock()
-            mockExhibit.return_value.output_spec = Mock()
-            mockExhibit.return_value.execute_spec = Mock(name='execute_spec')
+            mockExhibit.return_value.read_spec = Mock()
+            mockExhibit.return_value.validate_spec = Mock()
+            mockExhibit.return_value.execute_spec = Mock()
 
             mockExhibit.return_value.args = argparse.Namespace(
                 command='fromspec',
@@ -64,4 +64,6 @@ class bootstrapTests(unittest.TestCase):
             
             tm.main()
             
+            mockExhibit.return_value.read_spec.assert_called()
+            mockExhibit.return_value.validate_spec.assert_called()
             mockExhibit.return_value.execute_spec.assert_called()

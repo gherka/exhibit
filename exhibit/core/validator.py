@@ -8,6 +8,8 @@ before a new spec is sent to the execution
 # Standard library imports
 from operator import mul
 from functools import reduce
+import textwrap
+import math
 
 # External library imports
 import yaml
@@ -27,7 +29,7 @@ class newValidator:
         Save the spec path as class attribute and validate
         the format of the spec
         '''
-
+        
         if spec_path.suffix == '.yml':
             with open(spec_path) as f:
                 self.spec_dict = yaml.safe_load(f)
@@ -37,9 +39,9 @@ class newValidator:
 
     def run_validator(self):
         '''
-        Run all validator methods define in the class
+        Run all validator methods defined in the class
         '''
-        
+
         gen = (m for m in dir(self) if "validate" in m)
         
         for method in gen:
@@ -59,8 +61,6 @@ class newValidator:
         Returns True or False
         '''
 
-        fail_msg = "VALIDATION FAIL: Requested number of rows exceeds possible maximum"
-
         if spec_dict is None:
             spec_dict = self.spec_dict
         
@@ -70,10 +70,16 @@ class newValidator:
         nums = []
 
         for miss_flag, value in zip(miss, uniques):
-            if miss_flag == False:
+            if (miss_flag == False) & (value is not None):
                 nums.append(value)
+
+        min_combi = reduce(mul, nums)
+
+        fail_msg = textwrap.dedent(f"""
+        VALIDATION FAIL: Requested number of rows is below the minimum possible combintations({min_combi})
+        """)
         
-        if spec_dict['metadata']['number_of_rows'] < reduce(mul, nums):
+        if spec_dict['metadata']['number_of_rows'] < min_combi:
             print(fail_msg)
             return False
         return True
@@ -81,14 +87,40 @@ class newValidator:
     def validate_probability_vector(self, spec_dict=None):
         '''
         Each columns's probability vector should always sum up to 1
+        However, due to floating point arithmetic, the round-trip can
+        produce values that are slighly below or slightly above 1
+        so we validate using math.isclose() function instead.
         '''
         fail_msg = f"VALIDATION FAIL: the probability vector of err_col is not 1"
 
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        for c, v in get_attr_values(spec_dict, 'probability_vector', col_names=True):
-            if not sum(v) == 1:
+        for c, v in get_attr_values(
+                spec_dict, 'probability_vector', col_names=True, types=['categorical']):
+            if not math.isclose(sum(v), 1, rel_tol=1e-5):
                 print(fail_msg.replace("err_col", c))
+                return False
+        return True
+
+    def validate_linked_cols(self, spec_dict=None):
+        '''
+        All linked columns should share allow_missing_values
+        attribute
+        '''
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: linked columns must have matching allow_missing_values attributes
+        """)
+
+        for linked_col_group in spec_dict['constraints']['linked_columns']:
+            linked_cols = linked_col_group[1]
+            group_flags = []
+            for col in linked_cols:
+                group_flags.append(spec_dict["columns"][col]['allow_missing_values'])
+            if len(set(group_flags)) != 1:
+                print(fail_msg)
                 return False
         return True

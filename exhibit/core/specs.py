@@ -56,7 +56,7 @@ class newSpec:
                                    .apply(lambda x: x / len(self.df))
                                    .values
                                    .tolist()),
-            'allow_missing_values': bool(self.df[col].isna().any()),
+            'allow_missing_values': True,
             'miss_probability': 0,
             'anonymise':True,
             'anonymising_set':'random',
@@ -75,7 +75,7 @@ class newSpec:
 
         time_d = {
             'type': 'date',
-            'allow_missing_values': bool(self.df[col].isna().any()),
+            'allow_missing_values': False,
             'miss_probability': 0,
             'from': self.df[col].min().date().isoformat(),
             'to': self.df[col].max().date().isoformat(),

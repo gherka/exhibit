@@ -72,7 +72,6 @@ def read_with_date_parser(path):
     
     raise TypeError("Only .csv file format is supported")
 
-
 def generate_YAML_string(spec_dict):
     '''
     Returns a string formatted to a YAML spec
@@ -134,7 +133,7 @@ def guess_date_frequency(timeseries):
     else:
         return None
 
-def get_attr_values(spec_dict, attr, col_names=False):
+def get_attr_values(spec_dict, attr, col_names=False, types=None):
     '''
     spec_dict should be YAML de-serialised into
     dictionary.
@@ -152,24 +151,28 @@ def get_attr_values(spec_dict, attr, col_names=False):
     instead of just a list of attribute values
     '''
     
+    if types is None:
+        types = ['categorical', 'date', 'continuous']
+
     attrs = []
 
     if col_names:
 
         for col in spec_dict['columns']:
         #append None as a placeholder; overwrite if attr exists
-            attrs.append((col, None))
-            for a in spec_dict['columns'][col]:
-                if a == attr:
-                    attrs[-1] = (col, spec_dict['columns'][col][attr])
+            if spec_dict["columns"][col]['type'] in types:
+                attrs.append((col, None))
+                for a in spec_dict['columns'][col]:
+                    if a == attr:
+                        attrs[-1] = (col, spec_dict['columns'][col][attr])
 
     else:
         for col in spec_dict['columns']:
-            attrs.append(None)
-            for a in spec_dict['columns'][col]:
-                if a == attr:
-                    attrs[-1] = spec_dict['columns'][col][attr]
-
+            if spec_dict["columns"][col]['type'] in types:
+                attrs.append(None)
+                for a in spec_dict['columns'][col]:
+                    if a == attr:
+                        attrs[-1] = spec_dict['columns'][col][attr]
     return attrs
 
 def find_linked_columns(df):

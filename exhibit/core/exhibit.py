@@ -9,6 +9,10 @@ import argparse
 import textwrap
 import sys
 
+# External library imports
+import yaml
+import pandas as pd
+
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser, generate_YAML_string
 from exhibit.core.specs import newSpec
@@ -106,20 +110,42 @@ class newExhibit:
             spec_yaml = generate_YAML_string(self.spec_dict)
 
         if self.args.output is None:
-            if self.args.command == 'fromdata':
-                output_path = self.args.source.stem + "_SPEC" + ".yml"
-            else:
-                output_path = self.args.source.stem + "_DEMO" + ".csv"
+            output_path = self.args.source.stem + "_SPEC" + ".yml"
         else:
             output_path = self.args.output
 
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             f.write(spec_yaml)
+
+    def read_spec(self):
+        '''
+        Read the YAML file and save it as spec_dict
+        '''
+        with open(self.args.source, "r") as f:
+            self.spec_dict = yaml.safe_load(f)
+
+    def validate_spec(self):
+        '''
+        Returns True or False depending on whether all
+        methods in the validator class return True
+        '''
+        return newValidator(self.args.source).run_validator()
 
     def execute_spec(self):
         '''
-        Doc string
+        Function only runs if validate_spec returned True
         '''
 
-        if newValidator(self.args.source).run_validator():
-            print("executed")
+        #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
+        print(self.spec_dict['metadata']['number_of_rows'] /
+              self.spec_dict['columns']['Month']['uniques'])
+
+        # if self.args.output is None:
+        #     output_path = self.args.source.stem + "_DEMO" + ".csv"
+        # else:
+        #     output_path = self.args.output
+
+        # anon_df.to_csv(output_path)
+                
+
+        print("executed")

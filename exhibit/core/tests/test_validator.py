@@ -57,3 +57,27 @@ class validatorTests(unittest.TestCase):
         test_func = tm.validate_probability_vector(validatorMock, test_spec)
 
         self.assertFalse(test_func)
+
+    def test_linked_cols_shared_attributes(self):
+        '''
+        If linked columns have different attributes for generation
+        it will cause issues.
+        '''
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board Code": {
+                    "allow_missing_values": False
+                },
+                "Board":  {
+                    "allow_missing_values": True
+                },
+            },
+            "constraints": {
+                "linked_columns": [[0, ['Board Code', 'Board']]] 
+            }
+        
+        }
+        
+        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict))

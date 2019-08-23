@@ -30,4 +30,6 @@ def main():
         xA.write_spec()
 
     else:
-        xA.execute_spec()
+        xA.read_spec()
+        if xA.validate_spec():
+            xA.execute_spec()
