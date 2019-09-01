@@ -10,6 +10,7 @@ import textwrap
 import sys
 from functools import reduce
 from operator import add
+from itertools import chain
 
 # External library imports
 import yaml
@@ -163,17 +164,30 @@ class newExhibit:
 
         #3) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
         for linked_group in self.spec_dict['constraints']['linked_columns']:
-       
             df = generate_linked_anon_df(self.spec_dict, linked_group[0], core_rows)
             linked_dfs.append(df)
         
-        #4) GENERATE ANON SERIES
+        #4) GENERATE ANON SERIES (only categorical)
+        nested_linked_cols = [
+            sublist for n, sublist in self.spec_dict['constraints']['linked_columns']
+            ]
+        linked_cols = list(chain.from_iterable(nested_linked_cols))
 
+        list_of_cat_tuples = get_attr_values(
+            self.spec_dict,
+            'type',
+            col_names=True, types='categorical')
+
+        for col in [k for k, v in list_of_cat_tuples if k not in linked_cols]:
+            s = generate_anon_series(self.spec_dict, col, core_rows)
+            linked_dfs.append(s)        
 
         #5) CONCAT LINKED DFs AND SERIES
 
+        temp_anon_df = pd.concat(linked_dfs, axis=1)
+        temp_anon_df.to_csv("temp_anon_df.csv", index=False)
 
-        #6) GENERATE DF WITH "COMPLETE" COLUMNS
+        #6) GENERATE DF WITH "COMPLETE" COLUMNS, LIKE TIME
 
 
         #7) OUTER JOIN

@@ -62,6 +62,29 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
 def generate_anon_series(spec_dict, col_name, num_rows):
     '''
-    Various paths depending on the column type
+    Only valid for categorical column types. Returns
+    a Pandas Series object
     '''
+    col_type = spec_dict['columns'][col_name]['type']
+
+    if col_type != "categorical":
+        raise TypeError
+
+    col_prob = spec_dict['columns'][col_name]['probability_vector']
+    col_values = spec_dict['columns'][col_name]['original_values']
+
+    result = np.random.choice(col_values, num_rows, col_prob)
+    return pd.Series(result, name=col_name)
+
+
+def generate_complete_series(spec_dict, col_name):
+    '''
+    This function doesn't take num_rows argument because
+    we are always generating the full number of rows
+    for this column as specified in the spec.
+
+    Function path depends on the column type.
+
+    '''
+    col_type = spec_dict['columns'][col_name]['type']
     pass

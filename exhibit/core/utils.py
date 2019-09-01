@@ -66,7 +66,7 @@ def read_with_date_parser(path):
         for x in df.loc[0, :].iteritems():
             time_col = date_parser(x)
             if not time_col is None:
-                df[time_col] = pd.to_datetime(df[time_col])
+                df[time_col] = pd.to_datetime(df[time_col], dayfirst=True)
                 
         return df
     
@@ -153,6 +153,9 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None):
     
     if types is None:
         types = ['categorical', 'date', 'continuous']
+    
+    if not isinstance(types, list):
+        types = [types]
 
     attrs = []
 
