@@ -86,5 +86,18 @@ def generate_complete_series(spec_dict, col_name):
     Function path depends on the column type.
 
     '''
-    col_type = spec_dict['columns'][col_name]['type']
-    pass
+    col_attrs = spec_dict['columns'][col_name]
+    
+    if col_attrs['type'] == "date":
+
+        result = pd.date_range(
+            start=col_attrs['from'],
+            end=col_attrs['to'],
+            freq=col_attrs['frequency'],            
+        )
+        return pd.Series(result, name=col_name)
+
+    elif col_attrs['type'] == 'categorical':
+
+        return pd.Series(col_attrs['original_values'], name=col_name)
+        
