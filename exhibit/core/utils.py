@@ -100,6 +100,8 @@ def guess_date_frequency(timeseries):
 
     If the period between two unique timestamps is between 28 and 31 days
     then we guess it's a monthly timerseries and so on.
+
+    See description of time alises on Pandas website.
     '''
     
     time_diff_counts = (timeseries
@@ -111,24 +113,24 @@ def guess_date_frequency(timeseries):
     if len(time_diff_counts.index) == 1:
 
         if time_diff_counts.index[0].days == 1:
-            return "day"        
+            return "D"        
         elif time_diff_counts.index[0].days in range(28, 32):
-            return "month"
+            return "MS"
         elif time_diff_counts.index[0].days in range(90, 93):
-            return "quarter"
+            return "QS"
         elif time_diff_counts.index[0].days in range(365, 367):
-            return "year"
+            return "YS"
     
     elif time_diff_counts.index[0].days - time_diff_counts.index[1].days in range(0, 3):
         
         if time_diff_counts.index[0].days == 1:
-            return "day"
+            return "D"
         elif time_diff_counts.index[0].days in range(28, 32):
-            return "month"
+            return "MS"
         elif time_diff_counts.index[0].days in range(90, 93):
-            return "quarter"
+            return "QS"
         elif time_diff_counts.index[0].days in range(365, 367):
-            return "year"
+            return "YS"
         
     else:
         return None
