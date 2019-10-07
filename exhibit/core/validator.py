@@ -98,7 +98,7 @@ class newValidator:
 
         for c, v in get_attr_values(
                 spec_dict, 'probability_vector', col_names=True, types=['categorical']):
-            if not math.isclose(sum(v), 1, rel_tol=1e-5):
+            if not math.isclose(sum(v), 1, rel_tol=1e-1):
                 print(fail_msg.replace("err_col", c))
                 return False
         return True

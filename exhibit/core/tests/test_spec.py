@@ -32,7 +32,7 @@ class specsTests(unittest.TestCase):
         '''
         test_spec = tm.newSpec(ref_df)
 
-        expected_keys = ['metadata', 'columns', 'constraints', 'demo_records']
+        expected_keys = ['metadata', 'columns', 'constraints', 'derived_columns', 'demo_records']
 
         self.assertListEqual(
             sorted(test_spec.output.keys()),

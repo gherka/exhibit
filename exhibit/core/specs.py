@@ -9,6 +9,7 @@ import numpy as np
 from exhibit.core.utils import guess_date_frequency, find_linked_columns
 from exhibit.core.utils import linkedColumnsTree, generate_id
 from exhibit.core.sql import create_temp_table
+from exhibit.core.generator import generate_weights
 
 class newSpec:
     '''
@@ -19,14 +20,21 @@ class newSpec:
 
         self.df = data.copy()
         self.id = generate_id()
-        self.numerical_cols = self.df.select_dtypes(include=np.number).columns.values
+        self.numerical_cols = list(self.df.select_dtypes(include=np.number).columns.values)
+        self.cat_cols = list(self.df.select_dtypes(exclude=np.number).columns.values)
+        self.time_cols = [col for col in self.df.columns.values
+                         if is_datetime64_dtype(self.df.dtypes[col])]
         self.output = {
             'metadata': {
                 "number_of_rows": self.df.shape[0],
+                "categorical_columns": self.cat_cols,
+                "numerical_columns": self.numerical_cols,
+                "time_columns": self.time_cols,
                 "id":self.id
             },
             'columns': {},
-            'constraints':{},
+            'constraints': {},
+            'derived_columns': {},
             'demo_records': {},
             }
 
@@ -36,16 +44,16 @@ class newSpec:
         save the min-max bounds of each continous
         measure of the dataframe
         '''
-        value_bounds = {}
+        weights = {}
 
         for num_col in self.numerical_cols:
 
             group = self.df.groupby(col)[num_col].agg(
                 [('minimum', 'min'), ('maximum', 'max')]
             )
-            #unpack the tuple (value, min, max) into a dictionary
-            value_bounds[num_col] = [{x[0]:(x[1], x[2])} for x in
-                                     group.itertuples(name=None)]
+
+            weights[num_col] = generate_weights(self.df, col, num_col)
+
                                      
         categorical_d = {
             'type': 'categorical',
@@ -54,15 +62,15 @@ class newSpec:
             'probability_vector': (self.df[col]
                                    .value_counts()
                                    .sort_index(kind="mergesort")
-                                   .apply(lambda x: x / len(self.df))
+                                   .apply(lambda x: round(x / len(self.df), 3))
                                    .values
                                    .tolist()),
+            'weights': weights,
             'allow_missing_values': True,
             'miss_probability': 0,
             'anonymise':True,
             'anonymising_set':'random',
-            'anonymised_values':[],
-            'value_bounds':value_bounds,
+            'anonymised_values':[]
         }
 
         return categorical_d
@@ -97,8 +105,7 @@ class newSpec:
             'anonymising_pattern':'random',
             'allow_missing_values': bool(self.df[col].isna().any()),
             'miss_probability': 0,
-            'mean': float(self.df[col].mean()),
-            'sigma': float(self.df[col].std()),
+            'sum': float(self.df[col].sum())
         }
 
         return cont_d

@@ -22,7 +22,8 @@ from exhibit.core.utils import get_attr_values
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 from exhibit.core.generator import (generate_linked_anon_df,
-                                    generate_anon_series, generate_complete_series)
+                                    generate_anon_series, generate_complete_series,
+                                    generate_weights_table, generate_cont_val)
 
 class newExhibit:
     '''
@@ -213,6 +214,15 @@ class newExhibit:
 
         #8) GENERATE CONTINUOUS VARIABLES
 
+        wt = generate_weights_table(self.spec_dict)
+
+    
+        for num_col in self.spec_dict['metadata']['numerical_columns']:
+
+            anon_df[num_col] = anon_df.apply(
+                generate_cont_val,
+                args=(wt, num_col, self.spec_dict['columns'][num_col]['sum'], 18),
+                axis=1)
 
         # 9) WRITE THE ANONYMISED DATAFRAME TO .CSV
         if self.args.output is None:

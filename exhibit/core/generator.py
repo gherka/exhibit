@@ -5,27 +5,110 @@ Various functions to generate anonymised data
 # Standard library imports
 import sqlite3
 from contextlib import closing
+from itertools import chain
 
 # External library imports
-from scipy.stats import truncnorm
 import pandas as pd
 import numpy as np
 
 # Exhibit import
 from exhibit.core.utils import package_dir
 
-def truncated_normal(mean, sigma, lower, upper, size, decimal=False):
+
+def generate_weights(df, cat_col, num_col):
     '''
-    Returns a numpy array with numbers drawn from a normal
-    distribution truncated by lower and upper parameters.
+    Returns a list of weights in ascending order of values
+    Rounded to 3 digits.
     '''
     
-    a = (lower - mean) / sigma
-    b = (upper - mean) / sigma
+    weights = df.groupby([cat_col])[num_col].sum()
+    ws = round(weights / weights.sum(), 3)
+    
+    output = ws.sort_index(kind="mergesort").to_list()
+    
+    return output
 
-    if decimal:
-        return truncnorm(a, b, loc=mean, scale=sigma).rvs(size=size)
-    return truncnorm(a, b, loc=mean, scale=sigma).rvs(size=size).astype(int)
+
+def generate_weights_table(spec):
+    '''
+    Be wary of multiple time columns!
+    
+    We only want to generate weigths for the LAST
+    aka most granular column among the linked columns
+    to avoid applying the weights twice to the same 
+    "cut" of the data.
+    '''
+    
+    tuple_list = []
+    
+    num_cols = set(spec['metadata']['numerical_columns'])
+    cat_cols = set(spec['metadata']['categorical_columns'])
+    time_cols = set(spec['metadata']['time_columns'])
+    
+    all_linked_cols = list(
+        chain.from_iterable([x[1] for x in spec['constraints']['linked_columns']])
+    )
+    last_linked_cols = [x[1][-1] for x in spec['constraints']['linked_columns']]
+    
+    
+    target_cols = list(cat_cols - time_cols)
+        
+    #iterate over a new list
+    for col in list(target_cols):
+        #if column is linked, but not the most granular, remove it
+        if (col in all_linked_cols) & (col not in last_linked_cols):
+            target_cols.remove(col)
+       
+    for cat_col in target_cols:   
+
+        for num_col in num_cols:
+    
+            ws = spec['columns'][cat_col]['weights'][num_col]
+            ws_vals = spec['columns'][cat_col]['original_values']
+            
+            for val, weight in zip(ws_vals, ws):
+            
+                tuple_list.append((num_col, cat_col, val, weight))
+
+    output_df = pd.DataFrame(tuple_list,
+                             columns=['num_col', 'cat_col', 'cat_value', 'weight'])    
+    return output_df.set_index(['num_col', 'cat_col', 'cat_value'])
+
+
+def generate_cont_val(row, weights_table, num_col, num_col_sum, time_factor):
+    '''
+    
+    Super inefficient, non-vectorised function
+    
+    Given a dataframe row:
+    
+    1)
+        for each value in row, try to find an entry in the weights table
+    2)
+        apply weights to the sum of the cont_colto get a "center value"
+        and divide by the number of lowest time values (months)
+    3)
+        Next, calculate deciles and their standard deviations
+    
+    4) 
+        Finally, create a range around the center value +-
+        standard deviation of the decile in which the center value
+        falls.
+    
+    5) 
+        Get a random value from the range.
+    '''
+            
+    for cat_col, val in row.iteritems():
+                
+        try:
+            weight = weights_table.loc[num_col, cat_col, val]['weight']
+            num_col_sum = num_col_sum * weight
+        except:
+            continue
+            
+    return round(num_col_sum / time_factor, 0)
+
 
 def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     '''
@@ -51,7 +134,9 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         c.execute(sql)
         result = c.fetchall()
 
-    base_col_prob = spec_dict['columns'][base_col]['probability_vector']
+    base_col_prob = np.array(spec_dict['columns'][base_col]['probability_vector'])
+
+    base_col_prob /= base_col_prob.sum()
 
     idx = np.random.choice(len(result), num_rows, p=base_col_prob)
     anon_list = [result[x] for x in idx]
