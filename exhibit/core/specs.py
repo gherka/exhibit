@@ -105,7 +105,8 @@ class newSpec:
             'anonymising_pattern':'random',
             'allow_missing_values': bool(self.df[col].isna().any()),
             'miss_probability': 0,
-            'sum': float(self.df[col].sum())
+            'sum': float(self.df[col].sum()),
+            'dispersion': 0.1
         }
 
         return cont_d

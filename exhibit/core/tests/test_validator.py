@@ -81,3 +81,39 @@ class validatorTests(unittest.TestCase):
         }
         
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict))
+
+
+    def test_num_of_weights(self):
+        '''
+        Weights for each numerical column for each categorical column
+        should number the same as the number of values for that
+        categorical column
+        '''
+
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board Code": {
+                    "type":"categorical",
+                    "uniques": 4,
+                    "weights": {
+
+                        "C1":[1,2,3,4],
+                        "C2":[1,2,3]
+                    }
+                },
+                "Board":  {
+                    "type":"time",
+                    "uniques": 4,
+                    "weights": {
+                        "C1":[1,2,3,4],
+                        "C2":[1,2,3]
+                    }
+                }
+            }        
+        }
+        
+        self.assertFalse(tm.validate_num_of_weights(validatorMock, spec_dict=test_dict))
+
+

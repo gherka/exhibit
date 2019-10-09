@@ -103,6 +103,42 @@ class newValidator:
                 return False
         return True
 
+    def validate_num_of_weights(self, spec_dict=None):
+        '''
+        User shouldn't be able to create or remove a weight value
+        if there isn't a corresponding categorical value for it
+        '''
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: number of %(err_col)s weights for %(col)s(%(weights_num)s)
+        is not equal to the number of unique values(%(value_count)s)
+        """)
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        for c, v in get_attr_values(
+                spec_dict, 'weights', col_names=True, types=['categorical']):
+
+            count = spec_dict['columns'][c]['uniques']
+
+            for wcol in v.keys():
+
+                wcount = len(v[wcol])
+                if wcount != count:
+
+                    print(fail_msg % {
+
+                        "err_col" : wcol,
+                        "col" : c,
+                        "weights_num" : wcount,
+                        "value_count" : count
+                    })
+                    return False
+
+        return True
+
+
     def validate_linked_cols(self, spec_dict=None):
         '''
         All linked columns should share allow_missing_values

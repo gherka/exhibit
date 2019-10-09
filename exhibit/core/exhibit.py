@@ -23,7 +23,8 @@ from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 from exhibit.core.generator import (generate_linked_anon_df,
                                     generate_anon_series, generate_complete_series,
-                                    generate_weights_table, generate_cont_val)
+                                    generate_weights_table, generate_cont_val,
+                                    apply_dispersion)
 
 class newExhibit:
     '''
@@ -223,6 +224,15 @@ class newExhibit:
                 generate_cont_val,
                 args=(wt, num_col, self.spec_dict['columns'][num_col]['sum'], 18),
                 axis=1)
+
+            d = self.spec_dict['columns'][num_col]['dispersion']
+
+            anon_df[num_col] = anon_df[num_col].apply(
+
+                apply_dispersion,
+                args=[d]
+            )
+
 
         # 9) WRITE THE ANONYMISED DATAFRAME TO .CSV
         if self.args.output is None:

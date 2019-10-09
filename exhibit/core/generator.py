@@ -28,6 +28,21 @@ def generate_weights(df, cat_col, num_col):
     
     return output
 
+def apply_dispersion(value, dispersion_pct):
+    '''
+    Simply take a random positive value from a range
+    created by +- the dispersion value (which is 
+    expressed as a percentage)
+    '''
+    d = int(value * dispersion_pct)
+    rmin, rmax = (max(0, (value - d)), (value + d))
+
+    #Make sure you get at least a range of 1
+    if rmin <= (1 / dispersion_pct):
+        return np.random.randint(0, (1 / dispersion_pct))
+
+    return np.random.randint(rmin, rmax)
+
 
 def generate_weights_table(spec):
     '''
@@ -106,7 +121,7 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, time_factor):
             num_col_sum = num_col_sum * weight
         except:
             continue
-            
+    
     return round(num_col_sum / time_factor, 0)
 
 
