@@ -5,6 +5,7 @@ Unit and reference tests for the Exhibit package
 # Standard library imports
 import unittest
 from unittest.mock import Mock
+from copy import deepcopy
 
 # External library imports
 import yaml
@@ -68,10 +69,14 @@ class validatorTests(unittest.TestCase):
         test_dict = {
             "columns": {
                 "Board Code": {
-                    "allow_missing_values": False
+                    "allow_missing_values": True,
+                    "anonymise": True,
+                    "anonymising_set": "random"
                 },
                 "Board":  {
-                    "allow_missing_values": True
+                    "allow_missing_values": True,
+                    "anonymise": True,
+                    "anonymising_set": "random"
                 },
             },
             "constraints": {
@@ -79,8 +84,19 @@ class validatorTests(unittest.TestCase):
             }
         
         }
+
+        test_dict1 = deepcopy(test_dict)
+        test_dict1['columns']['Board']['allow_missing_values'] = False
+
+        test_dict2 = deepcopy(test_dict)
+        test_dict2['columns']['Board']['anonymise'] = False
+
+        test_dict3 = deepcopy(test_dict)
+        test_dict3['columns']['Board']['anonymising_set'] = "fish"
         
-        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict))
+        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict1))
+        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict2))
+        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict3))
 
 
     def test_num_of_weights(self):
@@ -116,4 +132,20 @@ class validatorTests(unittest.TestCase):
         
         self.assertFalse(tm.validate_num_of_weights(validatorMock, spec_dict=test_dict))
 
+    def test_anonymising_sets(self):
+        '''
+        So far, only two are available: mountain ranges and random
+        '''
 
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board Code": {
+                    "type":"categorical",
+                    "anonymising_set": "fish"
+                }
+            }
+        }
+
+        self.assertFalse(tm.validate_anonymising_sets(validatorMock, spec_dict=test_dict))

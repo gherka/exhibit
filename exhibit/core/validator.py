@@ -141,22 +141,63 @@ class newValidator:
 
     def validate_linked_cols(self, spec_dict=None):
         '''
-        All linked columns should share allow_missing_values
-        attribute
+        All linked columns should share certain attributes
         '''
         if spec_dict is None:
             spec_dict = self.spec_dict
 
+        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set', 'anonymise']
+
         fail_msg = textwrap.dedent("""
-        VALIDATION FAIL: linked columns must have matching allow_missing_values attributes
+        VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
         """)
 
         for linked_col_group in spec_dict['constraints']['linked_columns']:
+            #linked_columns[0] is the index of linked group; actual columns are [1] 
             linked_cols = linked_col_group[1]
-            group_flags = []
-            for col in linked_cols:
-                group_flags.append(spec_dict["columns"][col]['allow_missing_values'])
-            if len(set(group_flags)) != 1:
-                print(fail_msg)
-                return False
+
+            for attr in LINKED_ATTRS:
+
+                group_flags = []
+
+                for col in linked_cols:
+                
+                    group_flags.append(spec_dict["columns"][col][attr])
+
+                if len(set(group_flags)) != 1:
+
+                    print(fail_msg % {
+                            "err_attr" : attr
+                        })
+
+                    return False
+
         return True
+
+    def validate_anonymising_sets(self, spec_dict=None):
+        '''
+        So far, only two are available: mountain ranges and random
+        '''
+
+        VALID_SETS = ['random', 'mountain']
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: %(anon_set)s in column %(col)s is not a valid anonymising set
+        """)
+
+        for c, v in get_attr_values(
+            spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
+
+            if v not in VALID_SETS:
+
+                print(fail_msg % {
+
+                        "anon_set" : v,
+                        "col" : c
+                    })
+                return False
+            return True
+            
