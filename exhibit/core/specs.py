@@ -56,6 +56,7 @@ class newSpec:
             'original_values' : build_table_from_lists(
                 self.df[col],
                 len(self.df),
+                self.numerical_cols,
                 weights),
             'allow_missing_values': True,
             'miss_probability': 0,
