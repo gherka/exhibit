@@ -15,6 +15,59 @@ import textwrap
 import pandas as pd
 import yaml
 
+def build_list_of_original_values(series):
+    '''
+    Return a padded list of strings
+    '''
+    original_values = sorted(series.unique().tolist())
+    longest = len(max(original_values, key=len))
+
+    padded_values = [x.ljust(longest + 1) for x in original_values]
+
+    return padded_values
+
+
+def build_list_of_probability_vectors(series, total_count):
+    '''
+    Return a list of probability vectors as strings
+    '''
+    vectors = (series
+        .value_counts()
+        .sort_index(kind="mergesort")
+        .apply(lambda x: x / total_count)
+        .values
+        .tolist())
+
+    string_vectors = ["{0:.3f} ".format(x) for x in vectors]
+
+    return string_vectors
+
+def build_list_of_column_weights(weights):
+    '''
+    weights is a dictionary {col_name: list_of_weights}
+    '''
+
+    sorted_weights = [weights[key] for key in sorted(weights)]
+
+    sorted_final = [" | ".join(
+        ["{0:.3f}".format(y) for y in x])
+        for x in zip(*sorted_weights)]
+
+    return sorted_final
+    
+
+def build_table_from_lists(series, total_count, weights):
+    '''
+    Doc string
+    '''
+    s1 = build_list_of_original_values(series)
+    s2 = build_list_of_probability_vectors(series, total_count)
+    s3 = build_list_of_column_weights(weights)
+
+    final = ["| ".join(x) for x in zip(s1, s2, s3)]
+
+    return final
+
 def path_checker(string):
     '''
     Improves error message for user if wrong path entered.

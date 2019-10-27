@@ -8,6 +8,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import guess_date_frequency, find_linked_columns
 from exhibit.core.utils import linkedColumnsTree, generate_id
+from exhibit.core.utils import build_table_from_lists
 from exhibit.core.sql import create_temp_table
 from exhibit.core.generator import generate_weights
 
@@ -28,7 +29,7 @@ class newSpec:
             'metadata': {
                 "number_of_rows": self.df.shape[0],
                 "categorical_columns": self.cat_cols,
-                "numerical_columns": self.numerical_cols,
+                "numerical_columns": sorted(self.numerical_cols),
                 "time_columns": self.time_cols,
                 "id":self.id
             },
@@ -40,32 +41,22 @@ class newSpec:
 
     def categorical_dict(self, col):
         '''
-        For each value in the categorical column
-        save the min-max bounds of each continous
-        measure of the dataframe
+        Create a dictionary with information summarising
+        the categorical column "col"
         '''
         weights = {}
 
         for num_col in self.numerical_cols:
 
-            group = self.df.groupby(col)[num_col].agg(
-                [('minimum', 'min'), ('maximum', 'max')]
-            )
-
             weights[num_col] = generate_weights(self.df, col, num_col)
 
-                                     
         categorical_d = {
             'type': 'categorical',
             'uniques': self.df[col].nunique(),
-            'original_values': sorted(self.df[col].unique().tolist()),
-            'probability_vector': (self.df[col]
-                                   .value_counts()
-                                   .sort_index(kind="mergesort")
-                                   .apply(lambda x: round(x / len(self.df), 3))
-                                   .values
-                                   .tolist()),
-            'weights': weights,
+            'original_values' : build_table_from_lists(
+                self.df[col],
+                len(self.df),
+                weights),
             'allow_missing_values': True,
             'miss_probability': 0,
             'anonymise':True,
