@@ -13,6 +13,7 @@ import math
 
 # External library imports
 import yaml
+import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import get_attr_values
@@ -131,6 +132,8 @@ class newValidator:
                 types=['categorical']):
 
             values_table = parse_original_values_into_dataframe(v)
+            #replace blank cells ('') with np.nan
+            values_table.replace('', np.nan, inplace=True)
 
             if any(values_table.isna().any()):
 

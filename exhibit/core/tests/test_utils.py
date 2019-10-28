@@ -103,15 +103,15 @@ class helperTests(unittest.TestCase):
     def test_get_attr_values(self):
         '''
         This test might fail as the test_spec is updated
-        because of "magic" test numbers, like 7.
+        because of "magic" test numbers, like 6.
         '''
         
         with open(package_dir("tests", "test_spec.yml")) as f:
             test_spec = yaml.safe_load(f)
 
-        #there are 7 columns in the test spec
-        test_list = tm.get_attr_values(test_spec, "uniques")
-        self.assertEqual(len(test_list), 7)
+        #there are 5 categorical columns in the test spec
+        test_list = tm.get_attr_values(test_spec, "uniques", types=['categorical'])
+        self.assertEqual(len(test_list), 5)
 
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")

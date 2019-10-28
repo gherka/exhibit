@@ -50,9 +50,10 @@ class validatorTests(unittest.TestCase):
         with open(package_dir("tests", "test_spec.yml")) as f:
             test_spec = yaml.safe_load(f)
         
-        test_vector = [0.5, 0.8]
-        test_spec['columns']['Location']['probability_vector'] = test_vector
-
+        #modify list in place
+        original_values_list = test_spec['columns']['hb_name']['original_values']
+        original_values_list[-1] = "Scotland| 1 | 0.016 | 0.333 | 0.333"
+        
         validatorMock = Mock()
 
         test_func = tm.validate_probability_vector(validatorMock, test_spec)
@@ -101,9 +102,7 @@ class validatorTests(unittest.TestCase):
 
     def test_validator_no_nulls(self):
         '''
-        Weights for each numerical column for each categorical column
-        should number the same as the number of values for that
-        categorical column
+        Doc string
         '''
 
         validatorMock = Mock()
