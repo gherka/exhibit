@@ -130,8 +130,9 @@ class newSpec:
 
         #Add linked column values to the temp tables in anon_db
         for linked_group_tuple in linked_tree:
-
+        
             data = list(self.df.groupby(linked_group_tuple[1]).groups.keys())
+
             #Column names can't have spaces; replace with $ and then back when
             #reading the data from the SQLite DB at execution stage. 
             create_temp_table(

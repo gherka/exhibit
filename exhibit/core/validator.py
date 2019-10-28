@@ -16,11 +16,12 @@ import yaml
 
 # Exhibit imports
 from exhibit.core.utils import get_attr_values
+from exhibit.core.formatters import parse_original_values_into_dataframe
 
 class newValidator:
     '''
     Add any methods used to validate the spec prior to
-    executing it to this class. All methods that 
+    executing it to this class. All methods that
     start with "validate" will be run before data is generated.
     '''
 
@@ -29,7 +30,7 @@ class newValidator:
         Save the spec path as class attribute and validate
         the format of the spec
         '''
-        
+
         if spec_path.suffix == '.yml':
             with open(spec_path) as f:
                 self.spec_dict = yaml.safe_load(f)
@@ -76,7 +77,8 @@ class newValidator:
         min_combi = reduce(mul, nums)
 
         fail_msg = textwrap.dedent(f"""
-        VALIDATION FAIL: Requested number of rows is below the minimum possible combintations({min_combi})
+        VALIDATION FAIL: Requested number of rows is below the
+        minimum possible combintations({min_combi})
         """)
         
         if spec_dict['metadata']['number_of_rows'] < min_combi:
@@ -97,45 +99,44 @@ class newValidator:
             spec_dict = self.spec_dict
 
         for c, v in get_attr_values(
-                spec_dict, 'probability_vector', col_names=True, types=['categorical']):
-            if not math.isclose(sum(v), 1, rel_tol=1e-1):
+                spec_dict,
+                'original_values',
+                col_names=True,
+                types=['categorical']):
+
+            prob_vector = parse_original_values_into_dataframe(v)["probability_vector"]
+
+            if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
                 print(fail_msg.replace("err_col", c))
                 return False
         return True
 
-    def validate_num_of_weights(self, spec_dict=None):
+    def validate_weights_and_probability_vector_have_no_nulls(self, spec_dict=None):
         '''
-        User shouldn't be able to create or remove a weight value
-        if there isn't a corresponding categorical value for it
+        The original values pseudo-csv table shouldn't have any nulls
         '''
 
         fail_msg = textwrap.dedent("""
-        VALIDATION FAIL: number of %(err_col)s weights for %(col)s(%(weights_num)s)
-        is not equal to the number of unique values(%(value_count)s)
+        VALIDATION FAIL: One or more values in the probability vector or
+        column weights of column %(err_col)s is null.
         """)
 
         if spec_dict is None:
             spec_dict = self.spec_dict
 
         for c, v in get_attr_values(
-                spec_dict, 'weights', col_names=True, types=['categorical']):
+                spec_dict,
+                'original_values',
+                col_names=True,
+                types=['categorical']):
 
-            count = spec_dict['columns'][c]['uniques']
+            values_table = parse_original_values_into_dataframe(v)
 
-            for wcol in v.keys():
+            if any(values_table.isna().any()):
 
-                wcount = len(v[wcol])
-                if wcount != count:
-
-                    print(fail_msg % {
-
-                        "err_col" : wcol,
-                        "col" : c,
-                        "weights_num" : wcount,
-                        "value_count" : count
-                    })
-                    return False
-
+                print(fail_msg % {"err_col" : c})
+                return False
+                
         return True
 
 
@@ -166,10 +167,7 @@ class newValidator:
 
                 if len(set(group_flags)) != 1:
 
-                    print(fail_msg % {
-                            "err_attr" : attr
-                        })
-
+                    print(fail_msg % {"err_attr" : attr})
                     return False
 
         return True
@@ -189,14 +187,13 @@ class newValidator:
         """)
 
         for c, v in get_attr_values(
-            spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
+                spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
 
             if v not in VALID_SETS:
 
                 print(fail_msg % {
-
-                        "anon_set" : v,
-                        "col" : c
+                    "anon_set" : v,
+                    "col" : c
                     })
                 return False
             return True

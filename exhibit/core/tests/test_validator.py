@@ -99,7 +99,7 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict3))
 
 
-    def test_num_of_weights(self):
+    def test_validator_no_nulls(self):
         '''
         Weights for each numerical column for each categorical column
         should number the same as the number of values for that
@@ -113,24 +113,17 @@ class validatorTests(unittest.TestCase):
                 "Board Code": {
                     "type":"categorical",
                     "uniques": 4,
-                    "weights": {
+                    "original_values": [
 
-                        "C1":[1,2,3,4],
-                        "C2":[1,2,3]
-                    }
-                },
-                "Board":  {
-                    "type":"time",
-                    "uniques": 4,
-                    "weights": {
-                        "C1":[1,2,3,4],
-                        "C2":[1,2,3]
-                    }
-                }
-            }        
+                        "name|probability_vector|A|B|C",
+                        "D|0.5|0.5|0.5|0.5",
+                        "E|0.6||0.5|0.5",
+                    ]
+                }     
+            }
         }
-        
-        self.assertFalse(tm.validate_num_of_weights(validatorMock, spec_dict=test_dict))
+        self.assertFalse(tm.validate_weights_and_probability_vector_have_no_nulls(
+            validatorMock, spec_dict=test_dict))
 
     def test_anonymising_sets(self):
         '''
@@ -148,4 +141,6 @@ class validatorTests(unittest.TestCase):
             }
         }
 
-        self.assertFalse(tm.validate_anonymising_sets(validatorMock, spec_dict=test_dict))
+        self.assertFalse(
+            tm.validate_anonymising_sets(validatorMock, spec_dict=test_dict)
+            )

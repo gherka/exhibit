@@ -247,7 +247,7 @@ def find_linked_columns(df):
     Columns with the same value in all rows are skipped.
 
     The column that maps 1 to many is appended first,
-    juding by the number of unique values it has.
+    judging by the number of unique values it has.
     '''
     linked = []
     

@@ -67,6 +67,7 @@ def purge_temp_tables(db_uri=None):
         for table in table_names:
             if 'temp' in table[0]:
                 c.execute(f"DROP TABLE {table[0]}")
+        conn.execute("VACUUM")
         conn.commit()
 
 

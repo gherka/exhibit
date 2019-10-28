@@ -31,7 +31,7 @@ class exhibitTests(unittest.TestCase):
         and assert that the program reads the same data as ref_df.
         '''
         mock_args.return_value = argparse.Namespace(
-            source=Path(package_dir('sampledata', '_data', 'basic.csv')),
+            source=Path(package_dir('sampledata', '_data', 'inpatients.csv')),
             verbose=True,
         )
 
