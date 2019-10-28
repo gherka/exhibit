@@ -8,7 +8,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import guess_date_frequency, find_linked_columns
 from exhibit.core.utils import linkedColumnsTree, generate_id
-from exhibit.core.utils import build_table_from_lists
+from exhibit.core.formatters import build_table_from_lists
 from exhibit.core.sql import create_temp_table
 from exhibit.core.generator import generate_weights
 

@@ -17,14 +17,14 @@ import yaml
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.utils import path_checker, read_with_date_parser, generate_YAML_string
+from exhibit.core.utils import path_checker, read_with_date_parser
 from exhibit.core.utils import get_attr_values
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 from exhibit.core.generator import (generate_linked_anon_df,
                                     generate_anon_series, generate_complete_series,
                                     generate_weights_table, generate_cont_val,
-                                    apply_dispersion)
+                                    apply_dispersion, generate_YAML_string)
 
 class newExhibit:
     '''
