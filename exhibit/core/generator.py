@@ -15,6 +15,7 @@ import yaml
 
 # Exhibit import
 from exhibit.core.utils import package_dir
+from exhibit.core.formatters import parse_original_values_into_dataframe
 
 
 def generate_weights(df, cat_col, num_col):
@@ -76,12 +77,16 @@ def generate_weights_table(spec):
         if (col in all_linked_cols) & (col not in last_linked_cols):
             target_cols.remove(col)
        
-    for cat_col in target_cols:   
+    for cat_col in target_cols:
+
+        #get the original values with weights DF
+        ws_df = parse_original_values_into_dataframe(
+            spec['columns'][cat_col]['original_values'])
 
         for num_col in num_cols:
     
-            ws = spec['columns'][cat_col]['weights'][num_col]
-            ws_vals = spec['columns'][cat_col]['original_values']
+            ws = ws_df[num_col]
+            ws_vals = ws_df['name']
             
             for val, weight in zip(ws_vals, ws):
             
@@ -92,7 +97,7 @@ def generate_weights_table(spec):
     return output_df.set_index(['num_col', 'cat_col', 'cat_value'])
 
 
-def generate_cont_val(row, weights_table, num_col, num_col_sum, time_factor):
+def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor):
     '''
     
     Super inefficient, non-vectorised function
@@ -102,8 +107,9 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, time_factor):
     1)
         for each value in row, try to find an entry in the weights table
     2)
-        apply weights to the sum of the cont_colto get a "center value"
-        and divide by the number of lowest time values (months)
+        apply weights to the sum of the cont_col to get a "center value"
+        and divide by the number of of "complete" values generated for
+        every "other", probabilistically drawn, value.
     3)
         Next, calculate deciles and their standard deviations
     
@@ -124,7 +130,7 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, time_factor):
         except:
             continue
     
-    return round(num_col_sum / time_factor, 0)
+    return round(num_col_sum / complete_factor, 0)
 
 
 def generate_linked_anon_df(spec_dict, linked_group, num_rows):
@@ -151,7 +157,10 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         c.execute(sql)
         result = c.fetchall()
 
-    base_col_prob = np.array(spec_dict['columns'][base_col]['probability_vector'])
+    base_col_df = parse_original_values_into_dataframe(
+        spec_dict['columns'][base_col]['original_values'])
+
+    base_col_prob = np.array(base_col_df['probability_vector'])
 
     base_col_prob /= base_col_prob.sum()
 
@@ -171,9 +180,12 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
     if col_type != "categorical":
         raise TypeError
+    
+    col_df = parse_original_values_into_dataframe(
+        spec_dict['columns'][col_name]['original_values'])
 
-    col_prob = spec_dict['columns'][col_name]['probability_vector']
-    col_values = spec_dict['columns'][col_name]['original_values']
+    col_prob = col_df['probability_vector'].to_list()
+    col_values = col_df['name'].to_list()
 
     result = np.random.choice(col_values, num_rows, col_prob)
     return pd.Series(result, name=col_name)

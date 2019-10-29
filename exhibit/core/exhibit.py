@@ -192,7 +192,8 @@ class newExhibit:
 
         #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
         complete_series = []
-        for col in self.spec_dict['columns'].keys():
+
+        for col in self.spec_dict['columns']:
             if col in core_cols:
                 s = generate_complete_series(self.spec_dict, col)
                 complete_series.append(s)
@@ -216,13 +217,17 @@ class newExhibit:
         #8) GENERATE CONTINUOUS VARIABLES
 
         wt = generate_weights_table(self.spec_dict)
+        complete_factor = sum([len(x) for x in complete_series])
 
-    
         for num_col in self.spec_dict['metadata']['numerical_columns']:
 
             anon_df[num_col] = anon_df.apply(
                 generate_cont_val,
-                args=(wt, num_col, self.spec_dict['columns'][num_col]['sum'], 18),
+                args=(
+                    wt,
+                    num_col,
+                    self.spec_dict['columns'][num_col]['sum'],
+                    complete_factor),
                 axis=1)
 
             d = self.spec_dict['columns'][num_col]['dispersion']
