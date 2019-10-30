@@ -7,6 +7,7 @@ import sqlite3
 from contextlib import closing
 from itertools import chain
 import textwrap
+import re
 
 # External library imports
 import pandas as pd
@@ -17,6 +18,17 @@ import yaml
 from exhibit.core.utils import package_dir
 from exhibit.core.formatters import parse_original_values_into_dataframe
 
+def generate_derived_column(anon_df, calculation):
+    '''
+    Columns passed in calculation can have spaces hence RE
+    Returns series
+    '''
+    safe_calculation = re.sub(r'\b\s\b', r'_', calculation)
+    output = (anon_df
+        .rename(columns=lambda x: x.replace(" ", "_"))
+        .eval(safe_calculation)
+    )
+    return output  
 
 def generate_weights(df, cat_col, num_col):
     '''
@@ -261,11 +273,13 @@ def generate_YAML_string(spec_dict):
 
     c4 = textwrap.dedent("""\
     #---------------------------------------------------------
-    #Please add any rates to be calculated from anonymised
-    #numerator and denominator in this section, alongside with
-    #the calculation used. The tool will automatically include
-    #columns with the word "Rate" in the column name here and
-    #the defaul calculation is a random float between 0 and 1.
+    #Please add any derived columns to be calculated from anonymised
+    #continuous variable in this section, alongside with
+    #the calculation used. The calculation should follow the format
+    #of the evaluate method from Pandas framework: 
+    #
+    #Assuming you have Numerator column A and Denomininator column B,
+    #you would write Rate: (A / B)
     #---------------------------------------------------------
     """)
 

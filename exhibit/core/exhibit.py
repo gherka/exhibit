@@ -25,7 +25,8 @@ from exhibit.core.validator import newValidator
 from exhibit.core.generator import (generate_linked_anon_df,
                                     generate_anon_series, generate_complete_series,
                                     generate_weights_table, generate_cont_val,
-                                    apply_dispersion, generate_YAML_string)
+                                    apply_dispersion, generate_YAML_string,
+                                    generate_derived_column)
 
 class newExhibit:
     '''
@@ -147,11 +148,10 @@ class newExhibit:
     def execute_spec(self):
         '''
         Function only runs if validate_spec returned True
-        WRITE REFERENCE TESTS!
+        ISOLATE STEPS INTO FUNCTIONS AND WRITE REFERENCE TESTS!
         '''
 
         #0) SET THE RANDOM SEED
-
         np.random.seed(self.spec_dict['metadata']['random_seed'])
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
@@ -247,13 +247,19 @@ class newExhibit:
                 args=[d]
             )
 
-        # 9) WRITE THE ANONYMISED DATAFRAME TO .CSV
+        #9) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+
+        for derived_col in self.spec_dict['derived_columns']:
+            (name, calc), = derived_col.items()
+            if "Example" not in name:
+                anon_df[name] = generate_derived_column(anon_df, calc)
+
+        #10) WRITE THE ANONYMISED DATAFRAME TO .CSV
         if self.args.output is None:
             output_path = self.args.source.stem + "_DEMO" + ".csv"
         else:
             output_path = self.args.output
 
         anon_df.to_csv(output_path, index=False)
-                
 
         print("done")
