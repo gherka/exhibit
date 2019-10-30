@@ -7,6 +7,11 @@ import math
 
 # External library imports
 import pandas as pd
+import yaml
+
+# Exhibit imports
+from exhibit.core.specs import newSpec
+from exhibit.sampledata.data import basic as ref_df
 
 # Module under test
 from exhibit.core import generator as tm
@@ -15,6 +20,20 @@ class generatorTests(unittest.TestCase):
     '''
     Doc string
     '''
+
+    def test_generate_spec_returns_valid_yaml(self):
+        '''
+        Mock up intermediate read_data function and check if mocked
+        generate_spec function was called by the main function.
+
+        COMPLETE ONCE MAIN IS EMITTING PROPER SPEC
+
+        '''
+
+        test_spec_dict = newSpec(ref_df).output_spec_dict()
+        output = tm.generate_YAML_string(test_spec_dict)
+    
+        self.assertIsInstance(yaml.safe_load(output), dict)
 
     def test_generate_weights_sums_to_1(self):
         '''

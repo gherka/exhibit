@@ -15,9 +15,7 @@ import numpy as np
 import yaml
 
 # Exhibit imports
-from exhibit.core.specs import newSpec
 from exhibit.core.utils import package_dir
-from exhibit.sampledata.data import basic as ref_df
 
 # Module under test
 from exhibit.core import utils as tm
@@ -43,20 +41,6 @@ class helperTests(unittest.TestCase):
         self.assertIsInstance(
             tm.path_checker(os.getcwd()),
             Path)
-
-    def test_generate_spec_returns_valid_yaml(self):
-        '''
-        Mock up intermediate read_data function and check if mocked
-        generate_spec function was called by the main function.
-
-        COMPLETE ONCE MAIN IS EMITTING PROPER SPEC
-
-        '''
-
-        test_spec_dict = newSpec(ref_df).output_spec_dict()
-        output = tm.generate_YAML_string(test_spec_dict)
-    
-        self.assertIsInstance(yaml.safe_load(output), dict)
 
     def test_date_parser(self):
         '''

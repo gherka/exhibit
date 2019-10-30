@@ -9,11 +9,9 @@ import re
 from itertools import chain, combinations
 import datetime
 import dateutil
-import textwrap
 
 # External library imports
 import pandas as pd
-import yaml
 
 def path_checker(string):
     '''
@@ -72,76 +70,6 @@ def read_with_date_parser(path):
         return df
     
     raise TypeError("Only .csv file format is supported")
-
-def generate_YAML_string(spec_dict):
-    '''
-    Returns a string formatted to a YAML spec
-    from a passed in dictionary
-
-    We overwrite ignore_aliases() to output identical dictionaries
-    and not have them replaced by aliases like *id001
-    '''
-    
-    yaml.SafeDumper.ignore_aliases = lambda *args: True
-
-    yaml_list = [{key:value} for key, value in spec_dict.items()]
-
-    c1 = textwrap.dedent("""\
-    #---------------------------------------------------------
-    #This specification describes the dataset in great detail.
-    #In order to vary to degree to which it is anonymised,
-    #please review the sections and make necessary adjustments
-    #---------------------------------------------------------
-    """)
-
-    yaml_meta = yaml.safe_dump(yaml_list[0], sort_keys=False, width=1000)
-
-    c2 = textwrap.dedent("""\
-    #---------------------------------------------------------
-    #Dataset columns can be one of the three types: 
-    #Categorical | Continuous | Timeseries
-    #Column type determines the parameters in the specification
-    #When making changes to the values, please note their format.
-    #---------------------------------------------------------
-    """)
-
-    yaml_columns = yaml.safe_dump(yaml_list[1], sort_keys=False, width=1000)
-
-    c3 = textwrap.dedent("""\
-    #---------------------------------------------------------
-    #The tool will try to guess which columns are "linked",
-    #meaning that values cascade from one column to another.
-    #If any grouping is missed, please add it manually.
-    #---------------------------------------------------------
-    """)
-
-    yaml_constraints = yaml.safe_dump(yaml_list[2], sort_keys=False, width=1000)
-
-    c4 = textwrap.dedent("""\
-    #---------------------------------------------------------
-    #Please add any rates to be calculated from anonymised
-    #numerator and denominator in this section, alongside with
-    #the calculation used. The tool will automatically include
-    #columns with the word "Rate" in the column name here and
-    #the defaul calculation is a random float between 0 and 1.
-    #---------------------------------------------------------
-    """)
-
-    yaml_derived = yaml.safe_dump(yaml_list[3], sort_keys=False, width=1000)
-
-    c5 = textwrap.dedent("""\
-    #---------------------------------------------------------
-    #Please add any demonstrator patterns in this section.
-    #---------------------------------------------------------
-    """)
-
-    yaml_demo = yaml.safe_dump(yaml_list[4], sort_keys=False, width=1000)
-    
-    spec_yaml = (
-        c1 + yaml_meta + c2 + yaml_columns + c3 + yaml_constraints +
-        c4 + yaml_derived + c5 + yaml_demo)
-
-    return spec_yaml
 
 def guess_date_frequency(timeseries):
     '''
