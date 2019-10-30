@@ -15,6 +15,7 @@ from itertools import chain
 # External library imports
 import yaml
 import pandas as pd
+import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser
@@ -99,8 +100,12 @@ class newExhibit:
         '''
         Generating spec needs a dataframe so should only be run
         after read_data()
+
+        By default set the random seed to 0
         '''
         if not self.df is None:
+
+            np.random.seed(0)
             
             new_spec = newSpec(self.df)
 
@@ -144,6 +149,10 @@ class newExhibit:
         Function only runs if validate_spec returned True
         WRITE REFERENCE TESTS!
         '''
+
+        #0) SET THE RANDOM SEED
+
+        np.random.seed(self.spec_dict['metadata']['random_seed'])
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
         #core rows are generated from probability vectors and then
@@ -237,7 +246,6 @@ class newExhibit:
                 apply_dispersion,
                 args=[d]
             )
-
 
         # 9) WRITE THE ANONYMISED DATAFRAME TO .CSV
         if self.args.output is None:

@@ -31,6 +31,7 @@ class newSpec:
                 "categorical_columns": self.cat_cols,
                 "numerical_columns": sorted(self.numerical_cols),
                 "time_columns": self.time_cols,
+                "random_seed" : 0,
                 "id":self.id
             },
             'columns': {},
