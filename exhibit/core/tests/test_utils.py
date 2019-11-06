@@ -101,6 +101,97 @@ class helperTests(unittest.TestCase):
         test_list = tm.get_attr_values(test_spec, "spam")
         assert test_list.count(None) == len(test_list)
 
+    def test_hierarchically_linked_columns(self):
+        '''
+        Doc string
+        '''
+
+        test_df = pd.DataFrame(
+            data=np.array([
+                [
+                "All Specialties",
+                "Medical",
+                "Medical", 
+                "Medical",
+                "Surgery",
+                "Surgery",
+                "Surgery",
+                "All Specialties"],
+                [
+                "All Specialties",
+                "General Medicine",
+                "Cardiology",
+                "Rheumatology",
+                "General Surgery",
+                "Anaesthetics",
+                "Cardiothoracic Surgery",
+                "All Specialties"
+                ],
+                [
+                "All",
+                "2",
+                "3",
+                "9",
+                "10",
+                "11",
+                "12",
+                "All"
+                ],
+                ["A", "A", "A", "B", "B", "B", "B", "B"],
+                ["C", "C", "C", "D", "D", "D", "D", "D",]]).T,
+            columns=[
+                "C1", "C2", "C3", "C4", "C5"]
+        )
+
+        assert tm.find_hierarchically_linked_columns(test_df) == [
+            ("C1", "C2"), ("C1", "C3")
+        ]
+
+    def test_1_to_1_linked_columns(self):
+        '''
+        Doc string
+        '''
+
+        test_df = pd.DataFrame(
+            data=np.array([
+                [
+                "All Specialties",
+                "Medical",
+                "Medical", 
+                "Medical",
+                "Surgery",
+                "Surgery",
+                "Surgery",
+                "All Specialties"],
+                [
+                "All Specialties",
+                "General Medicine",
+                "Cardiology",
+                "Rheumatology",
+                "General Surgery",
+                "Anaesthetics",
+                "Cardiothoracic Surgery",
+                "All Specialties"
+                ],
+                [
+                "All",
+                "2",
+                "3",
+                "9",
+                "10",
+                "11",
+                "12",
+                "All"
+                ],
+                ["A", "A", "A", "B", "B", "B", "B", "B"],
+                ["C", "C", "C", "D", "D", "D", "D", "D",]]).T,
+            columns=[
+                "C1", "C2", "C3", "C4", "C5"]
+        )
+
+        assert tm.find_1_to_1_linked_columns(test_df) == [("C2", "C3"), ("C4", "C5")]
+
+
     def test_find_linked_columns(self):
         '''
         Add more test cases if need be

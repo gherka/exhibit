@@ -164,6 +164,67 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None):
                         attrs[-1] = spec_dict['columns'][col][attr]
     return attrs
 
+
+def find_hierarchically_linked_columns(df):
+    '''
+    Given a dataframe df, return a list
+    of tuples with column names where values in 
+    the second column are always paired with the 
+    same value in the first column (many:1 relationship)
+    '''
+    linked = []
+    
+    #single value columns are ignored
+    cols = [col for col in df.columns if df[col].nunique() > 1]
+    
+    #combinations produce a pair only once (AB, not AB + BA)
+    for col1, col2 in combinations(cols, 2):
+        
+        #1:many relationship exists for one of two columns
+        if (( 
+                df.groupby(col1)[col2].nunique().max() == 1 and
+                df.groupby(col2)[col1].nunique().max() > 1
+            )
+        or ( 
+                df.groupby(col1)[col2].nunique().max() > 1 and
+                df.groupby(col2)[col1].nunique().max() == 1
+            )):
+            
+        #ancestor (1 in 1:many pair) is appened first
+            
+            if df.groupby(col1)[col2].nunique().max() > 1:
+                linked.append((col1, col2))
+                
+            else:
+                linked.append((col2, col1))
+
+    return linked
+
+
+def find_1_to_1_linked_columns(df):
+    '''
+    Given a dataframe df, return a list
+    of tuples with column names where each value in 
+    one column is always paired with the 
+    same value in another.
+    '''
+    linked = []
+    
+    #single value columns are ignored
+    cols = [col for col in df.columns if df[col].nunique() > 1]
+    
+    #combinations produce a pair only once (AB, not AB + BA)
+    for col1, col2 in combinations(cols, 2):
+        
+        if ( 
+                df.groupby(col1)[col2].nunique().max() == 1 and
+                df.groupby(col2)[col1].nunique().max() == 1
+            ):
+            linked.append((col1, col2))
+
+    return linked
+
+
 def find_linked_columns(df):
     '''
     Given a dataframe df, return a list

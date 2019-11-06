@@ -139,7 +139,7 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor)
         try:
             weight = weights_table.loc[num_col, cat_col, val]['weight']
             num_col_sum = num_col_sum * weight
-        except:
+        except KeyError:
             continue
     
     return round(num_col_sum / complete_factor, 0)
