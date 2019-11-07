@@ -102,10 +102,9 @@ class newSpec:
             'paired_columns': self.list_of_paired_cols(col),
             'uniques': self.df[col].nunique(),
             'original_values' : build_table_from_lists(
-                check=self.to_build_original_list(col),
-                series=self.df[col],
-                total_count=len(self.df),
-                numeric_cols=self.numerical_cols,
+                required=self.to_build_original_list(col),
+                original_series=self.df[col],
+                numerical_cols=self.numerical_cols,
                 weights=weights,
                 paired_series=self.paired_series_formatted(col)
                 ),
