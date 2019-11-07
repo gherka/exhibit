@@ -6,15 +6,18 @@ and reading back user specification
 # External library imports
 import pandas as pd
 
-def build_list_of_original_values(series):
+def build_list_of_original_values(series, name=None):
     '''
     Returns a padded list of strings
     We're dropping NAs as missing values are specified elsewhere
     '''
 
-    HEADER = "name"
+    if name:
+        HEADER = name
+    else:
+        HEADER = f"paired_{series.name}"
 
-    original_values = sorted(series.dropna().unique().tolist())
+    original_values = sorted(series.astype(str).dropna().unique().tolist())
     longest = max(len(HEADER), len(max(original_values, key=len)))
 
     padded_values = [x.ljust(longest + 1) for x in original_values]
@@ -59,26 +62,42 @@ def build_list_of_column_weights(weights):
     return sorted_final
     
 
-def build_table_from_lists(series, total_count, numeric_cols, weights):
+def build_table_from_lists(
+    check, series, total_count,
+    numeric_cols, weights, paired_series=None):
     '''
     We're dropping NAs as missing values are specified elsewhere
+    paired_series should come in format [(column_name, pd.Series)]
     '''
+
+    if not check:
+        return "None"
 
     original_values = sorted(series.dropna().unique().tolist())
     longest = max(len("name"), len(max(original_values, key=len)))
 
+    if paired_series:
+        paired_series_header = [n[0] for n in paired_series]
+        paired_series_values = [
+            build_list_of_original_values(n[1]) for n in paired_series
+            ]
+    else:
+        paired_series_header = []
+        paired_series_values = []
+
     header_cols = (
-        ["name".ljust(longest), "probability_vector"] +
+        ["name".ljust(longest)] + paired_series_header +
+        ["probability_vector"] +
         [x.ljust(5) for x in sorted(numeric_cols)]
     )
     
     header = [" | ".join(header_cols).rstrip()]
     
-    s1 = build_list_of_original_values(series)
+    s1 = build_list_of_original_values(series, "name")
     s2 = build_list_of_probability_vectors(series, total_count)
     s3 = build_list_of_column_weights(weights)
 
-    final = header + ["| ".join(x) for x in zip(s1, s2, s3)]
+    final = header + ["| ".join(x) for x in zip(s1, *paired_series_values, s2, s3)]
 
     return final
 

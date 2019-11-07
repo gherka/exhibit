@@ -27,7 +27,6 @@ class newSpec:
         self.cat_cols = list(self.df.select_dtypes(exclude=np.number).columns.values)
         self.time_cols = [col for col in self.df.columns.values
                          if is_datetime64_dtype(self.df.dtypes[col])]
-
         self.paired_cols = find_pair_linked_columns(self.df)
 
         self.output = {
@@ -54,7 +53,38 @@ class newSpec:
         for pair in self.paired_cols:
             if col in pair:
                 return [c for c in pair if c != col]
-        return []
+        return None
+
+    def paired_series_formatted(self, col):
+        '''
+        Return a list [(paired_col_name, paired_series), ...]
+        '''
+        output = []
+
+        for pair in self.paired_cols:
+            if col in pair:
+                for c in pair:
+                    if c != col:
+
+                        original_values = sorted(self.df[c].astype(str).dropna().unique().tolist())
+                        longest = max(len(f"paired_{c}"), len(max(original_values, key=len)))
+
+                        output.append(
+                            (
+                                f"paired_{c}".ljust(longest),
+                                self.df[c]
+                        ))
+        return output
+
+    def to_build_original_list(self, col):
+        '''
+        Returns bool
+        '''
+        for pair in self.paired_cols:
+            if (col in pair) and (pair[0] != col):
+                return False
+        return True
+
 
     def categorical_dict(self, col):
         '''
@@ -72,10 +102,13 @@ class newSpec:
             'paired_columns': self.list_of_paired_cols(col),
             'uniques': self.df[col].nunique(),
             'original_values' : build_table_from_lists(
-                self.df[col],
-                len(self.df),
-                self.numerical_cols,
-                weights),
+                check=self.to_build_original_list(col),
+                series=self.df[col],
+                total_count=len(self.df),
+                numeric_cols=self.numerical_cols,
+                weights=weights,
+                paired_series=self.paired_series_formatted(col)
+                ),
             'allow_missing_values': True,
             'miss_probability': 0,
             'anonymise':True,
