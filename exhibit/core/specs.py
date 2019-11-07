@@ -6,8 +6,10 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.utils import guess_date_frequency, find_linked_columns
-from exhibit.core.utils import linkedColumnsTree, generate_id
+from exhibit.core.utils import (
+    guess_date_frequency, find_hierarchically_linked_columns,
+    find_pair_linked_columns)
+from exhibit.core.utils import linkedColumnsTree, generate_table_id
 from exhibit.core.formatters import build_table_from_lists
 from exhibit.core.sql import create_temp_table
 from exhibit.core.generator import generate_weights
@@ -20,11 +22,14 @@ class newSpec:
     def __init__(self, data):
 
         self.df = data.copy()
-        self.id = generate_id()
+        self.id = generate_table_id()
         self.numerical_cols = list(self.df.select_dtypes(include=np.number).columns.values)
         self.cat_cols = list(self.df.select_dtypes(exclude=np.number).columns.values)
         self.time_cols = [col for col in self.df.columns.values
                          if is_datetime64_dtype(self.df.dtypes[col])]
+
+        self.paired_cols = find_pair_linked_columns(self.df)
+
         self.output = {
             'metadata': {
                 "number_of_rows": self.df.shape[0],
@@ -40,6 +45,17 @@ class newSpec:
             'demo_records': {},
             }
 
+    def list_of_paired_cols(self, col):
+        '''
+        If a column has one to one matching values
+        with another column(s), returns those columns
+        in a list. Otherwise returns an empty list.
+        '''
+        for pair in self.paired_cols:
+            if col in pair:
+                return [c for c in pair if c != col]
+        return []
+
     def categorical_dict(self, col):
         '''
         Create a dictionary with information summarising
@@ -53,6 +69,7 @@ class newSpec:
 
         categorical_d = {
             'type': 'categorical',
+            'paired_columns': self.list_of_paired_cols(col),
             'uniques': self.df[col].nunique(),
             'original_values' : build_table_from_lists(
                 self.df[col],
@@ -124,13 +141,23 @@ class newSpec:
                 self.output['columns'][col] = self.categorical_dict(col)
 
         #PART 2: DATASET-WIDE CONSTRAINTS
-        linked_cols = find_linked_columns(self.df)
+        linked_cols = find_hierarchically_linked_columns(self.df)
         linked_tree = linkedColumnsTree(linked_cols).tree
 
         self.output['constraints']['linked_columns'] = linked_tree
 
         #Add linked column values to the temp tables in anon_db
+        #Remember that linked_tree is a list of tuples:
+        #(i, [column_names])
         for linked_group_tuple in linked_tree:
+            #remove (in place) paired columns from the hierarchical link groups
+            #keeping the first column name (which should be the one with longer values)
+            for linked_col in linked_group_tuple[1]:
+                for pair_col_list in self.paired_cols:
+                    if (
+                        (linked_col in pair_col_list) and
+                        (linked_col != pair_col_list[0])):
+                        linked_group_tuple[1].remove(linked_col)
         
             data = list(self.df.groupby(linked_group_tuple[1]).groups.keys())
 

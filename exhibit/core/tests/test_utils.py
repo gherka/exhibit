@@ -184,12 +184,12 @@ class helperTests(unittest.TestCase):
                 "All"
                 ],
                 ["A", "A", "A", "B", "B", "B", "B", "B"],
-                ["C", "C", "C", "D", "D", "D", "D", "D",]]).T,
+                ["CA", "CA", "CA", "DA", "DA", "DA", "DA", "DA",]]).T,
             columns=[
                 "C1", "C2", "C3", "C4", "C5"]
         )
 
-        assert tm.find_1_to_1_linked_columns(test_df) == [("C2", "C3"), ("C4", "C5")]
+        assert tm.find_pair_linked_columns(test_df) == [["C2", "C3"], ["C5", "C4"]]
 
 
     def test_find_linked_columns(self):

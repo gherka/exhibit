@@ -105,7 +105,9 @@ def guess_date_frequency(timeseries):
         elif time_diff_counts.index[0].days in range(365, 367):
             return "YS"
     
-    elif time_diff_counts.index[0].days - time_diff_counts.index[1].days in range(0, 3):
+    elif abs(
+        time_diff_counts.index[0].days - time_diff_counts.index[1].days
+        ) in range(0, 3):
         
         if time_diff_counts.index[0].days == 1:
             return "D"
@@ -191,7 +193,6 @@ def find_hierarchically_linked_columns(df):
             )):
             
         #ancestor (1 in 1:many pair) is appened first
-            
             if df.groupby(col1)[col2].nunique().max() > 1:
                 linked.append((col1, col2))
                 
@@ -201,12 +202,25 @@ def find_hierarchically_linked_columns(df):
     return linked
 
 
-def find_1_to_1_linked_columns(df):
+def find_pair_linked_columns(df):
     '''
     Given a dataframe df, return a list
     of tuples with column names where each value in 
     one column is always paired with the 
     same value in another.
+
+    Returns a list of lists where the first column
+    in the tuple is the reference one that has the weights 
+    and whose parameter values cascade down to other
+    linked columns.
+
+    Currently, reference column is decided based on
+    the length of its values; codes and other identifiers
+    tend to have shorter values.
+
+    Need to implement a "common member" merging of tuples
+    so that [(A,B), (B,C), (D,E)] gets changed into 
+    [(A,B,C), (D,E)]
     '''
     linked = []
     
@@ -220,7 +234,17 @@ def find_1_to_1_linked_columns(df):
                 df.groupby(col1)[col2].nunique().max() == 1 and
                 df.groupby(col2)[col1].nunique().max() == 1
             ):
-            linked.append((col1, col2))
+            #column with a higher average value length is appended first
+            if (
+                sum(map(len, df[col1].astype(str).unique())) / df[col1].nunique() >
+                sum(map(len, df[col2].astype(str).unique())) / df[col2].nunique()
+            ):
+
+                linked.append([col1, col2])
+
+            else:
+
+                linked.append([col2, col1])
 
     return linked
 
@@ -275,7 +299,8 @@ class linkedColumnsTree:
     def __init__(self, connections):
         '''
         Main output of the class is stored in the tree attribute
-        as a list of tuples of the form (linked columns group number,
+        as a list of tuples of the form:
+        (linked columns group number,
         list of grouped columns)
         '''
         self._tree = []
@@ -341,7 +366,7 @@ class linkedColumnsTree:
             else:
                 self._tree[di][dj-1].append([node1])
 
-def generate_id():
+def generate_table_id():
     '''
     Generate a 5-digit pseudo-unique ID based on current time
     '''
