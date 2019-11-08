@@ -193,7 +193,7 @@ def build_table_from_lists(
     '''
 
     if not required:
-        return "None"
+        return "See paired column"
 
     #generate first column, minus the header  (original values)
     c1 = build_list_of_values(dataframe, original_series_name)

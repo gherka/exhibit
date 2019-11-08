@@ -102,12 +102,10 @@ class newExhibit:
         Generating spec needs a dataframe so should only be run
         after read_data()
 
-        By default set the random seed to 0
+        By default the random seed is set to 0
         '''
         if not self.df is None:
 
-            np.random.seed(0)
-            
             new_spec = newSpec(self.df)
 
             self.spec_dict = new_spec.output_spec_dict()
@@ -117,7 +115,7 @@ class newExhibit:
         '''
         Write the spec (as YAML string) to file specified in command line.
         The YAML string that is generated from spec_dict saved
-        as Exhibit instance attribute.
+        as newExhibit instance attribute.
         '''
 
         if spec_yaml is None:
@@ -184,16 +182,21 @@ class newExhibit:
         nested_linked_cols = [
             sublist for n, sublist in self.spec_dict['constraints']['linked_columns']
             ]
+        #columns not used for generation:
+        #   - linked columns (generated separately)
+        #   - core columns - all values are used
+        #   - columns where original values = "See paired column"
+
         linked_cols = list(chain.from_iterable(nested_linked_cols)) + core_cols
 
         list_of_cat_tuples = get_attr_values(
             self.spec_dict,
-            'type',
+            'original_values',
             col_names=True, types='categorical')
 
-        for col in [k for k, v in list_of_cat_tuples if k not in linked_cols]:
+        for col in [k for k, v in list_of_cat_tuples if (k not in linked_cols) and (v != "See paired column")]:
             s = generate_anon_series(self.spec_dict, col, core_rows)
-            linked_dfs.append(s)        
+            linked_dfs.append(s)
 
         #5) CONCAT LINKED DFs AND SERIES
 

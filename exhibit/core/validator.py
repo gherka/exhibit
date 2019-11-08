@@ -104,7 +104,9 @@ class newValidator:
                 'original_values',
                 col_names=True,
                 types=['categorical']):
-
+            
+            if v == "See paired column":
+                continue
             prob_vector = parse_original_values_into_dataframe(v)["probability_vector"]
 
             if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
@@ -130,6 +132,9 @@ class newValidator:
                 'original_values',
                 col_names=True,
                 types=['categorical']):
+
+            if v == "See paired column":
+                continue
 
             values_table = parse_original_values_into_dataframe(v)
             #replace blank cells ('') with np.nan

@@ -91,6 +91,9 @@ def generate_weights_table(spec):
        
     for cat_col in target_cols:
 
+        if spec['columns'][cat_col]['original_values'] == "See paired column":
+            continue
+
         #get the original values with weights DF
         ws_df = parse_original_values_into_dataframe(
             spec['columns'][cat_col]['original_values'])
@@ -98,7 +101,7 @@ def generate_weights_table(spec):
         for num_col in num_cols:
     
             ws = ws_df[num_col]
-            ws_vals = ws_df['name']
+            ws_vals = ws_df[cat_col]
             
             for val, weight in zip(ws_vals, ws):
             
@@ -149,6 +152,8 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     '''
     Generates linked values from temp table.
     Have to be careful around sort orders.
+
+    Also generate 1:1 pairs if there are any for linked columns!
     '''
 
     all_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
@@ -180,6 +185,21 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     anon_list = [result[x] for x in idx]
 
     linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
+
+    #NOW ADD 1:1 COLUMNS, IF ANY
+    for c in all_cols:
+        paired_cols = spec_dict['columns'][c]['paired_columns']
+        if paired_cols:
+
+            c_df = parse_original_values_into_dataframe(
+                spec_dict['columns'][c]['original_values'])
+
+            paired_df = (
+                c_df[[c] + [f"paired_{x}" for x in paired_cols]]
+                    .rename(columns=lambda x: x.replace('paired_', ''))
+            )
+            linked_df = pd.merge(linked_df, paired_df, how="left", on=c)
+
     
     return linked_df
 
@@ -196,11 +216,24 @@ def generate_anon_series(spec_dict, col_name, num_rows):
     col_df = parse_original_values_into_dataframe(
         spec_dict['columns'][col_name]['original_values'])
 
-    col_prob = col_df['probability_vector'].to_list()
-    col_values = col_df['name'].to_list()
+    paired_cols = spec_dict['columns'][col_name]['paired_columns']
 
-    result = np.random.choice(col_values, num_rows, col_prob)
-    return pd.Series(result, name=col_name)
+    col_prob = col_df['probability_vector'].to_list()
+    col_values = col_df[col_name].to_list()
+
+    original_series = pd.Series(
+        data=np.random.choice(col_values, num_rows, col_prob),
+        name=col_name)
+
+    if paired_cols:
+        paired_df = (
+            col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
+                .rename(columns=lambda x: x.replace('paired_', ''))
+        )
+
+        return pd.merge(original_series, paired_df, how="left", on=col_name)
+
+    return original_series
 
 
 def generate_complete_series(spec_dict, col_name):
