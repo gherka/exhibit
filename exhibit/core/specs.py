@@ -16,15 +16,44 @@ from exhibit.core.generator import generate_weights
 
 class newSpec:
     '''
-    Doc string
+    Holds all the information required to build a YAML spec from source data
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        source dataframe
+
+    Attributes
+    ----------
+    df : pd.DataFrame
+        internal copy of the passed in dataframe
+    random_seed : int
+        random seed to use; defaults to 0
+    id : str
+        each spec instance is given its ID for reference in temporary SQL table
+    numerical_cols : list
+        columns that fit np.number specification
+    cat_cols : list
+        all other columns
+    time_cols : list
+        columns that fit pandas' is_datetime64_dtype specification
+    paird_cols : list
+        list of lists where each inner list is a group of columns that
+        map 1:1 to each other
+    output : dict
+        processed specification
+
     '''
 
-    def __init__(self, data):
+    def __init__(self, data, random_seed=0):
 
         self.df = data.copy()
+        self.random_seed = random_seed
         self.id = generate_table_id()
-        self.numerical_cols = list(self.df.select_dtypes(include=np.number).columns.values)
-        self.cat_cols = list(self.df.select_dtypes(exclude=np.number).columns.values)
+        self.numerical_cols = list(
+            self.df.select_dtypes(include=np.number).columns.values)
+        self.cat_cols = list(
+            self.df.select_dtypes(exclude=np.number).columns.values)
         self.time_cols = [col for col in self.df.columns.values
                          if is_datetime64_dtype(self.df.dtypes[col])]
         self.paired_cols = find_pair_linked_columns(self.df)
@@ -35,8 +64,8 @@ class newSpec:
                 "categorical_columns": self.cat_cols,
                 "numerical_columns": sorted(self.numerical_cols),
                 "time_columns": self.time_cols,
-                "random_seed" : 0,
-                "id":self.id
+                "random_seed": self.random_seed,
+                "id": self.id
             },
             'columns': {},
             'constraints': {},
@@ -53,38 +82,22 @@ class newSpec:
         for pair in self.paired_cols:
             if col in pair:
                 return [c for c in pair if c != col]
-        return None
-
-    def paired_series_formatted(self, col):
-        '''
-        Return a list [(paired_col_name, paired_series), ...]
-        '''
-        output = []
-
-        for pair in self.paired_cols:
-            if col in pair:
-                for c in pair:
-                    if c != col:
-
-                        original_values = sorted(self.df[c].astype(str).dropna().unique().tolist())
-                        longest = max(len(f"paired_{c}"), len(max(original_values, key=len)))
-
-                        output.append(
-                            (
-                                f"paired_{c}".ljust(longest),
-                                self.df[c]
-                        ))
-        return output
+        return []
 
     def to_build_original_list(self, col):
         '''
-        Returns bool
+        We don't need to build a table with values, 
+        weights, probability vectors for columns that
+        are paired with another column. 
+
+        In paired_cols, the "reference" column is always
+        in position 1 so table is not needed for all
+        other columns in the pair
         '''
         for pair in self.paired_cols:
             if (col in pair) and (pair[0] != col):
                 return False
         return True
-
 
     def categorical_dict(self, col):
         '''
@@ -103,10 +116,11 @@ class newSpec:
             'uniques': self.df[col].nunique(),
             'original_values' : build_table_from_lists(
                 required=self.to_build_original_list(col),
-                original_series=self.df[col],
+                dataframe=self.df,
                 numerical_cols=self.numerical_cols,
                 weights=weights,
-                paired_series=self.paired_series_formatted(col)
+                original_series_name=col,
+                paired_series_names=self.list_of_paired_cols(col)
                 ),
             'allow_missing_values': True,
             'miss_probability': 0,
@@ -138,8 +152,9 @@ class newSpec:
 
     def continuous_dict(self, col):
         '''
-        Mean and Sigma have to be cast to floats
-        explicitly for the YAML parser.
+        Dispersion is used to add noise to the distribution
+        of values. This is particularly important for columns
+        that are dominated by low-count values.
         '''
         cont_d = {
             'type': 'continuous',
@@ -173,6 +188,7 @@ class newSpec:
                 self.output['columns'][col] = self.categorical_dict(col)
 
         #PART 2: DATASET-WIDE CONSTRAINTS
+
         linked_cols = find_hierarchically_linked_columns(self.df)
         linked_tree = linkedColumnsTree(linked_cols).tree
 
@@ -191,14 +207,16 @@ class newSpec:
                         (linked_col != pair_col_list[0])):
                         linked_group_tuple[1].remove(linked_col)
         
-            data = list(self.df.groupby(linked_group_tuple[1]).groups.keys())
+            linked_data = list(self.df.groupby(linked_group_tuple[1]).groups.keys())
+
+        #PART 3: STORE LINKED GROUPS INFORMATION IN A SQLITE3 DB
 
             #Column names can't have spaces; replace with $ and then back when
             #reading the data from the SQLite DB at execution stage. 
             create_temp_table(
                 table_name="temp_" + self.id + f"_{linked_group_tuple[0]}",
                 col_names=[x.replace(" ", "$") for x in linked_group_tuple[1]],
-                data=data                
+                data=linked_data                
             )
         
         return self.output

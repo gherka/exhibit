@@ -5,39 +5,110 @@ and reading back user specification
 
 # External library imports
 import pandas as pd
+from pandas.api.types import is_datetime64_dtype
 
-def build_list_of_original_values(series, name=None):
+def format_header(dataframe, series_name, prefix=None):
+    '''
+    Function to pad the header values based on the length
+    of the header column's values
+
+    If the series is timeseries, convert it to ISO date string
+    rather than include the time element as this will mess up
+    the padding length.
+    
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        source dataframe
+    series_name : str
+        Name of the series whose header we're formatting
+    prefix : str
+        Prefix to use to identify paired columns
+
+    Returns
+    -------
+    Formatted string value of series_name
     '''
 
-    Require a source dataframe paramter to make sure we 
-    can return a paired series that is sorted based on
-    the original column.
-
-    Returns a padded list of strings
-    We're dropping NAs as missing values are specified elsewhere
-    '''
-
-    if name:
-        HEADER = name
+    if is_datetime64_dtype(dataframe[series_name]):
+        series = dataframe[series_name].dt.strftime("%Y-%m-%d").unique()
     else:
-        HEADER = f"paired_{series.name}"
+        series = dataframe[series_name].unique().astype(str)
 
-    original_values = sorted(series.astype(str).dropna().unique().tolist())
-    longest = max(len(HEADER), len(max(original_values, key=len)))
+    if prefix:
+        series_name = prefix + series_name
 
-    padded_values = [x.ljust(longest + 1) for x in original_values]
+    longest = max(len(series_name), len(max(series, key=len)))
 
-    return padded_values
+    return series_name.ljust(longest)
 
 
-def build_list_of_probability_vectors(original_series):
+def build_list_of_values(dataframe, original_series_name, paired_series_name=None):
     '''
     Feeder function for build_table_from_lists
 
     Parameters
     ----------
-    original_series : pd.Series
-        Values from base, reference column
+    dataframe : pd.DataFrame
+        source dataframe
+    original_series_name : str
+        Name of the column used as reference
+        when using together with paired_series
+        or the column whose values to format if
+        used without paired_series_name argument
+    paired_series_name : str
+        Name of the paired series
+
+    Returns
+    -------
+    If paired_series_name is given, returns paired Series values
+    formatted into a list of padded strings, otherwise returns
+    formatted values from the original series
+    '''
+    
+    #sort paired_series based on the original
+    if paired_series_name:
+
+        working_list = (dataframe[[original_series_name, paired_series_name]]
+            .astype(str)
+            .sort_values(by=original_series_name, kind="mergesort")
+            [paired_series_name]
+            .dropna()
+            .unique()
+            .tolist()
+        )
+        
+        working_name = f"paired_{paired_series_name}"
+    
+    else:
+
+        working_list = (dataframe[original_series_name]
+            .astype(str)
+            .sort_values(kind="mergesort")
+            .dropna()
+            .unique()
+            .tolist()
+        )
+
+        working_name = original_series_name
+
+    longest = max(len(working_name), len(max(working_list, key=len)))
+
+    padded_values = [x.ljust(longest + 1) for x in working_list]
+
+    return padded_values
+
+
+def build_list_of_probability_vectors(dataframe, original_series_name):
+    '''
+    Feeder function for build_table_from_lists
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        source dataframe
+    original_series_name : str
+        Name of the column used as reference
 
     Returns
     -------
@@ -46,6 +117,8 @@ def build_list_of_probability_vectors(original_series):
     '''
 
     HEADER = "probability_vector"
+
+    original_series = dataframe[original_series_name]
 
     total_count = len(original_series)
 
@@ -90,23 +163,28 @@ def build_list_of_column_weights(weights):
     
 
 def build_table_from_lists(
-    required, original_series, numerical_cols,
-    weights, paired_series):
+    required, dataframe, numerical_cols, weights,
+    original_series_name, paired_series_names):
     '''
-    Should only be used on categorical columns.
+    Format information about a column (its values, its'
+    paired values from paired columns, values' weights
+    for each numerical column, probability vectors) into
+    a csv-like table with padding.
 
     Parameters
     ----------
     required : boolean
         Whether original values table needs to be generated
-    original_series : pd.Series
-        Values from base, reference column
+    dataframe : pd.DataFrame
+        Required downstream
     numerical_cols : iterable
         Numerical column names required for max length / padding checking
     weights : dictionary
         Required downstream. Key is numerical column, values are a list
-    paired_series : iterable
-        Expects a list of [(paired_col_name, paired_series), ...]
+    original_series_name : pd.Series
+        Values from base, reference column. Required downstream
+    paired_series_names : iterable
+        Expects a list of [paired_col_name1, paired_col_name2...]
         or an empty list
 
     Returns
@@ -117,33 +195,34 @@ def build_table_from_lists(
     if not required:
         return "None"
 
-    original_values = sorted(original_series.dropna().unique().tolist())
-    longest = max(len("name"), len(max(original_values, key=len)))
-
-    if paired_series:
-        paired_series_header = [n[0] for n in paired_series]
-        paired_series_values = [
-            build_list_of_original_values(n[1]) for n in paired_series
-            ]
-    else:
-        paired_series_header = []
-        paired_series_values = []
+    #generate first column, minus the header  (original values)
+    c1 = build_list_of_values(dataframe, original_series_name)
+    #generate a list of of paired columns
+    pairs = [
+        build_list_of_values(dataframe, original_series_name, paired_name)
+        for paired_name in paired_series_names
+        ]
+    #generate a list of probabilities for the original column
+    p = build_list_of_probability_vectors(dataframe, original_series_name)
+    #generate a list of value weights for each numerical column
+    w = build_list_of_column_weights(weights)
+    
+    #create padded header list
+    paired_series_header = [
+        format_header(dataframe, name, "paired_") for name in paired_series_names]
 
     header_cols = (
-        ["name".ljust(longest)] + paired_series_header +
+        [format_header(dataframe, original_series_name)] +
+        paired_series_header +
         ["probability_vector"] +
         #5 is a "magic" number that's reflecting the precision of the numbers and
         #the amount of space they're taking (5 at max) in a column
         [x.ljust(5) for x in sorted(numerical_cols)]
     )
-    
-    header = [" | ".join(header_cols).rstrip()]
-    
-    s1 = build_list_of_original_values(original_series, "name")
-    s2 = build_list_of_probability_vectors(original_series)
-    s3 = build_list_of_column_weights(weights)
 
-    final = header + ["| ".join(x) for x in zip(s1, *paired_series_values, s2, s3)]
+    header = [" | ".join(header_cols).rstrip()]
+
+    final = header + ["| ".join(x) for x in zip(c1, *pairs, p, w)]
 
     return final
 
