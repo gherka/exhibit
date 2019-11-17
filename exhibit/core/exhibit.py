@@ -252,8 +252,7 @@ class newExhibit:
 
         #9) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
 
-        for derived_col in self.spec_dict['derived_columns']:
-            (name, calc), = derived_col.items()
+        for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
 

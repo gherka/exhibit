@@ -12,6 +12,8 @@ import yaml
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
+from exhibit.sample import sample
+from exhibit.core.formatters import parse_original_values_into_dataframe
 
 # Module under test
 from exhibit.core.validator import newValidator as tm
@@ -21,6 +23,37 @@ class validatorTests(unittest.TestCase):
     '''
     Doc string
     '''
+
+
+    def test_column_names_duplicates(self):
+        '''
+        There should be no duplicates!
+        '''
+
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board Code": {
+                    "allow_missing_values": True,
+                    "anonymise": True,
+                    "anonymising_set": "random"
+                },
+                "Board":  {
+                    "allow_missing_values": True,
+                    "anonymise": True,
+                    "anonymising_set": "random"
+                },
+            },
+            "derived_columns": {
+                "Board Code": "Board Code" 
+            }
+        
+        }
+
+        self.assertFalse(tm.validate_column_names(validatorMock, spec_dict=test_dict))
+
+
     def test_metadata_has_a_valid_number_of_rows(self):
         '''
         The number of rows requested by the user can't 
@@ -29,8 +62,7 @@ class validatorTests(unittest.TestCase):
         missing values 
         '''
 
-        with open(package_dir("tests", "test_spec.yml")) as f:
-            test_spec = yaml.safe_load(f)
+        test_spec = sample.prescribing_spec
         
         #check the user isn't under-shooting with the number of rows
         test_spec['metadata']['number_of_rows'] = 4
@@ -47,12 +79,12 @@ class validatorTests(unittest.TestCase):
         The sum of all probability values should equal 1
         '''
 
-        with open(package_dir("tests", "test_spec.yml")) as f:
-            test_spec = yaml.safe_load(f)
+        test_spec = sample.prescribing_spec
         
         #modify list in place
-        original_values_list = test_spec['columns']['hb_name']['original_values']
-        original_values_list[-1] = "Scotland| 1 | 0.016 | 0.333 | 0.333"
+        original_values_list = test_spec['columns']['HB2014Name']['original_values']
+        #set the first value of the probality vector to 1
+        original_values_list[-1] = "Scotland| 1 | 0.016 | 0.333"
         
         validatorMock = Mock()
 

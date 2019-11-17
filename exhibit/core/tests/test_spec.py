@@ -9,7 +9,7 @@ import pandas as pd
 
 # Module under test
 from exhibit.core import specs as tm
-from exhibit.sampledata.data import basic as ref_df
+from exhibit.sample.sample import prescribing_data as ref_df
 
 
 class specsTests(unittest.TestCase):

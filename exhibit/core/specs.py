@@ -69,7 +69,7 @@ class newSpec:
             },
             'columns': {},
             'constraints': {},
-            'derived_columns': [{"Example_Column": "Example_Calculation"}],
+            'derived_columns': {"Example_Column": "Example_Calculation"},
             'demo_records': {},
             }
 

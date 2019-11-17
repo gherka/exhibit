@@ -1,0 +1,285 @@
+#---------------------------------------------------------
+#This specification describes the dataset in great detail.
+#In order to vary to degree to which it is anonymised,
+#please review the sections and make necessary adjustments
+#---------------------------------------------------------
+metadata:
+  number_of_rows: 2950
+  categorical_columns:
+  - PaidDateMonth
+  - HB2014Name
+  - GPPracticeName
+  - BNFItemCode
+  - BNFItemDescription
+  numerical_columns:
+  - NumberOfPaidItems
+  time_columns:
+  - PaidDateMonth
+  random_seed: 0
+  id: 1a2b9
+#---------------------------------------------------------
+#Dataset columns can be one of the three types: 
+#Categorical | Continuous | Timeseries
+#Column type determines the parameters in the specification
+#When making changes to the values, please note their format.
+#---------------------------------------------------------
+columns:
+  PaidDateMonth:
+    type: date
+    allow_missing_values: false
+    miss_probability: 0
+    from: '2019-04-01'
+    to: '2019-08-01'
+    uniques: 5
+    frequency: MS
+  HB2014Name:
+    type: categorical
+    paired_columns: []
+    uniques: 14
+    original_values:
+    - HB2014Name                    | probability_vector | NumberOfPaidItems
+    - NHS Ayrshire and Arran        | 0.077              | 0.092
+    - NHS Borders                   | 0.082              | 0.120
+    - NHS Dumfries and Galloway     | 0.082              | 0.072
+    - NHS Fife                      | 0.072              | 0.079
+    - NHS Forth Valley              | 0.077              | 0.077
+    - NHS Grampian                  | 0.083              | 0.094
+    - NHS Greater Glasgow and Clyde | 0.078              | 0.071
+    - NHS Highland                  | 0.065              | 0.050
+    - NHS Lanarkshire               | 0.081              | 0.077
+    - NHS Lothian                   | 0.069              | 0.081
+    - NHS Orkney                    | 0.044              | 0.027
+    - NHS Shetland                  | 0.065              | 0.031
+    - NHS Tayside                   | 0.075              | 0.093
+    - NHS Western Isles             | 0.050              | 0.034
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  GPPracticeName:
+    type: categorical
+    paired_columns: []
+    uniques: 136
+    original_values:
+    - GPPracticeName                                 | probability_vector | NumberOfPaidItems
+    - ABERFELDY AND KINLOCH RANNOCH MEDICAL PRACTICE | 0.008              | 0.005
+    - ABINGDON MEDICAL PRACTICE                      | 0.006              | 0.002
+    - ALVA MEDICAL PRACTICE                          | 0.009              | 0.018
+    - ALYTH HEALTH CENTRE                            | 0.007              | 0.007
+    - ANNIESLAND MEDICAL PRACTICE                    | 0.009              | 0.013
+    - ARBROATH MEDICAL CENTRE                        | 0.010              | 0.014
+    - ARMADALE MEDICAL PRACTICE                      | 0.005              | 0.001
+    - AUCHTERMUCHTY PRACTICE                         | 0.007              | 0.007
+    - BALFRON HEALTH CENTRE                          | 0.007              | 0.003
+    - BALLANTRAE MEDICAL PRACTICE                    | 0.004              | 0.002
+    - BANK STREET MEDICAL GROUP                      | 0.007              | 0.009
+    - BARNS MEDICAL PRACTICE                         | 0.008              | 0.012
+    - BARRA MEDICAL PRACTICE                         | 0.006              | 0.002
+    - BENBECULA MEDICAL PRACTICE                     | 0.003              | 0.001
+    - BIXTER HEALTH CENTRE                           | 0.003              | 0.001
+    - BRAE MEDICAL PRACTICE                          | 0.007              | 0.004
+    - BRAIDS MEDICAL PRACTICE                        | 0.007              | 0.010
+    - BRIDGE OF ALLAN HEALTH CENTRE                  | 0.008              | 0.010
+    - BROADBAY MEDICAL PRACTICE                      | 0.008              | 0.008
+    - BUCKINGHAM TERRACE MEDICAL PRACTICE            | 0.008              | 0.006
+    - BUCKSBURN MEDICAL PRACTICE                     | 0.006              | 0.004
+    - BURNTISLAND MEDICAL GROUP                      | 0.007              | 0.006
+    - CAIRNSMORE MEDICAL PRACTICE                    | 0.009              | 0.009
+    - CALLANDER MEDICAL PRACTICE                     | 0.006              | 0.002
+    - CANISBAY & CASTLETOWN JOINT MEDICAL PRACTICE   | 0.003              | 0.001
+    - CASTLE DOUGLAS MEDICAL GROUP                   | 0.009              | 0.015
+    - CENTRAL AVENUE SURGERY                         | 0.007              | 0.006
+    - COLINTON SURGERY                               | 0.007              | 0.013
+    - COWDENBEATH SURGERY                            | 0.007              | 0.019
+    - CRAIGMILLAR MEDICAL GROUP                      | 0.007              | 0.011
+    - CROSSGATES MEDICAL PRACTICE                    | 0.007              | 0.006
+    - DAISY VILLA                                    | 0.003              | 0.000
+    - DALBEATTIE MEDICAL PRACTICE                    | 0.008              | 0.007
+    - DALBLAIR MEDICAL PRACTICE                      | 0.008              | 0.004
+    - DENBURN MEDICAL PRACTICE                       | 0.010              | 0.017
+    - DORNOCH MEDICAL PRACTICE                       | 0.008              | 0.007
+    - DOUNBY SURGERY                                 | 0.008              | 0.005
+    - DR C M MCCANN                                  | 0.005              | 0.001
+    - DR R AFUAKWAH                                  | 0.006              | 0.004
+    - DRS OLIVER, GREELEY, INNES & SPRATT            | 0.012              | 0.008
+    - DRS REID & MACLAREN PARTNERSHIP                | 0.005              | 0.003
+    - DRS TIERNEY & CANNING                          | 0.007              | 0.006
+    - DUNBEATH SURGERY                               | 0.002              | 0.000
+    - EAST PRACTICE, SPRINGFIELD MEDICAL CENTRE      | 0.007              | 0.007
+    - EDEN VILLA PRACTICE                            | 0.008              | 0.007
+    - EDENKILN SURGERY                               | 0.008              | 0.003
+    - EILDON SURGERY                                 | 0.009              | 0.011
+    - ELMBANK GROUP PRACTICE                         | 0.008              | 0.014
+    - FERNIEHILL SURGERY                             | 0.007              | 0.008
+    - FORTHVIEW PRACTICE                             | 0.008              | 0.007
+    - FULTON STREET MEDICAL CENTRE                   | 0.009              | 0.007
+    - GARTHDEE MEDICAL GROUP                         | 0.009              | 0.010
+    - GLENKENS MEDICAL PRACTICE                      | 0.005              | 0.004
+    - GROVE HEALTH CENTRE                            | 0.006              | 0.006
+    - HAMILTON MEDICAL GROUP                         | 0.008              | 0.006
+    - HEALTH CENTRE PRACTICE 2                       | 0.009              | 0.014
+    - HEILENDI PRACTICE                              | 0.008              | 0.006
+    - HILLSWICK HEALTH CENTRE                        | 0.004              | 0.001
+    - HOLBURN MEDICAL GROUP                          | 0.007              | 0.012
+    - ISLANDS VIEW SURGERY                           | 0.004              | 0.000
+    - JAMIESON MEDICAL PRACTICE                      | 0.010              | 0.014
+    - JEDBURGH MEDICAL PRACTICE                      | 0.009              | 0.016
+    - KELSO MEDICAL GROUP                            | 0.009              | 0.025
+    - KESSINGTON MEDICAL CENTRE                      | 0.009              | 0.008
+    - KINGLASS MEDICAL PRACTICE                      | 0.008              | 0.003
+    - LADYWELL MEDICAL CENTRE (WEST)                 | 0.007              | 0.011
+    - LANGABHAT MEDICAL PRACTICE                     | 0.007              | 0.003
+    - LEITH SURGERY                                  | 0.007              | 0.008
+    - LERWICK HEALTH CENTRE                          | 0.012              | 0.014
+    - LEVEN MEDICAL PRACTICE                         | 0.006              | 0.006
+    - LEVENWICK MEDICAL PRACTICE                     | 0.003              | 0.001
+    - LOCH REE PRACTICE                              | 0.008              | 0.010
+    - LOCHINCH PRACTICE                              | 0.007              | 0.006
+    - LYBSTER MEDICAL CENTRE                         | 0.003              | 0.001
+    - MERSE MEDICAL PRACTICE                         | 0.008              | 0.014
+    - MUIREDGE SURGERY                               | 0.007              | 0.009
+    - MUIRHEAD MEDICAL CENTRE                        | 0.007              | 0.011
+    - MULL OF GALLOWAY PRACTICE                      | 0.006              | 0.001
+    - NAIRN HEALTHCARE GROUP                         | 0.008              | 0.014
+    - NALAGATLA MEDICAL PRACTICE                     | 0.008              | 0.004
+    - NEW DYCE MEDICAL PRACTICE                      | 0.009              | 0.013
+    - NEWCASTLETON MEDICAL PRACTICE                  | 0.003              | 0.002
+    - NIDDRIE MEDICAL PRACTICE                       | 0.006              | 0.004
+    - NORTH AVENUE SURGERY                           | 0.009              | 0.015
+    - NORTH HARRIS MEDICAL PRACTICE                  | 0.004              | 0.001
+    - NORTH UIST MEDICAL PRACTICE                    | 0.002              | 0.000
+    - O'CONNELL STREET MEDICAL PRACTICE              | 0.010              | 0.012
+    - OLD KILPATRICK MEDICAL PRACTICE                | 0.008              | 0.007
+    - ORCADES PRACTICE                               | 0.006              | 0.003
+    - OVERTOUN MEDICAL PRACTICE                      | 0.008              | 0.011
+    - PENNAN PRACTICE                                | 0.006              | 0.002
+    - RACECOURSE ROAD MEDICAL GROUP                  | 0.008              | 0.012
+    - RED WING MEDICAL PRACTICE                      | 0.009              | 0.016
+    - RIVERBANK SURGERY                              | 0.010              | 0.008
+    - RIVERVIEW MEDICAL PRACTICE                     | 0.008              | 0.008
+    - ROXBURGH STREET SURGERY                        | 0.008              | 0.005
+    - SCALLOWAY HEALTH CENTRE LLP                    | 0.008              | 0.003
+    - SELKIRK MEDICAL PRACTICE                       | 0.009              | 0.018
+    - SHEBBURN MEDICAL PRACTICE                      | 0.008              | 0.003
+    - SKEITH HEALTH CENTRE                           | 0.011              | 0.009
+    - SKERRYVORE PRACTICE                            | 0.007              | 0.009
+    - SOLWAY MEDICAL GROUP                           | 0.011              | 0.010
+    - SOUTH BEACH MEDICAL CENTRE                     | 0.009              | 0.013
+    - SOUTH HARRIS MEDICAL PRACTICE                  | 0.003              | 0.000
+    - SOUTH UIST MEDICAL PRACTICE                    | 0.007              | 0.002
+    - SOUTHFIELD MEDICAL PRACTICE                    | 0.006              | 0.005
+    - ST MARGARET'S HEALTH CENTRE                    | 0.008              | 0.009
+    - ST RONAN'S PRACTICE                            | 0.006              | 0.007
+    - STEPPS SURGERY                                 | 0.008              | 0.003
+    - STROMNESS SURGERY                              | 0.008              | 0.004
+    - TAM'S BRIG SURGERY                             | 0.009              | 0.013
+    - THE ABBEY PRACTICE                             | 0.008              | 0.011
+    - THE BLUE PRACTICE                              | 0.007              | 0.009
+    - THE CATHCART STREET MEDICAL PRACTICE           | 0.008              | 0.009
+    - THE FULLARTON MEDICAL PRACTICE                 | 0.008              | 0.012
+    - THE GREEN PRACTICE                             | 0.007              | 0.007
+    - THE GROUP PRACTICE                             | 0.009              | 0.017
+    - THE LINKS PRACTICE                             | 0.005              | 0.002
+    - THE NEIDPATH PRACTICE                          | 0.010              | 0.009
+    - THE PEARSON PRACTICE                           | 0.008              | 0.005
+    - THE RICHMOND PRACTICE                          | 0.007              | 0.008
+    - THE STONELAW PRACTICE                          | 0.009              | 0.012
+    - THE SURGERY                                    | 0.008              | 0.006
+    - THE TERRACE MEDICAL PRACTICE                   | 0.009              | 0.007
+    - THE WHINS MEDICAL PRACTICE                     | 0.007              | 0.009
+    - THURSO & HALKIRK MEDICAL PRACTICE              | 0.009              | 0.005
+    - TORRY MEDICAL PRACTICE                         | 0.008              | 0.005
+    - UNST HEALTH CENTRE                             | 0.006              | 0.002
+    - WALLS HEALTH CENTRE                            | 0.007              | 0.001
+    - WALLSGREEN MEDICAL PRACTICE                    | 0.005              | 0.003
+    - WARDLAW MEDICAL PRACTICE                       | 0.008              | 0.007
+    - WEST PRACTICE, SPRINGFIELD MEDICAL CENTRE      | 0.007              | 0.014
+    - WESTBURN MEDICAL GROUP                         | 0.008              | 0.007
+    - WHALSAY HEALTH CENTRE                          | 0.006              | 0.003
+    - WHINHILL MEDICAL PRACTICE                      | 0.008              | 0.006
+    - YELL HEALTH CENTRE                             | 0.007              | 0.002
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  BNFItemCode:
+    type: categorical
+    paired_columns:
+    - BNFItemDescription
+    uniques: 23
+    original_values: See paired column
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  BNFItemDescription:
+    type: categorical
+    paired_columns:
+    - BNFItemCode
+    uniques: 23
+    original_values:
+    - BNFItemDescription                                       | paired_BNFItemCode | probability_vector | NumberOfPaidItems
+    - 365 FILM 4CM X 5CM VP ADH FILM DRESS                     | 20030100662        | 0.000              | 0.000
+    - ADPORE 10CM X 10CM ADH DRESS PFA                         | 20030100600        | 0.000              | 0.000
+    - ADPORE 7CM X 8CM ADH DRESS PFA                           | 20030100599        | 0.000              | 0.000
+    - BLUE DOT PLAS PERF MED TAPE 2.5CM X 10M PERM NON-WOV SYN | 20100000641        | 0.000              | 0.000
+    - COTTON STKNTTE BLEACHED BP 1988 2.5CM HEAVYWEIGHT        | 20090000110        | 0.001              | 0.000
+    - DROPPER                                                  | 21010600100        | 0.000              | 0.000
+    - EASIFIX K 10CM X 4M KTD POLYAM & CELLULOSE CONTR BAND    | 20020200817        | 0.000              | 0.000
+    - EASIFIX K 5CM X 4M KTD POLYAM & CELLULOSE CONTR BAND     | 20020200815        | 0.000              | 0.000
+    - ELIQUIS_TAB 5MG                                          | 0208020Z0BBABAB    | 0.227              | 0.226
+    - FOSTAIR_INH 100MCG/6MCG (120D) CFF                       | 0302000C0BQAABX    | 0.321              | 0.405
+    - FREESTYLE LIBRE SENSOR KIT                               | 21480000100        | 0.169              | 0.100
+    - ICHTHAMMOL_(S)                                           | 190400000AACBCB    | 0.000              | 0.000
+    - JOBST ELVAREX SOFT ACC FOR L/EXTREM CLOSED TOE           | 21270000613        | 0.001              | 0.000
+    - K-BAND 7CM X 4M KTD POLYAM & CELLULOSE CONTR BAND        | 20020200802        | 0.000              | 0.000
+    - KNIT-BAND 5CM X 4M KTD POLYAM & CELLULOSE CONTR BAND     | 20020200810        | 0.000              | 0.000
+    - NAPROXEN_TAB 500MG                                       | 1001010P0AAAEAE    | 0.045              | 0.100
+    - NUTILIS CLEAR_PDR SACH 1.25G                             | 190700000BBCXA0    | 0.000              | 0.000
+    - PORTIA BLUE FINGER STALL PLASTIC MED/LGE                 | 21010800302        | 0.000              | 0.000
+    - PREMIERPORE VP 10CM X 15CM VP ADH FILM DRESS             | 20030100422        | 0.001              | 0.000
+    - PREMIERPORE VP 5CM X 7CM VP ADH FILM DRESS               | 20030100431        | 0.000              | 0.000
+    - SUTHERLAND LUBRI JELLY SACH 5G STER                      | 21140000001        | 0.001              | 0.000
+    - THICKEN AID_PDR SACH 9G                                  | 190700000BBCNBK    | 0.000              | 0.000
+    - XARELTO_TAB 20MG                                         | 0208020Y0BBACAC    | 0.229              | 0.168
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  NumberOfPaidItems:
+    type: continuous
+    anonymise: true
+    anonymising_pattern: random
+    allow_missing_values: false
+    miss_probability: 0
+    sum: 51444.0
+    dispersion: 0.1
+#---------------------------------------------------------
+#The tool will try to guess which columns are "linked",
+#meaning that values cascade from one column to another.
+#If any grouping is missed, please add it manually.
+#---------------------------------------------------------
+constraints:
+  linked_columns:
+  - - 0
+    - - HB2014Name
+      - GPPracticeName
+#---------------------------------------------------------
+#Please add any derived columns to be calculated from anonymised
+#continuous variable in this section, alongside with
+#the calculation used. The calculation should follow the format
+#of the evaluate method from Pandas framework: 
+#
+#Assuming you have Numerator column A and Denomininator column B,
+#you would write Rate: (A / B)
+#---------------------------------------------------------
+derived_columns:
+  Example_Column: Example_Calculation
+#---------------------------------------------------------
+#Please add any demonstrator patterns in this section.
+#---------------------------------------------------------
+demo_records: {}

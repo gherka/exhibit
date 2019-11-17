@@ -51,6 +51,29 @@ class newValidator:
                 return False
         return True
 
+    def validate_column_names(self, spec_dict=None):
+        '''
+        Make sure there are no identically-named columns
+        between the main and derived sections.
+        '''
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: Duplicated column names %(dupes)s. Please rename.
+        """)
+
+        dupes = (
+            set(spec_dict['columns']) &
+            set(spec_dict['derived_columns'])
+        )
+
+        if dupes:
+            print(fail_msg % {"dupes" : dupes})
+            return False
+        
+        return True
+
     def validate_number_of_rows(self, spec_dict=None):
         '''
         The number of rows requested by the user can't 

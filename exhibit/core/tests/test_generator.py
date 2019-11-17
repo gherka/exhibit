@@ -12,7 +12,7 @@ import yaml
 
 # Exhibit imports
 from exhibit.core.specs import newSpec
-from exhibit.sampledata.data import basic as ref_df
+from exhibit.sample.sample import prescribing_data as ref_df
 
 # Module under test
 from exhibit.core import generator as tm

@@ -1,0 +1,244 @@
+#---------------------------------------------------------
+#This specification describes the dataset in great detail.
+#In order to vary to degree to which it is anonymised,
+#please review the sections and make necessary adjustments
+#---------------------------------------------------------
+metadata:
+  number_of_rows: 11246
+  categorical_columns:
+  - quarter_date
+  - hb_code
+  - hb_name
+  - loc_code
+  - loc_name
+  - measure
+  - sex
+  - age
+  numerical_columns:
+  - los
+  - stays
+  time_columns:
+  - quarter_date
+  random_seed: 0
+  id: 1ac07
+#---------------------------------------------------------
+#Dataset columns can be one of the three types: 
+#Categorical | Continuous | Timeseries
+#Column type determines the parameters in the specification
+#When making changes to the values, please note their format.
+#---------------------------------------------------------
+columns:
+  quarter_date:
+    type: date
+    allow_missing_values: false
+    miss_probability: 0
+    from: '2018-03-31'
+    to: '2018-12-31'
+    uniques: 4
+    frequency: QS
+  hb_code:
+    type: categorical
+    paired_columns:
+    - hb_name
+    uniques: 17
+    original_values: See paired column
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  hb_name:
+    type: categorical
+    paired_columns:
+    - hb_code
+    uniques: 17
+    original_values:
+    - hb_name                       | paired_hb_code | probability_vector | avlos | los   | stays
+    - NHS Ayrshire & Arran          | S08000015      | 0.065              | 0.061 | 0.053 | 0.050
+    - NHS Borders                   | S08000016      | 0.041              | 0.036 | 0.013 | 0.011
+    - NHS Dumfries & Galloway       | S08000017      | 0.054              | 0.044 | 0.019 | 0.018
+    - NHS Fife                      | S08000029      | 0.059              | 0.048 | 0.035 | 0.035
+    - NHS Forth Valley              | S08000019      | 0.043              | 0.045 | 0.034 | 0.021
+    - NHS Grampian                  | S08000020      | 0.060              | 0.071 | 0.056 | 0.053
+    - NHS Greater Glasgow & Clyde   | S08000021      | 0.160              | 0.158 | 0.188 | 0.206
+    - NHS Highland                  | S08000022      | 0.091              | 0.095 | 0.029 | 0.029
+    - NHS Lanarkshire               | S08000023      | 0.084              | 0.072 | 0.064 | 0.078
+    - NHS Lothian                   | S08000024      | 0.081              | 0.106 | 0.106 | 0.095
+    - NHS Orkney                    | S08000025      | 0.037              | 0.029 | 0.002 | 0.003
+    - NHS Shetland                  | S08000026      | 0.038              | 0.027 | 0.002 | 0.003
+    - NHS Tayside                   | S08000030      | 0.076              | 0.066 | 0.051 | 0.038
+    - NHS Western Isles             | S08000028      | 0.038              | 0.045 | 0.003 | 0.003
+    - National Waiting Times Centre | SB0801         | 0.036              | 0.039 | 0.007 | 0.016
+    - Non-NHS Provider              | S27000001      | 0.017              | 0.033 | 0.001 | 0.001
+    - Scotland                      | scot           | 0.021              | 0.025 | 0.336 | 0.339
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  loc_code:
+    type: categorical
+    paired_columns:
+    - loc_name
+    uniques: 53
+    original_values: See paired column
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  loc_name:
+    type: categorical
+    paired_columns:
+    - loc_code
+    uniques: 53
+    original_values:
+    - loc_name                                      | paired_loc_code | probability_vector | avlos | los   | stays
+    - Aberdeen Royal Infirmary                      | N101H           | 0.019              | 0.024 | 0.023 | 0.020
+    - Arran War Memorial Hospital                   | A101H           | 0.003              | 0.000 | 0.000 | 0.000
+    - Balfour Hospital                              | R101H           | 0.019              | 0.015 | 0.001 | 0.001
+    - Belford Hospital                              | H212H           | 0.016              | 0.015 | 0.001 | 0.001
+    - Borders General Hospital                      | B120H           | 0.021              | 0.018 | 0.006 | 0.006
+    - Caithness General Hospital                    | H103H           | 0.016              | 0.013 | 0.001 | 0.002
+    - Dr Gray's Hospital                            | N411H           | 0.020              | 0.021 | 0.004 | 0.005
+    - Dumfries & Galloway Royal Infirmary           | Y146H           | 0.021              | 0.022 | 0.010 | 0.008
+    - Forth Valley Royal Hospital                   | V217H           | 0.021              | 0.022 | 0.017 | 0.010
+    - Galloway Community Hospital                   | Y144H           | 0.012              | 0.000 | 0.000 | 0.000
+    - Gilbert Bain Hospital                         | Z102H           | 0.019              | 0.013 | 0.001 | 0.001
+    - Glasgow Royal Infirmary                       | G107H           | 0.019              | 0.024 | 0.026 | 0.020
+    - Golden Jubilee National Hospital              | D102H           | 0.018              | 0.019 | 0.003 | 0.008
+    - Inverclyde Royal Hospital                     | C313H           | 0.019              | 0.021 | 0.007 | 0.007
+    - Lorn & Islands Hospital                       | C121H           | 0.016              | 0.017 | 0.001 | 0.001
+    - NHS Ayrshire & Arran                          | S08000015       | 0.021              | 0.021 | 0.026 | 0.025
+    - NHS Borders                                   | S08000016       | 0.021              | 0.018 | 0.006 | 0.006
+    - NHS Dumfries & Galloway                       | S08000017       | 0.021              | 0.022 | 0.010 | 0.009
+    - NHS Fife                                      | S08000029       | 0.021              | 0.020 | 0.017 | 0.018
+    - NHS Forth Valley                              | S08000019       | 0.021              | 0.022 | 0.017 | 0.011
+    - NHS Grampian                                  | S08000020       | 0.021              | 0.025 | 0.029 | 0.028
+    - NHS Greater Glasgow & Clyde                   | S08000021       | 0.021              | 0.027 | 0.095 | 0.106
+    - NHS Highland                                  | S08000022       | 0.021              | 0.024 | 0.015 | 0.015
+    - NHS Lanarkshire                               | S08000023       | 0.021              | 0.018 | 0.032 | 0.039
+    - NHS Lothian                                   | S08000024       | 0.021              | 0.029 | 0.054 | 0.050
+    - NHS Orkney                                    | S08000025       | 0.019              | 0.015 | 0.001 | 0.001
+    - NHS Shetland                                  | S08000026       | 0.019              | 0.013 | 0.001 | 0.001
+    - NHS Tayside                                   | S08000030       | 0.021              | 0.022 | 0.026 | 0.019
+    - NHS Western Isles                             | S08000028       | 0.019              | 0.023 | 0.002 | 0.002
+    - National Waiting Times Centre                 | SB0801          | 0.018              | 0.019 | 0.003 | 0.008
+    - New Victoria Hospital                         | G306H           | 0.014              | 0.003 | 0.000 | 0.010
+    - Ninewells Hospital                            | T101H           | 0.021              | 0.023 | 0.020 | 0.014
+    - Non-NHS Provider                              | S27000001       | 0.017              | 0.033 | 0.001 | 0.001
+    - Perth Royal Infirmary                         | T202H           | 0.019              | 0.018 | 0.005 | 0.004
+    - Queen Elizabeth University Hospital           | G405H           | 0.019              | 0.029 | 0.042 | 0.025
+    - Queen Margaret Hospital                       | F805H           | 0.016              | 0.008 | 0.000 | 0.004
+    - Raigmore Hospital                             | H202H           | 0.021              | 0.025 | 0.011 | 0.011
+    - Royal Alexandra Hospital                      | C418H           | 0.019              | 0.021 | 0.014 | 0.012
+    - Royal Infirmary of Edinburgh at Little France | S314H           | 0.019              | 0.027 | 0.028 | 0.017
+    - Scotland                                      | scot            | 0.021              | 0.025 | 0.336 | 0.339
+    - St John's Hospital                            | S308H           | 0.021              | 0.018 | 0.007 | 0.009
+    - Stobhill Hospital                             | G207H           | 0.012              | 0.002 | 0.000 | 0.007
+    - Stracathro Hospital                           | T312H           | 0.014              | 0.003 | 0.000 | 0.001
+    - University Hospital Ayr                       | A210H           | 0.019              | 0.018 | 0.010 | 0.011
+    - University Hospital Crosshouse                | A111H           | 0.021              | 0.022 | 0.016 | 0.013
+    - University Hospital Hairmyres                 | L302H           | 0.020              | 0.018 | 0.011 | 0.012
+    - University Hospital Monklands                 | L106H           | 0.021              | 0.016 | 0.010 | 0.013
+    - University Hospital Wishaw                    | L308H           | 0.021              | 0.019 | 0.011 | 0.014
+    - Vale of Leven General Hospital                | C206H           | 0.017              | 0.012 | 0.001 | 0.003
+    - Victoria Hospital                             | F704H           | 0.021              | 0.020 | 0.017 | 0.014
+    - West Glasgow                                  | G516H           | 0.019              | 0.020 | 0.003 | 0.017
+    - Western General Hospital                      | S116H           | 0.019              | 0.031 | 0.017 | 0.019
+    - Western Isles Hospital                        | W107H           | 0.019              | 0.023 | 0.002 | 0.002
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  measure:
+    type: categorical
+    paired_columns: []
+    uniques: 3
+    original_values:
+    - measure              | probability_vector | avlos | los   | stays
+    - All Daycases         | 0.349              | 0.000 | 0.000 | 0.399
+    - Elective Inpatients  | 0.319              | 0.294 | 0.108 | 0.121
+    - Emergency Inpatients | 0.332              | 0.706 | 0.892 | 0.480
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  stays:
+    type: continuous
+    anonymise: true
+    anonymising_pattern: random
+    allow_missing_values: false
+    miss_probability: 0
+    sum: 3097146.0
+    dispersion: 0.1
+  los:
+    type: continuous
+    anonymise: true
+    anonymising_pattern: random
+    allow_missing_values: false
+    miss_probability: 0
+    sum: 12584168.0
+    dispersion: 0.1
+  sex:
+    type: categorical
+    paired_columns: []
+    uniques: 2
+    original_values:
+    - sex    | probability_vector | avlos | los   | stays
+    - Female | 0.499              | 0.508 | 0.533 | 0.513
+    - Male   | 0.501              | 0.492 | 0.467 | 0.487
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+  age:
+    type: categorical
+    paired_columns: []
+    uniques: 10
+    original_values:
+    - age   | probability_vector | avlos | los   | stays
+    - 0-9   | 0.057              | 0.015 | 0.005 | 0.017
+    - 10-19 | 0.098              | 0.036 | 0.009 | 0.027
+    - 20-29 | 0.103              | 0.048 | 0.024 | 0.057
+    - 30-39 | 0.105              | 0.053 | 0.034 | 0.073
+    - 40-49 | 0.106              | 0.076 | 0.056 | 0.097
+    - 50-59 | 0.109              | 0.096 | 0.106 | 0.165
+    - 60-69 | 0.109              | 0.123 | 0.159 | 0.198
+    - 70-79 | 0.110              | 0.155 | 0.244 | 0.211
+    - 80-89 | 0.109              | 0.195 | 0.273 | 0.130
+    - 90+   | 0.094              | 0.203 | 0.089 | 0.026
+    allow_missing_values: true
+    miss_probability: 0
+    anonymise: true
+    anonymising_set: random
+    anonymised_values: []
+#---------------------------------------------------------
+#The tool will try to guess which columns are "linked",
+#meaning that values cascade from one column to another.
+#If any grouping is missed, please add it manually.
+#---------------------------------------------------------
+constraints:
+  linked_columns:
+  - - 0
+    - - hb_name
+      - loc_name
+#---------------------------------------------------------
+#Please add any derived columns to be calculated from anonymised
+#continuous variable in this section, alongside with
+#the calculation used. The calculation should follow the format
+#of the evaluate method from Pandas framework: 
+#
+#Assuming you have Numerator column A and Denomininator column B,
+#you would write Rate: (A / B)
+#---------------------------------------------------------
+derived_columns:
+  Example_Column: Example_Calculation
+  avlos: (los / stays)
+#---------------------------------------------------------
+#Please add any demonstrator patterns in this section.
+#---------------------------------------------------------
+demo_records: {}

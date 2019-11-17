@@ -45,10 +45,15 @@ def date_parser(row_tuple):
     (as it can throw up a lot of false positives).
     '''
     column_name, row_value = map(str, row_tuple)
-    if re.search(r'[-:/]', row_value):
+
+    date_regex = r"([-:/])"
+
+    if len(re.findall(date_regex, row_value)) == 2:
+
         try:
             dateutil.parser.parse(row_value)
             return column_name
+
         except ValueError:
             pass
 
