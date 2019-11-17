@@ -16,6 +16,7 @@ import yaml
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
+from exhibit.sample.sample import prescribing_spec
 
 # Module under test
 from exhibit.core import utils as tm
@@ -90,12 +91,11 @@ class helperTests(unittest.TestCase):
         because of "magic" test numbers, like 6.
         '''
         
-        with open(package_dir("tests", "test_spec.yml")) as f:
-            test_spec = yaml.safe_load(f)
+        test_spec = prescribing_spec
 
-        #there are 5 categorical columns in the test spec
+        #there are 4 categorical columns in the prescribing spec
         test_list = tm.get_attr_values(test_spec, "uniques", types=['categorical'])
-        self.assertEqual(len(test_list), 5)
+        self.assertEqual(len(test_list), 4)
 
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")

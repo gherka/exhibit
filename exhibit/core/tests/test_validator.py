@@ -84,7 +84,7 @@ class validatorTests(unittest.TestCase):
         #modify list in place
         original_values_list = test_spec['columns']['HB2014Name']['original_values']
         #set the first value of the probality vector to 1
-        original_values_list[-1] = "Scotland| 1 | 0.016 | 0.333"
+        original_values_list[-1] = "Scotland| 1 | 0.016"
         
         validatorMock = Mock()
 
