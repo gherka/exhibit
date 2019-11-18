@@ -33,3 +33,4 @@ def main():
         xA.read_spec()
         if xA.validate_spec():
             xA.execute_spec()
+            xA.write_data()

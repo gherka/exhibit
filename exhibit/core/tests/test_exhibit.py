@@ -7,12 +7,14 @@ import unittest
 from unittest.mock import patch, mock_open
 from pathlib import Path
 import argparse
+import json
 
 # External imports
 import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
+from exhibit.sample.sample import prescribing_spec, prescribing_anon
 
 # Module under test
 from exhibit.core import exhibit  as tm
@@ -23,6 +25,50 @@ class exhibitTests(unittest.TestCase):
     via @patch decorator; internal intermediate functions
     are mocked inside each test.
     '''
+
+    @patch('argparse.ArgumentParser.parse_args')
+    def test_reference_prescribing_spec(self, mock_args):
+        '''
+        The reference test mirrors the logic of the bootstrap.main()
+
+        The round-trip from YAML string into dictionary loses some type
+        information so the two dictionaries are not exactly the same,
+        but if we serialise them as strings using JSON module, the results
+        should be identical.
+        '''
+        mock_args.return_value = argparse.Namespace(
+            command="fromdata",
+            source=Path(package_dir('sample', '_data', 'prescribing.csv')),
+            verbose=True,
+            sample=True
+        )
+
+        xA = tm.newExhibit()
+        xA.read_data()
+        xA.generate_spec()
+
+        assert json.dumps(prescribing_spec) == json.dumps(xA.spec_dict)
+
+
+    @patch('argparse.ArgumentParser.parse_args')
+    def test_reference_prescribing_anon_data(self, mock_args):
+        '''
+        The reference test mirrors the logic of the bootstrap.main()
+        '''
+        mock_args.return_value = argparse.Namespace(
+            command="fromspec",
+            source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
+            verbose=True,
+            sample=True
+        )
+
+        xA = tm.newExhibit()
+        xA.read_spec()
+        if xA.validate_spec():
+            xA.execute_spec()
+
+        assert prescribing_anon.equals(xA.anon_df)
+
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):

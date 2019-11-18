@@ -17,7 +17,10 @@ from exhibit.core.utils import package_dir
 
 #Load data
 inpatients_data = pd.read_csv(package_dir('sample', '_data', 'inpatients.csv'))
-prescribing_data = pd.read_csv(package_dir('sample', '_data', 'prescribing.csv'))
+prescribing_data = pd.read_csv(
+    package_dir('sample', '_data', 'prescribing.csv'), parse_dates=['PaidDateMonth'])
+prescribing_anon = pd.read_csv(
+    package_dir('sample', '_data', 'prescribing_anon.csv'), parse_dates=['PaidDateMonth'])
 
 #Load specs
 with open(package_dir("sample", "_spec", "inpatients_edited.yml")) as f:

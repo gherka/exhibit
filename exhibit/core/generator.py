@@ -242,9 +242,6 @@ def generate_anon_series(spec_dict, col_name, num_rows):
         data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
         name=col_name)
 
-    if col_name == 'BNFItemDescription':
-        print(original_series.value_counts())
-
     if paired_cols:
         paired_df = (
             col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]

@@ -90,6 +90,7 @@ class newExhibit:
         self.args = self.parser.parse_args(sys.argv[1:])
         self.spec_dict = None
         self.df = None
+        self.anon_df = None
         self.numerical_cols = None
         
         #Default verbosity is set in the boostrap.py to 0
@@ -211,7 +212,6 @@ class newExhibit:
         #5) CONCAT LINKED DFs AND SERIES
 
         temp_anon_df = pd.concat(linked_dfs, axis=1)
-        # print(temp_anon_df['BNFItemDescription'].value_counts())
 
         #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
         complete_series = []
@@ -267,12 +267,18 @@ class newExhibit:
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
 
-        #10) WRITE THE ANONYMISED DATAFRAME TO .CSV
+        self.anon_df = anon_df
+
+    def write_data(self):
+        '''
+        Doc string
+        '''
+
         if self.args.output is None:
             output_path = self.args.source.stem + "_DEMO" + ".csv"
         else:
             output_path = self.args.output
 
-        anon_df.to_csv(output_path, index=False)
+        self.anon_df.to_csv(output_path, index=False)
 
         print("done")
