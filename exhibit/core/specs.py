@@ -29,6 +29,8 @@ class newSpec:
         internal copy of the passed in dataframe
     random_seed : int
         random seed to use; defaults to 0
+    sample : bool
+        flag to say whether the spec is a persistent sample spec
     id : str
         each spec instance is given its ID for reference in temporary SQL table
     numerical_cols : list
@@ -45,10 +47,11 @@ class newSpec:
 
     '''
 
-    def __init__(self, data, random_seed=0):
+    def __init__(self, data, sample=False, random_seed=0):
 
         self.df = data.copy()
         self.random_seed = random_seed
+        self.sample = sample
         self.id = generate_table_id()
         self.numerical_cols = list(
             self.df.select_dtypes(include=np.number).columns.values)
@@ -65,7 +68,7 @@ class newSpec:
                 "numerical_columns": sorted(self.numerical_cols),
                 "time_columns": self.time_cols,
                 "random_seed": self.random_seed,
-                "id": self.id
+                "id": "sample" if self.sample else self.id
             },
             'columns': {},
             'constraints': {},
@@ -212,9 +215,14 @@ class newSpec:
         #PART 3: STORE LINKED GROUPS INFORMATION IN A SQLITE3 DB
 
             #Column names can't have spaces; replace with $ and then back when
-            #reading the data from the SQLite DB at execution stage. 
+            #reading the data from the SQLite DB at execution stage.
+            if self.sample:
+                table_name = f"sample_{linked_group_tuple[0]}"
+            else:
+                table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
+
             create_temp_table(
-                table_name="temp_" + self.id + f"_{linked_group_tuple[0]}",
+                table_name=table_name,
                 col_names=[x.replace(" ", "$") for x in linked_group_tuple[1]],
                 data=linked_data                
             )

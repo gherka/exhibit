@@ -15,7 +15,7 @@ import numpy as np
 import yaml
 
 # Exhibit import
-from exhibit.core.utils import package_dir
+from exhibit.core.utils import package_dir, trim_probabilities_to_1
 from exhibit.core.formatters import parse_original_values_into_dataframe
 
 def generate_derived_column(anon_df, calculation):
@@ -37,9 +37,9 @@ def generate_weights(df, cat_col, num_col):
     '''
     
     weights = df.groupby([cat_col])[num_col].sum()
-    ws = round(weights / weights.sum(), 3)
+    weights['ws'] = np.maximum(0.001, round(weights / weights.sum(), 3))
     
-    output = ws.sort_index(kind="mergesort").to_list()
+    output = weights['ws'].sort_index(kind="mergesort").to_list()
     
     return output
 
@@ -49,6 +49,10 @@ def apply_dispersion(value, dispersion_pct):
     created by +- the dispersion value (which is 
     expressed as a percentage)
     '''
+
+    if value == np.inf:
+        value = 0
+
     d = int(value * dispersion_pct)
     rmin, rmax = (max(0, (value - d)), (value + d))
 
@@ -67,6 +71,10 @@ def generate_weights_table(spec):
     aka most granular column among the linked columns
     to avoid applying the weights twice to the same 
     "cut" of the data.
+
+    Weights and probabilities should be at least 0.001;
+    even if the original, non-anonymised data is 100% 
+    zeroes.
     '''
     
     tuple_list = []
@@ -159,13 +167,19 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     all_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
     base_col = all_cols[-1]
     base_col_sql = base_col.replace(" ", "$")
+    
+    #special case for reference test table for the prescribing dataset
+    if spec_dict['metadata']['id'] == "sample":
+        table_name = f"sample_{linked_group}"
+    else:
+        table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group}"
    
     db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
     conn = sqlite3.connect(db_uri, uri=True)
 
     sql = f"""
     SELECT *
-    FROM temp_{spec_dict['metadata']['id']}_{linked_group}
+    FROM {table_name}
     ORDER BY {base_col_sql}
     """
 
@@ -221,9 +235,15 @@ def generate_anon_series(spec_dict, col_name, num_rows):
     col_prob = col_df['probability_vector'].to_list()
     col_values = col_df[col_name].to_list()
 
+    #because we're ensuring no probability == 0, we have to trim
+    col_prob_clean = trim_probabilities_to_1(col_prob)
+
     original_series = pd.Series(
-        data=np.random.choice(col_values, num_rows, col_prob),
+        data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
         name=col_name)
+
+    if col_name == 'BNFItemDescription':
+        print(original_series.value_counts())
 
     if paired_cols:
         paired_df = (

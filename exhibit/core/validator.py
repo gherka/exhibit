@@ -92,7 +92,7 @@ class newValidator:
         miss = get_attr_values(spec_dict, 'allow_missing_values')
         uniques = get_attr_values(spec_dict, 'uniques')
 
-        nums = []
+        nums = [1]
 
         for miss_flag, value in zip(miss, uniques):
             if (miss_flag == False) & (value is not None):
@@ -160,7 +160,7 @@ class newValidator:
                 continue
 
             values_table = parse_original_values_into_dataframe(v)
-            #replace blank cells ('') with np.nan
+
             values_table.replace('', np.nan, inplace=True)
 
             if any(values_table.isna().any()):
@@ -170,6 +170,38 @@ class newValidator:
                 
         return True
 
+    def validate_weights_and_probability_vector_have_no_zeroes(self, spec_dict=None):
+        '''
+        The original values pseudo-csv table shouldn't have any zeroes (0.000)
+        '''
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: One or more values in the probability vector or
+        column weights of column %(err_col)s is zero.
+        """)
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        for c, v in get_attr_values(
+                spec_dict,
+                'original_values',
+                col_names=True,
+                types=['categorical']):
+
+            if v == "See paired column":
+                continue
+
+            values_table = parse_original_values_into_dataframe(v)
+
+            values_table.replace('', np.nan, inplace=True)
+
+            if ((values_table == 0).any()).any():
+
+                print(fail_msg % {"err_col" : c})
+                return False
+                
+        return True
 
     def validate_linked_cols(self, spec_dict=None):
         '''

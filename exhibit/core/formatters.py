@@ -101,7 +101,7 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
 
 def build_list_of_probability_vectors(dataframe, original_series_name):
     '''
-    Feeder function for build_table_from_lists
+    Feeder function for build_table_from_lists; at least 0.001
 
     Parameters
     ----------
@@ -124,7 +124,7 @@ def build_list_of_probability_vectors(dataframe, original_series_name):
 
     vectors = (original_series.value_counts()
                      .sort_index(kind="mergesort")
-                     .apply(lambda x: x / total_count)
+                     .apply(lambda x: max(0.001, x / total_count))
                      .values
                      .tolist()
     )

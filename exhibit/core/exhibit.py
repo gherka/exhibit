@@ -76,6 +76,13 @@ class newExhibit:
             help='control traceback length for debugging errors',
             )
         self.parser.add_argument(
+            '--sample', '-s',
+            default=False,
+            action='store_true',
+            help='flag to tell the tool to generate sample spec',
+            )
+
+        self.parser.add_argument(
             '--output', '-o',
             help='output the generated spec to a given file name',
             )
@@ -106,7 +113,7 @@ class newExhibit:
         '''
         if not self.df is None:
 
-            new_spec = newSpec(self.df)
+            new_spec = newSpec(self.df, self.args.sample)
 
             self.spec_dict = new_spec.output_spec_dict()
             
@@ -165,6 +172,9 @@ class newExhibit:
             v['uniques'] for c, v in self.spec_dict['columns'].items()
             if c in core_cols
             ]
+        
+        if not core_uniques:
+            core_uniques.append(1)
 
         unique_count = reduce(add, core_uniques)
 
@@ -201,6 +211,7 @@ class newExhibit:
         #5) CONCAT LINKED DFs AND SERIES
 
         temp_anon_df = pd.concat(linked_dfs, axis=1)
+        # print(temp_anon_df['BNFItemDescription'].value_counts())
 
         #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
         complete_series = []

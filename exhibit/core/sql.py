@@ -63,6 +63,7 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
     col_list = ', '.join(col_names)
     params = ', '.join(['?' for x in col_names])
 
+    drop_sql = f"DROP TABLE IF EXISTS {table_name}"
     create_sql = f"CREATE TABLE {table_name} ({col_list})"
     insert_sql = f"INSERT INTO {table_name} VALUES ({params})"
 
@@ -70,6 +71,7 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
 
     with closing(conn):
         c = conn.cursor()
+        c.execute(drop_sql)
         c.execute(create_sql)
         c.executemany(insert_sql, data)
         conn.commit()

@@ -16,7 +16,7 @@ metadata:
   time_columns:
   - PaidDateMonth
   random_seed: 0
-  id: 1a2b9
+  id: sample
 #---------------------------------------------------------
 #Dataset columns can be one of the three types: 
 #Categorical | Continuous | Timeseries
@@ -94,7 +94,7 @@ columns:
     - COWDENBEATH SURGERY                            | 0.007              | 0.019
     - CRAIGMILLAR MEDICAL GROUP                      | 0.007              | 0.011
     - CROSSGATES MEDICAL PRACTICE                    | 0.007              | 0.006
-    - DAISY VILLA                                    | 0.003              | 0.000
+    - DAISY VILLA                                    | 0.003              | 0.001
     - DALBEATTIE MEDICAL PRACTICE                    | 0.008              | 0.007
     - DALBLAIR MEDICAL PRACTICE                      | 0.008              | 0.004
     - DENBURN MEDICAL PRACTICE                       | 0.010              | 0.017
@@ -105,7 +105,7 @@ columns:
     - DRS OLIVER, GREELEY, INNES & SPRATT            | 0.012              | 0.008
     - DRS REID & MACLAREN PARTNERSHIP                | 0.005              | 0.003
     - DRS TIERNEY & CANNING                          | 0.007              | 0.006
-    - DUNBEATH SURGERY                               | 0.002              | 0.000
+    - DUNBEATH SURGERY                               | 0.002              | 0.001
     - EAST PRACTICE, SPRINGFIELD MEDICAL CENTRE      | 0.007              | 0.007
     - EDEN VILLA PRACTICE                            | 0.008              | 0.007
     - EDENKILN SURGERY                               | 0.008              | 0.003
@@ -122,7 +122,7 @@ columns:
     - HEILENDI PRACTICE                              | 0.008              | 0.006
     - HILLSWICK HEALTH CENTRE                        | 0.004              | 0.001
     - HOLBURN MEDICAL GROUP                          | 0.007              | 0.012
-    - ISLANDS VIEW SURGERY                           | 0.004              | 0.000
+    - ISLANDS VIEW SURGERY                           | 0.004              | 0.001
     - JAMIESON MEDICAL PRACTICE                      | 0.010              | 0.014
     - JEDBURGH MEDICAL PRACTICE                      | 0.009              | 0.016
     - KELSO MEDICAL GROUP                            | 0.009              | 0.025
@@ -148,7 +148,7 @@ columns:
     - NIDDRIE MEDICAL PRACTICE                       | 0.006              | 0.004
     - NORTH AVENUE SURGERY                           | 0.009              | 0.015
     - NORTH HARRIS MEDICAL PRACTICE                  | 0.004              | 0.001
-    - NORTH UIST MEDICAL PRACTICE                    | 0.002              | 0.000
+    - NORTH UIST MEDICAL PRACTICE                    | 0.002              | 0.001
     - O'CONNELL STREET MEDICAL PRACTICE              | 0.010              | 0.012
     - OLD KILPATRICK MEDICAL PRACTICE                | 0.008              | 0.007
     - ORCADES PRACTICE                               | 0.006              | 0.003
@@ -166,7 +166,7 @@ columns:
     - SKERRYVORE PRACTICE                            | 0.007              | 0.009
     - SOLWAY MEDICAL GROUP                           | 0.011              | 0.010
     - SOUTH BEACH MEDICAL CENTRE                     | 0.009              | 0.013
-    - SOUTH HARRIS MEDICAL PRACTICE                  | 0.003              | 0.000
+    - SOUTH HARRIS MEDICAL PRACTICE                  | 0.003              | 0.001
     - SOUTH UIST MEDICAL PRACTICE                    | 0.007              | 0.002
     - SOUTHFIELD MEDICAL PRACTICE                    | 0.006              | 0.005
     - ST MARGARET'S HEALTH CENTRE                    | 0.008              | 0.009
@@ -222,28 +222,28 @@ columns:
     uniques: 23
     original_values:
     - BNFItemDescription                                       | paired_BNFItemCode | probability_vector | NumberOfPaidItems
-    - 365 FILM 4CM X 5CM VP ADH FILM DRESS                     | 20030100662        | 0.000              | 0.000
-    - ADPORE 10CM X 10CM ADH DRESS PFA                         | 20030100600        | 0.000              | 0.000
-    - ADPORE 7CM X 8CM ADH DRESS PFA                           | 20030100599        | 0.000              | 0.000
-    - BLUE DOT PLAS PERF MED TAPE 2.5CM X 10M PERM NON-WOV SYN | 20100000641        | 0.000              | 0.000
-    - COTTON STKNTTE BLEACHED BP 1988 2.5CM HEAVYWEIGHT        | 20090000110        | 0.001              | 0.000
-    - DROPPER                                                  | 21010600100        | 0.000              | 0.000
-    - EASIFIX K 10CM X 4M KTD POLYAM & CELLULOSE CONTR BAND    | 20020200817        | 0.000              | 0.000
-    - EASIFIX K 5CM X 4M KTD POLYAM & CELLULOSE CONTR BAND     | 20020200815        | 0.000              | 0.000
+    - 365 FILM 4CM X 5CM VP ADH FILM DRESS                     | 20030100662        | 0.001              | 0.001
+    - ADPORE 10CM X 10CM ADH DRESS PFA                         | 20030100600        | 0.001              | 0.001
+    - ADPORE 7CM X 8CM ADH DRESS PFA                           | 20030100599        | 0.001              | 0.001
+    - BLUE DOT PLAS PERF MED TAPE 2.5CM X 10M PERM NON-WOV SYN | 20100000641        | 0.001              | 0.001
+    - COTTON STKNTTE BLEACHED BP 1988 2.5CM HEAVYWEIGHT        | 20090000110        | 0.001              | 0.001
+    - DROPPER                                                  | 21010600100        | 0.001              | 0.001
+    - EASIFIX K 10CM X 4M KTD POLYAM & CELLULOSE CONTR BAND    | 20020200817        | 0.001              | 0.001
+    - EASIFIX K 5CM X 4M KTD POLYAM & CELLULOSE CONTR BAND     | 20020200815        | 0.001              | 0.001
     - ELIQUIS_TAB 5MG                                          | 0208020Z0BBABAB    | 0.227              | 0.226
     - FOSTAIR_INH 100MCG/6MCG (120D) CFF                       | 0302000C0BQAABX    | 0.321              | 0.405
     - FREESTYLE LIBRE SENSOR KIT                               | 21480000100        | 0.169              | 0.100
-    - ICHTHAMMOL_(S)                                           | 190400000AACBCB    | 0.000              | 0.000
-    - JOBST ELVAREX SOFT ACC FOR L/EXTREM CLOSED TOE           | 21270000613        | 0.001              | 0.000
-    - K-BAND 7CM X 4M KTD POLYAM & CELLULOSE CONTR BAND        | 20020200802        | 0.000              | 0.000
-    - KNIT-BAND 5CM X 4M KTD POLYAM & CELLULOSE CONTR BAND     | 20020200810        | 0.000              | 0.000
+    - ICHTHAMMOL_(S)                                           | 190400000AACBCB    | 0.001              | 0.001
+    - JOBST ELVAREX SOFT ACC FOR L/EXTREM CLOSED TOE           | 21270000613        | 0.001              | 0.001
+    - K-BAND 7CM X 4M KTD POLYAM & CELLULOSE CONTR BAND        | 20020200802        | 0.001              | 0.001
+    - KNIT-BAND 5CM X 4M KTD POLYAM & CELLULOSE CONTR BAND     | 20020200810        | 0.001              | 0.001
     - NAPROXEN_TAB 500MG                                       | 1001010P0AAAEAE    | 0.045              | 0.100
-    - NUTILIS CLEAR_PDR SACH 1.25G                             | 190700000BBCXA0    | 0.000              | 0.000
-    - PORTIA BLUE FINGER STALL PLASTIC MED/LGE                 | 21010800302        | 0.000              | 0.000
-    - PREMIERPORE VP 10CM X 15CM VP ADH FILM DRESS             | 20030100422        | 0.001              | 0.000
-    - PREMIERPORE VP 5CM X 7CM VP ADH FILM DRESS               | 20030100431        | 0.000              | 0.000
-    - SUTHERLAND LUBRI JELLY SACH 5G STER                      | 21140000001        | 0.001              | 0.000
-    - THICKEN AID_PDR SACH 9G                                  | 190700000BBCNBK    | 0.000              | 0.000
+    - NUTILIS CLEAR_PDR SACH 1.25G                             | 190700000BBCXA0    | 0.001              | 0.001
+    - PORTIA BLUE FINGER STALL PLASTIC MED/LGE                 | 21010800302        | 0.001              | 0.001
+    - PREMIERPORE VP 10CM X 15CM VP ADH FILM DRESS             | 20030100422        | 0.001              | 0.001
+    - PREMIERPORE VP 5CM X 7CM VP ADH FILM DRESS               | 20030100431        | 0.001              | 0.001
+    - SUTHERLAND LUBRI JELLY SACH 5G STER                      | 21140000001        | 0.001              | 0.001
+    - THICKEN AID_PDR SACH 9G                                  | 190700000BBCNBK    | 0.001              | 0.001
     - XARELTO_TAB 20MG                                         | 0208020Y0BBACAC    | 0.229              | 0.168
     allow_missing_values: true
     miss_probability: 0

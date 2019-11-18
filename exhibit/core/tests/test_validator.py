@@ -7,13 +7,8 @@ import unittest
 from unittest.mock import Mock
 from copy import deepcopy
 
-# External library imports
-import yaml
-
 # Exhibit imports
-from exhibit.core.utils import package_dir
 from exhibit.sample import sample
-from exhibit.core.formatters import parse_original_values_into_dataframe
 
 # Module under test
 from exhibit.core.validator import newValidator as tm
