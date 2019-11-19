@@ -49,6 +49,7 @@ class newValidator:
         for method in gen:
             if not getattr(self, method)():
                 return False
+        print("VALIDATION COMPLETE")
         return True
 
     def validate_column_names(self, spec_dict=None):

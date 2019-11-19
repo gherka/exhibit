@@ -279,8 +279,16 @@ def generate_complete_series(spec_dict, col_name):
 
 def generate_YAML_string(spec_dict):
     '''
-    Returns a string formatted to a YAML spec
-    from a passed in dictionary
+    Serialise specification dictionary into a YAML string with added comments
+
+    Paramters
+    ---------
+    spec_dict : dict
+        complete specification of the source dataframe
+    
+    Returns
+    -------
+    YAML-formatted string
 
     We overwrite ignore_aliases() to output identical dictionaries
     and not have them replaced by aliases like *id001

@@ -30,12 +30,27 @@ from exhibit.core.generator import (generate_linked_anon_df,
 
 class newExhibit:
     '''
-    An exhbit class to make unit-testing easier
+    The main class encapsulating the demonstrator
+    
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+    spec_dict : dict
+        complete specification of the source dataframe which serves
+        as the final output when tool called with "fromdata" command
+    df : pd.DataFrame
+        source dataframe
+    anon_df : pd.DataFrame
+        generated anonymised dataframe which serves as the final
+        output when the tool is called with "fromspec" command    
+
     '''
 
     def __init__(self):
         '''
-        Setup the program to parse command line arguments
+        Setup the tool to parse command line arguments
         '''
 
         desc = textwrap.dedent('''\
@@ -87,69 +102,70 @@ class newExhibit:
             help='output the generated spec to a given file name',
             )
  
-        self.args = self.parser.parse_args(sys.argv[1:])
+        self._args = self.parser.parse_args(sys.argv[1:])
         self.spec_dict = None
         self.df = None
         self.anon_df = None
-        self.numerical_cols = None
         
         #Default verbosity is set in the boostrap.py to 0
-        if self.args.verbose:
+        if self._args.verbose:
             sys.tracebacklimit = 1000
 
     def read_data(self):
         '''
-        Read whatever file has been selected as source, accounting for format.
-        Only called on fromdata CLI command.
+        Attempt to read whatever filepath was given as source.
+        Only called on "fromdata" CLI command.
         '''
 
-        self.df = read_with_date_parser(self.args.source)
+        self.df = read_with_date_parser(self._args.source)
 
     def generate_spec(self):
         '''
-        Generating spec needs a dataframe so should only be run
-        after read_data()
-
-        By default the random seed is set to 0
+        Generating a spec requires a dataframe so this function should
+        only be run after read_data()
         '''
         if not self.df is None:
 
-            new_spec = newSpec(self.df, self.args.sample)
+            new_spec = newSpec(self.df, self._args.sample)
 
             self.spec_dict = new_spec.output_spec_dict()
             
     
     def write_spec(self, spec_yaml=None):
         '''
-        Write the spec (as YAML string) to file specified in command line.
-        The YAML string that is generated from spec_dict saved
-        as newExhibit instance attribute.
+        Write the YAML string generated from the spec_dict attribute
+        to filepath specified in command line.
         '''
 
         if spec_yaml is None:
             spec_yaml = generate_YAML_string(self.spec_dict)
 
-        if self.args.output is None:
-            output_path = self.args.source.stem + "_SPEC" + ".yml"
+        if self._args.output is None:
+            output_path = self._args.source.stem + "_SPEC" + ".yml"
         else:
-            output_path = self.args.output
+            output_path = self._args.output
 
         with open(output_path, "w") as f:
             f.write(spec_yaml)
 
     def read_spec(self):
         '''
-        Read the YAML file and save it as spec_dict
+        Read the YAML file and save it as class attribute spec_dict
         '''
-        with open(self.args.source, "r") as f:
+        with open(self._args.source, "r") as f:
             self.spec_dict = yaml.safe_load(f)
 
     def validate_spec(self):
         '''
-        Returns True or False depending on whether all
-        methods in the validator class return True
+        Users can (and are encouraged to) alter the spec to suit their requirements
+        which can potentially lead to unexpected formatting and parsing errors.
+        
+        To avoid this, the newValidator class contains methods that check the 
+        integrity of the specification. 
+
+        If validation passes, returns True, else returns False with helpful messages
         '''
-        return newValidator(self.args.source).run_validator()
+        return newValidator(self._args.source).run_validator()
 
     def execute_spec(self):
         '''
@@ -274,10 +290,10 @@ class newExhibit:
         Doc string
         '''
 
-        if self.args.output is None:
-            output_path = self.args.source.stem + "_DEMO" + ".csv"
+        if self._args.output is None:
+            output_path = self._args.source.stem + "_DEMO" + ".csv"
         else:
-            output_path = self.args.output
+            output_path = self._args.output
 
         self.anon_df.to_csv(output_path, index=False)
 

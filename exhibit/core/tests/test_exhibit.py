@@ -69,7 +69,6 @@ class exhibitTests(unittest.TestCase):
 
         assert prescribing_anon.equals(xA.anon_df)
 
-
     @patch('argparse.ArgumentParser.parse_args')
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
         '''

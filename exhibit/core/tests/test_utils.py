@@ -11,11 +11,8 @@ from pathlib import Path
 
 # External library imports
 import pandas as pd
-import numpy as np
-import yaml
 
 # Exhibit imports
-from exhibit.core.utils import package_dir
 from exhibit.sample.sample import prescribing_spec
 
 # Module under test
@@ -100,122 +97,6 @@ class helperTests(unittest.TestCase):
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")
         assert test_list.count(None) == len(test_list)
-
-    def test_hierarchically_linked_columns(self):
-        '''
-        Doc string
-        '''
-
-        test_df = pd.DataFrame(
-            data=np.array([
-                [
-                "All Specialties",
-                "Medical",
-                "Medical", 
-                "Medical",
-                "Surgery",
-                "Surgery",
-                "Surgery",
-                "All Specialties"],
-                [
-                "All Specialties",
-                "General Medicine",
-                "Cardiology",
-                "Rheumatology",
-                "General Surgery",
-                "Anaesthetics",
-                "Cardiothoracic Surgery",
-                "All Specialties"
-                ],
-                [
-                "All",
-                "2",
-                "3",
-                "9",
-                "10",
-                "11",
-                "12",
-                "All"
-                ],
-                ["A", "A", "A", "B", "B", "B", "B", "B"],
-                ["C", "C", "C", "D", "D", "D", "D", "D",]]).T,
-            columns=[
-                "C1", "C2", "C3", "C4", "C5"]
-        )
-
-        assert tm.find_hierarchically_linked_columns(test_df) == [
-            ("C1", "C2"), ("C1", "C3")
-        ]
-
-    def test_1_to_1_linked_columns(self):
-        '''
-        Doc string
-        '''
-
-        test_df = pd.DataFrame(
-            data=np.array([
-                [
-                "All Specialties",
-                "Medical",
-                "Medical", 
-                "Medical",
-                "Surgery",
-                "Surgery",
-                "Surgery",
-                "All Specialties"],
-                [
-                "All Specialties",
-                "General Medicine",
-                "Cardiology",
-                "Rheumatology",
-                "General Surgery",
-                "Anaesthetics",
-                "Cardiothoracic Surgery",
-                "All Specialties"
-                ],
-                [
-                "All",
-                "2",
-                "3",
-                "9",
-                "10",
-                "11",
-                "12",
-                "All"
-                ],
-                ["A", "A", "A", "B", "B", "B", "B", "B"],
-                ["CA", "CA", "CA", "DA", "DA", "DA", "DA", "DA",]]).T,
-            columns=[
-                "C1", "C2", "C3", "C4", "C5"]
-        )
-
-        assert tm.find_pair_linked_columns(test_df) == [["C2", "C3"], ["C5", "C4"]]
-
-
-    def test_find_linked_columns(self):
-        '''
-        Add more test cases if need be
-        '''
-        
-        #1 to 1 relationship between A and B; C discounted
-        test_df1 = pd.DataFrame(
-            data=np.transpose([list('ABCD'), range(4), ['a']*4]),
-            columns=list('ABC')
-            )
-        #1 to many relationship between A and B
-        test_df2 = pd.DataFrame(
-            data=np.transpose([list('AABCD'), [1, 1, 2, 3, 4], [1, 2, 5, 5, 1]]),
-            columns=list('ABC')
-            )
-        #no relationships
-        test_df3 = pd.DataFrame(
-            data=np.transpose([list('AACDABCD'), [1, 2]*4, list('abdd')*2]),
-            columns=list('ABC')
-            )
-
-        assert tm.find_linked_columns(test_df1) == [('A', 'B')]
-        assert tm.find_linked_columns(test_df2) == [('A', 'B')]
-        assert tm.find_linked_columns(test_df3) == []
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

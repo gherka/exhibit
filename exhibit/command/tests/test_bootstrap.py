@@ -57,6 +57,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.read_spec = Mock()
             mockExhibit.return_value.validate_spec = Mock()
             mockExhibit.return_value.execute_spec = Mock()
+            mockExhibit.return_value.write_data = Mock()
 
             mockExhibit.return_value.args = argparse.Namespace(
                 command='fromspec',
@@ -67,3 +68,4 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.read_spec.assert_called()
             mockExhibit.return_value.validate_spec.assert_called()
             mockExhibit.return_value.execute_spec.assert_called()
+            mockExhibit.return_value.write_data.assert_called()

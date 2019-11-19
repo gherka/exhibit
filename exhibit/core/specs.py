@@ -6,10 +6,11 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.utils import (
-    guess_date_frequency, find_hierarchically_linked_columns,
+from exhibit.core.utils import guess_date_frequency, generate_table_id
+from exhibit.core.linkage import (
+    linkedColumnsTree,
+    find_hierarchically_linked_columns,
     find_pair_linked_columns)
-from exhibit.core.utils import linkedColumnsTree, generate_table_id
 from exhibit.core.formatters import build_table_from_lists
 from exhibit.core.sql import create_temp_table
 from exhibit.core.generator import generate_weights
@@ -22,6 +23,11 @@ class newSpec:
     ----------
     data : pd.DataFrame
         source dataframe
+    sample : bool
+        special flag for generating sample spec and anonymised dataframe
+        OPTIONAL. Default is False
+    random_seed : int
+        OPTIONAL. Default is 0    
 
     Attributes
     ----------
