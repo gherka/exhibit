@@ -5,6 +5,8 @@ A collection of helper functions to keep the main module tidy
 # Standard library imports
 from os.path import abspath, dirname, join, exists
 from pathlib import Path
+from functools import reduce
+from operator import add
 import re
 import datetime
 import dateutil
@@ -186,3 +188,50 @@ def trim_probabilities_to_1(p):
     output = [x if x != max(p) else x - diff for x in p]
 
     return output
+
+def count_core_rows(spec_dict):
+    '''
+    Calculate number of rows to generate probabilistically
+
+    Parameters
+    ----------
+    spec_dict : dict
+        complete specification of the source dataframe
+
+    Returns
+    -------
+    A tuple (number of core rows, count of complete values)
+
+
+    There are two types of columns:
+     - probability driven columns where values can be "skipped" if probability too low
+     - "unskippable" or complete columns where every value is guaranteed to appear
+        for each other column value. Think of it as uninterrupted time series.
+
+    The columns with non-skippable values in the specification are
+    those that have "allow_missing_values" as False.
+
+    Knowing the number of "core" rows early is important when checking
+    if the requested number of rows is achievable.
+    '''
+
+    complete_cols = [c for c, v in get_attr_values(
+        spec_dict,
+        "allow_missing_values",
+        col_names=True, 
+        types=['categorical', 'date']) if not v]
+
+    complete_uniques = [
+        v['uniques'] for c, v in spec_dict['columns'].items()
+        if c in complete_cols
+        ]
+    
+    #reduce needs at least one value or it will error out
+    if not complete_uniques:
+        complete_uniques.append(1)
+
+    complete_count = reduce(add, complete_uniques)
+
+    core_rows = int(spec_dict['metadata']['number_of_rows'] / complete_count)
+
+    return (core_rows, complete_count)

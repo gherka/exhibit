@@ -15,7 +15,7 @@ import numpy as np
 import yaml
 
 # Exhibit import
-from exhibit.core.utils import package_dir, trim_probabilities_to_1
+from exhibit.core.utils import package_dir, trim_probabilities_to_1, get_attr_values
 from exhibit.core.formatters import parse_original_values_into_dataframe
 
 def generate_derived_column(anon_df, calculation):
@@ -61,7 +61,6 @@ def apply_dispersion(value, dispersion_pct):
         return np.random.randint(0, (1 / dispersion_pct))
 
     return np.random.randint(rmin, rmax)
-
 
 def generate_weights_table(spec):
     '''
@@ -276,6 +275,93 @@ def generate_complete_series(spec_dict, col_name):
     elif col_attrs['type'] == 'categorical':
 
         return pd.Series(col_attrs['original_values'], name=col_name)
+
+
+def generate_categorical_data(spec_dict, core_rows):
+    '''
+    Brings together all the components of categorical (inc. timeseries)
+    data generation.
+
+    Parameters
+    ----------
+    spec_dict : dict
+        complete specification of the source dataframe
+    core_rows : int
+        number of rows to generate for each column
+
+    Returns
+    -------
+    A dataframe with all categorical columns
+
+    '''
+    #1) CREATE PLACEHOLDER LIST OF GENERATED DFs
+    generated_dfs = []
+
+    #2) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
+    for linked_group in spec_dict['constraints']['linked_columns']:
+        linked_df = generate_linked_anon_df(spec_dict, linked_group[0], core_rows)
+        generated_dfs.append(linked_df)
+
+    #3) DEFINE COLUMNS TO SKIP
+    #   - nested linked columns (generated as part of #2)
+    #   - complete columns - all values are used
+    #   - columns where original values = "See paired column"
+    
+    nested_linked_cols = [
+        sublist for n, sublist in spec_dict['constraints']['linked_columns']
+        ]
+
+    complete_cols = [c for c, v in get_attr_values(
+        spec_dict,
+        "allow_missing_values",
+        col_names=True, 
+        types=['categorical', 'date']) if not v]
+
+    skipped_cols = list(chain.from_iterable(nested_linked_cols)) + complete_cols
+
+    #4) GENERATE NON-LINKED DFs
+
+    list_of_cat_tuples = get_attr_values(
+        spec_dict,
+        'original_values',
+        col_names=True, types='categorical')
+
+    for col in [
+        k for k, v in list_of_cat_tuples if
+        (k not in skipped_cols) and (v != "See paired column")]:
+        s = generate_anon_series(spec_dict, col, core_rows)
+        generated_dfs.append(s)
+
+    #5) CONCAT GENERATED DFs AND SERIES
+
+    temp_anon_df = pd.concat(generated_dfs, axis=1)
+
+    #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
+    complete_series = []
+
+    for col in spec_dict['columns']:
+        if col in complete_cols:
+            s = generate_complete_series(spec_dict, col)
+            complete_series.append(s)
+    
+    #7) OUTER JOIN
+    temp_anon_df['key'] = 1
+
+    for s in complete_series:
+
+        temp_anon_df = pd.merge(
+            temp_anon_df,
+            pd.DataFrame(s).assign(key=1),
+            how="outer",
+            on="key"
+        )
+        
+    anon_df = temp_anon_df
+    
+    anon_df.drop('key', axis=1, inplace=True)
+
+    return anon_df
+
 
 def generate_YAML_string(spec_dict):
     '''

@@ -31,7 +31,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.generate_spec = Mock()
             mockExhibit.return_value.write_spec = Mock()
 
-            mockExhibit.return_value.args = argparse.Namespace(
+            mockExhibit.return_value._args = argparse.Namespace(
                 command='fromdata',
             )
             

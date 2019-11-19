@@ -15,12 +15,13 @@ metadata:
   - sex
   - age
   numerical_columns:
+  - avlos
   - los
   - stays
   time_columns:
   - quarter_date
   random_seed: 0
-  id: 1ac07
+  id: '97859'
 #---------------------------------------------------------
 #Dataset columns can be one of the three types: 
 #Categorical | Continuous | Timeseries
@@ -95,7 +96,7 @@ columns:
     original_values:
     - loc_name                                      | paired_loc_code | probability_vector | avlos | los   | stays
     - Aberdeen Royal Infirmary                      | N101H           | 0.019              | 0.024 | 0.023 | 0.020
-    - Arran War Memorial Hospital                   | A101H           | 0.003              | 0.000 | 0.000 | 0.000
+    - Arran War Memorial Hospital                   | A101H           | 0.003              | 0.001 | 0.001 | 0.001
     - Balfour Hospital                              | R101H           | 0.019              | 0.015 | 0.001 | 0.001
     - Belford Hospital                              | H212H           | 0.016              | 0.015 | 0.001 | 0.001
     - Borders General Hospital                      | B120H           | 0.021              | 0.018 | 0.006 | 0.006
@@ -103,7 +104,7 @@ columns:
     - Dr Gray's Hospital                            | N411H           | 0.020              | 0.021 | 0.004 | 0.005
     - Dumfries & Galloway Royal Infirmary           | Y146H           | 0.021              | 0.022 | 0.010 | 0.008
     - Forth Valley Royal Hospital                   | V217H           | 0.021              | 0.022 | 0.017 | 0.010
-    - Galloway Community Hospital                   | Y144H           | 0.012              | 0.000 | 0.000 | 0.000
+    - Galloway Community Hospital                   | Y144H           | 0.012              | 0.001 | 0.001 | 0.001
     - Gilbert Bain Hospital                         | Z102H           | 0.019              | 0.013 | 0.001 | 0.001
     - Glasgow Royal Infirmary                       | G107H           | 0.019              | 0.024 | 0.026 | 0.020
     - Golden Jubilee National Hospital              | D102H           | 0.018              | 0.019 | 0.003 | 0.008
@@ -124,19 +125,19 @@ columns:
     - NHS Tayside                                   | S08000030       | 0.021              | 0.022 | 0.026 | 0.019
     - NHS Western Isles                             | S08000028       | 0.019              | 0.023 | 0.002 | 0.002
     - National Waiting Times Centre                 | SB0801          | 0.018              | 0.019 | 0.003 | 0.008
-    - New Victoria Hospital                         | G306H           | 0.014              | 0.003 | 0.000 | 0.010
+    - New Victoria Hospital                         | G306H           | 0.014              | 0.003 | 0.001 | 0.010
     - Ninewells Hospital                            | T101H           | 0.021              | 0.023 | 0.020 | 0.014
     - Non-NHS Provider                              | S27000001       | 0.017              | 0.033 | 0.001 | 0.001
     - Perth Royal Infirmary                         | T202H           | 0.019              | 0.018 | 0.005 | 0.004
     - Queen Elizabeth University Hospital           | G405H           | 0.019              | 0.029 | 0.042 | 0.025
-    - Queen Margaret Hospital                       | F805H           | 0.016              | 0.008 | 0.000 | 0.004
+    - Queen Margaret Hospital                       | F805H           | 0.016              | 0.008 | 0.001 | 0.004
     - Raigmore Hospital                             | H202H           | 0.021              | 0.025 | 0.011 | 0.011
     - Royal Alexandra Hospital                      | C418H           | 0.019              | 0.021 | 0.014 | 0.012
     - Royal Infirmary of Edinburgh at Little France | S314H           | 0.019              | 0.027 | 0.028 | 0.017
     - Scotland                                      | scot            | 0.021              | 0.025 | 0.336 | 0.339
     - St John's Hospital                            | S308H           | 0.021              | 0.018 | 0.007 | 0.009
-    - Stobhill Hospital                             | G207H           | 0.012              | 0.002 | 0.000 | 0.007
-    - Stracathro Hospital                           | T312H           | 0.014              | 0.003 | 0.000 | 0.001
+    - Stobhill Hospital                             | G207H           | 0.012              | 0.002 | 0.001 | 0.007
+    - Stracathro Hospital                           | T312H           | 0.014              | 0.003 | 0.001 | 0.001
     - University Hospital Ayr                       | A210H           | 0.019              | 0.018 | 0.010 | 0.011
     - University Hospital Crosshouse                | A111H           | 0.021              | 0.022 | 0.016 | 0.013
     - University Hospital Hairmyres                 | L302H           | 0.020              | 0.018 | 0.011 | 0.012
@@ -158,7 +159,7 @@ columns:
     uniques: 3
     original_values:
     - measure              | probability_vector | avlos | los   | stays
-    - All Daycases         | 0.349              | 0.000 | 0.000 | 0.399
+    - All Daycases         | 0.349              | 0.001 | 0.001 | 0.399
     - Elective Inpatients  | 0.319              | 0.294 | 0.108 | 0.121
     - Emergency Inpatients | 0.332              | 0.706 | 0.892 | 0.480
     allow_missing_values: true

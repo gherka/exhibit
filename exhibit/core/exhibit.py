@@ -8,25 +8,20 @@ Main Exhibit class
 import argparse
 import textwrap
 import sys
-from functools import reduce
-from operator import add
-from itertools import chain
 
 # External library imports
 import yaml
-import pandas as pd
 import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser
-from exhibit.core.utils import get_attr_values
+from exhibit.core.utils import count_core_rows
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
-from exhibit.core.generator import (generate_linked_anon_df,
-                                    generate_anon_series, generate_complete_series,
+from exhibit.core.generator import (
                                     generate_weights_table, generate_cont_val,
                                     apply_dispersion, generate_YAML_string,
-                                    generate_derived_column)
+                                    generate_derived_column, generate_categorical_data)
 
 class newExhibit:
     '''
@@ -130,7 +125,6 @@ class newExhibit:
 
             self.spec_dict = new_spec.output_spec_dict()
             
-    
     def write_spec(self, spec_yaml=None):
         '''
         Write the YAML string generated from the spec_dict attribute
@@ -147,6 +141,8 @@ class newExhibit:
 
         with open(output_path, "w") as f:
             f.write(spec_yaml)
+        
+        print("Exhibit ready to view")
 
     def read_spec(self):
         '''
@@ -170,95 +166,25 @@ class newExhibit:
     def execute_spec(self):
         '''
         Function only runs if validate_spec returned True
-        ISOLATE STEPS INTO FUNCTIONS AND WRITE REFERENCE TESTS!
         '''
 
         #0) SET THE RANDOM SEED
         np.random.seed(self.spec_dict['metadata']['random_seed'])
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
-        #core rows are generated from probability vectors and then
-        #repeated for each column that has "allow_missing_values" as false
-        core_cols = [c for c, v in get_attr_values(
-            self.spec_dict,
-            "allow_missing_values",
-            col_names=True, 
-            types=['categorical', 'date']) if not v]
+        core_rows, complete_factor = count_core_rows(self.spec_dict)
 
-        core_uniques = [
-            v['uniques'] for c, v in self.spec_dict['columns'].items()
-            if c in core_cols
-            ]
-        
-        if not core_uniques:
-            core_uniques.append(1)
+        #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
+        anon_df = generate_categorical_data(self.spec_dict, core_rows)
 
-        unique_count = reduce(add, core_uniques)
-
-        core_rows = int(self.spec_dict['metadata']['number_of_rows'] / unique_count)
-
-        #2) CREATE PLACEHOLDER LIST OF GENERATED LINKED DFs
-        linked_dfs = []
-
-        #3) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-        for linked_group in self.spec_dict['constraints']['linked_columns']:
-            df = generate_linked_anon_df(self.spec_dict, linked_group[0], core_rows)
-            linked_dfs.append(df)
-        
-        #4) GENERATE ANON SERIES (only categorical)
-        nested_linked_cols = [
-            sublist for n, sublist in self.spec_dict['constraints']['linked_columns']
-            ]
-        #columns not used for generation:
-        #   - linked columns (generated separately)
-        #   - core columns - all values are used
-        #   - columns where original values = "See paired column"
-
-        linked_cols = list(chain.from_iterable(nested_linked_cols)) + core_cols
-
-        list_of_cat_tuples = get_attr_values(
-            self.spec_dict,
-            'original_values',
-            col_names=True, types='categorical')
-
-        for col in [k for k, v in list_of_cat_tuples if (k not in linked_cols) and (v != "See paired column")]:
-            s = generate_anon_series(self.spec_dict, col, core_rows)
-            linked_dfs.append(s)
-
-        #5) CONCAT LINKED DFs AND SERIES
-
-        temp_anon_df = pd.concat(linked_dfs, axis=1)
-
-        #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
-        complete_series = []
-
-        for col in self.spec_dict['columns']:
-            if col in core_cols:
-                s = generate_complete_series(self.spec_dict, col)
-                complete_series.append(s)
-        
-        #7) OUTER JOIN
-        temp_anon_df['key'] = 1
-
-        for s in complete_series:
-
-            temp_anon_df = pd.merge(
-                temp_anon_df,
-                pd.DataFrame(s).assign(key=1),
-                how="outer",
-                on="key"
-            )
-            
-        anon_df = temp_anon_df
-        
-        anon_df.drop('key', axis=1, inplace=True)
-
-        #8) GENERATE CONTINUOUS VARIABLES
-
+        #3) ADD CONTINUOUS VARIABLES TO ANON DF
         wt = generate_weights_table(self.spec_dict)
-        complete_factor = sum([len(x) for x in complete_series])
-
+   
         for num_col in self.spec_dict['metadata']['numerical_columns']:
+            
+            #skip derived columns as they require primary columns generated first
+            if num_col in self.spec_dict['derived_columns']:
+                continue
 
             anon_df[num_col] = anon_df.apply(
                 generate_cont_val,
@@ -272,22 +198,21 @@ class newExhibit:
             d = self.spec_dict['columns'][num_col]['dispersion']
 
             anon_df[num_col] = anon_df[num_col].apply(
-
                 apply_dispersion,
                 args=[d]
             )
 
-        #9) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
-
+        #4) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
 
+        #5) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self):
         '''
-        Doc string
+        Save the generated anonymised dataset to .csv
         '''
 
         if self._args.output is None:
@@ -297,4 +222,4 @@ class newExhibit:
 
         self.anon_df.to_csv(output_path, index=False)
 
-        print("done")
+        print("Exhibit ready to view")
