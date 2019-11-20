@@ -166,7 +166,7 @@ def build_table_from_lists(
     required, dataframe, numerical_cols, weights,
     original_series_name, paired_series_names):
     '''
-    Format information about a column (its values, its'
+    Format information about a column (its values, its
     paired values from paired columns, values' weights
     for each numerical column, probability vectors) into
     a csv-like table with padding.
