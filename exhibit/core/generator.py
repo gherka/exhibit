@@ -9,8 +9,6 @@ from itertools import chain
 import textwrap
 import re
 
-import pdb
-
 # External library imports
 import pandas as pd
 import numpy as np
@@ -122,6 +120,7 @@ def generate_weights_table(spec):
                 ws_df[num_col] = 1 / ws_df.shape[0]
 
         else:
+
             #get the original values with weights DF
             ws_df = parse_original_values_into_dataframe(
                 spec['columns'][cat_col]['original_values'])
@@ -136,7 +135,8 @@ def generate_weights_table(spec):
                 tuple_list.append((num_col, cat_col, val, weight))
 
     output_df = pd.DataFrame(tuple_list,
-                             columns=['num_col', 'cat_col', 'cat_value', 'weight'])    
+                             columns=['num_col', 'cat_col', 'cat_value', 'weight'])
+
     return output_df.set_index(['num_col', 'cat_col', 'cat_value'])
 
 
@@ -242,8 +242,6 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         c.execute(sql)
         result = c.fetchall()
 
-    print("Got to closing")
-
     #now the code diverges depending on the order_pos of the column used as base_col
     #and whether it has original_values with proper probabilities and weights
     
@@ -253,8 +251,6 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         idx = np.random.choice(len(result), num_rows)
         anon_list = [result[x] for x in idx]
         linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
-
-        print("S1 is OK")
 
     #SCENARIO 2: base_col has original_values, but it isn't the most granular column
     elif (not base_col_uniform) and (base_col_pos != 0):
@@ -299,10 +295,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
                 how='left',
                 on=[base_col_sql, all_cols[-1]]
             )
-
-        print("S2 is OK")
-
-        
+      
     #SCENARIO 3: base_col has original_values, AND it's the most granular column
     elif (not base_col_uniform) and (base_col_pos == 0):
 
@@ -318,8 +311,6 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
         linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
 
-        print("S3 is OK")
-
     #FINALLY ADD 1:1 COLUMNS, IF THERE ARE ANY
     for c in all_cols:
 
@@ -331,8 +322,6 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
                 right=paired_columns_lookup,
                 how="left",
                 on=c)
-
-    print("1:1 is OK")
 
     return linked_df
 
@@ -472,8 +461,6 @@ def generate_categorical_data(spec_dict, core_rows):
     for linked_group in spec_dict['constraints']['linked_columns']:
         linked_df = generate_linked_anon_df(spec_dict, linked_group[0], core_rows)
         generated_dfs.append(linked_df)
-
-    print("Generated Linked DFs Successfully")
 
     #3) DEFINE COLUMNS TO SKIP
     #   - nested linked columns (generated as part of #2)

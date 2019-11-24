@@ -150,7 +150,11 @@ class newSpec:
                 sql_paired_cols = [f"paired_{x}".replace(" ", "$") for x in paired_cols]
                 safe_col_names = [safe_col_name] + sql_paired_cols
 
-                data = list(self.df[[col] + paired_cols].to_records(index=False))
+                data_cols = [col] + paired_cols
+                #use groupby to get unique values for paired columns and not all rows
+                data = list(
+                    self.df[data_cols].groupby(data_cols).max().to_records()
+                )
 
                 create_temp_table(
                     table_name=table_name,

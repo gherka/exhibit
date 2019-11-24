@@ -6,7 +6,6 @@ anon.db SQLite database
 # Standard library imports
 import sqlite3
 from contextlib import closing
-import pdb
 
 #External library imports
 import pandas as pd
