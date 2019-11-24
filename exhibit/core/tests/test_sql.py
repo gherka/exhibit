@@ -7,6 +7,9 @@ import unittest
 import sqlite3
 from contextlib import closing
 
+# External library imports
+import pandas as pd
+
 # Exhibit imports
 from exhibit.core.utils import package_dir
 
@@ -35,10 +38,9 @@ class sqlTests(unittest.TestCase):
         Doc string
         '''
 
-        output = tm.query_anon_database('mountains', 'range', 1)
-        expected = ['Alps']
+        output = tm.query_anon_database('mountains', size=2)
 
-        assert output == expected
+        self.assertIsInstance(output, pd.DataFrame)
 
     def test_temp_table_insertion(self):
         '''

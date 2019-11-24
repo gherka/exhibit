@@ -72,6 +72,9 @@ class validatorTests(unittest.TestCase):
     def test_probability_vector_validator(self):
         '''
         The sum of all probability values should equal 1
+
+        Remember that with added CT code, not all categorical columns
+        have a dataframe in original_values.
         '''
 
         test_spec = sample.prescribing_spec
@@ -82,6 +85,7 @@ class validatorTests(unittest.TestCase):
         original_values_list[-1] = "Scotland| 1 | 0.016"
         
         validatorMock = Mock()
+        validatorMock.ct = 25
 
         test_func = tm.validate_probability_vector(validatorMock, test_spec)
 
@@ -133,6 +137,7 @@ class validatorTests(unittest.TestCase):
         '''
 
         validatorMock = Mock()
+        validatorMock.ct = 25
 
         test_dict = {
             "columns": {

@@ -17,6 +17,9 @@ from exhibit.core.utils import package_dir
 
 #Load data
 inpatients_data = pd.read_csv(package_dir('sample', '_data', 'inpatients.csv'))
+inpatients_anon = pd.read_csv(
+    package_dir('sample', '_data', 'inpatients_anon.csv'), parse_dates=['quarter_date'])
+
 prescribing_data = pd.read_csv(
     package_dir('sample', '_data', 'prescribing.csv'), parse_dates=['PaidDateMonth'])
 prescribing_anon = pd.read_csv(

@@ -81,7 +81,10 @@ def generate_weights_table(spec):
     
     tuple_list = []
     
-    num_cols = set(spec['metadata']['numerical_columns'])
+    num_cols = (
+        set(spec['metadata']['numerical_columns']) -
+        set(spec['derived_columns'])
+    )
     cat_cols = set(spec['metadata']['categorical_columns'])
     time_cols = set(spec['metadata']['time_columns'])
     

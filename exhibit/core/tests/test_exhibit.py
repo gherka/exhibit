@@ -11,10 +11,13 @@ import json
 
 # External imports
 import pandas as pd
+from pandas.testing import assert_frame_equal
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
-from exhibit.sample.sample import prescribing_spec, prescribing_anon
+from exhibit.sample.sample import (
+    prescribing_spec, prescribing_anon,
+    inpatients_anon)
 
 # Module under test
 from exhibit.core import exhibit  as tm
@@ -39,7 +42,7 @@ class exhibitTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             command="fromdata",
             source=Path(package_dir('sample', '_data', 'prescribing.csv')),
-            category_threshold=140,
+            category_threshold=25,
             verbose=True,
             sample=True
         )
@@ -69,6 +72,33 @@ class exhibitTests(unittest.TestCase):
             xA.execute_spec()
 
         assert prescribing_anon.equals(xA.anon_df)
+
+    @patch('argparse.ArgumentParser.parse_args')
+    def test_reference_inpatient_anon_data(self, mock_args):
+        '''
+        Inpatients have a floating point column so we're using
+        Pandas internal testing assert to make sure the small
+        differences are not failing the reference test
+        '''
+        mock_args.return_value = argparse.Namespace(
+            command="fromspec",
+            source=Path(package_dir('sample', '_spec', 'inpatients_edited.yml')),
+            verbose=True,
+            sample=True
+        )
+
+        xA = tm.newExhibit()
+        xA.read_spec()
+        if xA.validate_spec():
+            xA.execute_spec()
+
+        assert_frame_equal(
+            left=inpatients_anon,
+            right=xA.anon_df,
+            check_exact=False,
+            check_less_precise=True,
+        )
+
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
