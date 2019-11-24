@@ -37,6 +37,8 @@ class newValidator:
                 self.spec_dict = yaml.safe_load(f)
         else:
             raise TypeError('Specification is not in .yml format')
+
+        self.ct = self.spec_dict['metadata']['category_threshold']
         
 
     def run_validator(self):
@@ -128,6 +130,9 @@ class newValidator:
                 'original_values',
                 col_names=True,
                 types=['categorical']):
+
+            if spec_dict['columns'][c]['uniques'] > self.ct:
+                continue
             
             if v == "See paired column":
                 continue
@@ -156,6 +161,9 @@ class newValidator:
                 'original_values',
                 col_names=True,
                 types=['categorical']):
+
+            if spec_dict['columns'][c]['uniques'] > self.ct:
+                continue
 
             if v == "See paired column":
                 continue
@@ -189,6 +197,9 @@ class newValidator:
                 'original_values',
                 col_names=True,
                 types=['categorical']):
+
+            if spec_dict['columns'][c]['uniques'] > self.ct:
+                continue
 
             if v == "See paired column":
                 continue

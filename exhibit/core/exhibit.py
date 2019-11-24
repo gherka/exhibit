@@ -8,6 +8,7 @@ Main Exhibit class
 import argparse
 import textwrap
 import sys
+import pdb
 
 # External library imports
 import yaml
@@ -93,6 +94,13 @@ class newExhibit:
             )
 
         self.parser.add_argument(
+            '--category_threshold', '-ct',
+            type=int,
+            default=30,
+            help='maximum number of categories to include in .yml for manual editing',
+            )
+
+        self.parser.add_argument(
             '--output', '-o',
             help='output the generated spec to a given file name',
             )
@@ -121,7 +129,11 @@ class newExhibit:
         '''
         if not self.df is None:
 
-            new_spec = newSpec(self.df, self._args.sample)
+            new_spec = newSpec(
+                data=self.df,
+                ct=self._args.category_threshold,
+                sample=self._args.sample,
+                )
 
             self.spec_dict = new_spec.output_spec_dict()
             
@@ -173,9 +185,11 @@ class newExhibit:
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
         core_rows, complete_factor = count_core_rows(self.spec_dict)
+        print("Counted core rows")
 
         #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
         anon_df = generate_categorical_data(self.spec_dict, core_rows)
+        print("Generated Categorical Data Successfully!")
 
         #3) ADD CONTINUOUS VARIABLES TO ANON DF
         wt = generate_weights_table(self.spec_dict)
@@ -185,6 +199,9 @@ class newExhibit:
             #skip derived columns as they require primary columns generated first
             if num_col in self.spec_dict['derived_columns']:
                 continue
+            
+            #REALLY SLOW AND WILL HANG THE MACHINE! - CODE DIDN't STOP!
+            pdb.set_trace()
 
             anon_df[num_col] = anon_df.apply(
                 generate_cont_val,
@@ -201,6 +218,10 @@ class newExhibit:
                 apply_dispersion,
                 args=[d]
             )
+
+            print(f"Generated {num_col} Successfully!")
+        
+        
 
         #4) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():

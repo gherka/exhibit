@@ -163,7 +163,7 @@ def build_list_of_column_weights(weights):
     
 
 def build_table_from_lists(
-    required, dataframe, numerical_cols, weights,
+    dataframe, numerical_cols, weights,
     original_series_name, paired_series_names):
     '''
     Format information about a column (its values, its
@@ -173,8 +173,6 @@ def build_table_from_lists(
 
     Parameters
     ----------
-    required : boolean
-        Whether original values table needs to be generated
     dataframe : pd.DataFrame
         Required downstream
     numerical_cols : iterable
@@ -191,10 +189,6 @@ def build_table_from_lists(
     -------
     List of lists
     '''
-
-    if not required:
-        return "See paired column"
-
     #generate first column, minus the header  (original values)
     c1 = build_list_of_values(dataframe, original_series_name)
     #generate a list of of paired columns

@@ -23,6 +23,12 @@ class newSpec:
     ----------
     data : pd.DataFrame
         source dataframe
+    ct : int
+        specifies the maximum number of unique values (categories) a column can
+        have for them to be displayed in full for manual editing; default is 30.
+        If the full list is too long to display, the values are put in a dedicated
+        anon_db table for later retrieval and the weights and probability vectors 
+        are drawn from a uniform distribution.
     sample : bool
         special flag for generating sample spec and anonymised dataframe
         OPTIONAL. Default is False
@@ -33,6 +39,8 @@ class newSpec:
     ----------
     df : pd.DataFrame
         internal copy of the passed in dataframe
+    ct : int
+        threshold for deciding the maximum number of unique values per column
     random_seed : int
         random seed to use; defaults to 0
     sample : bool
@@ -53,9 +61,10 @@ class newSpec:
 
     '''
 
-    def __init__(self, data, sample=False, random_seed=0):
+    def __init__(self, data, ct, sample=False, random_seed=0):
 
         self.df = data.copy()
+        self.ct = ct
         self.random_seed = random_seed
         self.sample = sample
         self.id = generate_table_id()
@@ -73,6 +82,7 @@ class newSpec:
                 "categorical_columns": self.cat_cols,
                 "numerical_columns": sorted(self.numerical_cols),
                 "time_columns": self.time_cols,
+                "category_threshold": self.ct,
                 "random_seed": self.random_seed,
                 "id": "sample" if self.sample else self.id
             },
@@ -93,20 +103,84 @@ class newSpec:
                 return [c for c in pair if c != col]
         return []
 
-    def to_build_original_list(self, col):
+    def original_values_path(self, col):
         '''
-        We don't need to build a table with values, 
-        weights, probability vectors for columns that
-        are paired with another column. 
+        There are three possible paths:
+            - paired : we don't need to build a table with values
+                       weights, probability vectors for columns that
+                       are paired with another column. 
+            - long   : if the number of unique values in the column
+                       exceeds the threshold, then the values are put
+                       in the SQLite database and not displayed
+            - normal : display all values
 
         In paired_cols, the "reference" column is always
-        in position 1 so table is not needed for all
+        in position 0 so table is not needed for all
         other columns in the pair
         '''
+
         for pair in self.paired_cols:
             if (col in pair) and (pair[0] != col):
-                return False
-        return True
+                return "paired"
+
+        if self.df[col].nunique() > self.ct:
+            return "long"
+
+        return "normal"
+
+    def original_values_path_resolver(self, path, wt, col):
+        '''
+        Doc string
+        '''
+        
+        safe_col_name = col.replace(" ", "$")
+        paired_cols = self.list_of_paired_cols(col)
+
+        if self.sample:
+            table_name = f"sample_{safe_col_name}"
+        else:
+            table_name = f"temp_{self.id}_{safe_col_name}"
+
+        if path == "long":
+            
+            #check if the column has any paired columns (which will also be long!)
+            #and if there are any, stick them in SQL, prefixed with "paired_"
+            if paired_cols:
+                
+                sql_paired_cols = [f"paired_{x}".replace(" ", "$") for x in paired_cols]
+                safe_col_names = [safe_col_name] + sql_paired_cols
+
+                data = list(self.df[[col] + paired_cols].to_records(index=False))
+
+                create_temp_table(
+                    table_name=table_name,
+                    col_names=safe_col_names,
+                    data=data
+                )
+
+                return "Number of unique values is above category threshold"
+
+            create_temp_table(
+                table_name=table_name,
+                col_names=[safe_col_name],
+                data=[(x,) for x in self.df[col].unique()]
+            )
+            return "Number of unique values is above category threshold"
+
+        if path == "paired":
+            return "See paired column"
+
+        if path == "normal":
+            
+            output = build_table_from_lists(
+                dataframe=self.df,
+                numerical_cols=self.numerical_cols,
+                weights=wt,
+                original_series_name=col,
+                paired_series_names=self.list_of_paired_cols(col)
+                )
+            
+            return output
 
     def categorical_dict(self, col):
         '''
@@ -114,6 +188,7 @@ class newSpec:
         the categorical column "col"
         '''
         weights = {}
+        path = self.original_values_path(col)
 
         for num_col in self.numerical_cols:
 
@@ -123,14 +198,7 @@ class newSpec:
             'type': 'categorical',
             'paired_columns': self.list_of_paired_cols(col),
             'uniques': self.df[col].nunique(),
-            'original_values' : build_table_from_lists(
-                required=self.to_build_original_list(col),
-                dataframe=self.df,
-                numerical_cols=self.numerical_cols,
-                weights=weights,
-                original_series_name=col,
-                paired_series_names=self.list_of_paired_cols(col)
-                ),
+            'original_values' : self.original_values_path_resolver(path, weights, col),
             'allow_missing_values': True,
             'miss_probability': 0,
             'anonymise':True,

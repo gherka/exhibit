@@ -22,7 +22,7 @@ class specsTests(unittest.TestCase):
         New Specification class instance should have
         own copy of the dataframe
         '''
-        test_spec = tm.newSpec(ref_df)
+        test_spec = tm.newSpec(ref_df, 140)
 
         self.assertIsInstance(test_spec.df, pd.DataFrame)
 
@@ -30,9 +30,15 @@ class specsTests(unittest.TestCase):
         '''
         Add tests looking at deeper structure
         '''
-        test_spec = tm.newSpec(ref_df)
+        test_spec = tm.newSpec(ref_df, 140)
 
-        expected_keys = ['metadata', 'columns', 'constraints', 'derived_columns', 'demo_records']
+        expected_keys = [
+            'metadata',
+            'columns',
+            'constraints',
+            'derived_columns',
+            'demo_records'
+            ]
 
         self.assertListEqual(
             sorted(test_spec.output.keys()),

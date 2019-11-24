@@ -6,17 +6,32 @@ anon.db SQLite database
 # Standard library imports
 import sqlite3
 from contextlib import closing
+import pdb
+
+#External library imports
+import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
 
-def query_anon_database(table, column, size, db_uri=None):
+def query_anon_database(table_name, size=None, db_uri=None):
     '''
-    Make sure the input to the query function 
-    is validated to ensure no errors at this stage.
+    Query anon_db and return a nice dataframe or series
 
-    column value can be either single column name
-    or '*' for all columns - usually two.
+    Parameters
+    ----------
+    table_name : str
+        table_name comes in a fixed format either prefixed with temp_ or sample_
+        followed by the spec id and then either the linked group number of the
+        column name in case of non-linked, many-valued columns
+    size : int
+        optional. The parameter to go into LIMIT statement
+    db_uri : str
+        optional. For testing.
+
+    Returns
+    -------
+    A dataframe
     '''
 
     if db_uri is None:
@@ -24,20 +39,40 @@ def query_anon_database(table, column, size, db_uri=None):
 
     conn = sqlite3.connect(db_uri, uri=True)
 
-    sql = f"SELECT {column} FROM {table} LIMIT {size}"
+    if size:
+        sql = f"SELECT * FROM {table_name} LIMIT {size}"
+    else:
+        sql = f"SELECT * FROM {table_name}"
 
     with closing(conn):
         c = conn.cursor()
         c.execute(sql)
+        column_names = [description[0] for description in c.description]
         result = c.fetchall()
 
-        #for single columns return a nice list
-        if not column == '*':
-            return [x[0] for x in result]
-        return result
+    
+    if len(column_names) == 1:
+        return pd.DataFrame(data={column_names[0]: [x[0] for x in result]})
+
+    return pd.DataFrame(data=result, columns=column_names)
 
 def create_temp_table(table_name, col_names, data, db_uri=None, return_table=False):
     '''
+    Create a lookup table in the anon_db SQLite3 database
+
+    Parameters
+    ----------
+    table_name : str
+        make sure there are no spaces in the table_name as they are not allowed
+    col_names: list or any other iterable
+        column names also can't contain spaces
+    data: list of tuples
+        each tuple containting row's worth of data
+    db_uri : str
+        optional. During testing can pass an in-memory uri
+    return_table : bool
+        optional. Sometimes useful to return all values from the newly created table
+
     Occasionally it's useful to create a temporary table
     for linked columns that user doesn't want to anonymise,
     like Specialty and Specialty Group. To ensure that each 
@@ -60,7 +95,11 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
-    col_list = ', '.join(col_names)
+    if len(col_names) == 1:
+        col_list = col_names[0]
+    else:
+        col_list = ', '.join(col_names)
+
     params = ', '.join(['?' for x in col_names])
 
     drop_sql = f"DROP TABLE IF EXISTS {table_name}"

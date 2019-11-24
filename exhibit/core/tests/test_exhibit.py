@@ -39,6 +39,7 @@ class exhibitTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             command="fromdata",
             source=Path(package_dir('sample', '_data', 'prescribing.csv')),
+            category_threshold=140,
             verbose=True,
             sample=True
         )

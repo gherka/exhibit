@@ -27,7 +27,7 @@ class generatorTests(unittest.TestCase):
         generate_spec function was called by the main function.
         '''
 
-        test_spec_dict = newSpec(ref_df).output_spec_dict()
+        test_spec_dict = newSpec(ref_df, 140).output_spec_dict()
         output = tm.generate_YAML_string(test_spec_dict)
     
         self.assertIsInstance(yaml.safe_load(output), dict)

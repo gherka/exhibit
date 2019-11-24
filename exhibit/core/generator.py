@@ -9,14 +9,19 @@ from itertools import chain
 import textwrap
 import re
 
+import pdb
+
 # External library imports
 import pandas as pd
 import numpy as np
 import yaml
 
 # Exhibit import
-from exhibit.core.utils import package_dir, trim_probabilities_to_1, get_attr_values
+from exhibit.core.utils import (
+    package_dir, trim_probabilities_to_1,
+    get_attr_values, exceeds_ct)
 from exhibit.core.formatters import parse_original_values_into_dataframe
+from exhibit.core.sql import query_anon_database
 
 def generate_derived_column(anon_df, calculation):
     '''
@@ -101,9 +106,25 @@ def generate_weights_table(spec):
         if spec['columns'][cat_col]['original_values'] == "See paired column":
             continue
 
-        #get the original values with weights DF
-        ws_df = parse_original_values_into_dataframe(
-            spec['columns'][cat_col]['original_values'])
+        if exceeds_ct(spec, cat_col):
+
+            safe_col_name = cat_col.replace(" ", "$")
+
+            if spec['metadata']['id'] == 'sample':
+                table_name = f"sample_{safe_col_name}"
+            else:
+                table_name = f"temp_{spec['metadata']['id']}_{safe_col_name}"
+
+            ws_df = query_anon_database(table_name)
+            
+            #generate equal weights among unlisted category values
+            for num_col in num_cols:
+                ws_df[num_col] = 1 / ws_df.shape[0]
+
+        else:
+            #get the original values with weights DF
+            ws_df = parse_original_values_into_dataframe(
+                spec['columns'][cat_col]['original_values'])
 
         for num_col in num_cols:
     
@@ -161,10 +182,43 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     Have to be careful around sort orders.
 
     Also generate 1:1 pairs if there are any for linked columns!
-    '''
+
+    Base_col is the last, most granular column in the group
+
+    Two possibilities:
+    - The number of unique values in the base column is greater than the threshold
+      so the original_values for it weren't generated and the values were simply
+      stored away in the SQLite3 database.
+    - The base column has the original_values dataframe and all is straightforward
+      and well.
+
+    If the base_col doesn't have original_values, move up the level and check if the
+    next base_col has them. If it does, generate probabilities for that column first,
+    then re-trace the steps to generate preciding columns drawn from a uniform
+    distribution and finally move forward from the base_col to get 1:1 lookups.
+    
+    '''  
 
     all_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
-    base_col = all_cols[-1]
+    ct = spec_dict['metadata']['category_threshold']
+    base_col = None
+    base_col_pos = None
+    base_col_uniform = False
+
+    #find the first available "base_col", starting from the end of the list
+    for i, col_name in enumerate(reversed(all_cols)):
+        if spec_dict['columns'][col_name]['uniques'] <= ct:
+            base_col = list(reversed(all_cols))[i]
+            base_col_pos = i
+    
+    #if all columns in the linked group have more unique values than allowed,
+    #just generate uniform distribution from the most granular and do upstream lookup
+    if not base_col:
+        base_col = list(reversed(all_cols))[0]
+        base_col_pos = 0
+        base_col_uniform = True
+
+    #sanitise the column name in case it has spaces in it
     base_col_sql = base_col.replace(" ", "$")
     
     #special case for reference test table for the prescribing dataset
@@ -172,7 +226,8 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         table_name = f"sample_{linked_group}"
     else:
         table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group}"
-   
+
+    #get the linked data out for lookup purposes later
     db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
     conn = sqlite3.connect(db_uri, uri=True)
 
@@ -187,34 +242,150 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         c.execute(sql)
         result = c.fetchall()
 
-    base_col_df = parse_original_values_into_dataframe(
-        spec_dict['columns'][base_col]['original_values'])
+    print("Got to closing")
 
-    base_col_prob = np.array(base_col_df['probability_vector'])
-
-    base_col_prob /= base_col_prob.sum()
-
-    idx = np.random.choice(len(result), num_rows, p=base_col_prob)
-    anon_list = [result[x] for x in idx]
-
-    linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
-
-    #NOW ADD 1:1 COLUMNS, IF ANY
-    for c in all_cols:
-        paired_cols = spec_dict['columns'][c]['paired_columns']
-        if paired_cols:
-
-            c_df = parse_original_values_into_dataframe(
-                spec_dict['columns'][c]['original_values'])
-
-            paired_df = (
-                c_df[[c] + [f"paired_{x}" for x in paired_cols]]
-                    .rename(columns=lambda x: x.replace('paired_', ''))
-            )
-            linked_df = pd.merge(linked_df, paired_df, how="left", on=c)
-
+    #now the code diverges depending on the order_pos of the column used as base_col
+    #and whether it has original_values with proper probabilities and weights
     
+    #SCENARIO 1: All columns in linked group exceed max allowed num of unique values
+    if base_col_uniform:
+
+        idx = np.random.choice(len(result), num_rows)
+        anon_list = [result[x] for x in idx]
+        linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
+
+        print("S1 is OK")
+
+    #SCENARIO 2: base_col has original_values, but it isn't the most granular column
+    elif (not base_col_uniform) and (base_col_pos != 0):
+
+        sql_df = pd.DataFrame(columns=all_cols, data=result)
+
+        base_col_df = parse_original_values_into_dataframe(
+            spec_dict['columns'][base_col]['original_values'])
+
+        base_col_prob = np.array(base_col_df['probability_vector'])
+
+        base_col_prob /= base_col_prob.sum()
+
+        base_col_series = pd.Series(
+            data=np.random.choice(
+                a=base_col_df.iloc[:, 0].unique(),
+                size=num_rows,
+                p=base_col_prob),
+            name=base_col_sql   
+        )
+
+        uniform_series = (
+            base_col_series
+                .groupby(base_col_series)
+                .transform(
+                    lambda x: np.random.choice(
+                        a=sql_df[sql_df[base_col_sql] == min(x)].iloc[:, -1],
+                        size=len(x)
+                    )
+                ) 
+            )
+        
+        uniform_series.name = all_cols[-1]
+
+        linked_df = pd.concat([base_col_series, uniform_series], axis=1)
+
+        #join the remaining columns, if there are any
+        if len(all_cols) > 2:
+            linked_df = pd.merge(
+                left=linked_df,
+                right=sql_df,
+                how='left',
+                on=[base_col_sql, all_cols[-1]]
+            )
+
+        print("S2 is OK")
+
+        
+    #SCENARIO 3: base_col has original_values, AND it's the most granular column
+    elif (not base_col_uniform) and (base_col_pos == 0):
+
+        base_col_df = parse_original_values_into_dataframe(
+            spec_dict['columns'][base_col]['original_values'])
+
+        base_col_prob = np.array(base_col_df['probability_vector'])
+
+        base_col_prob /= base_col_prob.sum()
+
+        idx = np.random.choice(len(result), num_rows, p=base_col_prob)
+        anon_list = [result[x] for x in idx]
+
+        linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
+
+        print("S3 is OK")
+
+    #FINALLY ADD 1:1 COLUMNS, IF THERE ARE ANY
+    for c in all_cols:
+
+        paired_columns_lookup = create_paired_columns_lookup(spec_dict, c)
+
+        if not paired_columns_lookup is None:
+            linked_df = pd.merge(
+                left=linked_df,
+                right=paired_columns_lookup,
+                how="left",
+                on=c)
+
+    print("1:1 is OK")
+
     return linked_df
+
+
+def create_paired_columns_lookup(spec_dict, base_column):
+    '''
+    Paired columns can either be in SQL or in original_values linked to base_column
+    
+    Parameters
+    ----------
+    spec_dict : dict
+        the usual
+    base_column : str
+        column to check for presence of any paired columns
+
+    Returns
+    -------
+    A dataframe with base column and paired columns, if any.
+    Paired columns are stripped of their "paired_" prefix
+    for joining downstream into the final anonymised dataframe
+    '''
+    #get a list of paired columns:
+    pairs = spec_dict['columns'][base_column]['paired_columns']
+    #sanitse base_columns name for SQL
+    safe_base_col_name = base_column.replace(" ", "$")
+
+    if spec_dict['metadata']['id'] == 'sample':
+        table_name = f"sample_{safe_base_col_name}"
+    else:
+        table_name = f"temp_{spec_dict['metadata']['id']}_{safe_base_col_name}"
+
+    if pairs:
+        #check if paired column values live in SQL or are part of original_values
+        if exceeds_ct(spec_dict, base_column):
+
+            paired_df = query_anon_database(table_name=table_name)
+            paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
+
+            return paired_df
+
+        #code to pull the base_column + paired column(s) from original_values
+        base_df = parse_original_values_into_dataframe(
+            spec_dict['columns'][base_column]['original_values'])
+
+        paired_df = (
+            base_df[[base_column] + [f"paired_{x}" for x in pairs]]
+                .rename(columns=lambda x: x.replace('paired_', ''))
+        )
+        
+        return paired_df
+                            
+    #if no pairs, just return None
+    return None
 
 def generate_anon_series(spec_dict, col_name, num_rows):
     '''
@@ -301,6 +472,8 @@ def generate_categorical_data(spec_dict, core_rows):
     for linked_group in spec_dict['constraints']['linked_columns']:
         linked_df = generate_linked_anon_df(spec_dict, linked_group[0], core_rows)
         generated_dfs.append(linked_df)
+
+    print("Generated Linked DFs Successfully")
 
     #3) DEFINE COLUMNS TO SKIP
     #   - nested linked columns (generated as part of #2)

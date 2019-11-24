@@ -189,6 +189,17 @@ def trim_probabilities_to_1(p):
 
     return output
 
+def exceeds_ct(spec_dict, col):
+    '''
+    Returns true if column exceeds category threshold
+    '''
+    result = (
+        spec_dict['columns'][col]['uniques'] > 
+        spec_dict['metadata']['category_threshold']
+    )
+
+    return result
+
 def count_core_rows(spec_dict):
     '''
     Calculate number of rows to generate probabilistically
