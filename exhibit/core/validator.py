@@ -18,6 +18,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import get_attr_values
 from exhibit.core.formatters import parse_original_values_into_dataframe
+from exhibit.core.sql import number_of_query_rows
 
 class newValidator:
     '''
@@ -246,7 +247,7 @@ class newValidator:
 
         return True
 
-    def validate_anonymising_sets(self, spec_dict=None):
+    def validate_anonymising_set_names(self, spec_dict=None):
         '''
         So far, only two are available: mountain ranges and random
         '''
@@ -270,5 +271,33 @@ class newValidator:
                     "col" : c
                     })
                 return False
-            return True
+        return True
+
+    def validate_anonymising_set_lengths(self, spec_dict=None):
+        '''
+        Number of unique values of an anonymising set must be
+        at least the same as the number of unique values of the
+        column that is being anonymised
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: %(anon_set)s has fewer distinct values than column %(col)s
+        """)
+
+        for c, v in get_attr_values(
+                spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
             
+            if v != "random":
+                col_uniques = spec_dict['columns'][c]['uniques']
+                anon_uniques = number_of_query_rows(v)
+
+                if col_uniques > anon_uniques:
+                    print(fail_msg % {
+                    "anon_set" : v,
+                    "col" : c
+                    })
+                    return False
+        return True

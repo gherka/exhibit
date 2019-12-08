@@ -11,6 +11,7 @@ from pathlib import Path
 
 # External library imports
 import pandas as pd
+import numpy as np
 
 # Exhibit imports
 from exhibit.sample.sample import prescribing_spec
@@ -97,6 +98,20 @@ class helperTests(unittest.TestCase):
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")
         assert test_list.count(None) == len(test_list)
+
+    def test_whole_number_column(self):
+        '''
+        If any value has a decimal point, flag up as false
+        '''
+
+        test_series_1 = pd.Series([1, 2, 3, 4, 5, 0.0])
+        test_series_2 = pd.Series([1, np.nan, 2, 3])
+        test_series_3 = pd.Series([0.1, 0.2, 3, 4])
+
+        self.assertTrue(tm.whole_number_column(test_series_1))
+        self.assertTrue(tm.whole_number_column(test_series_2))
+        self.assertFalse(tm.whole_number_column(test_series_3))
+
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

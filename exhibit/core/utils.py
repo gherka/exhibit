@@ -246,3 +246,17 @@ def count_core_rows(spec_dict):
     core_rows = int(spec_dict['metadata']['number_of_rows'] / complete_count)
 
     return (core_rows, complete_count)
+
+def whole_number_column(series):
+    '''
+    Given a Pandas series determine whether it always has
+    whole numbers or includes fractions. Relying on dtypes
+    is unsafe because if the column has any missing values,
+    its dtype is automatically made into float (at least in
+    older versions of Pandas)
+
+    Return True if series is whole numbers, False if fractions
+
+    '''
+
+    return all(series.fillna(0) * 10 % 10 == 0)

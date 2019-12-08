@@ -118,3 +118,39 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
             c.execute(f"SELECT * FROM {table_name}")
             return c.fetchall()
     return True
+
+def number_of_query_rows(table_name, column=None, db_uri=None):
+    '''
+    Returns the number of rows for a given query
+
+    Parameters
+    ----------
+    table_name : str
+        table in anon_db to query
+    column : str
+        optional. column name in the given table
+    Returns
+    -------
+    Count of rows
+    '''
+
+    if db_uri is None:
+        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+
+    if "." in table_name:
+        table_name, column = table_name.split(".")
+
+    if column:
+        sql = f"SELECT COUNT(DISTINCT {column}) FROM {table_name}"
+    else:
+        sql = f"SELECT COUNT() FROM {table_name}"
+
+    conn = sqlite3.connect(db_uri, uri=True)
+
+    #fetchall will return a list with the single tuple (result, )
+    with closing(conn):
+        c = conn.cursor()
+        c.execute(sql)
+        result = c.fetchall()[0][0]
+
+    return result

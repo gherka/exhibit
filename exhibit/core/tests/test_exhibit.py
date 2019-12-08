@@ -71,6 +71,8 @@ class exhibitTests(unittest.TestCase):
         if xA.validate_spec():
             xA.execute_spec()
 
+        print(xA.anon_df.head())
+
         assert prescribing_anon.equals(xA.anon_df)
 
     @patch('argparse.ArgumentParser.parse_args')

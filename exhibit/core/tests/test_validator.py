@@ -156,7 +156,7 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(tm.validate_weights_and_probability_vector_have_no_nulls(
             validatorMock, spec_dict=test_dict))
 
-    def test_anonymising_sets(self):
+    def test_anonymising_set_names(self):
         '''
         So far, only two are available: mountain ranges and random
         '''
@@ -173,5 +173,26 @@ class validatorTests(unittest.TestCase):
         }
 
         self.assertFalse(
-            tm.validate_anonymising_sets(validatorMock, spec_dict=test_dict)
+            tm.validate_anonymising_set_names(validatorMock, spec_dict=test_dict)
+            )
+
+    def test_anonymising_set_lengths(self):
+        '''
+        Doc string
+        '''
+
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board Code": {
+                    "uniques": 20,
+                    "type":"categorical",
+                    "anonymising_set": "mountains.range"
+                }
+            }
+        }
+
+        self.assertFalse(
+            tm.validate_anonymising_set_lengths(validatorMock, spec_dict=test_dict)
             )
