@@ -18,7 +18,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import get_attr_values
 from exhibit.core.formatters import parse_original_values_into_dataframe
-from exhibit.core.sql import number_of_query_rows
+from exhibit.core.sql import number_of_query_rows, number_of_table_columns
 
 class newValidator:
     '''
@@ -252,7 +252,7 @@ class newValidator:
         So far, only two are available: mountain ranges and random
         '''
 
-        VALID_SETS = ['random', 'mountain']
+        VALID_SETS = ['random', 'mountains', 'birds']
 
         if spec_dict is None:
             spec_dict = self.spec_dict
@@ -264,7 +264,7 @@ class newValidator:
         for c, v in get_attr_values(
                 spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
 
-            if v not in VALID_SETS:
+            if v.split(".")[0] not in VALID_SETS:
 
                 print(fail_msg % {
                     "anon_set" : v,
@@ -273,7 +273,7 @@ class newValidator:
                 return False
         return True
 
-    def validate_anonymising_set_lengths(self, spec_dict=None):
+    def validate_anonymising_set_length(self, spec_dict=None):
         '''
         Number of unique values of an anonymising set must be
         at least the same as the number of unique values of the
@@ -300,4 +300,32 @@ class newValidator:
                     "col" : c
                     })
                     return False
+        return True
+    
+    def validate_anonymising_set_width(self, spec_dict=None):
+        '''
+        Doc string
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: %(anon_set)s has fewer columns than linked group %(col)s
+        """)
+        
+        if spec_dict['constraints']['linked_columns']:
+
+            for linked_group in spec_dict['constraints']['linked_columns']:
+                linked_set = spec_dict['columns'][linked_group[1][0]]['anonymising_set']
+                linked_col_count = len(linked_group[1])
+
+                if linked_set != "random":
+                    anon_col_count = number_of_table_columns(linked_set)
+                    if linked_col_count > anon_col_count:
+                        print(fail_msg % {
+                        "anon_set" : linked_set,
+                        "col" : ", ".join(linked_group[1])
+                        })
+                        return False
         return True

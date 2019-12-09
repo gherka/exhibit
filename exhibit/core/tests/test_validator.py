@@ -19,7 +19,6 @@ class validatorTests(unittest.TestCase):
     Doc string
     '''
 
-
     def test_column_names_duplicates(self):
         '''
         There should be no duplicates!
@@ -178,7 +177,9 @@ class validatorTests(unittest.TestCase):
 
     def test_anonymising_set_lengths(self):
         '''
-        Doc string
+        Anonomyising sets should have at least the same
+        number of values as the source data to maintain
+        weights and probability vectors
         '''
 
         validatorMock = Mock()
@@ -194,5 +195,31 @@ class validatorTests(unittest.TestCase):
         }
 
         self.assertFalse(
-            tm.validate_anonymising_set_lengths(validatorMock, spec_dict=test_dict)
+            tm.validate_anonymising_set_length(validatorMock, spec_dict=test_dict)
+            )
+
+    def test_anonymising_set_width(self):
+        '''
+        When used against a linked column, the anonymising set
+        should have at least the same number of columns as the
+        source material.
+
+        Mountains set has just 2 columns: range and peak
+        '''
+
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board": {
+                    "anonymising_set": "mountains"
+                }
+            },
+            "constraints": {
+                "linked_columns": [[0, ['Board', 'Local Authority', 'GP Practice']]] 
+            }
+        }
+
+        self.assertFalse(
+            tm.validate_anonymising_set_width(validatorMock, spec_dict=test_dict)
             )

@@ -56,14 +56,32 @@ class sqlTests(unittest.TestCase):
 
         self.assertListEqual(expected, output)
 
-    def test_number_of_query_rows(self):
+    def test_number_of_query_rows_ranges(self):
         '''
         There are 15 mountain ranges with 150 peaks
         '''
-        self.assertEquals(
+        self.assertEqual(
             tm.number_of_query_rows("mountains.range"),
-            15)
+            15
+        )
 
+    def test_number_of_query_rows_table(self):
+        '''
+        There are 15 mountain ranges with 150 peaks
+        '''
+        self.assertEqual(
+            tm.number_of_query_rows("mountains"),
+            150
+        )
+
+    def test_number_of_table_columns(self):
+        '''
+        There are 2 columns in the mountains table
+        '''
+        self.assertEqual(
+            tm.number_of_table_columns("mountains"),
+            2
+        )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

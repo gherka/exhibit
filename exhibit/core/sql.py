@@ -13,7 +13,7 @@ import pandas as pd
 # Exhibit imports
 from exhibit.core.utils import package_dir
 
-def query_anon_database(table_name, size=None, db_uri=None):
+def query_anon_database(table_name, column=None, size=None, db_uri=None):
     '''
     Query anon_db and return a nice dataframe or series
 
@@ -23,6 +23,8 @@ def query_anon_database(table_name, size=None, db_uri=None):
         table_name comes in a fixed format either prefixed with temp_ or sample_
         followed by the spec id and then either the linked group number of the
         column name in case of non-linked, many-valued columns
+    column : str
+        optional. Single column to be extracted from given table
     size : int
         optional. The parameter to go into LIMIT statement
     db_uri : str
@@ -38,18 +40,20 @@ def query_anon_database(table_name, size=None, db_uri=None):
 
     conn = sqlite3.connect(db_uri, uri=True)
 
+    if column:
+        column = column[0]
+
     if size:
-        sql = f"SELECT * FROM {table_name} LIMIT {size}"
+        sql = f"SELECT {str(column or '*')} FROM {table_name} LIMIT {size}"
     else:
-        sql = f"SELECT * FROM {table_name}"
+        sql = f"SELECT {str(column or '*')} FROM {table_name}"
 
     with closing(conn):
         c = conn.cursor()
         c.execute(sql)
         column_names = [description[0] for description in c.description]
         result = c.fetchall()
-
-    
+ 
     if len(column_names) == 1:
         return pd.DataFrame(data={column_names[0]: [x[0] for x in result]})
 
@@ -152,5 +156,33 @@ def number_of_query_rows(table_name, column=None, db_uri=None):
         c = conn.cursor()
         c.execute(sql)
         result = c.fetchall()[0][0]
+
+    return result
+
+def number_of_table_columns(table_name, db_uri=None):
+    '''
+    Returns the number of columns of a given table
+
+    Parameters
+    ----------
+    table_name : str
+        table in anon_db to query
+    Returns
+    -------
+    Count of columns
+    '''
+
+    if db_uri is None:
+        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+
+    sql = f"PRAGMA TABLE_INFO({table_name})"
+
+    conn = sqlite3.connect(db_uri, uri=True)
+
+    #fetchall will return a list with a tuple for each column
+    with closing(conn):
+        c = conn.cursor()
+        c.execute(sql)
+        result = len(c.fetchall())
 
     return result

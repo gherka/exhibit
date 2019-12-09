@@ -197,13 +197,14 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
     If the base_col doesn't have original_values, move up the level and check if the
     next base_col has them. If it does, generate probabilities for that column first,
-    then re-trace the steps to generate preciding columns drawn from a uniform
+    then re-trace the steps to generate preceding columns drawn from a uniform
     distribution and finally move forward from the base_col to get 1:1 lookups.
     
     '''  
 
     all_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
     ct = spec_dict['metadata']['category_threshold']
+    #anon_set = spec_dict['columns'][all_cols[0]]['anonymising_set']
     base_col = None
     base_col_pos = None
     base_col_uniform = False
@@ -381,38 +382,154 @@ def create_paired_columns_lookup(spec_dict, base_column):
 
 def generate_anon_series(spec_dict, col_name, num_rows):
     '''
-    Only valid for categorical column types. Returns
-    a Pandas Series object
+    Generate basic categorical series anonymised according to user input
+
+    The code can take different paths depending on these things: 
+     - whether a the anonymising method is set to random or a custom set
+     - whether the number of unique values exceed the threshold
+     - whether the column has any paired columns
+
+    The paths differ primarily in terms of where the data sits: as part
+    of the spec in original_values or in anon_db.
+
+    Things are further complicated if users want to use a single column
+    from an anonymising table, like mountains.peak
+
+    Parameters:
+    -----------
+    spec_dict : dict
+        the usual
+    col_name : str
+        column name to process & anonymise
+    num_rows : int
+        number of rows to generate
+
+    Returns:
+    -------
+    Pandas Series object or a Dataframe
     '''
+
     col_type = spec_dict['columns'][col_name]['type']
+    anon_set = spec_dict['columns'][col_name]['anonymising_set']
+    paired_cols = spec_dict['columns'][col_name]['paired_columns']
+    ct = spec_dict['metadata']['category_threshold']
+    uniques = spec_dict['columns'][col_name]['uniques']
 
     if col_type != "categorical":
         raise TypeError
     
-    col_df = parse_original_values_into_dataframe(
-        spec_dict['columns'][col_name]['original_values'])
+    #values were stored in anon_db; randomise based on uniform distribution
+    if uniques > ct:
 
-    paired_cols = spec_dict['columns'][col_name]['paired_columns']
+        safe_col_name = col_name.replace(" ", "$")
+        sql_column = None
 
-    col_prob = col_df['probability_vector'].to_list()
-    col_values = col_df[col_name].to_list()
+        if spec_dict['metadata']['id'] == 'sample':
+            table_name = f"sample_{safe_col_name}"
+        else:
+            table_name = f"temp_{spec_dict['metadata']['id']}_{safe_col_name}"
 
-    #because we're ensuring no probability == 0, we have to trim
-    col_prob_clean = trim_probabilities_to_1(col_prob)
+        if anon_set != "random": 
+            table_name, *sql_column = anon_set.split(".")
+            col_df = query_anon_database(table_name, sql_column, uniques)
 
-    original_series = pd.Series(
-        data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
-        name=col_name)
+            #rename the first column of the anon_set df to be same as original
+            col_df.rename(columns={col_df.columns[0]:col_name}, inplace=True)
 
-    if paired_cols:
-        paired_df = (
-            col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
-                .rename(columns=lambda x: x.replace('paired_', ''))
-        )
+            #if the column has paired columns and a non-random anonymising set,
+            #the anonymising set must also provide the paired columns or the same
+            #values will be used for the original + paired columns
 
-        return pd.merge(original_series, paired_df, how="left", on=col_name)
+            if len(paired_cols) + 1 > col_df.shape[1]:
 
-    return original_series
+                for paired_col in paired_cols:
+
+                    col_df[paired_col] = col_df[col_name]
+
+                col_values = col_df[col_name].to_list()
+
+                original_series = pd.Series(
+                    data=np.random.choice(a=col_values, size=num_rows),
+                    name=col_name
+                )
+
+                return pd.merge(original_series, col_df, how="left", on=col_name)
+
+            #we must make sure that the anonymising set is suitable for paired column
+            #generation, meaning 1:1 and not 1:many or many:1 relationship
+
+            for col in col_df.columns:
+                if col_df[col].nunique() != col_df.shape[0]:
+                    raise TypeError("anonymising dataset contains duplicates")
+
+            col_df = col_df.iloc[:, 0:len(paired_cols)+1]
+            col_df.columns = [col_name] + paired_cols
+
+            col_values = col_df[col_name].to_list()
+            original_series = pd.Series(
+                data=np.random.choice(a=col_values, size=num_rows),
+                name=col_name)
+
+            if paired_cols:
+                paired_df = col_df[[col_name] + paired_cols]
+                return pd.merge(original_series, paired_df, how="left", on=col_name)
+
+            return original_series
+
+        #If function hasn't returned by now, that means the anonymising set is random
+        col_df = query_anon_database(table_name)
+
+        col_values = col_df[col_name].to_list()
+
+        original_series = pd.Series(
+            data=np.random.choice(a=col_values, size=num_rows),
+            name=col_name)
+
+        if paired_cols:
+            paired_df = (
+                col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
+                    .rename(columns=lambda x: x.replace('paired_', ''))
+            )
+
+            return pd.merge(original_series, paired_df, how="left", on=col_name)
+
+        return original_series  
+    
+    #This path is the most straightforward: when the number of unique_values doesn't
+    #exceed the category_threshold and we can get all information from original_values
+    #EXCEPT FOR WHEN ANONYMISING SET IS CHOSEN TO BE ANTHING OTHER THAN RANDOM!
+
+    if anon_set == "random": 
+
+        col_df = parse_original_values_into_dataframe(
+            spec_dict['columns'][col_name]['original_values'])
+
+        col_prob = col_df['probability_vector'].to_list()
+        col_values = col_df[col_name].to_list()
+
+        #because we're ensuring no probability == 0, we have to trim
+        col_prob_clean = trim_probabilities_to_1(col_prob)
+
+        original_series = pd.Series(
+            data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
+            name=col_name)
+
+        if paired_cols:
+            paired_df = (
+                col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
+                    .rename(columns=lambda x: x.replace('paired_', ''))
+            )
+
+            return pd.merge(original_series, paired_df, how="left", on=col_name)
+
+        return original_series
+
+    #finally, if we have original_values, but anon_set is not random
+    #we pick the values based on the given distributions, but then 
+    #rename them at the end; this would potentially mean having to
+    #switch the generation of continuous variables and the weigths
+    #table to index-based, not name based because names will be different
+    raise Exception("Not implemented yet")
 
 
 def generate_complete_series(spec_dict, col_name):
@@ -550,8 +667,8 @@ def generate_YAML_string(spec_dict):
     c1 = textwrap.dedent("""\
     #---------------------------------------------------------
     #This specification describes the dataset in great detail.
-    #In order to vary to degree to which it is anonymised,
-    #please review the sections and make necessary adjustments
+    #In order to vary the degree to which it is anonymised,
+    #please review each section and make necessary adjustments
     #---------------------------------------------------------
     """)
 
@@ -561,8 +678,22 @@ def generate_YAML_string(spec_dict):
     #---------------------------------------------------------
     #Dataset columns can be one of the three types: 
     #Categorical | Continuous | Timeseries
-    #Column type determines the parameters in the specification
+    #
+    #Column type determines the parameters in the specification.
     #When making changes to the values, please note their format.
+    #
+    #The default anonymising method is "random", but you can add your
+    #own custom sets, including linked, by creating a suitable
+    #table in the anon.db SQLite3 database (using db_util.py script)
+    #
+    #The tool comes with a linked set of mountain ranges (15) and
+    #their top 10 peaks. Only linked sets can be used for linked columns
+    #and the number of columns in the linked table must match the number
+    #of linked columns in your data. For 1:1 mapping, there is a birds
+    #dataset with 150 values
+    #
+    #To use just one column from a table, add a dot separator like so:
+    #mountains.ranges
     #---------------------------------------------------------
     """)
 
