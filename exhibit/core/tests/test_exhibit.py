@@ -53,7 +53,6 @@ class exhibitTests(unittest.TestCase):
 
         assert json.dumps(prescribing_spec) == json.dumps(xA.spec_dict)
 
-
     @patch('argparse.ArgumentParser.parse_args')
     def test_reference_prescribing_anon_data(self, mock_args):
         '''
@@ -70,8 +69,6 @@ class exhibitTests(unittest.TestCase):
         xA.read_spec()
         if xA.validate_spec():
             xA.execute_spec()
-
-        print(xA.anon_df.head())
 
         assert prescribing_anon.equals(xA.anon_df)
 

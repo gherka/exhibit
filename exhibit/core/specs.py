@@ -68,20 +68,21 @@ class newSpec:
         self.random_seed = random_seed
         self.sample = sample
         self.id = generate_table_id()
-        self.numerical_cols = list(
+        self.numerical_cols = set(
             self.df.select_dtypes(include=np.number).columns.values)
-        self.cat_cols = list(
-            self.df.select_dtypes(exclude=np.number).columns.values)
-        self.time_cols = [col for col in self.df.columns.values
-                         if is_datetime64_dtype(self.df.dtypes[col])]
+        self.time_cols = {col for col in self.df.columns.values
+                         if is_datetime64_dtype(self.df.dtypes[col])}
+        self.cat_cols = (
+            set(self.df.select_dtypes(exclude=np.number).columns.values) -
+            self.time_cols)
         self.paired_cols = find_pair_linked_columns(self.df)
 
         self.output = {
             'metadata': {
                 "number_of_rows": self.df.shape[0],
-                "categorical_columns": self.cat_cols,
-                "numerical_columns": sorted(self.numerical_cols),
-                "time_columns": self.time_cols,
+                "categorical_columns": sorted(list(self.cat_cols)),
+                "numerical_columns": sorted(list(self.numerical_cols)),
+                "time_columns": sorted(list(self.time_cols)),
                 "category_threshold": self.ct,
                 "random_seed": self.random_seed,
                 "id": "sample" if self.sample else self.id

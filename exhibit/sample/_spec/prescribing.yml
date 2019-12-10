@@ -1,16 +1,15 @@
 #---------------------------------------------------------
 #This specification describes the dataset in great detail.
-#In order to vary to degree to which it is anonymised,
-#please review the sections and make necessary adjustments
+#In order to vary the degree to which it is anonymised,
+#please review each section and make necessary adjustments
 #---------------------------------------------------------
 metadata:
   number_of_rows: 2950
   categorical_columns:
-  - PaidDateMonth
-  - HB2014Name
-  - GPPracticeName
   - BNFItemCode
   - BNFItemDescription
+  - GPPracticeName
+  - HB2014Name
   numerical_columns:
   - NumberOfPaidItems
   time_columns:
@@ -21,8 +20,22 @@ metadata:
 #---------------------------------------------------------
 #Dataset columns can be one of the three types: 
 #Categorical | Continuous | Timeseries
-#Column type determines the parameters in the specification
+#
+#Column type determines the parameters in the specification.
 #When making changes to the values, please note their format.
+#
+#The default anonymising method is "random", but you can add your
+#own custom sets, including linked, by creating a suitable
+#table in the anon.db SQLite3 database (using db_util.py script)
+#
+#The tool comes with a linked set of mountain ranges (15) and
+#their top 10 peaks. Only linked sets can be used for linked columns
+#and the number of columns in the linked table must match the number
+#of linked columns in your data. For 1:1 mapping, there is a birds
+#dataset with 150 values
+#
+#To use just one column from a table, add a dot separator like so:
+#mountains.ranges
 #---------------------------------------------------------
 columns:
   PaidDateMonth:

@@ -8,6 +8,7 @@ from contextlib import closing
 from itertools import chain
 import textwrap
 import re
+# import pdb
 
 # External library imports
 import pandas as pd
@@ -18,7 +19,6 @@ import yaml
 from exhibit.core.utils import (
     package_dir, trim_probabilities_to_1,
     get_attr_values, exceeds_ct)
-from exhibit.core.formatters import parse_original_values_into_dataframe
 from exhibit.core.sql import query_anon_database
 
 def generate_derived_column(anon_df, calculation):
@@ -104,7 +104,9 @@ def generate_weights_table(spec):
        
     for cat_col in target_cols:
 
-        if spec['columns'][cat_col]['original_values'] == "See paired column":
+        orig_vals = spec['columns'][cat_col]['original_values']
+
+        if isinstance(orig_vals, str) and orig_vals == 'See paired column':
             continue
 
         if exceeds_ct(spec, cat_col):
@@ -125,8 +127,10 @@ def generate_weights_table(spec):
         else:
 
             #get the original values with weights DF
-            ws_df = parse_original_values_into_dataframe(
-                spec['columns'][cat_col]['original_values'])
+            ws_df = spec['columns'][cat_col]['original_values']
+
+            # print("Cat col: ", cat_col)
+            # print("ws_df shape: ", ws_df.shape)
 
         for num_col in num_cols:
     
@@ -140,7 +144,11 @@ def generate_weights_table(spec):
     output_df = pd.DataFrame(tuple_list,
                              columns=['num_col', 'cat_col', 'cat_value', 'weight'])
 
-    return output_df.set_index(['num_col', 'cat_col', 'cat_value'])
+    result = output_df.set_index(['num_col', 'cat_col', 'cat_value']).sort_index()
+
+    # pdb.set_trace()
+
+    return result
 
 
 def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor):
@@ -174,7 +182,8 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor)
             weight = weights_table.loc[num_col, cat_col, val]['weight']
             num_col_sum = num_col_sum * weight
         except KeyError:
-            continue
+            # pdb.set_trace()
+            continue           
     
     return round(num_col_sum / complete_factor, 0)
 
@@ -261,8 +270,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
         sql_df = pd.DataFrame(columns=all_cols, data=result)
 
-        base_col_df = parse_original_values_into_dataframe(
-            spec_dict['columns'][base_col]['original_values'])
+        base_col_df = spec_dict['columns'][base_col]['original_values']
 
         base_col_prob = np.array(base_col_df['probability_vector'])
 
@@ -303,8 +311,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     #SCENARIO 3: base_col has original_values, AND it's the most granular column
     elif (not base_col_uniform) and (base_col_pos == 0):
 
-        base_col_df = parse_original_values_into_dataframe(
-            spec_dict['columns'][base_col]['original_values'])
+        base_col_df = spec_dict['columns'][base_col]['original_values']
 
         base_col_prob = np.array(base_col_df['probability_vector'])
 
@@ -367,8 +374,7 @@ def create_paired_columns_lookup(spec_dict, base_column):
             return paired_df
 
         #code to pull the base_column + paired column(s) from original_values
-        base_df = parse_original_values_into_dataframe(
-            spec_dict['columns'][base_column]['original_values'])
+        base_df = spec_dict['columns'][base_column]['original_values']
 
         paired_df = (
             base_df[[base_column] + [f"paired_{x}" for x in pairs]]
@@ -497,12 +503,10 @@ def generate_anon_series(spec_dict, col_name, num_rows):
     
     #This path is the most straightforward: when the number of unique_values doesn't
     #exceed the category_threshold and we can get all information from original_values
-    #EXCEPT FOR WHEN ANONYMISING SET IS CHOSEN TO BE ANTHING OTHER THAN RANDOM!
 
     if anon_set == "random": 
 
-        col_df = parse_original_values_into_dataframe(
-            spec_dict['columns'][col_name]['original_values'])
+        col_df = spec_dict['columns'][col_name]['original_values']
 
         col_prob = col_df['probability_vector'].to_list()
         col_values = col_df[col_name].to_list()
@@ -525,11 +529,49 @@ def generate_anon_series(spec_dict, col_name, num_rows):
         return original_series
 
     #finally, if we have original_values, but anon_set is not random
-    #we pick the values based on the given distributions, but then 
-    #rename them at the end; this would potentially mean having to
-    #switch the generation of continuous variables and the weigths
-    #table to index-based, not name based because names will be different
-    raise Exception("Not implemented yet")
+    #we pick the N distinct values from the anonymysing set, replace
+    #the original values + paired column values in the original_values
+    #DATAFRAME, making sure the changes happen in-place which means
+    #that downstream, the weights table will be built based on the
+    #modified "original_values" dataframe.
+
+    table_name, *sql_column = anon_set.split(".")
+    col_df = query_anon_database(table_name, sql_column, uniques)
+    col_df.rename(columns={col_df.columns[0]:col_name}, inplace=True)
+
+    if len(paired_cols) + 1 > col_df.shape[1]:
+
+        for paired_col in paired_cols:
+
+            col_df[paired_col] = col_df[col_name]
+
+    orig_df = spec_dict['columns'][col_name]['original_values']
+
+    orig_df.iloc[:, 0:len(paired_cols)+1] = col_df.iloc[:, 0:len(paired_cols)+1].values
+
+    spec_dict['columns'][col_name]['original_values'] = orig_df
+
+    col_df = spec_dict['columns'][col_name]['original_values']
+
+    col_prob = col_df['probability_vector'].to_list()
+    
+    col_values = col_df[col_name].to_list()
+
+    col_prob_clean = trim_probabilities_to_1(col_prob)
+
+    original_series = pd.Series(
+        data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
+        name=col_name)
+
+    if paired_cols:
+        paired_df = (
+            col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
+                .rename(columns=lambda x: x.replace('paired_', ''))
+        )
+
+        return pd.merge(original_series, paired_df, how="left", on=col_name)
+
+    return original_series
 
 
 def generate_complete_series(spec_dict, col_name):
@@ -605,10 +647,11 @@ def generate_categorical_data(spec_dict, core_rows):
         spec_dict,
         'original_values',
         col_names=True, types='categorical')
-
+    
+    #original_values can either be a string or a Pandas DataFrame
     for col in [
         k for k, v in list_of_cat_tuples if
-        (k not in skipped_cols) and (v != "See paired column")]:
+        (k not in skipped_cols) and (str(v) != "See paired column")]:
         s = generate_anon_series(spec_dict, col, core_rows)
         generated_dfs.append(s)
 

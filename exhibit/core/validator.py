@@ -14,10 +14,10 @@ import math
 # External library imports
 import yaml
 import numpy as np
+import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import get_attr_values
-from exhibit.core.formatters import parse_original_values_into_dataframe
 from exhibit.core.sql import number_of_query_rows, number_of_table_columns
 
 class newValidator:
@@ -131,16 +131,12 @@ class newValidator:
                 col_names=True,
                 types=['categorical']):
 
-            if spec_dict['columns'][c]['uniques'] > self.ct:
-                continue
-            
-            if v == "See paired column":
-                continue
-            prob_vector = parse_original_values_into_dataframe(v)["probability_vector"]
+            if isinstance(v, pd.DataFrame):
+                prob_vector = v["probability_vector"]
 
-            if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
-                print(fail_msg.replace("err_col", c))
-                return False
+                if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
+                    print(fail_msg.replace("err_col", c))
+                    return False
         return True
 
     def validate_weights_and_probability_vector_have_no_nulls(self, spec_dict=None):
@@ -162,21 +158,17 @@ class newValidator:
                 col_names=True,
                 types=['categorical']):
 
-            if spec_dict['columns'][c]['uniques'] > self.ct:
-                continue
+            if isinstance(v, pd.DataFrame):
 
-            if v == "See paired column":
-                continue
+                values_table = v
 
-            values_table = parse_original_values_into_dataframe(v)
+                values_table.replace('', np.nan, inplace=True)
 
-            values_table.replace('', np.nan, inplace=True)
+                if any(values_table.isna().any()):
 
-            if any(values_table.isna().any()):
-
-                print(fail_msg % {"err_col" : c})
-                return False
-                
+                    print(fail_msg % {"err_col" : c})
+                    return False
+                    
         return True
 
     def validate_weights_and_probability_vector_have_no_zeroes(self, spec_dict=None):
@@ -198,20 +190,16 @@ class newValidator:
                 col_names=True,
                 types=['categorical']):
 
-            if spec_dict['columns'][c]['uniques'] > self.ct:
-                continue
+            if isinstance(v, pd.DataFrame):
 
-            if v == "See paired column":
-                continue
+                values_table = v
 
-            values_table = parse_original_values_into_dataframe(v)
+                values_table.replace('', np.nan, inplace=True)
 
-            values_table.replace('', np.nan, inplace=True)
+                if ((values_table == 0).any()).any():
 
-            if ((values_table == 0).any()).any():
-
-                print(fail_msg % {"err_col" : c})
-                return False
+                    print(fail_msg % {"err_col" : c})
+                    return False
                 
         return True
 
@@ -244,6 +232,49 @@ class newValidator:
 
                     print(fail_msg % {"err_attr" : attr})
                     return False
+
+        return True
+
+
+    def validate_paired_cols(self, spec_dict=None):
+        '''
+        All paired columns should share certain attributes
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set', 'anonymise']
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: Paired columns must have matching attributes (%(err_attr)s)
+        """)
+
+        for c, v in get_attr_values(
+            spec_dict,
+            'paired_columns',
+            col_names=True,
+            types=['categorical']):
+
+            if v:
+
+                orig_col_name = c
+                paired_col_names = v
+
+                for attr in LINKED_ATTRS:
+
+                    group_flags = []
+
+                    group_flags.append(spec_dict["columns"][orig_col_name][attr])
+
+                    for pair in paired_col_names:
+
+                        group_flags.append(spec_dict["columns"][pair][attr])
+
+                    if len(set(group_flags)) != 1:
+
+                        print(fail_msg % {"err_attr" : attr})
+                        return False
 
         return True
 

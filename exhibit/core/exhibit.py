@@ -16,6 +16,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser
 from exhibit.core.utils import count_core_rows
+from exhibit.core.formatters import parse_original_values_into_dataframe
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 from exhibit.core.generator import (
@@ -158,9 +159,27 @@ class newExhibit:
     def read_spec(self):
         '''
         Read the YAML file and save it as class attribute spec_dict
+
+        Categorical columns have an "original_values" attribute set
+        to be a string that can either contain original column values
+        formatted in a csv-like table or a plain string indicating 
+        how the original values were processed (either as Paired columns)
+        or stored away in a temporary table in the anon database.
+        
+        If original values are a csv-like table, parse it early
+        so that we can amend the dataframe in-place when using
+        anonymised values from anon db in the generation process.
         '''
         with open(self._args.source, "r") as f:
             self.spec_dict = yaml.safe_load(f)
+
+        for col in self.spec_dict['metadata']['categorical_columns']:
+
+            orig_str = self.spec_dict['columns'][col]['original_values']
+    
+            parsed_values = parse_original_values_into_dataframe(orig_str)
+
+            self.spec_dict['columns'][col]['original_values'] = parsed_values
 
     def validate_spec(self):
         '''

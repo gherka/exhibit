@@ -9,6 +9,7 @@ from copy import deepcopy
 
 # Exhibit imports
 from exhibit.sample import sample
+from exhibit.core.formatters import parse_original_values_into_dataframe
 
 # Module under test
 from exhibit.core.validator import newValidator as tm
@@ -79,9 +80,12 @@ class validatorTests(unittest.TestCase):
         test_spec = sample.prescribing_spec
         
         #modify list in place
-        original_values_list = test_spec['columns']['HB2014Name']['original_values']
+        orig_vals = test_spec['columns']['HB2014Name']['original_values']
         #set the first value of the probality vector to 1
-        original_values_list[-1] = "Scotland| 1 | 0.016"
+        orig_vals[-1] = "Scotland| 1 | 0.016"
+        #parse the csv-like string into dataframe
+        test_spec['columns']['HB2014Name']['original_values'] = (
+            parse_original_values_into_dataframe(orig_vals))
         
         validatorMock = Mock()
         validatorMock.ct = 25
@@ -130,6 +134,46 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict3))
 
 
+    def test_paired_cols_shared_attributes(self):
+        '''
+        If paired columns have different attributes for generation
+        it will cause confusion
+        '''
+        validatorMock = Mock()
+
+        test_dict = {
+            "columns": {
+                "Board Code": {
+                    "type": "categorical",
+                    "allow_missing_values": True,
+                    "paired_columns": ['Board'],
+                    "anonymise": True,
+                    "anonymising_set": "random"
+                },
+                "Board":  {
+                    "type": "categorical",
+                    "allow_missing_values": True,
+                    "paired_columns": ['Board Code'],
+                    "anonymise": True,
+                    "anonymising_set": "random"
+                },
+            }        
+        }
+
+        test_dict1 = deepcopy(test_dict)
+        test_dict1['columns']['Board']['allow_missing_values'] = False
+
+        test_dict2 = deepcopy(test_dict)
+        test_dict2['columns']['Board']['anonymise'] = False
+
+        test_dict3 = deepcopy(test_dict)
+        test_dict3['columns']['Board']['anonymising_set'] = "fish"
+        
+        self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict1))
+        self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict2))
+        self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict3))
+
+
     def test_validator_no_nulls(self):
         '''
         Doc string
@@ -152,6 +196,12 @@ class validatorTests(unittest.TestCase):
                 }     
             }
         }
+
+        orig_vals = test_dict['columns']['Board Code']['original_values']
+
+        test_dict['columns']['Board Code']['original_values'] = (
+            parse_original_values_into_dataframe(orig_vals))
+
         self.assertFalse(tm.validate_weights_and_probability_vector_have_no_nulls(
             validatorMock, spec_dict=test_dict))
 

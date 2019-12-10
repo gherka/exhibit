@@ -6,7 +6,6 @@
 metadata:
   number_of_rows: 2500
   categorical_columns:
-  - quarter_date
   - hb_code
   - hb_name
   - measure

@@ -1,0 +1,1126 @@
+hb_name,hb_code,loc_name,loc_code,measure,sex,age,quarter_date,avlos,los,stays
+Finsteraarhorn,Finsteraarhorn,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,90+,2018-04-01,21,369,34
+Finsteraarhorn,Finsteraarhorn,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,90+,2018-07-01,24,384,31
+Finsteraarhorn,Finsteraarhorn,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,90+,2018-10-01,24,428,34
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,0-9,2018-04-01,3,461,275
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,0-9,2018-07-01,7,487,235
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,0-9,2018-10-01,2,489,272
+Finsteraarhorn,Finsteraarhorn,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Male,10-19,2018-04-01,1,346,146
+Finsteraarhorn,Finsteraarhorn,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Male,10-19,2018-07-01,4,318,147
+Finsteraarhorn,Finsteraarhorn,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Male,10-19,2018-10-01,4,317,134
+Finsteraarhorn,Finsteraarhorn,Shy Albatross,Thalassarche cauta,Emergency Inpatients,Male,70-79,2018-04-01,38,9111,1011
+Finsteraarhorn,Finsteraarhorn,Shy Albatross,Thalassarche cauta,Emergency Inpatients,Male,70-79,2018-07-01,40,10025,1076
+Finsteraarhorn,Finsteraarhorn,Shy Albatross,Thalassarche cauta,Emergency Inpatients,Male,70-79,2018-10-01,38,9256,1176
+Grand Combin,Grand Combin,Horned Grebe,Podiceps auritus,Emergency Inpatients,Female,10-19,2018-04-01,16,2542,1125
+Grand Combin,Grand Combin,Horned Grebe,Podiceps auritus,Emergency Inpatients,Female,10-19,2018-07-01,16,2532,1122
+Grand Combin,Grand Combin,Horned Grebe,Podiceps auritus,Emergency Inpatients,Female,10-19,2018-10-01,17,2518,1025
+Grandes Jorasses,Grandes Jorasses,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,50-59,2018-04-01,20,9332,2393
+Grandes Jorasses,Grandes Jorasses,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,50-59,2018-07-01,19,11085,2301
+Grandes Jorasses,Grandes Jorasses,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,50-59,2018-10-01,20,10661,2566
+Grand Combin,Grand Combin,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,20-29,2018-04-01,8,9,1819
+Grand Combin,Grand Combin,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,20-29,2018-07-01,9,2,1639
+Grand Combin,Grand Combin,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,20-29,2018-10-01,5,9,1756
+Dykh-Tau,Dykh-Tau,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,30-39,2018-04-01,9,5,33
+Dykh-Tau,Dykh-Tau,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,30-39,2018-07-01,1,7,34
+Dykh-Tau,Dykh-Tau,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,30-39,2018-10-01,8,5,35
+Shkhara,Shkhara,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Male,70-79,2018-04-01,8,17,1079
+Shkhara,Shkhara,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Male,70-79,2018-07-01,6,18,1239
+Shkhara,Shkhara,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Male,70-79,2018-10-01,0,17,1191
+Grand Combin,Grand Combin,Wandering Albatross,Diomedea exulans,All Daycases,Male,0-9,2018-04-01,0,1,501
+Grand Combin,Grand Combin,Wandering Albatross,Diomedea exulans,All Daycases,Male,0-9,2018-07-01,2,5,533
+Grand Combin,Grand Combin,Wandering Albatross,Diomedea exulans,All Daycases,Male,0-9,2018-10-01,3,8,550
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,80-89,2018-04-01,22,4755,594
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,80-89,2018-07-01,24,5255,534
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,80-89,2018-10-01,23,4555,593
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,40-49,2018-04-01,14,1700,916
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,40-49,2018-07-01,14,1727,888
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,40-49,2018-10-01,14,1686,947
+Finsteraarhorn,Finsteraarhorn,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,50-59,2018-04-01,24,3870,938
+Finsteraarhorn,Finsteraarhorn,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,50-59,2018-07-01,25,4167,834
+Finsteraarhorn,Finsteraarhorn,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,50-59,2018-10-01,24,4363,792
+Shkhara,Shkhara,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Male,50-59,2018-04-01,16,6986,1250
+Shkhara,Shkhara,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Male,50-59,2018-07-01,16,7292,1194
+Shkhara,Shkhara,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Male,50-59,2018-10-01,17,7190,1081
+Monte Rosa,Monte Rosa,Horned Grebe,Podiceps auritus,All Daycases,Female,60-69,2018-04-01,8,8,354
+Monte Rosa,Monte Rosa,Horned Grebe,Podiceps auritus,All Daycases,Female,60-69,2018-07-01,7,7,333
+Monte Rosa,Monte Rosa,Horned Grebe,Podiceps auritus,All Daycases,Female,60-69,2018-10-01,7,7,339
+Monte Rosa,Monte Rosa,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,30-39,2018-04-01,3,8,125
+Monte Rosa,Monte Rosa,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,30-39,2018-07-01,4,1,146
+Monte Rosa,Monte Rosa,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,30-39,2018-10-01,9,9,125
+Mont Blanc,Mont Blanc,Arctic Loon,Gavia arctica,Elective Inpatients,Female,10-19,2018-04-01,6,81,59
+Mont Blanc,Mont Blanc,Arctic Loon,Gavia arctica,Elective Inpatients,Female,10-19,2018-07-01,9,87,60
+Mont Blanc,Mont Blanc,Arctic Loon,Gavia arctica,Elective Inpatients,Female,10-19,2018-10-01,6,82,57
+Elbrus,Elbrus,White-faced Storm-Petrel,Pelagodroma marina,Emergency Inpatients,Female,30-39,2018-04-01,4,107,42
+Elbrus,Elbrus,White-faced Storm-Petrel,Pelagodroma marina,Emergency Inpatients,Female,30-39,2018-07-01,1,102,43
+Elbrus,Elbrus,White-faced Storm-Petrel,Pelagodroma marina,Emergency Inpatients,Female,30-39,2018-10-01,2,98,40
+Rimpfischhorn,Rimpfischhorn,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,20-29,2018-04-01,14,4052,1061
+Rimpfischhorn,Rimpfischhorn,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,20-29,2018-07-01,14,3907,1137
+Rimpfischhorn,Rimpfischhorn,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,20-29,2018-10-01,14,3731,1167
+Dykh-Tau,Dykh-Tau,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Female,50-59,2018-04-01,7,324,93
+Dykh-Tau,Dykh-Tau,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Female,50-59,2018-07-01,6,340,92
+Dykh-Tau,Dykh-Tau,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Female,50-59,2018-10-01,2,317,96
+Koshtan-Tau,Koshtan-Tau,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Female,30-39,2018-04-01,9,16098,4385
+Koshtan-Tau,Koshtan-Tau,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Female,30-39,2018-07-01,8,18315,4498
+Koshtan-Tau,Koshtan-Tau,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Female,30-39,2018-10-01,8,16179,4403
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,90+,2018-04-01,25,1538,107
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,90+,2018-07-01,24,1530,117
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,90+,2018-10-01,25,1322,104
+Grand Combin,Grand Combin,Streaked Shearwater,Calonectris leucomelas,Elective Inpatients,Male,90+,2018-04-01,39,2698,232
+Grand Combin,Grand Combin,Streaked Shearwater,Calonectris leucomelas,Elective Inpatients,Male,90+,2018-07-01,37,2536,244
+Grand Combin,Grand Combin,Streaked Shearwater,Calonectris leucomelas,Elective Inpatients,Male,90+,2018-10-01,38,2701,219
+Rimpfischhorn,Rimpfischhorn,Manx Shearwater,Puffinus puffinus,All Daycases,Female,60-69,2018-04-01,7,28,2949
+Rimpfischhorn,Rimpfischhorn,Manx Shearwater,Puffinus puffinus,All Daycases,Female,60-69,2018-07-01,6,29,2991
+Rimpfischhorn,Rimpfischhorn,Manx Shearwater,Puffinus puffinus,All Daycases,Female,60-69,2018-10-01,6,27,2965
+Dom,Dom,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Male,60-69,2018-04-01,13,4221,578
+Dom,Dom,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Male,60-69,2018-07-01,14,4229,673
+Dom,Dom,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Male,60-69,2018-10-01,14,4093,688
+Grandes Jorasses,Grandes Jorasses,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,90+,2018-04-01,16,889,98
+Grandes Jorasses,Grandes Jorasses,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,90+,2018-07-01,17,919,93
+Grandes Jorasses,Grandes Jorasses,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,90+,2018-10-01,16,875,93
+Dom,Dom,Band-rumped Storm-Petrel,Oceanodroma castro,Emergency Inpatients,Male,80-89,2018-04-01,22,7244,378
+Dom,Dom,Band-rumped Storm-Petrel,Oceanodroma castro,Emergency Inpatients,Male,80-89,2018-07-01,24,7194,448
+Dom,Dom,Band-rumped Storm-Petrel,Oceanodroma castro,Emergency Inpatients,Male,80-89,2018-10-01,21,6992,419
+Shkhara,Shkhara,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Male,70-79,2018-04-01,9,17,1175
+Shkhara,Shkhara,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Male,70-79,2018-07-01,3,18,1154
+Shkhara,Shkhara,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Male,70-79,2018-10-01,9,18,1194
+Grand Combin,Grand Combin,Buller's Shearwater,Puffinus bulleri,Elective Inpatients,Male,30-39,2018-04-01,4,1057,702
+Grand Combin,Grand Combin,Buller's Shearwater,Puffinus bulleri,Elective Inpatients,Male,30-39,2018-07-01,2,935,696
+Grand Combin,Grand Combin,Buller's Shearwater,Puffinus bulleri,Elective Inpatients,Male,30-39,2018-10-01,1,883,628
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Elective Inpatients,Female,30-39,2018-04-01,6,1177,762
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Elective Inpatients,Female,30-39,2018-07-01,0,1023,711
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Elective Inpatients,Female,30-39,2018-10-01,2,1078,677
+Matterhorn,Matterhorn,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,20-29,2018-04-01,6,1,200
+Matterhorn,Matterhorn,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,20-29,2018-07-01,3,7,193
+Matterhorn,Matterhorn,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,20-29,2018-10-01,7,3,182
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,50-59,2018-04-01,5,16,2307
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,50-59,2018-07-01,2,15,2386
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,50-59,2018-10-01,6,15,2179
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Female,90+,2018-04-01,96,27169,960
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Female,90+,2018-07-01,100,22990,1138
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Female,90+,2018-10-01,101,27185,962
+Finsteraarhorn,Finsteraarhorn,Pacific Loon,Gavia pacifica,All Daycases,Female,90+,2018-04-01,1,8,105
+Finsteraarhorn,Finsteraarhorn,Pacific Loon,Gavia pacifica,All Daycases,Female,90+,2018-07-01,9,5,110
+Finsteraarhorn,Finsteraarhorn,Pacific Loon,Gavia pacifica,All Daycases,Female,90+,2018-10-01,0,0,111
+Mont Blanc,Mont Blanc,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Female,10-19,2018-04-01,1,73,63
+Mont Blanc,Mont Blanc,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Female,10-19,2018-07-01,3,82,68
+Mont Blanc,Mont Blanc,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Female,10-19,2018-10-01,3,77,68
+Finsteraarhorn,Finsteraarhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,0-9,2018-04-01,1,6,73
+Finsteraarhorn,Finsteraarhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,0-9,2018-07-01,3,0,78
+Finsteraarhorn,Finsteraarhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,0-9,2018-10-01,4,9,75
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-04-01,21,1335,177
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-07-01,19,1346,152
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-10-01,19,1285,165
+Finsteraarhorn,Finsteraarhorn,Streaked Shearwater,Calonectris leucomelas,Emergency Inpatients,Male,50-59,2018-04-01,24,3722,818
+Finsteraarhorn,Finsteraarhorn,Streaked Shearwater,Calonectris leucomelas,Emergency Inpatients,Male,50-59,2018-07-01,24,4093,884
+Finsteraarhorn,Finsteraarhorn,Streaked Shearwater,Calonectris leucomelas,Emergency Inpatients,Male,50-59,2018-10-01,25,4400,841
+Shkhara,Shkhara,Arctic Loon,Gavia arctica,Elective Inpatients,Female,20-29,2018-04-01,8,228,102
+Shkhara,Shkhara,Arctic Loon,Gavia arctica,Elective Inpatients,Female,20-29,2018-07-01,9,199,112
+Shkhara,Shkhara,Arctic Loon,Gavia arctica,Elective Inpatients,Female,20-29,2018-10-01,5,209,98
+Grandes Jorasses,Grandes Jorasses,Red-throated Loon,Gavia stellata,Emergency Inpatients,Female,60-69,2018-04-01,24,15440,2912
+Grandes Jorasses,Grandes Jorasses,Red-throated Loon,Gavia stellata,Emergency Inpatients,Female,60-69,2018-07-01,23,13786,3239
+Grandes Jorasses,Grandes Jorasses,Red-throated Loon,Gavia stellata,Emergency Inpatients,Female,60-69,2018-10-01,23,15232,2823
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Female,60-69,2018-04-01,5,51,6838
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Female,60-69,2018-07-01,0,49,5835
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Female,60-69,2018-10-01,3,51,6452
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,All Daycases,Female,10-19,2018-04-01,1,8,880
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,All Daycases,Female,10-19,2018-07-01,6,6,820
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,All Daycases,Female,10-19,2018-10-01,8,9,920
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Elective Inpatients,Male,20-29,2018-04-01,6,233,200
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Elective Inpatients,Male,20-29,2018-07-01,3,214,190
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Elective Inpatients,Male,20-29,2018-10-01,4,210,189
+Mont Blanc,Mont Blanc,Wandering Albatross,Diomedea exulans,Elective Inpatients,Female,0-9,2018-04-01,5,42,41
+Mont Blanc,Mont Blanc,Wandering Albatross,Diomedea exulans,Elective Inpatients,Female,0-9,2018-07-01,8,47,41
+Mont Blanc,Mont Blanc,Wandering Albatross,Diomedea exulans,Elective Inpatients,Female,0-9,2018-10-01,2,45,40
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,Emergency Inpatients,Female,20-29,2018-04-01,9,2291,897
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,Emergency Inpatients,Female,20-29,2018-07-01,3,2296,874
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,Emergency Inpatients,Female,20-29,2018-10-01,2,2474,838
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Male,10-19,2018-04-01,9,7,309
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Male,10-19,2018-07-01,1,6,287
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Male,10-19,2018-10-01,1,6,284
+Weisshorn,Weisshorn,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Male,20-29,2018-04-01,8,1088,352
+Weisshorn,Weisshorn,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Male,20-29,2018-07-01,6,1113,408
+Weisshorn,Weisshorn,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Male,20-29,2018-10-01,3,994,353
+Dom,Dom,Fork-tailed Storm-Petrel,Oceanodroma furcata,Elective Inpatients,Female,60-69,2018-04-01,2,561,151
+Dom,Dom,Fork-tailed Storm-Petrel,Oceanodroma furcata,Elective Inpatients,Female,60-69,2018-07-01,2,530,168
+Dom,Dom,Fork-tailed Storm-Petrel,Oceanodroma furcata,Elective Inpatients,Female,60-69,2018-10-01,4,538,146
+Dent Blanche,Dent Blanche,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Female,0-9,2018-04-01,7,46,45
+Dent Blanche,Dent Blanche,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Female,0-9,2018-07-01,2,49,45
+Dent Blanche,Dent Blanche,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Female,0-9,2018-10-01,4,46,43
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Male,10-19,2018-04-01,4,278,238
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Male,10-19,2018-07-01,9,236,253
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Male,10-19,2018-10-01,1,272,250
+Finsteraarhorn,Finsteraarhorn,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,10-19,2018-04-01,5,36,34
+Finsteraarhorn,Finsteraarhorn,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,10-19,2018-07-01,3,42,34
+Finsteraarhorn,Finsteraarhorn,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,10-19,2018-10-01,7,40,33
+Grand Combin,Grand Combin,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,30-39,2018-04-01,4,4,2267
+Grand Combin,Grand Combin,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,30-39,2018-07-01,2,1,2262
+Grand Combin,Grand Combin,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,30-39,2018-10-01,0,7,2630
+Koshtan-Tau,Koshtan-Tau,Pied-billed Grebe,Podilymbus podiceps,Emergency Inpatients,Male,30-39,2018-04-01,9,13737,4466
+Koshtan-Tau,Koshtan-Tau,Pied-billed Grebe,Podilymbus podiceps,Emergency Inpatients,Male,30-39,2018-07-01,2,14263,4895
+Koshtan-Tau,Koshtan-Tau,Pied-billed Grebe,Podilymbus podiceps,Emergency Inpatients,Male,30-39,2018-10-01,2,13706,4622
+Monte Rosa,Monte Rosa,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Female,20-29,2018-04-01,9,48,32
+Monte Rosa,Monte Rosa,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Female,20-29,2018-07-01,6,49,34
+Monte Rosa,Monte Rosa,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Female,20-29,2018-10-01,8,50,30
+Weisshorn,Weisshorn,Pied-billed Grebe,Podilymbus podiceps,Emergency Inpatients,Female,70-79,2018-04-01,20,12752,1479
+Weisshorn,Weisshorn,Pied-billed Grebe,Podilymbus podiceps,Emergency Inpatients,Female,70-79,2018-07-01,20,11794,1468
+Weisshorn,Weisshorn,Pied-billed Grebe,Podilymbus podiceps,Emergency Inpatients,Female,70-79,2018-10-01,20,11856,1347
+Dom,Dom,Pacific Loon,Gavia pacifica,Elective Inpatients,Female,90+,2018-04-01,1,314,21
+Dom,Dom,Pacific Loon,Gavia pacifica,Elective Inpatients,Female,90+,2018-07-01,0,320,21
+Dom,Dom,Pacific Loon,Gavia pacifica,Elective Inpatients,Female,90+,2018-10-01,1,313,19
+Grandes Jorasses,Grandes Jorasses,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,50-59,2018-04-01,7,9,2020
+Grandes Jorasses,Grandes Jorasses,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,50-59,2018-07-01,0,8,1981
+Grandes Jorasses,Grandes Jorasses,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,50-59,2018-10-01,6,0,2004
+Matterhorn,Matterhorn,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Male,90+,2018-04-01,5,488,25
+Matterhorn,Matterhorn,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Male,90+,2018-07-01,9,451,23
+Matterhorn,Matterhorn,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Male,90+,2018-10-01,8,472,26
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,40-49,2018-04-01,14,1699,997
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,40-49,2018-07-01,14,1680,912
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,40-49,2018-10-01,13,1766,960
+Matterhorn,Matterhorn,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,10-19,2018-04-01,8,6,91
+Matterhorn,Matterhorn,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,10-19,2018-07-01,1,8,85
+Matterhorn,Matterhorn,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,10-19,2018-10-01,4,3,89
+Dom,Dom,Least Grebe,Tachybaptus dominicus,All Daycases,Male,40-49,2018-04-01,5,7,276
+Dom,Dom,Least Grebe,Tachybaptus dominicus,All Daycases,Male,40-49,2018-07-01,9,3,273
+Dom,Dom,Least Grebe,Tachybaptus dominicus,All Daycases,Male,40-49,2018-10-01,0,3,263
+Monte Rosa,Monte Rosa,Ashy Storm-Petrel,Oceanodroma homochroa,Emergency Inpatients,Male,30-39,2018-04-01,5,572,164
+Monte Rosa,Monte Rosa,Ashy Storm-Petrel,Oceanodroma homochroa,Emergency Inpatients,Male,30-39,2018-07-01,6,581,157
+Monte Rosa,Monte Rosa,Ashy Storm-Petrel,Oceanodroma homochroa,Emergency Inpatients,Male,30-39,2018-10-01,9,548,157
+Grandes Jorasses,Grandes Jorasses,Eared Grebe,Podiceps nigricollis,All Daycases,Male,50-59,2018-04-01,1,4,1768
+Grandes Jorasses,Grandes Jorasses,Eared Grebe,Podiceps nigricollis,All Daycases,Male,50-59,2018-07-01,1,8,2001
+Grandes Jorasses,Grandes Jorasses,Eared Grebe,Podiceps nigricollis,All Daycases,Male,50-59,2018-10-01,3,9,2106
+Dom,Dom,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,60-69,2018-04-01,1,460,161
+Dom,Dom,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,60-69,2018-07-01,6,472,167
+Dom,Dom,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,60-69,2018-10-01,0,487,151
+Weisshorn,Weisshorn,Shy Albatross,Thalassarche cauta,Emergency Inpatients,Female,40-49,2018-04-01,7,2877,712
+Weisshorn,Weisshorn,Shy Albatross,Thalassarche cauta,Emergency Inpatients,Female,40-49,2018-07-01,6,2935,627
+Weisshorn,Weisshorn,Shy Albatross,Thalassarche cauta,Emergency Inpatients,Female,40-49,2018-10-01,4,3204,661
+Grand Combin,Grand Combin,Murphy's Petrel,Pterodroma ultima,Elective Inpatients,Female,90+,2018-04-01,37,2902,268
+Grand Combin,Grand Combin,Murphy's Petrel,Pterodroma ultima,Elective Inpatients,Female,90+,2018-07-01,38,3118,232
+Grand Combin,Grand Combin,Murphy's Petrel,Pterodroma ultima,Elective Inpatients,Female,90+,2018-10-01,39,2847,228
+Elbrus,Elbrus,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Female,80-89,2018-04-01,15,790,67
+Elbrus,Elbrus,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Female,80-89,2018-07-01,15,819,75
+Elbrus,Elbrus,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Female,80-89,2018-10-01,15,820,70
+Monte Rosa,Monte Rosa,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,70-79,2018-04-01,2,6,341
+Monte Rosa,Monte Rosa,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,70-79,2018-07-01,1,3,353
+Monte Rosa,Monte Rosa,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,70-79,2018-10-01,7,6,350
+Elbrus,Elbrus,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Female,50-59,2018-04-01,8,313,86
+Elbrus,Elbrus,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Female,50-59,2018-07-01,8,340,91
+Elbrus,Elbrus,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Female,50-59,2018-10-01,4,318,99
+Monte Rosa,Monte Rosa,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,10-19,2018-04-01,2,6,49
+Monte Rosa,Monte Rosa,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,10-19,2018-07-01,9,9,48
+Monte Rosa,Monte Rosa,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,10-19,2018-10-01,8,5,51
+Shkhara,Shkhara,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Male,40-49,2018-04-01,0,404,177
+Shkhara,Shkhara,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Male,40-49,2018-07-01,3,436,153
+Shkhara,Shkhara,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Male,40-49,2018-10-01,0,460,158
+Grand Combin,Grand Combin,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Male,70-79,2018-04-01,26,7168,2012
+Grand Combin,Grand Combin,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Male,70-79,2018-07-01,28,7160,2058
+Grand Combin,Grand Combin,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Male,70-79,2018-10-01,28,7476,1899
+Shkhara,Shkhara,Murphy's Petrel,Pterodroma ultima,Elective Inpatients,Female,30-39,2018-04-01,4,277,136
+Shkhara,Shkhara,Murphy's Petrel,Pterodroma ultima,Elective Inpatients,Female,30-39,2018-07-01,8,319,129
+Shkhara,Shkhara,Murphy's Petrel,Pterodroma ultima,Elective Inpatients,Female,30-39,2018-10-01,2,299,119
+Finsteraarhorn,Finsteraarhorn,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,10-19,2018-04-01,9,43,34
+Finsteraarhorn,Finsteraarhorn,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,10-19,2018-07-01,5,43,38
+Finsteraarhorn,Finsteraarhorn,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,10-19,2018-10-01,1,42,38
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Male,90+,2018-04-01,7,14,346
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Male,90+,2018-07-01,7,14,384
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Male,90+,2018-10-01,1,14,399
+Mont Blanc,Mont Blanc,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,70-79,2018-04-01,5,22,1585
+Mont Blanc,Mont Blanc,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,70-79,2018-07-01,0,22,1506
+Mont Blanc,Mont Blanc,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,70-79,2018-10-01,7,20,1717
+Matterhorn,Matterhorn,Laysan Albatross,Phoebastria immutabilis,Elective Inpatients,Female,60-69,2018-04-01,8,920,192
+Matterhorn,Matterhorn,Laysan Albatross,Phoebastria immutabilis,Elective Inpatients,Female,60-69,2018-07-01,4,877,211
+Matterhorn,Matterhorn,Laysan Albatross,Phoebastria immutabilis,Elective Inpatients,Female,60-69,2018-10-01,5,999,211
+Dom,Dom,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Male,70-79,2018-04-01,17,6979,727
+Dom,Dom,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Male,70-79,2018-07-01,17,5855,634
+Dom,Dom,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Male,70-79,2018-10-01,18,6419,682
+Dent Blanche,Dent Blanche,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Female,80-89,2018-04-01,15,2833,325
+Dent Blanche,Dent Blanche,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Female,80-89,2018-07-01,15,2891,332
+Dent Blanche,Dent Blanche,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Female,80-89,2018-10-01,16,2805,305
+Dom,Dom,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,50-59,2018-04-01,5,0,437
+Dom,Dom,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,50-59,2018-07-01,3,5,449
+Dom,Dom,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,50-59,2018-10-01,8,5,449
+Dent Blanche,Dent Blanche,Arctic Loon,Gavia arctica,All Daycases,Male,80-89,2018-04-01,9,23,1085
+Dent Blanche,Dent Blanche,Arctic Loon,Gavia arctica,All Daycases,Male,80-89,2018-07-01,0,21,1007
+Dent Blanche,Dent Blanche,Arctic Loon,Gavia arctica,All Daycases,Male,80-89,2018-10-01,7,22,1120
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Male,90+,2018-04-01,2,23,738
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Male,90+,2018-07-01,8,23,724
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Male,90+,2018-10-01,7,26,854
+Mont Blanc,Mont Blanc,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,30-39,2018-04-01,6,4,496
+Mont Blanc,Mont Blanc,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,30-39,2018-07-01,0,1,557
+Mont Blanc,Mont Blanc,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,30-39,2018-10-01,5,8,604
+Grandes Jorasses,Grandes Jorasses,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,60-69,2018-04-01,2,16,2280
+Grandes Jorasses,Grandes Jorasses,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,60-69,2018-07-01,6,16,2549
+Grandes Jorasses,Grandes Jorasses,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,60-69,2018-10-01,8,17,2262
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,All Daycases,Male,50-59,2018-04-01,4,3,752
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,All Daycases,Male,50-59,2018-07-01,0,3,636
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,All Daycases,Male,50-59,2018-10-01,3,2,733
+Matterhorn,Matterhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Female,50-59,2018-04-01,4,9,524
+Matterhorn,Matterhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Female,50-59,2018-07-01,1,5,552
+Matterhorn,Matterhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Female,50-59,2018-10-01,8,7,527
+Grand Combin,Grand Combin,Black-browed Albatross,Thalassarche melanophris,All Daycases,Male,90+,2018-04-01,2,24,785
+Grand Combin,Grand Combin,Black-browed Albatross,Thalassarche melanophris,All Daycases,Male,90+,2018-07-01,8,24,853
+Grand Combin,Grand Combin,Black-browed Albatross,Thalassarche melanophris,All Daycases,Male,90+,2018-10-01,9,24,774
+Monte Rosa,Monte Rosa,Red-necked Grebe,Podiceps grisegena,Emergency Inpatients,Male,30-39,2018-04-01,8,623,173
+Monte Rosa,Monte Rosa,Red-necked Grebe,Podiceps grisegena,Emergency Inpatients,Male,30-39,2018-07-01,7,526,164
+Monte Rosa,Monte Rosa,Red-necked Grebe,Podiceps grisegena,Emergency Inpatients,Male,30-39,2018-10-01,9,560,152
+Finsteraarhorn,Finsteraarhorn,Horned Grebe,Podiceps auritus,All Daycases,Male,90+,2018-04-01,3,0,117
+Finsteraarhorn,Finsteraarhorn,Horned Grebe,Podiceps auritus,All Daycases,Male,90+,2018-07-01,6,2,120
+Finsteraarhorn,Finsteraarhorn,Horned Grebe,Podiceps auritus,All Daycases,Male,90+,2018-10-01,3,7,113
+Shkhara,Shkhara,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,80-89,2018-04-01,15,2225,247
+Shkhara,Shkhara,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,80-89,2018-07-01,14,2552,242
+Shkhara,Shkhara,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,80-89,2018-10-01,15,2474,242
+Dent Blanche,Dent Blanche,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,40-49,2018-04-01,15,4373,988
+Dent Blanche,Dent Blanche,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,40-49,2018-07-01,14,3825,875
+Dent Blanche,Dent Blanche,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,40-49,2018-10-01,15,3781,906
+Grandes Jorasses,Grandes Jorasses,Wedge-rumped Storm-Petrel,Oceanodroma tethys,Elective Inpatients,Male,80-89,2018-04-01,16,2912,418
+Grandes Jorasses,Grandes Jorasses,Wedge-rumped Storm-Petrel,Oceanodroma tethys,Elective Inpatients,Male,80-89,2018-07-01,15,2864,438
+Grandes Jorasses,Grandes Jorasses,Wedge-rumped Storm-Petrel,Oceanodroma tethys,Elective Inpatients,Male,80-89,2018-10-01,15,2685,431
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,70-79,2018-04-01,3,2,572
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,70-79,2018-07-01,0,4,552
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,70-79,2018-10-01,2,3,569
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,All Daycases,Female,60-69,2018-04-01,5,17,2278
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,All Daycases,Female,60-69,2018-07-01,4,17,2404
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,All Daycases,Female,60-69,2018-10-01,2,17,2282
+Dent Blanche,Dent Blanche,Western Grebe,Aechmophorus occidentalis,Elective Inpatients,Female,30-39,2018-04-01,7,299,185
+Dent Blanche,Dent Blanche,Western Grebe,Aechmophorus occidentalis,Elective Inpatients,Female,30-39,2018-07-01,3,354,195
+Dent Blanche,Dent Blanche,Western Grebe,Aechmophorus occidentalis,Elective Inpatients,Female,30-39,2018-10-01,7,347,182
+Weisshorn,Weisshorn,Streaked Shearwater,Calonectris leucomelas,Elective Inpatients,Male,20-29,2018-04-01,3,121,88
+Weisshorn,Weisshorn,Streaked Shearwater,Calonectris leucomelas,Elective Inpatients,Male,20-29,2018-07-01,1,122,94
+Weisshorn,Weisshorn,Streaked Shearwater,Calonectris leucomelas,Elective Inpatients,Male,20-29,2018-10-01,4,132,84
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Male,60-69,2018-04-01,13,680,232
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Male,60-69,2018-07-01,13,693,257
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Male,60-69,2018-10-01,12,731,227
+Mont Blanc,Mont Blanc,Common Loon,Gavia immer,Emergency Inpatients,Female,80-89,2018-04-01,33,21355,1171
+Mont Blanc,Mont Blanc,Common Loon,Gavia immer,Emergency Inpatients,Female,80-89,2018-07-01,34,22293,1284
+Mont Blanc,Mont Blanc,Common Loon,Gavia immer,Emergency Inpatients,Female,80-89,2018-10-01,32,23314,1295
+Elbrus,Elbrus,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Male,0-9,2018-04-01,3,12,2
+Elbrus,Elbrus,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Male,0-9,2018-07-01,4,13,0
+Elbrus,Elbrus,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Male,0-9,2018-10-01,4,12,2
+Mont Blanc,Mont Blanc,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Female,60-69,2018-04-01,21,12512,1867
+Mont Blanc,Mont Blanc,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Female,60-69,2018-07-01,20,13506,1992
+Mont Blanc,Mont Blanc,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Female,60-69,2018-10-01,20,12473,2054
+Grandes Jorasses,Grandes Jorasses,Least Grebe,Tachybaptus dominicus,All Daycases,Male,40-49,2018-04-01,3,5,1119
+Grandes Jorasses,Grandes Jorasses,Least Grebe,Tachybaptus dominicus,All Daycases,Male,40-49,2018-07-01,7,6,1032
+Grandes Jorasses,Grandes Jorasses,Least Grebe,Tachybaptus dominicus,All Daycases,Male,40-49,2018-10-01,4,1,1092
+Matterhorn,Matterhorn,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,80-89,2018-04-01,25,13346,553
+Matterhorn,Matterhorn,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,80-89,2018-07-01,23,11829,523
+Matterhorn,Matterhorn,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,80-89,2018-10-01,22,13019,562
+Rimpfischhorn,Rimpfischhorn,Black-footed Albatross,Phoebastria nigripes,Elective Inpatients,Male,30-39,2018-04-01,0,575,288
+Rimpfischhorn,Rimpfischhorn,Black-footed Albatross,Phoebastria nigripes,Elective Inpatients,Male,30-39,2018-07-01,0,535,310
+Rimpfischhorn,Rimpfischhorn,Black-footed Albatross,Phoebastria nigripes,Elective Inpatients,Male,30-39,2018-10-01,0,582,323
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Female,50-59,2018-04-01,17,7578,1149
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Female,50-59,2018-07-01,17,7564,1163
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Female,50-59,2018-10-01,18,7742,1207
+Matterhorn,Matterhorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,50-59,2018-04-01,12,4671,634
+Matterhorn,Matterhorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,50-59,2018-07-01,12,4368,715
+Matterhorn,Matterhorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,50-59,2018-10-01,12,4364,711
+Finsteraarhorn,Finsteraarhorn,Cook's Petrel,Pterodroma cookii,Emergency Inpatients,Female,10-19,2018-04-01,9,370,157
+Finsteraarhorn,Finsteraarhorn,Cook's Petrel,Pterodroma cookii,Emergency Inpatients,Female,10-19,2018-07-01,2,394,155
+Finsteraarhorn,Finsteraarhorn,Cook's Petrel,Pterodroma cookii,Emergency Inpatients,Female,10-19,2018-10-01,0,401,141
+Finsteraarhorn,Finsteraarhorn,Common Loon,Gavia immer,Emergency Inpatients,Male,70-79,2018-04-01,37,9264,1016
+Finsteraarhorn,Finsteraarhorn,Common Loon,Gavia immer,Emergency Inpatients,Male,70-79,2018-07-01,39,9339,1138
+Finsteraarhorn,Finsteraarhorn,Common Loon,Gavia immer,Emergency Inpatients,Male,70-79,2018-10-01,37,9506,1013
+Finsteraarhorn,Finsteraarhorn,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Male,80-89,2018-04-01,19,1264,150
+Finsteraarhorn,Finsteraarhorn,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Male,80-89,2018-07-01,20,1285,156
+Finsteraarhorn,Finsteraarhorn,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Male,80-89,2018-10-01,18,1292,169
+Weisshorn,Weisshorn,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,0-9,2018-04-01,0,25,26
+Weisshorn,Weisshorn,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,0-9,2018-07-01,7,26,26
+Weisshorn,Weisshorn,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,0-9,2018-10-01,6,26,26
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,30-39,2018-04-01,7,282,131
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,30-39,2018-07-01,9,272,127
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,30-39,2018-10-01,0,240,131
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,0-9,2018-04-01,9,152,156
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,0-9,2018-07-01,4,175,166
+Grand Combin,Grand Combin,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,0-9,2018-10-01,8,165,149
+Elbrus,Elbrus,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,90+,2018-04-01,5,6,11
+Elbrus,Elbrus,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,90+,2018-07-01,2,5,12
+Elbrus,Elbrus,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,90+,2018-10-01,5,4,11
+Grandes Jorasses,Grandes Jorasses,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Female,60-69,2018-04-01,4,1826,669
+Grandes Jorasses,Grandes Jorasses,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Female,60-69,2018-07-01,1,1906,766
+Grandes Jorasses,Grandes Jorasses,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Female,60-69,2018-10-01,0,1859,737
+Dent Blanche,Dent Blanche,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Female,90+,2018-04-01,42,8029,255
+Dent Blanche,Dent Blanche,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Female,90+,2018-07-01,45,8192,263
+Dent Blanche,Dent Blanche,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Female,90+,2018-10-01,44,7452,256
+Elbrus,Elbrus,Black-browed Albatross,Thalassarche melanophris,All Daycases,Female,50-59,2018-04-01,2,9,71
+Elbrus,Elbrus,Black-browed Albatross,Thalassarche melanophris,All Daycases,Female,50-59,2018-07-01,7,6,71
+Elbrus,Elbrus,Black-browed Albatross,Thalassarche melanophris,All Daycases,Female,50-59,2018-10-01,3,8,80
+Grand Combin,Grand Combin,Horned Grebe,Podiceps auritus,Elective Inpatients,Female,80-89,2018-04-01,38,9231,1176
+Grand Combin,Grand Combin,Horned Grebe,Podiceps auritus,Elective Inpatients,Female,80-89,2018-07-01,35,8564,1146
+Grand Combin,Grand Combin,Horned Grebe,Podiceps auritus,Elective Inpatients,Female,80-89,2018-10-01,37,8680,1191
+Dykh-Tau,Dykh-Tau,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Female,40-49,2018-04-01,9,8,44
+Dykh-Tau,Dykh-Tau,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Female,40-49,2018-07-01,8,4,47
+Dykh-Tau,Dykh-Tau,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Female,40-49,2018-10-01,0,2,46
+Finsteraarhorn,Finsteraarhorn,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Female,30-39,2018-04-01,0,3,339
+Finsteraarhorn,Finsteraarhorn,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Female,30-39,2018-07-01,2,0,358
+Finsteraarhorn,Finsteraarhorn,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Female,30-39,2018-10-01,6,4,345
+Dykh-Tau,Dykh-Tau,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,40-49,2018-04-01,1,8,45
+Dykh-Tau,Dykh-Tau,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,40-49,2018-07-01,5,0,45
+Dykh-Tau,Dykh-Tau,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,40-49,2018-10-01,9,4,46
+Grandes Jorasses,Grandes Jorasses,Black-footed Albatross,Phoebastria nigripes,Emergency Inpatients,Male,60-69,2018-04-01,23,13533,3096
+Grandes Jorasses,Grandes Jorasses,Black-footed Albatross,Phoebastria nigripes,Emergency Inpatients,Male,60-69,2018-07-01,24,12193,2885
+Grandes Jorasses,Grandes Jorasses,Black-footed Albatross,Phoebastria nigripes,Emergency Inpatients,Male,60-69,2018-10-01,25,13549,3004
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Female,30-39,2018-04-01,3,2,1198
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Female,30-39,2018-07-01,3,2,1051
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Female,30-39,2018-10-01,8,7,1038
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,80-89,2018-04-01,5,80,3844
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,80-89,2018-07-01,9,79,3876
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,80-89,2018-10-01,5,78,3984
+Shkhara,Shkhara,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,90+,2018-04-01,16,681,44
+Shkhara,Shkhara,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,90+,2018-07-01,16,661,44
+Shkhara,Shkhara,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,90+,2018-10-01,15,657,41
+Grandes Jorasses,Grandes Jorasses,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Male,0-9,2018-04-01,7,1,195
+Grandes Jorasses,Grandes Jorasses,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Male,0-9,2018-07-01,7,4,203
+Grandes Jorasses,Grandes Jorasses,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Male,0-9,2018-10-01,1,6,197
+Grand Combin,Grand Combin,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,20-29,2018-04-01,21,6502,2312
+Grand Combin,Grand Combin,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,20-29,2018-07-01,23,6283,1978
+Grand Combin,Grand Combin,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,20-29,2018-10-01,21,5438,2078
+Finsteraarhorn,Finsteraarhorn,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Male,10-19,2018-04-01,0,356,129
+Finsteraarhorn,Finsteraarhorn,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Male,10-19,2018-07-01,9,342,127
+Finsteraarhorn,Finsteraarhorn,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Male,10-19,2018-10-01,4,317,136
+Mont Blanc,Mont Blanc,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,0-9,2018-04-01,6,389,155
+Mont Blanc,Mont Blanc,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,0-9,2018-07-01,0,420,172
+Mont Blanc,Mont Blanc,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,0-9,2018-10-01,3,398,176
+Dent Blanche,Dent Blanche,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,20-29,2018-04-01,3,222,125
+Dent Blanche,Dent Blanche,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,20-29,2018-07-01,4,210,141
+Dent Blanche,Dent Blanche,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,20-29,2018-10-01,1,208,128
+Grandes Jorasses,Grandes Jorasses,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Male,40-49,2018-04-01,0,3,1085
+Grandes Jorasses,Grandes Jorasses,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Male,40-49,2018-07-01,4,4,1053
+Grandes Jorasses,Grandes Jorasses,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Male,40-49,2018-10-01,6,4,1121
+Dent Blanche,Dent Blanche,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Male,80-89,2018-04-01,14,2559,306
+Dent Blanche,Dent Blanche,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Male,80-89,2018-07-01,15,2197,306
+Dent Blanche,Dent Blanche,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Male,80-89,2018-10-01,14,2105,276
+Finsteraarhorn,Finsteraarhorn,Band-rumped Storm-Petrel,Oceanodroma castro,Emergency Inpatients,Male,20-29,2018-04-01,12,868,294
+Finsteraarhorn,Finsteraarhorn,Band-rumped Storm-Petrel,Oceanodroma castro,Emergency Inpatients,Male,20-29,2018-07-01,13,933,309
+Finsteraarhorn,Finsteraarhorn,Band-rumped Storm-Petrel,Oceanodroma castro,Emergency Inpatients,Male,20-29,2018-10-01,12,934,330
+Grand Combin,Grand Combin,Red-throated Loon,Gavia stellata,Elective Inpatients,Female,50-59,2018-04-01,18,3391,1601
+Grand Combin,Grand Combin,Red-throated Loon,Gavia stellata,Elective Inpatients,Female,50-59,2018-07-01,17,3146,1426
+Grand Combin,Grand Combin,Red-throated Loon,Gavia stellata,Elective Inpatients,Female,50-59,2018-10-01,18,3417,1453
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,90+,2018-04-01,6,0,71
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,90+,2018-07-01,4,0,71
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,90+,2018-10-01,4,2,73
+Dent Blanche,Dent Blanche,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Female,60-69,2018-04-01,26,14040,1971
+Dent Blanche,Dent Blanche,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Female,60-69,2018-07-01,26,12406,2058
+Dent Blanche,Dent Blanche,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Female,60-69,2018-10-01,26,13531,2070
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Female,80-89,2018-04-01,20,1316,164
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Female,80-89,2018-07-01,20,1328,187
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Female,80-89,2018-10-01,22,1528,176
+Finsteraarhorn,Finsteraarhorn,Yellow-billed Loon,Gavia adamsii,All Daycases,Male,50-59,2018-04-01,6,8,751
+Finsteraarhorn,Finsteraarhorn,Yellow-billed Loon,Gavia adamsii,All Daycases,Male,50-59,2018-07-01,0,6,726
+Finsteraarhorn,Finsteraarhorn,Yellow-billed Loon,Gavia adamsii,All Daycases,Male,50-59,2018-10-01,2,4,722
+Finsteraarhorn,Finsteraarhorn,Horned Grebe,Podiceps auritus,All Daycases,Female,90+,2018-04-01,0,5,109
+Finsteraarhorn,Finsteraarhorn,Horned Grebe,Podiceps auritus,All Daycases,Female,90+,2018-07-01,7,5,115
+Finsteraarhorn,Finsteraarhorn,Horned Grebe,Podiceps auritus,All Daycases,Female,90+,2018-10-01,7,7,108
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,All Daycases,Male,60-69,2018-04-01,1,15,2356
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,All Daycases,Male,60-69,2018-07-01,4,15,2260
+Grandes Jorasses,Grandes Jorasses,Common Loon,Gavia immer,All Daycases,Male,60-69,2018-10-01,9,15,2112
+Grandes Jorasses,Grandes Jorasses,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Female,0-9,2018-04-01,8,477,256
+Grandes Jorasses,Grandes Jorasses,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Female,0-9,2018-07-01,0,440,270
+Grandes Jorasses,Grandes Jorasses,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Female,0-9,2018-10-01,3,472,262
+Grand Combin,Grand Combin,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,20-29,2018-04-01,4,746,570
+Grand Combin,Grand Combin,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,20-29,2018-07-01,6,656,508
+Grand Combin,Grand Combin,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,20-29,2018-10-01,1,626,553
+Shkhara,Shkhara,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Male,40-49,2018-04-01,3,409,167
+Shkhara,Shkhara,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Male,40-49,2018-07-01,3,450,148
+Shkhara,Shkhara,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Male,40-49,2018-10-01,2,462,150
+Grand Combin,Grand Combin,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,60-69,2018-04-01,4,51,6102
+Grand Combin,Grand Combin,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,60-69,2018-07-01,4,52,7012
+Grand Combin,Grand Combin,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,60-69,2018-10-01,4,45,6875
+Grand Combin,Grand Combin,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Male,70-79,2018-04-01,69,54770,8061
+Grand Combin,Grand Combin,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Male,70-79,2018-07-01,65,57290,8461
+Grand Combin,Grand Combin,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Male,70-79,2018-10-01,68,61173,7795
+Dykh-Tau,Dykh-Tau,Horned Grebe,Podiceps auritus,Emergency Inpatients,Female,40-49,2018-04-01,3,174,59
+Dykh-Tau,Dykh-Tau,Horned Grebe,Podiceps auritus,Emergency Inpatients,Female,40-49,2018-07-01,6,181,59
+Dykh-Tau,Dykh-Tau,Horned Grebe,Podiceps auritus,Emergency Inpatients,Female,40-49,2018-10-01,5,175,55
+Rimpfischhorn,Rimpfischhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,70-79,2018-04-01,46,42073,4179
+Rimpfischhorn,Rimpfischhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,70-79,2018-07-01,46,36373,3689
+Rimpfischhorn,Rimpfischhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,70-79,2018-10-01,50,40828,4172
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Female,70-79,2018-04-01,12,2532,814
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Female,70-79,2018-07-01,12,2804,764
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Female,70-79,2018-10-01,12,2932,783
+Monte Rosa,Monte Rosa,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Male,30-39,2018-04-01,9,618,154
+Monte Rosa,Monte Rosa,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Male,30-39,2018-07-01,7,605,149
+Monte Rosa,Monte Rosa,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Male,30-39,2018-10-01,4,566,165
+Shkhara,Shkhara,Common Loon,Gavia immer,Emergency Inpatients,Female,90+,2018-04-01,37,6842,187
+Shkhara,Shkhara,Common Loon,Gavia immer,Emergency Inpatients,Female,90+,2018-07-01,40,6806,201
+Shkhara,Shkhara,Common Loon,Gavia immer,Emergency Inpatients,Female,90+,2018-10-01,41,6886,208
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,60-69,2018-04-01,26,15999,3078
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,60-69,2018-07-01,25,15597,3261
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,60-69,2018-10-01,23,15509,2738
+Koshtan-Tau,Koshtan-Tau,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,80-89,2018-04-01,5,166,6995
+Koshtan-Tau,Koshtan-Tau,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,80-89,2018-07-01,3,156,7452
+Koshtan-Tau,Koshtan-Tau,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,80-89,2018-10-01,6,166,6619
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,50-59,2018-04-01,7,3,442
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,50-59,2018-07-01,0,8,450
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,50-59,2018-10-01,3,8,408
+Dykh-Tau,Dykh-Tau,Arctic Loon,Gavia arctica,All Daycases,Female,70-79,2018-04-01,2,3,88
+Dykh-Tau,Dykh-Tau,Arctic Loon,Gavia arctica,All Daycases,Female,70-79,2018-07-01,0,2,88
+Dykh-Tau,Dykh-Tau,Arctic Loon,Gavia arctica,All Daycases,Female,70-79,2018-10-01,7,1,99
+Dom,Dom,Herald Petrel,Pterodroma arminjoniana,Emergency Inpatients,Male,70-79,2018-04-01,17,5927,642
+Dom,Dom,Herald Petrel,Pterodroma arminjoniana,Emergency Inpatients,Male,70-79,2018-07-01,18,6063,660
+Dom,Dom,Herald Petrel,Pterodroma arminjoniana,Emergency Inpatients,Male,70-79,2018-10-01,17,6754,678
+Finsteraarhorn,Finsteraarhorn,Laysan Albatross,Phoebastria immutabilis,All Daycases,Female,90+,2018-04-01,2,6,122
+Finsteraarhorn,Finsteraarhorn,Laysan Albatross,Phoebastria immutabilis,All Daycases,Female,90+,2018-07-01,0,8,115
+Finsteraarhorn,Finsteraarhorn,Laysan Albatross,Phoebastria immutabilis,All Daycases,Female,90+,2018-10-01,2,0,117
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,Elective Inpatients,Male,10-19,2018-04-01,6,26,20
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,Elective Inpatients,Male,10-19,2018-07-01,0,26,20
+Dom,Dom,European Storm-Petrel,Hydrobates pelagicus,Elective Inpatients,Male,10-19,2018-10-01,8,26,22
+Elbrus,Elbrus,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Female,50-59,2018-04-01,3,36,24
+Elbrus,Elbrus,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Female,50-59,2018-07-01,3,33,21
+Elbrus,Elbrus,Cory's Shearwater,Calonectris diomedea,Elective Inpatients,Female,50-59,2018-10-01,6,37,23
+Rimpfischhorn,Rimpfischhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,40-49,2018-04-01,24,9017,1959
+Rimpfischhorn,Rimpfischhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,40-49,2018-07-01,24,8302,1743
+Rimpfischhorn,Rimpfischhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,40-49,2018-10-01,22,8973,1929
+Finsteraarhorn,Finsteraarhorn,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Male,90+,2018-04-01,52,3742,126
+Finsteraarhorn,Finsteraarhorn,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Male,90+,2018-07-01,55,3497,126
+Finsteraarhorn,Finsteraarhorn,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Male,90+,2018-10-01,54,3362,134
+Grand Combin,Grand Combin,Pacific Loon,Gavia pacifica,All Daycases,Male,10-19,2018-04-01,2,9,832
+Grand Combin,Grand Combin,Pacific Loon,Gavia pacifica,All Daycases,Male,10-19,2018-07-01,0,0,903
+Grand Combin,Grand Combin,Pacific Loon,Gavia pacifica,All Daycases,Male,10-19,2018-10-01,9,0,768
+Mont Blanc,Mont Blanc,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,90+,2018-04-01,15,839,62
+Mont Blanc,Mont Blanc,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,90+,2018-07-01,15,878,56
+Mont Blanc,Mont Blanc,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Female,90+,2018-10-01,14,740,65
+Grandes Jorasses,Grandes Jorasses,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Male,80-89,2018-04-01,40,21989,1800
+Grandes Jorasses,Grandes Jorasses,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Male,80-89,2018-07-01,40,20892,1994
+Grandes Jorasses,Grandes Jorasses,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Male,80-89,2018-10-01,36,24364,1821
+Grand Combin,Grand Combin,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,10-19,2018-04-01,17,2530,1100
+Grand Combin,Grand Combin,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,10-19,2018-07-01,17,2585,1183
+Grand Combin,Grand Combin,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,10-19,2018-10-01,16,2327,982
+Rimpfischhorn,Rimpfischhorn,Leach's Storm-Petrel,Oceanodroma leucorhoa,All Daycases,Male,50-59,2018-04-01,4,16,2568
+Rimpfischhorn,Rimpfischhorn,Leach's Storm-Petrel,Oceanodroma leucorhoa,All Daycases,Male,50-59,2018-07-01,9,16,2106
+Rimpfischhorn,Rimpfischhorn,Leach's Storm-Petrel,Oceanodroma leucorhoa,All Daycases,Male,50-59,2018-10-01,0,16,2195
+Dykh-Tau,Dykh-Tau,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,70-79,2018-04-01,6,5,95
+Dykh-Tau,Dykh-Tau,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,70-79,2018-07-01,1,4,92
+Dykh-Tau,Dykh-Tau,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,70-79,2018-10-01,1,2,86
+Shkhara,Shkhara,Stejneger's Petrel,Pterodroma longirostris,All Daycases,Female,70-79,2018-04-01,3,21,1262
+Shkhara,Shkhara,Stejneger's Petrel,Pterodroma longirostris,All Daycases,Female,70-79,2018-07-01,0,19,1195
+Shkhara,Shkhara,Stejneger's Petrel,Pterodroma longirostris,All Daycases,Female,70-79,2018-10-01,3,21,1211
+Dykh-Tau,Dykh-Tau,Manx Shearwater,Puffinus puffinus,All Daycases,Female,90+,2018-04-01,1,1,12
+Dykh-Tau,Dykh-Tau,Manx Shearwater,Puffinus puffinus,All Daycases,Female,90+,2018-07-01,3,1,12
+Dykh-Tau,Dykh-Tau,Manx Shearwater,Puffinus puffinus,All Daycases,Female,90+,2018-10-01,1,7,11
+Mont Blanc,Mont Blanc,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-04-01,12,2161,293
+Mont Blanc,Mont Blanc,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-07-01,13,2173,268
+Mont Blanc,Mont Blanc,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-10-01,13,2377,277
+Grand Combin,Grand Combin,Yellow-billed Loon,Gavia adamsii,All Daycases,Female,30-39,2018-04-01,6,4,2396
+Grand Combin,Grand Combin,Yellow-billed Loon,Gavia adamsii,All Daycases,Female,30-39,2018-07-01,4,1,2315
+Grand Combin,Grand Combin,Yellow-billed Loon,Gavia adamsii,All Daycases,Female,30-39,2018-10-01,5,5,2425
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,50-59,2018-04-01,11,1830,769
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,50-59,2018-07-01,11,1863,779
+Rimpfischhorn,Rimpfischhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,50-59,2018-10-01,11,2001,669
+Dom,Dom,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,70-79,2018-04-01,9,4,597
+Dom,Dom,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,70-79,2018-07-01,3,9,597
+Dom,Dom,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,70-79,2018-10-01,7,7,564
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Elective Inpatients,Female,10-19,2018-04-01,0,292,256
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Elective Inpatients,Female,10-19,2018-07-01,0,265,246
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Elective Inpatients,Female,10-19,2018-10-01,8,303,236
+Mont Blanc,Mont Blanc,Wilson's Storm-Petrel,Oceanites oceanicus,All Daycases,Male,20-29,2018-04-01,3,2,448
+Mont Blanc,Mont Blanc,Wilson's Storm-Petrel,Oceanites oceanicus,All Daycases,Male,20-29,2018-07-01,6,1,389
+Mont Blanc,Mont Blanc,Wilson's Storm-Petrel,Oceanites oceanicus,All Daycases,Male,20-29,2018-10-01,5,8,413
+Weisshorn,Weisshorn,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Male,50-59,2018-04-01,11,4925,1067
+Weisshorn,Weisshorn,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Male,50-59,2018-07-01,12,4919,1093
+Weisshorn,Weisshorn,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Male,50-59,2018-10-01,12,4313,1161
+Mont Blanc,Mont Blanc,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Female,30-39,2018-04-01,2,2438,691
+Mont Blanc,Mont Blanc,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Female,30-39,2018-07-01,8,2849,718
+Mont Blanc,Mont Blanc,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Female,30-39,2018-10-01,1,2523,732
+Rimpfischhorn,Rimpfischhorn,Little Shearwater,Puffinus assimilis,Elective Inpatients,Female,80-89,2018-04-01,25,5490,624
+Rimpfischhorn,Rimpfischhorn,Little Shearwater,Puffinus assimilis,Elective Inpatients,Female,80-89,2018-07-01,24,4697,597
+Rimpfischhorn,Rimpfischhorn,Little Shearwater,Puffinus assimilis,Elective Inpatients,Female,80-89,2018-10-01,22,4761,538
+Weisshorn,Weisshorn,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,60-69,2018-04-01,3,1,1034
+Weisshorn,Weisshorn,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,60-69,2018-07-01,5,3,1199
+Weisshorn,Weisshorn,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,60-69,2018-10-01,1,9,1073
+Dent Blanche,Dent Blanche,Buller's Shearwater,Puffinus bulleri,All Daycases,Male,30-39,2018-04-01,2,1,622
+Dent Blanche,Dent Blanche,Buller's Shearwater,Puffinus bulleri,All Daycases,Male,30-39,2018-07-01,6,2,591
+Dent Blanche,Dent Blanche,Buller's Shearwater,Puffinus bulleri,All Daycases,Male,30-39,2018-10-01,3,7,573
+Shkhara,Shkhara,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-04-01,13,2090,224
+Shkhara,Shkhara,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-07-01,14,1988,209
+Shkhara,Shkhara,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,80-89,2018-10-01,13,2233,222
+Grandes Jorasses,Grandes Jorasses,Short-tailed Shearwater,Puffinus tenuirostris,All Daycases,Male,80-89,2018-04-01,5,24,1521
+Grandes Jorasses,Grandes Jorasses,Short-tailed Shearwater,Puffinus tenuirostris,All Daycases,Male,80-89,2018-07-01,3,25,1390
+Grandes Jorasses,Grandes Jorasses,Short-tailed Shearwater,Puffinus tenuirostris,All Daycases,Male,80-89,2018-10-01,5,27,1530
+Mont Blanc,Mont Blanc,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Female,90+,2018-04-01,14,759,65
+Mont Blanc,Mont Blanc,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Female,90+,2018-07-01,15,813,59
+Mont Blanc,Mont Blanc,Stejneger's Petrel,Pterodroma longirostris,Elective Inpatients,Female,90+,2018-10-01,15,819,56
+Dom,Dom,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,80-89,2018-04-01,9,971,108
+Dom,Dom,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,80-89,2018-07-01,1,952,111
+Dom,Dom,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,80-89,2018-10-01,5,890,111
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Male,40-49,2018-04-01,9,230,120
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Male,40-49,2018-07-01,8,226,115
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Elective Inpatients,Male,40-49,2018-10-01,9,262,111
+Finsteraarhorn,Finsteraarhorn,Herald Petrel,Pterodroma arminjoniana,Emergency Inpatients,Female,10-19,2018-04-01,3,421,144
+Finsteraarhorn,Finsteraarhorn,Herald Petrel,Pterodroma arminjoniana,Emergency Inpatients,Female,10-19,2018-07-01,2,411,156
+Finsteraarhorn,Finsteraarhorn,Herald Petrel,Pterodroma arminjoniana,Emergency Inpatients,Female,10-19,2018-10-01,2,416,145
+Weisshorn,Weisshorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,80-89,2018-04-01,23,11714,847
+Weisshorn,Weisshorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,80-89,2018-07-01,26,13043,837
+Weisshorn,Weisshorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,80-89,2018-10-01,23,12971,813
+Shkhara,Shkhara,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Male,0-9,2018-04-01,8,328,114
+Shkhara,Shkhara,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Male,0-9,2018-07-01,5,367,119
+Shkhara,Shkhara,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Male,0-9,2018-10-01,5,345,124
+Finsteraarhorn,Finsteraarhorn,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Male,30-39,2018-04-01,3,138,97
+Finsteraarhorn,Finsteraarhorn,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Male,30-39,2018-07-01,7,163,98
+Finsteraarhorn,Finsteraarhorn,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Male,30-39,2018-10-01,6,158,91
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Female,90+,2018-04-01,54,3977,154
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Female,90+,2018-07-01,62,4015,145
+Finsteraarhorn,Finsteraarhorn,Short-tailed Albatross,Phoebastria albatrus,Emergency Inpatients,Female,90+,2018-10-01,59,4154,135
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,90+,2018-04-01,59,4031,137
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,90+,2018-07-01,57,3917,144
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,90+,2018-10-01,62,3776,131
+Rimpfischhorn,Rimpfischhorn,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,60-69,2018-04-01,15,2851,795
+Rimpfischhorn,Rimpfischhorn,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,60-69,2018-07-01,14,2925,826
+Rimpfischhorn,Rimpfischhorn,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Female,60-69,2018-10-01,15,3035,955
+Dent Blanche,Dent Blanche,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,70-79,2018-04-01,12,1886,479
+Dent Blanche,Dent Blanche,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,70-79,2018-07-01,12,2208,468
+Dent Blanche,Dent Blanche,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,70-79,2018-10-01,11,1984,513
+Grand Combin,Grand Combin,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,0-9,2018-04-01,7,5,543
+Grand Combin,Grand Combin,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,0-9,2018-07-01,1,3,500
+Grand Combin,Grand Combin,European Storm-Petrel,Hydrobates pelagicus,All Daycases,Male,0-9,2018-10-01,3,9,550
+Weisshorn,Weisshorn,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Male,50-59,2018-04-01,12,4876,1060
+Weisshorn,Weisshorn,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Male,50-59,2018-07-01,12,5166,1125
+Weisshorn,Weisshorn,Cory's Shearwater,Calonectris diomedea,Emergency Inpatients,Male,50-59,2018-10-01,12,5005,1022
+Weisshorn,Weisshorn,Cook's Petrel,Pterodroma cookii,All Daycases,Male,50-59,2018-04-01,8,4,862
+Weisshorn,Weisshorn,Cook's Petrel,Pterodroma cookii,All Daycases,Male,50-59,2018-07-01,9,7,894
+Weisshorn,Weisshorn,Cook's Petrel,Pterodroma cookii,All Daycases,Male,50-59,2018-10-01,5,8,936
+Shkhara,Shkhara,Short-tailed Albatross,Phoebastria albatrus,All Daycases,Male,30-39,2018-04-01,8,1,404
+Shkhara,Shkhara,Short-tailed Albatross,Phoebastria albatrus,All Daycases,Male,30-39,2018-07-01,7,4,426
+Shkhara,Shkhara,Short-tailed Albatross,Phoebastria albatrus,All Daycases,Male,30-39,2018-10-01,3,5,433
+Rimpfischhorn,Rimpfischhorn,Common Loon,Gavia immer,All Daycases,Male,10-19,2018-04-01,5,5,416
+Rimpfischhorn,Rimpfischhorn,Common Loon,Gavia immer,All Daycases,Male,10-19,2018-07-01,9,3,417
+Rimpfischhorn,Rimpfischhorn,Common Loon,Gavia immer,All Daycases,Male,10-19,2018-10-01,6,8,355
+Grand Combin,Grand Combin,Leach's Storm-Petrel,Oceanodroma leucorhoa,Elective Inpatients,Female,20-29,2018-04-01,5,828,549
+Grand Combin,Grand Combin,Leach's Storm-Petrel,Oceanodroma leucorhoa,Elective Inpatients,Female,20-29,2018-07-01,3,769,593
+Grand Combin,Grand Combin,Leach's Storm-Petrel,Oceanodroma leucorhoa,Elective Inpatients,Female,20-29,2018-10-01,2,739,517
+Weisshorn,Weisshorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,30-39,2018-04-01,3,1724,522
+Weisshorn,Weisshorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,30-39,2018-07-01,9,1815,528
+Weisshorn,Weisshorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,30-39,2018-10-01,1,1882,489
+Matterhorn,Matterhorn,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,40-49,2018-04-01,6,318,104
+Matterhorn,Matterhorn,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,40-49,2018-07-01,9,334,102
+Matterhorn,Matterhorn,Ashy Storm-Petrel,Oceanodroma homochroa,Elective Inpatients,Female,40-49,2018-10-01,3,337,96
+Mont Blanc,Mont Blanc,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,60-69,2018-04-01,7,1375,455
+Mont Blanc,Mont Blanc,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,60-69,2018-07-01,7,1150,436
+Mont Blanc,Mont Blanc,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,60-69,2018-10-01,5,1357,412
+Grand Combin,Grand Combin,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,70-79,2018-04-01,2,63,6774
+Grand Combin,Grand Combin,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,70-79,2018-07-01,1,70,5961
+Grand Combin,Grand Combin,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,70-79,2018-10-01,7,72,5937
+Dent Blanche,Dent Blanche,Common Loon,Gavia immer,Elective Inpatients,Female,30-39,2018-04-01,5,356,164
+Dent Blanche,Dent Blanche,Common Loon,Gavia immer,Elective Inpatients,Female,30-39,2018-07-01,0,326,192
+Dent Blanche,Dent Blanche,Common Loon,Gavia immer,Elective Inpatients,Female,30-39,2018-10-01,3,358,195
+Grandes Jorasses,Grandes Jorasses,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Female,30-39,2018-04-01,7,3,883
+Grandes Jorasses,Grandes Jorasses,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Female,30-39,2018-07-01,1,1,949
+Grandes Jorasses,Grandes Jorasses,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Female,30-39,2018-10-01,0,9,851
+Grand Combin,Grand Combin,Streaked Shearwater,Calonectris leucomelas,All Daycases,Female,0-9,2018-04-01,8,6,553
+Grand Combin,Grand Combin,Streaked Shearwater,Calonectris leucomelas,All Daycases,Female,0-9,2018-07-01,1,7,579
+Grand Combin,Grand Combin,Streaked Shearwater,Calonectris leucomelas,All Daycases,Female,0-9,2018-10-01,7,8,592
+Weisshorn,Weisshorn,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Female,0-9,2018-04-01,7,251,115
+Weisshorn,Weisshorn,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Female,0-9,2018-07-01,6,259,116
+Weisshorn,Weisshorn,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Female,0-9,2018-10-01,0,241,109
+Mont Blanc,Mont Blanc,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,20-29,2018-04-01,5,3,470
+Mont Blanc,Mont Blanc,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,20-29,2018-07-01,5,7,415
+Mont Blanc,Mont Blanc,Pied-billed Grebe,Podilymbus podiceps,All Daycases,Male,20-29,2018-10-01,6,9,471
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Male,70-79,2018-04-01,26,16478,2063
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Male,70-79,2018-07-01,24,16814,2026
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Male,70-79,2018-10-01,24,15285,2036
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,60-69,2018-04-01,25,13319,2588
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,60-69,2018-07-01,23,13589,3002
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,60-69,2018-10-01,25,13626,2773
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,All Daycases,Male,70-79,2018-04-01,8,63,6181
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,All Daycases,Male,70-79,2018-07-01,3,61,6441
+Grand Combin,Grand Combin,Audubon's Shearwater,Puffinus lherminieri,All Daycases,Male,70-79,2018-10-01,9,69,6421
+Finsteraarhorn,Finsteraarhorn,Herald Petrel,Pterodroma arminjoniana,Elective Inpatients,Female,70-79,2018-04-01,17,1178,274
+Finsteraarhorn,Finsteraarhorn,Herald Petrel,Pterodroma arminjoniana,Elective Inpatients,Female,70-79,2018-07-01,17,1194,296
+Finsteraarhorn,Finsteraarhorn,Herald Petrel,Pterodroma arminjoniana,Elective Inpatients,Female,70-79,2018-10-01,17,1272,296
+Shkhara,Shkhara,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Male,80-89,2018-04-01,3,19,705
+Shkhara,Shkhara,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Male,80-89,2018-07-01,6,20,711
+Shkhara,Shkhara,Fork-tailed Storm-Petrel,Oceanodroma furcata,All Daycases,Male,80-89,2018-10-01,4,22,760
+Koshtan-Tau,Koshtan-Tau,Red-throated Loon,Gavia stellata,Emergency Inpatients,Male,70-79,2018-04-01,2,117071,13706
+Koshtan-Tau,Koshtan-Tau,Red-throated Loon,Gavia stellata,Emergency Inpatients,Male,70-79,2018-07-01,5,104117,13641
+Koshtan-Tau,Koshtan-Tau,Red-throated Loon,Gavia stellata,Emergency Inpatients,Male,70-79,2018-10-01,1,113435,13161
+Weisshorn,Weisshorn,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Female,90+,2018-04-01,12,579,44
+Weisshorn,Weisshorn,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Female,90+,2018-07-01,11,515,39
+Weisshorn,Weisshorn,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Female,90+,2018-10-01,12,491,46
+Grandes Jorasses,Grandes Jorasses,Ashy Storm-Petrel,Oceanodroma homochroa,Emergency Inpatients,Male,80-89,2018-04-01,35,22593,2001
+Grandes Jorasses,Grandes Jorasses,Ashy Storm-Petrel,Oceanodroma homochroa,Emergency Inpatients,Male,80-89,2018-07-01,40,23780,1832
+Grandes Jorasses,Grandes Jorasses,Ashy Storm-Petrel,Oceanodroma homochroa,Emergency Inpatients,Male,80-89,2018-10-01,35,21003,1909
+Matterhorn,Matterhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,60-69,2018-04-01,3,978,179
+Matterhorn,Matterhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,60-69,2018-07-01,0,999,205
+Matterhorn,Matterhorn,White-faced Storm-Petrel,Pelagodroma marina,Elective Inpatients,Female,60-69,2018-10-01,6,1006,183
+Mont Blanc,Mont Blanc,Pacific Loon,Gavia pacifica,Emergency Inpatients,Male,60-69,2018-04-01,21,10709,1667
+Mont Blanc,Mont Blanc,Pacific Loon,Gavia pacifica,Emergency Inpatients,Male,60-69,2018-07-01,21,10210,1761
+Mont Blanc,Mont Blanc,Pacific Loon,Gavia pacifica,Emergency Inpatients,Male,60-69,2018-10-01,19,11721,1694
+Rimpfischhorn,Rimpfischhorn,Buller's Shearwater,Puffinus bulleri,All Daycases,Male,0-9,2018-04-01,7,7,246
+Rimpfischhorn,Rimpfischhorn,Buller's Shearwater,Puffinus bulleri,All Daycases,Male,0-9,2018-07-01,8,4,222
+Rimpfischhorn,Rimpfischhorn,Buller's Shearwater,Puffinus bulleri,All Daycases,Male,0-9,2018-10-01,3,5,218
+Dent Blanche,Dent Blanche,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,90+,2018-04-01,7,7,218
+Dent Blanche,Dent Blanche,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,90+,2018-07-01,6,4,222
+Dent Blanche,Dent Blanche,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,90+,2018-10-01,7,9,225
+Grand Combin,Grand Combin,Wandering Albatross,Diomedea exulans,Emergency Inpatients,Male,10-19,2018-04-01,16,2203,1050
+Grand Combin,Grand Combin,Wandering Albatross,Diomedea exulans,Emergency Inpatients,Male,10-19,2018-07-01,15,2287,1061
+Grand Combin,Grand Combin,Wandering Albatross,Diomedea exulans,Emergency Inpatients,Male,10-19,2018-10-01,16,2039,1071
+Finsteraarhorn,Finsteraarhorn,Buller's Shearwater,Puffinus bulleri,Elective Inpatients,Male,70-79,2018-04-01,16,1198,279
+Finsteraarhorn,Finsteraarhorn,Buller's Shearwater,Puffinus bulleri,Elective Inpatients,Male,70-79,2018-07-01,15,1050,261
+Finsteraarhorn,Finsteraarhorn,Buller's Shearwater,Puffinus bulleri,Elective Inpatients,Male,70-79,2018-10-01,16,1147,249
+Elbrus,Elbrus,Black-capped Petrel,Pterodroma hasitata,All Daycases,Female,80-89,2018-04-01,8,3,62
+Elbrus,Elbrus,Black-capped Petrel,Pterodroma hasitata,All Daycases,Female,80-89,2018-07-01,5,9,62
+Elbrus,Elbrus,Black-capped Petrel,Pterodroma hasitata,All Daycases,Female,80-89,2018-10-01,6,2,57
+Finsteraarhorn,Finsteraarhorn,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,40-49,2018-04-01,3,0,450
+Finsteraarhorn,Finsteraarhorn,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,40-49,2018-07-01,7,7,466
+Finsteraarhorn,Finsteraarhorn,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,40-49,2018-10-01,2,2,437
+Dykh-Tau,Dykh-Tau,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,20-29,2018-04-01,7,66,33
+Dykh-Tau,Dykh-Tau,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,20-29,2018-07-01,8,67,30
+Dykh-Tau,Dykh-Tau,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,20-29,2018-10-01,2,67,33
+Matterhorn,Matterhorn,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Male,10-19,2018-04-01,3,42,25
+Matterhorn,Matterhorn,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Male,10-19,2018-07-01,1,43,26
+Matterhorn,Matterhorn,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Male,10-19,2018-10-01,8,42,25
+Rimpfischhorn,Rimpfischhorn,Arctic Loon,Gavia arctica,Emergency Inpatients,Male,70-79,2018-04-01,43,34193,3644
+Rimpfischhorn,Rimpfischhorn,Arctic Loon,Gavia arctica,Emergency Inpatients,Male,70-79,2018-07-01,41,35208,3728
+Rimpfischhorn,Rimpfischhorn,Arctic Loon,Gavia arctica,Emergency Inpatients,Male,70-79,2018-10-01,40,36476,3397
+Weisshorn,Weisshorn,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Male,40-49,2018-04-01,0,2724,587
+Weisshorn,Weisshorn,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Male,40-49,2018-07-01,5,2721,647
+Weisshorn,Weisshorn,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Male,40-49,2018-10-01,1,2503,603
+Shkhara,Shkhara,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,70-79,2018-04-01,5,1907,382
+Shkhara,Shkhara,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,70-79,2018-07-01,0,2076,321
+Shkhara,Shkhara,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,70-79,2018-10-01,3,1989,336
+Grandes Jorasses,Grandes Jorasses,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Female,90+,2018-04-01,18,923,93
+Grandes Jorasses,Grandes Jorasses,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Female,90+,2018-07-01,17,899,102
+Grandes Jorasses,Grandes Jorasses,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Female,90+,2018-10-01,18,927,88
+Weisshorn,Weisshorn,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Male,10-19,2018-04-01,0,49,38
+Weisshorn,Weisshorn,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Male,10-19,2018-07-01,8,46,39
+Weisshorn,Weisshorn,Audubon's Shearwater,Puffinus lherminieri,Elective Inpatients,Male,10-19,2018-10-01,9,44,42
+Shkhara,Shkhara,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Female,90+,2018-04-01,41,7301,179
+Shkhara,Shkhara,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Female,90+,2018-07-01,42,6827,187
+Shkhara,Shkhara,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Female,90+,2018-10-01,44,6619,189
+Rimpfischhorn,Rimpfischhorn,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Female,40-49,2018-04-01,24,9788,1609
+Rimpfischhorn,Rimpfischhorn,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Female,40-49,2018-07-01,25,9018,1722
+Rimpfischhorn,Rimpfischhorn,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Female,40-49,2018-10-01,23,8045,1805
+Matterhorn,Matterhorn,Murphy's Petrel,Pterodroma ultima,All Daycases,Male,30-39,2018-04-01,0,7,260
+Matterhorn,Matterhorn,Murphy's Petrel,Pterodroma ultima,All Daycases,Male,30-39,2018-07-01,1,6,237
+Matterhorn,Matterhorn,Murphy's Petrel,Pterodroma ultima,All Daycases,Male,30-39,2018-10-01,7,7,245
+Weisshorn,Weisshorn,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,90+,2018-04-01,29,4329,193
+Weisshorn,Weisshorn,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,90+,2018-07-01,30,4806,192
+Weisshorn,Weisshorn,Pacific Loon,Gavia pacifica,Emergency Inpatients,Female,90+,2018-10-01,32,4967,164
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Male,90+,2018-04-01,95,21707,1070
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Male,90+,2018-07-01,95,21138,1045
+Grand Combin,Grand Combin,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Male,90+,2018-10-01,89,21909,901
+Mont Blanc,Mont Blanc,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Female,20-29,2018-04-01,0,1877,604
+Mont Blanc,Mont Blanc,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Female,20-29,2018-07-01,0,1742,523
+Mont Blanc,Mont Blanc,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Female,20-29,2018-10-01,8,1941,614
+Weisshorn,Weisshorn,Eared Grebe,Podiceps nigricollis,All Daycases,Female,60-69,2018-04-01,6,8,989
+Weisshorn,Weisshorn,Eared Grebe,Podiceps nigricollis,All Daycases,Female,60-69,2018-07-01,6,6,1174
+Weisshorn,Weisshorn,Eared Grebe,Podiceps nigricollis,All Daycases,Female,60-69,2018-10-01,4,3,1186
+Grand Combin,Grand Combin,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Female,10-19,2018-04-01,8,277,235
+Grand Combin,Grand Combin,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Female,10-19,2018-07-01,9,265,249
+Grand Combin,Grand Combin,Red-necked Grebe,Podiceps grisegena,Elective Inpatients,Female,10-19,2018-10-01,0,266,275
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Female,60-69,2018-04-01,7,46,6015
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Female,60-69,2018-07-01,5,49,6127
+Grand Combin,Grand Combin,Least Grebe,Tachybaptus dominicus,All Daycases,Female,60-69,2018-10-01,6,45,6059
+Grand Combin,Grand Combin,Fork-tailed Storm-Petrel,Oceanodroma furcata,Elective Inpatients,Female,80-89,2018-04-01,36,8921,1272
+Grand Combin,Grand Combin,Fork-tailed Storm-Petrel,Oceanodroma furcata,Elective Inpatients,Female,80-89,2018-07-01,38,9075,1132
+Grand Combin,Grand Combin,Fork-tailed Storm-Petrel,Oceanodroma furcata,Elective Inpatients,Female,80-89,2018-10-01,35,8295,1166
+Matterhorn,Matterhorn,Arctic Loon,Gavia arctica,Emergency Inpatients,Female,60-69,2018-04-01,16,7458,881
+Matterhorn,Matterhorn,Arctic Loon,Gavia arctica,Emergency Inpatients,Female,60-69,2018-07-01,16,7827,744
+Matterhorn,Matterhorn,Arctic Loon,Gavia arctica,Emergency Inpatients,Female,60-69,2018-10-01,15,8485,763
+Finsteraarhorn,Finsteraarhorn,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,40-49,2018-04-01,18,1997,467
+Finsteraarhorn,Finsteraarhorn,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,40-49,2018-07-01,20,2378,480
+Finsteraarhorn,Finsteraarhorn,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,40-49,2018-10-01,18,2155,508
+Dykh-Tau,Dykh-Tau,Wandering Albatross,Diomedea exulans,All Daycases,Female,40-49,2018-04-01,2,0,43
+Dykh-Tau,Dykh-Tau,Wandering Albatross,Diomedea exulans,All Daycases,Female,40-49,2018-07-01,1,2,41
+Dykh-Tau,Dykh-Tau,Wandering Albatross,Diomedea exulans,All Daycases,Female,40-49,2018-10-01,7,1,42
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,40-49,2018-04-01,1,6,243
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,40-49,2018-07-01,0,3,281
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Female,40-49,2018-10-01,2,6,295
+Grand Combin,Grand Combin,Wedge-rumped Storm-Petrel,Oceanodroma tethys,Elective Inpatients,Female,60-69,2018-04-01,23,4685,1855
+Grand Combin,Grand Combin,Wedge-rumped Storm-Petrel,Oceanodroma tethys,Elective Inpatients,Female,60-69,2018-07-01,20,4671,1740
+Grand Combin,Grand Combin,Wedge-rumped Storm-Petrel,Oceanodroma tethys,Elective Inpatients,Female,60-69,2018-10-01,22,5274,1913
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Female,80-89,2018-04-01,22,7703,421
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Female,80-89,2018-07-01,23,8831,470
+Dom,Dom,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Female,80-89,2018-10-01,22,8169,476
+Grandes Jorasses,Grandes Jorasses,Murphy's Petrel,Pterodroma ultima,All Daycases,Female,90+,2018-04-01,6,3,296
+Grandes Jorasses,Grandes Jorasses,Murphy's Petrel,Pterodroma ultima,All Daycases,Female,90+,2018-07-01,5,2,292
+Grandes Jorasses,Grandes Jorasses,Murphy's Petrel,Pterodroma ultima,All Daycases,Female,90+,2018-10-01,4,8,345
+Grand Combin,Grand Combin,Short-tailed Albatross,Phoebastria albatrus,All Daycases,Male,0-9,2018-04-01,7,0,543
+Grand Combin,Grand Combin,Short-tailed Albatross,Phoebastria albatrus,All Daycases,Male,0-9,2018-07-01,4,6,496
+Grand Combin,Grand Combin,Short-tailed Albatross,Phoebastria albatrus,All Daycases,Male,0-9,2018-10-01,0,6,526
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,20-29,2018-04-01,13,989,337
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,20-29,2018-07-01,13,1055,337
+Finsteraarhorn,Finsteraarhorn,Stejneger's Petrel,Pterodroma longirostris,Emergency Inpatients,Female,20-29,2018-10-01,13,1011,312
+Weisshorn,Weisshorn,Shy Albatross,Thalassarche cauta,Elective Inpatients,Male,10-19,2018-04-01,6,48,39
+Weisshorn,Weisshorn,Shy Albatross,Thalassarche cauta,Elective Inpatients,Male,10-19,2018-07-01,4,48,44
+Weisshorn,Weisshorn,Shy Albatross,Thalassarche cauta,Elective Inpatients,Male,10-19,2018-10-01,0,48,39
+Dom,Dom,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,20-29,2018-04-01,2,668,177
+Dom,Dom,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,20-29,2018-07-01,8,586,178
+Dom,Dom,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,20-29,2018-10-01,7,614,204
+Grand Combin,Grand Combin,Cory's Shearwater,Calonectris diomedea,All Daycases,Male,30-39,2018-04-01,8,6,2428
+Grand Combin,Grand Combin,Cory's Shearwater,Calonectris diomedea,All Daycases,Male,30-39,2018-07-01,6,8,2209
+Grand Combin,Grand Combin,Cory's Shearwater,Calonectris diomedea,All Daycases,Male,30-39,2018-10-01,4,5,2447
+Grand Combin,Grand Combin,Leach's Storm-Petrel,Oceanodroma leucorhoa,Elective Inpatients,Male,50-59,2018-04-01,16,3212,1391
+Grand Combin,Grand Combin,Leach's Storm-Petrel,Oceanodroma leucorhoa,Elective Inpatients,Male,50-59,2018-07-01,17,2753,1518
+Grand Combin,Grand Combin,Leach's Storm-Petrel,Oceanodroma leucorhoa,Elective Inpatients,Male,50-59,2018-10-01,16,3191,1435
+Shkhara,Shkhara,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,60-69,2018-04-01,4,12,1207
+Shkhara,Shkhara,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,60-69,2018-07-01,5,12,1074
+Shkhara,Shkhara,White-faced Storm-Petrel,Pelagodroma marina,All Daycases,Male,60-69,2018-10-01,3,11,1113
+Rimpfischhorn,Rimpfischhorn,Murphy's Petrel,Pterodroma ultima,All Daycases,Female,70-79,2018-04-01,4,44,3132
+Rimpfischhorn,Rimpfischhorn,Murphy's Petrel,Pterodroma ultima,All Daycases,Female,70-79,2018-07-01,2,43,3144
+Rimpfischhorn,Rimpfischhorn,Murphy's Petrel,Pterodroma ultima,All Daycases,Female,70-79,2018-10-01,2,39,3433
+Rimpfischhorn,Rimpfischhorn,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,80-89,2018-04-01,22,4389,507
+Rimpfischhorn,Rimpfischhorn,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,80-89,2018-07-01,24,4474,501
+Rimpfischhorn,Rimpfischhorn,Pied-billed Grebe,Podilymbus podiceps,Elective Inpatients,Male,80-89,2018-10-01,22,4304,507
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,90+,2018-04-01,15,758,45
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,90+,2018-07-01,16,671,46
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,90+,2018-10-01,16,696,41
+Monte Rosa,Monte Rosa,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Female,60-69,2018-04-01,2,365,116
+Monte Rosa,Monte Rosa,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Female,60-69,2018-07-01,1,320,115
+Monte Rosa,Monte Rosa,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Female,60-69,2018-10-01,4,332,107
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Male,80-89,2018-04-01,49,11114,622
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Male,80-89,2018-07-01,46,11360,736
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Male,80-89,2018-10-01,53,10989,646
+Finsteraarhorn,Finsteraarhorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,70-79,2018-04-01,37,9565,1140
+Finsteraarhorn,Finsteraarhorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,70-79,2018-07-01,39,9252,1107
+Finsteraarhorn,Finsteraarhorn,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Male,70-79,2018-10-01,40,9374,1111
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Female,30-39,2018-04-01,2,2544,570
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Female,30-39,2018-07-01,5,2584,531
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Female,30-39,2018-10-01,8,2698,565
+Dent Blanche,Dent Blanche,Wandering Albatross,Diomedea exulans,All Daycases,Female,80-89,2018-04-01,2,26,1165
+Dent Blanche,Dent Blanche,Wandering Albatross,Diomedea exulans,All Daycases,Female,80-89,2018-07-01,9,26,981
+Dent Blanche,Dent Blanche,Wandering Albatross,Diomedea exulans,All Daycases,Female,80-89,2018-10-01,4,27,1121
+Matterhorn,Matterhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,0-9,2018-04-01,9,23,15
+Matterhorn,Matterhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,0-9,2018-07-01,6,23,15
+Matterhorn,Matterhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,0-9,2018-10-01,1,24,16
+Monte Rosa,Monte Rosa,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Male,0-9,2018-04-01,2,87,35
+Monte Rosa,Monte Rosa,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Male,0-9,2018-07-01,6,80,36
+Monte Rosa,Monte Rosa,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Male,0-9,2018-10-01,2,80,35
+Mont Blanc,Mont Blanc,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Male,30-39,2018-04-01,0,2248,620
+Mont Blanc,Mont Blanc,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Male,30-39,2018-07-01,0,2145,743
+Mont Blanc,Mont Blanc,Greater Shearwater,Puffinus gravis,Emergency Inpatients,Male,30-39,2018-10-01,6,2397,715
+Shkhara,Shkhara,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,40-49,2018-04-01,9,0,615
+Shkhara,Shkhara,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,40-49,2018-07-01,6,8,640
+Shkhara,Shkhara,Wedge-tailed Shearwater,Puffinus pacificus,All Daycases,Female,40-49,2018-10-01,2,9,627
+Grandes Jorasses,Grandes Jorasses,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,60-69,2018-04-01,25,13680,2874
+Grandes Jorasses,Grandes Jorasses,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,60-69,2018-07-01,22,12378,2900
+Grandes Jorasses,Grandes Jorasses,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,60-69,2018-10-01,24,13605,3042
+Rimpfischhorn,Rimpfischhorn,Wedge-tailed Shearwater,Puffinus pacificus,Emergency Inpatients,Female,10-19,2018-04-01,0,1499,465
+Rimpfischhorn,Rimpfischhorn,Wedge-tailed Shearwater,Puffinus pacificus,Emergency Inpatients,Female,10-19,2018-07-01,9,1321,520
+Rimpfischhorn,Rimpfischhorn,Wedge-tailed Shearwater,Puffinus pacificus,Emergency Inpatients,Female,10-19,2018-10-01,6,1326,506
+Matterhorn,Matterhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,60-69,2018-04-01,1,2,657
+Matterhorn,Matterhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,60-69,2018-07-01,4,3,625
+Matterhorn,Matterhorn,Western Grebe,Aechmophorus occidentalis,All Daycases,Male,60-69,2018-10-01,4,2,604
+Finsteraarhorn,Finsteraarhorn,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Male,80-89,2018-04-01,47,10896,740
+Finsteraarhorn,Finsteraarhorn,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Male,80-89,2018-07-01,50,9805,723
+Finsteraarhorn,Finsteraarhorn,Yellow-nosed Albatross,Thalassarche chlororhynchos,Emergency Inpatients,Male,80-89,2018-10-01,47,9959,635
+Mont Blanc,Mont Blanc,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,20-29,2018-04-01,3,180,122
+Mont Blanc,Mont Blanc,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,20-29,2018-07-01,2,174,126
+Mont Blanc,Mont Blanc,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,20-29,2018-10-01,3,176,135
+Grand Combin,Grand Combin,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,40-49,2018-04-01,13,1685,965
+Grand Combin,Grand Combin,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,40-49,2018-07-01,13,1707,871
+Grand Combin,Grand Combin,Red-throated Loon,Gavia stellata,Elective Inpatients,Male,40-49,2018-10-01,13,1734,876
+Koshtan-Tau,Koshtan-Tau,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Female,50-59,2018-04-01,4,6186,2782
+Koshtan-Tau,Koshtan-Tau,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Female,50-59,2018-07-01,7,6047,2527
+Koshtan-Tau,Koshtan-Tau,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Female,50-59,2018-10-01,3,5579,2773
+Dykh-Tau,Dykh-Tau,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,40-49,2018-04-01,3,17,12
+Dykh-Tau,Dykh-Tau,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,40-49,2018-07-01,3,17,13
+Dykh-Tau,Dykh-Tau,White-chinned Petrel,Procellaria aequinoctialis,Elective Inpatients,Male,40-49,2018-10-01,6,16,12
+Dent Blanche,Dent Blanche,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,80-89,2018-04-01,14,2250,296
+Dent Blanche,Dent Blanche,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,80-89,2018-07-01,15,2551,308
+Dent Blanche,Dent Blanche,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,80-89,2018-10-01,14,2494,301
+Shkhara,Shkhara,Mottled Petrel,Pterodroma inexpectata,Elective Inpatients,Female,90+,2018-04-01,17,765,44
+Shkhara,Shkhara,Mottled Petrel,Pterodroma inexpectata,Elective Inpatients,Female,90+,2018-07-01,17,839,48
+Shkhara,Shkhara,Mottled Petrel,Pterodroma inexpectata,Elective Inpatients,Female,90+,2018-10-01,17,748,49
+Weisshorn,Weisshorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,80-89,2018-04-01,28,12970,949
+Weisshorn,Weisshorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,80-89,2018-07-01,28,14370,837
+Weisshorn,Weisshorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,80-89,2018-10-01,28,15527,873
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Male,10-19,2018-04-01,2,69,41
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Male,10-19,2018-07-01,2,69,48
+Shkhara,Shkhara,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Male,10-19,2018-10-01,0,75,46
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,80-89,2018-04-01,14,2215,238
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,80-89,2018-07-01,13,2237,219
+Shkhara,Shkhara,Manx Shearwater,Puffinus puffinus,Elective Inpatients,Male,80-89,2018-10-01,14,2245,230
+Rimpfischhorn,Rimpfischhorn,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Male,10-19,2018-04-01,0,146,102
+Rimpfischhorn,Rimpfischhorn,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Male,10-19,2018-07-01,9,132,111
+Rimpfischhorn,Rimpfischhorn,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Male,10-19,2018-10-01,5,146,113
+Grandes Jorasses,Grandes Jorasses,Manx Shearwater,Puffinus puffinus,Emergency Inpatients,Male,20-29,2018-04-01,4,2054,773
+Grandes Jorasses,Grandes Jorasses,Manx Shearwater,Puffinus puffinus,Emergency Inpatients,Male,20-29,2018-07-01,8,2135,842
+Grandes Jorasses,Grandes Jorasses,Manx Shearwater,Puffinus puffinus,Emergency Inpatients,Male,20-29,2018-10-01,6,2094,816
+Dykh-Tau,Dykh-Tau,Least Grebe,Tachybaptus dominicus,All Daycases,Male,10-19,2018-04-01,4,5,11
+Dykh-Tau,Dykh-Tau,Least Grebe,Tachybaptus dominicus,All Daycases,Male,10-19,2018-07-01,1,2,11
+Dykh-Tau,Dykh-Tau,Least Grebe,Tachybaptus dominicus,All Daycases,Male,10-19,2018-10-01,6,8,11
+Dent Blanche,Dent Blanche,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,20-29,2018-04-01,5,0,443
+Dent Blanche,Dent Blanche,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,20-29,2018-07-01,8,5,492
+Dent Blanche,Dent Blanche,Cory's Shearwater,Calonectris diomedea,All Daycases,Female,20-29,2018-10-01,7,0,457
+Elbrus,Elbrus,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,50-59,2018-04-01,4,8,69
+Elbrus,Elbrus,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,50-59,2018-07-01,2,5,68
+Elbrus,Elbrus,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,50-59,2018-10-01,2,6,74
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Male,60-69,2018-04-01,29,5665,1099
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Male,60-69,2018-07-01,33,6628,1089
+Finsteraarhorn,Finsteraarhorn,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Male,60-69,2018-10-01,28,6544,1012
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,40-49,2018-04-01,14,4632,929
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,40-49,2018-07-01,13,4440,1029
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,40-49,2018-10-01,13,4689,1016
+Dent Blanche,Dent Blanche,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,90+,2018-04-01,9,2,198
+Dent Blanche,Dent Blanche,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,90+,2018-07-01,4,4,212
+Dent Blanche,Dent Blanche,Yellow-nosed Albatross,Thalassarche chlororhynchos,All Daycases,Male,90+,2018-10-01,3,0,207
+Dom,Dom,Audubon's Shearwater,Puffinus lherminieri,All Daycases,Female,20-29,2018-04-01,0,8,172
+Dom,Dom,Audubon's Shearwater,Puffinus lherminieri,All Daycases,Female,20-29,2018-07-01,5,1,148
+Dom,Dom,Audubon's Shearwater,Puffinus lherminieri,All Daycases,Female,20-29,2018-10-01,8,7,170
+Koshtan-Tau,Koshtan-Tau,Horned Grebe,Podiceps auritus,All Daycases,Female,70-79,2018-04-01,8,135,10212
+Koshtan-Tau,Koshtan-Tau,Horned Grebe,Podiceps auritus,All Daycases,Female,70-79,2018-07-01,7,137,11483
+Koshtan-Tau,Koshtan-Tau,Horned Grebe,Podiceps auritus,All Daycases,Female,70-79,2018-10-01,2,128,10260
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,All Daycases,Female,80-89,2018-04-01,5,79,4384
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,All Daycases,Female,80-89,2018-07-01,1,90,4252
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,All Daycases,Female,80-89,2018-10-01,5,78,4540
+Grand Combin,Grand Combin,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Male,50-59,2018-04-01,39,28571,6661
+Grand Combin,Grand Combin,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Male,50-59,2018-07-01,38,26983,6382
+Grand Combin,Grand Combin,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Male,50-59,2018-10-01,42,26435,6525
+Grandes Jorasses,Grandes Jorasses,Red-throated Loon,Gavia stellata,All Daycases,Female,40-49,2018-04-01,2,8,1190
+Grandes Jorasses,Grandes Jorasses,Red-throated Loon,Gavia stellata,All Daycases,Female,40-49,2018-07-01,9,1,1214
+Grandes Jorasses,Grandes Jorasses,Red-throated Loon,Gavia stellata,All Daycases,Female,40-49,2018-10-01,6,6,1137
+Grand Combin,Grand Combin,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Female,60-69,2018-04-01,57,42704,7926
+Grand Combin,Grand Combin,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Female,60-69,2018-07-01,54,48115,8164
+Grand Combin,Grand Combin,Black-capped Petrel,Pterodroma hasitata,Emergency Inpatients,Female,60-69,2018-10-01,56,44763,7352
+Dom,Dom,Wandering Albatross,Diomedea exulans,All Daycases,Female,40-49,2018-04-01,1,0,282
+Dom,Dom,Wandering Albatross,Diomedea exulans,All Daycases,Female,40-49,2018-07-01,5,7,269
+Dom,Dom,Wandering Albatross,Diomedea exulans,All Daycases,Female,40-49,2018-10-01,7,2,252
+Elbrus,Elbrus,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,50-59,2018-04-01,5,288,94
+Elbrus,Elbrus,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,50-59,2018-07-01,4,318,92
+Elbrus,Elbrus,Western Grebe,Aechmophorus occidentalis,Emergency Inpatients,Female,50-59,2018-10-01,8,326,96
+Weisshorn,Weisshorn,Common Loon,Gavia immer,Elective Inpatients,Female,40-49,2018-04-01,2,322,150
+Weisshorn,Weisshorn,Common Loon,Gavia immer,Elective Inpatients,Female,40-49,2018-07-01,9,366,172
+Weisshorn,Weisshorn,Common Loon,Gavia immer,Elective Inpatients,Female,40-49,2018-10-01,6,309,157
+Grand Combin,Grand Combin,Common Loon,Gavia immer,Elective Inpatients,Male,40-49,2018-04-01,13,1713,794
+Grand Combin,Grand Combin,Common Loon,Gavia immer,Elective Inpatients,Male,40-49,2018-07-01,14,1626,959
+Grand Combin,Grand Combin,Common Loon,Gavia immer,Elective Inpatients,Male,40-49,2018-10-01,13,1532,849
+Weisshorn,Weisshorn,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,70-79,2018-04-01,7,11,1145
+Weisshorn,Weisshorn,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,70-79,2018-07-01,9,11,1149
+Weisshorn,Weisshorn,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,70-79,2018-10-01,1,11,1153
+Monte Rosa,Monte Rosa,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Female,10-19,2018-04-01,1,185,56
+Monte Rosa,Monte Rosa,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Female,10-19,2018-07-01,1,178,63
+Monte Rosa,Monte Rosa,Eared Grebe,Podiceps nigricollis,Emergency Inpatients,Female,10-19,2018-10-01,9,180,61
+Dykh-Tau,Dykh-Tau,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,20-29,2018-04-01,7,1,28
+Dykh-Tau,Dykh-Tau,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,20-29,2018-07-01,9,5,25
+Dykh-Tau,Dykh-Tau,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,20-29,2018-10-01,8,3,28
+Shkhara,Shkhara,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,80-89,2018-04-01,14,2264,208
+Shkhara,Shkhara,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,80-89,2018-07-01,14,2068,227
+Shkhara,Shkhara,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,80-89,2018-10-01,13,2106,215
+Shkhara,Shkhara,Black-footed Albatross,Phoebastria nigripes,Elective Inpatients,Male,70-79,2018-04-01,5,1843,365
+Shkhara,Shkhara,Black-footed Albatross,Phoebastria nigripes,Elective Inpatients,Male,70-79,2018-07-01,1,1898,376
+Shkhara,Shkhara,Black-footed Albatross,Phoebastria nigripes,Elective Inpatients,Male,70-79,2018-10-01,1,1920,364
+Shkhara,Shkhara,Eared Grebe,Podiceps nigricollis,Elective Inpatients,Female,30-39,2018-04-01,0,294,129
+Shkhara,Shkhara,Eared Grebe,Podiceps nigricollis,Elective Inpatients,Female,30-39,2018-07-01,7,295,138
+Shkhara,Shkhara,Eared Grebe,Podiceps nigricollis,Elective Inpatients,Female,30-39,2018-10-01,6,293,124
+Rimpfischhorn,Rimpfischhorn,Leach's Storm-Petrel,Oceanodroma leucorhoa,Emergency Inpatients,Male,40-49,2018-04-01,22,8127,1598
+Rimpfischhorn,Rimpfischhorn,Leach's Storm-Petrel,Oceanodroma leucorhoa,Emergency Inpatients,Male,40-49,2018-07-01,22,7689,1706
+Rimpfischhorn,Rimpfischhorn,Leach's Storm-Petrel,Oceanodroma leucorhoa,Emergency Inpatients,Male,40-49,2018-10-01,22,8111,1557
+Dent Blanche,Dent Blanche,Wandering Albatross,Diomedea exulans,Elective Inpatients,Female,90+,2018-04-01,17,918,61
+Dent Blanche,Dent Blanche,Wandering Albatross,Diomedea exulans,Elective Inpatients,Female,90+,2018-07-01,17,821,61
+Dent Blanche,Dent Blanche,Wandering Albatross,Diomedea exulans,Elective Inpatients,Female,90+,2018-10-01,17,849,65
+Monte Rosa,Monte Rosa,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Male,80-89,2018-04-01,19,4856,306
+Monte Rosa,Monte Rosa,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Male,80-89,2018-07-01,18,4934,262
+Monte Rosa,Monte Rosa,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Male,80-89,2018-10-01,18,5060,272
+Grand Combin,Grand Combin,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Female,60-69,2018-04-01,54,42571,7932
+Grand Combin,Grand Combin,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Female,60-69,2018-07-01,54,48068,8104
+Grand Combin,Grand Combin,Black-browed Albatross,Thalassarche melanophris,Emergency Inpatients,Female,60-69,2018-10-01,57,44901,7537
+Weisshorn,Weisshorn,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,20-29,2018-04-01,0,0,307
+Weisshorn,Weisshorn,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,20-29,2018-07-01,0,1,350
+Weisshorn,Weisshorn,Buller's Shearwater,Puffinus bulleri,All Daycases,Female,20-29,2018-10-01,7,3,295
+Dom,Dom,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,0-9,2018-04-01,9,131,50
+Dom,Dom,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,0-9,2018-07-01,0,126,59
+Dom,Dom,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,0-9,2018-10-01,6,129,54
+Mont Blanc,Mont Blanc,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,40-49,2018-04-01,9,3,736
+Mont Blanc,Mont Blanc,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,40-49,2018-07-01,4,3,700
+Mont Blanc,Mont Blanc,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,40-49,2018-10-01,6,8,749
+Rimpfischhorn,Rimpfischhorn,Manx Shearwater,Puffinus puffinus,Emergency Inpatients,Male,60-69,2018-04-01,36,21579,3680
+Rimpfischhorn,Rimpfischhorn,Manx Shearwater,Puffinus puffinus,Emergency Inpatients,Male,60-69,2018-07-01,34,22244,3205
+Rimpfischhorn,Rimpfischhorn,Manx Shearwater,Puffinus puffinus,Emergency Inpatients,Male,60-69,2018-10-01,32,22233,3499
+Mont Blanc,Mont Blanc,Horned Grebe,Podiceps auritus,All Daycases,Male,80-89,2018-04-01,7,20,968
+Mont Blanc,Mont Blanc,Horned Grebe,Podiceps auritus,All Daycases,Male,80-89,2018-07-01,5,20,919
+Mont Blanc,Mont Blanc,Horned Grebe,Podiceps auritus,All Daycases,Male,80-89,2018-10-01,2,20,883
+Rimpfischhorn,Rimpfischhorn,Black-capped Petrel,Pterodroma hasitata,All Daycases,Female,80-89,2018-04-01,2,46,1835
+Rimpfischhorn,Rimpfischhorn,Black-capped Petrel,Pterodroma hasitata,All Daycases,Female,80-89,2018-07-01,4,49,1969
+Rimpfischhorn,Rimpfischhorn,Black-capped Petrel,Pterodroma hasitata,All Daycases,Female,80-89,2018-10-01,0,49,1777
+Dom,Dom,Streaked Shearwater,Calonectris leucomelas,All Daycases,Male,0-9,2018-04-01,4,0,41
+Dom,Dom,Streaked Shearwater,Calonectris leucomelas,All Daycases,Male,0-9,2018-07-01,7,6,46
+Dom,Dom,Streaked Shearwater,Calonectris leucomelas,All Daycases,Male,0-9,2018-10-01,3,8,45
+Monte Rosa,Monte Rosa,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,20-29,2018-04-01,8,49,27
+Monte Rosa,Monte Rosa,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,20-29,2018-07-01,6,46,28
+Monte Rosa,Monte Rosa,Band-rumped Storm-Petrel,Oceanodroma castro,Elective Inpatients,Male,20-29,2018-10-01,6,49,30
+Monte Rosa,Monte Rosa,Horned Grebe,Podiceps auritus,Emergency Inpatients,Male,30-39,2018-04-01,5,629,173
+Monte Rosa,Monte Rosa,Horned Grebe,Podiceps auritus,Emergency Inpatients,Male,30-39,2018-07-01,2,547,159
+Monte Rosa,Monte Rosa,Horned Grebe,Podiceps auritus,Emergency Inpatients,Male,30-39,2018-10-01,6,548,150
+Grandes Jorasses,Grandes Jorasses,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,20-29,2018-04-01,6,8,771
+Grandes Jorasses,Grandes Jorasses,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,20-29,2018-07-01,5,2,772
+Grandes Jorasses,Grandes Jorasses,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,20-29,2018-10-01,0,8,731
+Matterhorn,Matterhorn,Sooty Shearwater,Puffinus griseus,All Daycases,Female,80-89,2018-04-01,2,15,432
+Matterhorn,Matterhorn,Sooty Shearwater,Puffinus griseus,All Daycases,Female,80-89,2018-07-01,1,14,436
+Matterhorn,Matterhorn,Sooty Shearwater,Puffinus griseus,All Daycases,Female,80-89,2018-10-01,6,14,447
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Female,70-79,2018-04-01,1,82,6609
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Female,70-79,2018-07-01,4,72,6312
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Female,70-79,2018-10-01,2,75,6920
+Finsteraarhorn,Finsteraarhorn,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,50-59,2018-04-01,26,4376,807
+Finsteraarhorn,Finsteraarhorn,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,50-59,2018-07-01,24,3796,859
+Finsteraarhorn,Finsteraarhorn,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,50-59,2018-10-01,24,4051,906
+Dykh-Tau,Dykh-Tau,Streaked Shearwater,Calonectris leucomelas,All Daycases,Male,90+,2018-04-01,5,8,3
+Dykh-Tau,Dykh-Tau,Streaked Shearwater,Calonectris leucomelas,All Daycases,Male,90+,2018-07-01,2,5,9
+Dykh-Tau,Dykh-Tau,Streaked Shearwater,Calonectris leucomelas,All Daycases,Male,90+,2018-10-01,1,8,3
+Rimpfischhorn,Rimpfischhorn,Wedge-rumped Storm-Petrel,Oceanodroma tethys,All Daycases,Male,10-19,2018-04-01,5,2,415
+Rimpfischhorn,Rimpfischhorn,Wedge-rumped Storm-Petrel,Oceanodroma tethys,All Daycases,Male,10-19,2018-07-01,2,0,400
+Rimpfischhorn,Rimpfischhorn,Wedge-rumped Storm-Petrel,Oceanodroma tethys,All Daycases,Male,10-19,2018-10-01,6,2,380
+Matterhorn,Matterhorn,Wedge-rumped Storm-Petrel,Oceanodroma tethys,All Daycases,Male,80-89,2018-04-01,6,13,428
+Matterhorn,Matterhorn,Wedge-rumped Storm-Petrel,Oceanodroma tethys,All Daycases,Male,80-89,2018-07-01,2,13,438
+Matterhorn,Matterhorn,Wedge-rumped Storm-Petrel,Oceanodroma tethys,All Daycases,Male,80-89,2018-10-01,0,14,438
+Dom,Dom,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Male,10-19,2018-04-01,4,212,94
+Dom,Dom,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Male,10-19,2018-07-01,5,246,81
+Dom,Dom,Clark's Grebe,Aechmophorus clarkii,Emergency Inpatients,Male,10-19,2018-10-01,7,212,88
+Mont Blanc,Mont Blanc,Black-capped Petrel,Pterodroma hasitata,Elective Inpatients,Male,20-29,2018-04-01,3,187,128
+Mont Blanc,Mont Blanc,Black-capped Petrel,Pterodroma hasitata,Elective Inpatients,Male,20-29,2018-07-01,6,175,136
+Mont Blanc,Mont Blanc,Black-capped Petrel,Pterodroma hasitata,Elective Inpatients,Male,20-29,2018-10-01,5,207,121
+Dent Blanche,Dent Blanche,Black-browed Albatross,Thalassarche melanophris,All Daycases,Male,70-79,2018-04-01,5,21,1647
+Dent Blanche,Dent Blanche,Black-browed Albatross,Thalassarche melanophris,All Daycases,Male,70-79,2018-07-01,9,19,1706
+Dent Blanche,Dent Blanche,Black-browed Albatross,Thalassarche melanophris,All Daycases,Male,70-79,2018-10-01,2,20,1728
+Matterhorn,Matterhorn,Little Shearwater,Puffinus assimilis,Emergency Inpatients,Female,10-19,2018-04-01,0,460,122
+Matterhorn,Matterhorn,Little Shearwater,Puffinus assimilis,Emergency Inpatients,Female,10-19,2018-07-01,5,452,111
+Matterhorn,Matterhorn,Little Shearwater,Puffinus assimilis,Emergency Inpatients,Female,10-19,2018-10-01,1,494,119
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Female,50-59,2018-04-01,3,30,4973
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Female,50-59,2018-07-01,0,35,5019
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Female,50-59,2018-10-01,7,35,5706
+Grandes Jorasses,Grandes Jorasses,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,40-49,2018-04-01,16,5105,1616
+Grandes Jorasses,Grandes Jorasses,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,40-49,2018-07-01,16,5055,1483
+Grandes Jorasses,Grandes Jorasses,White-chinned Petrel,Procellaria aequinoctialis,Emergency Inpatients,Female,40-49,2018-10-01,16,5765,1349
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,70-79,2018-04-01,31,19271,2791
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,70-79,2018-07-01,32,21285,2719
+Grandes Jorasses,Grandes Jorasses,Sooty Shearwater,Puffinus griseus,Emergency Inpatients,Male,70-79,2018-10-01,28,21448,2735
+Matterhorn,Matterhorn,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,80-89,2018-04-01,6,13,384
+Matterhorn,Matterhorn,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,80-89,2018-07-01,1,14,441
+Matterhorn,Matterhorn,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,80-89,2018-10-01,5,14,389
+Grand Combin,Grand Combin,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Male,70-79,2018-04-01,70,62124,7334
+Grand Combin,Grand Combin,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Male,70-79,2018-07-01,64,56776,8444
+Grand Combin,Grand Combin,Short-tailed Shearwater,Puffinus tenuirostris,Emergency Inpatients,Male,70-79,2018-10-01,67,64898,8667
+Weisshorn,Weisshorn,Horned Grebe,Podiceps auritus,All Daycases,Female,80-89,2018-04-01,6,16,653
+Weisshorn,Weisshorn,Horned Grebe,Podiceps auritus,All Daycases,Female,80-89,2018-07-01,3,16,724
+Weisshorn,Weisshorn,Horned Grebe,Podiceps auritus,All Daycases,Female,80-89,2018-10-01,2,15,701
+Rimpfischhorn,Rimpfischhorn,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,0-9,2018-04-01,3,9,256
+Rimpfischhorn,Rimpfischhorn,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,0-9,2018-07-01,6,6,242
+Rimpfischhorn,Rimpfischhorn,Ashy Storm-Petrel,Oceanodroma homochroa,All Daycases,Female,0-9,2018-10-01,5,0,248
+Mont Blanc,Mont Blanc,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Male,30-39,2018-04-01,7,8,599
+Mont Blanc,Mont Blanc,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Male,30-39,2018-07-01,7,4,525
+Mont Blanc,Mont Blanc,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Male,30-39,2018-10-01,6,6,554
+Grandes Jorasses,Grandes Jorasses,Yellow-billed Loon,Gavia adamsii,All Daycases,Female,50-59,2018-04-01,6,6,2082
+Grandes Jorasses,Grandes Jorasses,Yellow-billed Loon,Gavia adamsii,All Daycases,Female,50-59,2018-07-01,5,1,2161
+Grandes Jorasses,Grandes Jorasses,Yellow-billed Loon,Gavia adamsii,All Daycases,Female,50-59,2018-10-01,8,3,1901
+Rimpfischhorn,Rimpfischhorn,Shy Albatross,Thalassarche cauta,Elective Inpatients,Male,40-49,2018-04-01,5,967,415
+Rimpfischhorn,Rimpfischhorn,Shy Albatross,Thalassarche cauta,Elective Inpatients,Male,40-49,2018-07-01,3,853,443
+Rimpfischhorn,Rimpfischhorn,Shy Albatross,Thalassarche cauta,Elective Inpatients,Male,40-49,2018-10-01,7,902,417
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,20-29,2018-04-01,2,353,235
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,20-29,2018-07-01,7,395,250
+Rimpfischhorn,Rimpfischhorn,Black-vented Shearwater,Puffinus opisthomelas,Elective Inpatients,Male,20-29,2018-10-01,2,385,227
+Matterhorn,Matterhorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,30-39,2018-04-01,9,1741,320
+Matterhorn,Matterhorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,30-39,2018-07-01,5,1809,318
+Matterhorn,Matterhorn,Northern Fulmar,Fulmarus glacialis,Emergency Inpatients,Female,30-39,2018-10-01,0,1649,310
+Grand Combin,Grand Combin,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,90+,2018-04-01,92,21787,1035
+Grand Combin,Grand Combin,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,90+,2018-07-01,101,21410,900
+Grand Combin,Grand Combin,Fork-tailed Storm-Petrel,Oceanodroma furcata,Emergency Inpatients,Male,90+,2018-10-01,98,24193,974
+Finsteraarhorn,Finsteraarhorn,Red-necked Grebe,Podiceps grisegena,All Daycases,Female,30-39,2018-04-01,8,9,363
+Finsteraarhorn,Finsteraarhorn,Red-necked Grebe,Podiceps grisegena,All Daycases,Female,30-39,2018-07-01,6,7,355
+Finsteraarhorn,Finsteraarhorn,Red-necked Grebe,Podiceps grisegena,All Daycases,Female,30-39,2018-10-01,8,8,328
+Matterhorn,Matterhorn,Wedge-tailed Shearwater,Puffinus pacificus,Elective Inpatients,Male,30-39,2018-04-01,3,165,68
+Matterhorn,Matterhorn,Wedge-tailed Shearwater,Puffinus pacificus,Elective Inpatients,Male,30-39,2018-07-01,6,160,67
+Matterhorn,Matterhorn,Wedge-tailed Shearwater,Puffinus pacificus,Elective Inpatients,Male,30-39,2018-10-01,4,167,74
+Grand Combin,Grand Combin,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,0-9,2018-04-01,0,6,504
+Grand Combin,Grand Combin,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,0-9,2018-07-01,6,8,567
+Grand Combin,Grand Combin,Black-footed Albatross,Phoebastria nigripes,All Daycases,Male,0-9,2018-10-01,6,5,523
+Weisshorn,Weisshorn,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Female,80-89,2018-04-01,3,1579,193
+Weisshorn,Weisshorn,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Female,80-89,2018-07-01,4,1655,217
+Weisshorn,Weisshorn,Least Grebe,Tachybaptus dominicus,Elective Inpatients,Female,80-89,2018-10-01,8,1528,225
+Grand Combin,Grand Combin,Manx Shearwater,Puffinus puffinus,All Daycases,Female,10-19,2018-04-01,6,2,957
+Grand Combin,Grand Combin,Manx Shearwater,Puffinus puffinus,All Daycases,Female,10-19,2018-07-01,0,1,847
+Grand Combin,Grand Combin,Manx Shearwater,Puffinus puffinus,All Daycases,Female,10-19,2018-10-01,0,1,857
+Mont Blanc,Mont Blanc,Arctic Loon,Gavia arctica,All Daycases,Female,20-29,2018-04-01,3,7,441
+Mont Blanc,Mont Blanc,Arctic Loon,Gavia arctica,All Daycases,Female,20-29,2018-07-01,5,9,463
+Mont Blanc,Mont Blanc,Arctic Loon,Gavia arctica,All Daycases,Female,20-29,2018-10-01,7,7,466
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,20-29,2018-04-01,0,394,237
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,20-29,2018-07-01,9,381,256
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,Elective Inpatients,Male,20-29,2018-10-01,9,380,258
+Monte Rosa,Monte Rosa,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,80-89,2018-04-01,18,4235,254
+Monte Rosa,Monte Rosa,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,80-89,2018-07-01,19,4877,303
+Monte Rosa,Monte Rosa,Least Grebe,Tachybaptus dominicus,Emergency Inpatients,Male,80-89,2018-10-01,19,4818,285
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,20-29,2018-04-01,8,1,1899
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,20-29,2018-07-01,0,0,1607
+Grand Combin,Grand Combin,Laysan Albatross,Phoebastria immutabilis,All Daycases,Male,20-29,2018-10-01,1,7,1694
+Dent Blanche,Dent Blanche,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Male,80-89,2018-04-01,36,20372,1167
+Dent Blanche,Dent Blanche,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Male,80-89,2018-07-01,39,20802,1238
+Dent Blanche,Dent Blanche,Audubon's Shearwater,Puffinus lherminieri,Emergency Inpatients,Male,80-89,2018-10-01,35,21124,1286
+Finsteraarhorn,Finsteraarhorn,Wilson's Storm-Petrel,Oceanites oceanicus,Emergency Inpatients,Male,80-89,2018-04-01,47,10660,675
+Finsteraarhorn,Finsteraarhorn,Wilson's Storm-Petrel,Oceanites oceanicus,Emergency Inpatients,Male,80-89,2018-07-01,49,11319,674
+Finsteraarhorn,Finsteraarhorn,Wilson's Storm-Petrel,Oceanites oceanicus,Emergency Inpatients,Male,80-89,2018-10-01,53,10474,613
+Shkhara,Shkhara,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,90+,2018-04-01,2,9,167
+Shkhara,Shkhara,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,90+,2018-07-01,2,6,171
+Shkhara,Shkhara,Mottled Petrel,Pterodroma inexpectata,All Daycases,Female,90+,2018-10-01,7,4,150
+Grandes Jorasses,Grandes Jorasses,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,10-19,2018-04-01,6,871,445
+Grandes Jorasses,Grandes Jorasses,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,10-19,2018-07-01,3,841,436
+Grandes Jorasses,Grandes Jorasses,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,10-19,2018-10-01,2,819,418
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Female,20-29,2018-04-01,6,208,123
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Female,20-29,2018-07-01,5,222,130
+Mont Blanc,Mont Blanc,Northern Fulmar,Fulmarus glacialis,Elective Inpatients,Female,20-29,2018-10-01,4,198,128
+Grand Combin,Grand Combin,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,70-79,2018-04-01,70,58196,7190
+Grand Combin,Grand Combin,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,70-79,2018-07-01,63,63344,7456
+Grand Combin,Grand Combin,Yellow-billed Loon,Gavia adamsii,Emergency Inpatients,Male,70-79,2018-10-01,71,55944,7188
+Grand Combin,Grand Combin,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,20-29,2018-04-01,3,3,1850
+Grand Combin,Grand Combin,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,20-29,2018-07-01,9,9,1741
+Grand Combin,Grand Combin,Herald Petrel,Pterodroma arminjoniana,All Daycases,Female,20-29,2018-10-01,7,2,1881
+Finsteraarhorn,Finsteraarhorn,European Storm-Petrel,Hydrobates pelagicus,Elective Inpatients,Female,30-39,2018-04-01,4,188,102
+Finsteraarhorn,Finsteraarhorn,European Storm-Petrel,Hydrobates pelagicus,Elective Inpatients,Female,30-39,2018-07-01,4,160,102
+Finsteraarhorn,Finsteraarhorn,European Storm-Petrel,Hydrobates pelagicus,Elective Inpatients,Female,30-39,2018-10-01,5,157,103
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,All Daycases,Female,20-29,2018-04-01,9,0,726
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,All Daycases,Female,20-29,2018-07-01,4,6,734
+Grandes Jorasses,Grandes Jorasses,Western Grebe,Aechmophorus occidentalis,All Daycases,Female,20-29,2018-10-01,1,4,691
+Matterhorn,Matterhorn,Common Loon,Gavia immer,All Daycases,Male,20-29,2018-04-01,1,3,174
+Matterhorn,Matterhorn,Common Loon,Gavia immer,All Daycases,Male,20-29,2018-07-01,7,0,186
+Matterhorn,Matterhorn,Common Loon,Gavia immer,All Daycases,Male,20-29,2018-10-01,9,0,201
+Dom,Dom,Mottled Petrel,Pterodroma inexpectata,Elective Inpatients,Male,50-59,2018-04-01,0,307,124
+Dom,Dom,Mottled Petrel,Pterodroma inexpectata,Elective Inpatients,Male,50-59,2018-07-01,0,311,130
+Dom,Dom,Mottled Petrel,Pterodroma inexpectata,Elective Inpatients,Male,50-59,2018-10-01,5,323,134
+Grand Combin,Grand Combin,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Female,10-19,2018-04-01,16,2490,1157
+Grand Combin,Grand Combin,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Female,10-19,2018-07-01,17,2547,1009
+Grand Combin,Grand Combin,Black-vented Shearwater,Puffinus opisthomelas,Emergency Inpatients,Female,10-19,2018-10-01,16,2751,1122
+Shkhara,Shkhara,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Female,30-39,2018-04-01,5,2755,506
+Shkhara,Shkhara,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Female,30-39,2018-07-01,2,2732,503
+Shkhara,Shkhara,Pink-footed Shearwater,Puffinus creatopus,Emergency Inpatients,Female,30-39,2018-10-01,0,2494,591
+Weisshorn,Weisshorn,White-faced Storm-Petrel,Pelagodroma marina,Emergency Inpatients,Female,40-49,2018-04-01,9,2714,694
+Weisshorn,Weisshorn,White-faced Storm-Petrel,Pelagodroma marina,Emergency Inpatients,Female,40-49,2018-07-01,7,2877,647
+Weisshorn,Weisshorn,White-faced Storm-Petrel,Pelagodroma marina,Emergency Inpatients,Female,40-49,2018-10-01,5,2888,667
+Shkhara,Shkhara,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,0-9,2018-04-01,0,41,28
+Shkhara,Shkhara,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,0-9,2018-07-01,3,36,28
+Shkhara,Shkhara,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,0-9,2018-10-01,5,38,27
+Finsteraarhorn,Finsteraarhorn,Black-footed Albatross,Phoebastria nigripes,Emergency Inpatients,Male,40-49,2018-04-01,20,2217,520
+Finsteraarhorn,Finsteraarhorn,Black-footed Albatross,Phoebastria nigripes,Emergency Inpatients,Male,40-49,2018-07-01,18,2073,462
+Finsteraarhorn,Finsteraarhorn,Black-footed Albatross,Phoebastria nigripes,Emergency Inpatients,Male,40-49,2018-10-01,21,2318,475
+Grand Combin,Grand Combin,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,10-19,2018-04-01,3,279,261
+Grand Combin,Grand Combin,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,10-19,2018-07-01,2,280,229
+Grand Combin,Grand Combin,Wilson's Storm-Petrel,Oceanites oceanicus,Elective Inpatients,Male,10-19,2018-10-01,2,250,221
+Dykh-Tau,Dykh-Tau,European Storm-Petrel,Hydrobates pelagicus,Emergency Inpatients,Male,50-59,2018-04-01,0,282,88
+Dykh-Tau,Dykh-Tau,European Storm-Petrel,Hydrobates pelagicus,Emergency Inpatients,Male,50-59,2018-07-01,8,283,90
+Dykh-Tau,Dykh-Tau,European Storm-Petrel,Hydrobates pelagicus,Emergency Inpatients,Male,50-59,2018-10-01,3,257,83
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,80-89,2018-04-01,90,75099,5137
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,80-89,2018-07-01,90,78524,5047
+Grand Combin,Grand Combin,Flesh-footed Shearwater,Puffinus carneipes,Emergency Inpatients,Female,80-89,2018-10-01,90,83458,5189
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Male,80-89,2018-04-01,6,46,1678
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Male,80-89,2018-07-01,4,40,1776
+Rimpfischhorn,Rimpfischhorn,Pink-footed Shearwater,Puffinus creatopus,All Daycases,Male,80-89,2018-10-01,9,45,1714
+Grand Combin,Grand Combin,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Male,10-19,2018-04-01,16,2275,962
+Grand Combin,Grand Combin,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Male,10-19,2018-07-01,15,2441,984
+Grand Combin,Grand Combin,Buller's Shearwater,Puffinus bulleri,Emergency Inpatients,Male,10-19,2018-10-01,15,2406,1114
+Shkhara,Shkhara,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Male,60-69,2018-04-01,1,12,1037
+Shkhara,Shkhara,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Male,60-69,2018-07-01,0,11,1228
+Shkhara,Shkhara,Flesh-footed Shearwater,Puffinus carneipes,All Daycases,Male,60-69,2018-10-01,9,12,1150
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Male,80-89,2018-04-01,1,27,1371
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Male,80-89,2018-07-01,1,25,1464
+Grandes Jorasses,Grandes Jorasses,Band-rumped Storm-Petrel,Oceanodroma castro,All Daycases,Male,80-89,2018-10-01,7,26,1408
+Grandes Jorasses,Grandes Jorasses,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,20-29,2018-04-01,2,1,666
+Grandes Jorasses,Grandes Jorasses,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,20-29,2018-07-01,7,6,660
+Grandes Jorasses,Grandes Jorasses,Black-vented Shearwater,Puffinus opisthomelas,All Daycases,Female,20-29,2018-10-01,0,8,670
+Dent Blanche,Dent Blanche,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Male,70-79,2018-04-01,11,1966,506
+Dent Blanche,Dent Blanche,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Male,70-79,2018-07-01,11,2094,471
+Dent Blanche,Dent Blanche,Cook's Petrel,Pterodroma cookii,Elective Inpatients,Male,70-79,2018-10-01,11,1939,512
+Rimpfischhorn,Rimpfischhorn,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,80-89,2018-04-01,52,34582,2364
+Rimpfischhorn,Rimpfischhorn,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,80-89,2018-07-01,59,41593,2105
+Rimpfischhorn,Rimpfischhorn,Laysan Albatross,Phoebastria immutabilis,Emergency Inpatients,Male,80-89,2018-10-01,51,38643,2352
+Grandes Jorasses,Grandes Jorasses,Short-tailed Shearwater,Puffinus tenuirostris,All Daycases,Male,80-89,2018-04-01,3,25,1371
+Grandes Jorasses,Grandes Jorasses,Short-tailed Shearwater,Puffinus tenuirostris,All Daycases,Male,80-89,2018-07-01,5,27,1592
+Grandes Jorasses,Grandes Jorasses,Short-tailed Shearwater,Puffinus tenuirostris,All Daycases,Male,80-89,2018-10-01,1,27,1476
+Matterhorn,Matterhorn,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,10-19,2018-04-01,2,43,24
+Matterhorn,Matterhorn,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,10-19,2018-07-01,1,45,25
+Matterhorn,Matterhorn,Little Shearwater,Puffinus assimilis,Elective Inpatients,Male,10-19,2018-10-01,4,44,26

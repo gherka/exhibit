@@ -226,7 +226,7 @@ def parse_original_values_into_dataframe(original_table):
 
     Parameters
     ----------
-    original_table : list of lists
+    original_table : list of lists or str
         The first list is the header row
     
     Because the original_table is constructed with a lot of padding,
@@ -241,6 +241,12 @@ def parse_original_values_into_dataframe(original_table):
     -------
     Pandas DataFrame
     '''
+    if original_table == "Number of unique values is above category threshold":
+        return original_table
+
+    if original_table == "See paired column":
+        return original_table
+
     df = pd.DataFrame(
         data=[
             map(str.strip, x.split('|')) for x in original_table[1:]
