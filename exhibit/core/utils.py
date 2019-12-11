@@ -113,7 +113,7 @@ def guess_date_frequency(timeseries):
     
     elif abs(
         time_diff_counts.index[0].days - time_diff_counts.index[1].days
-        ) in range(0, 3):
+        ) in range(0, 4):
         
         if time_diff_counts.index[0].days == 1:
             return "D"

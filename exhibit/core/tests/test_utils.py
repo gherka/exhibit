@@ -86,14 +86,14 @@ class helperTests(unittest.TestCase):
     def test_get_attr_values(self):
         '''
         This test might fail as the test_spec is updated
-        because of "magic" test numbers, like 6.
+        because of "magic" test numbers, like 5.
         '''
         
         test_spec = prescribing_spec
 
-        #there are 4 categorical columns in the prescribing spec
+        #there are 5 categorical columns in the prescribing spec
         test_list = tm.get_attr_values(test_spec, "uniques", types=['categorical'])
-        self.assertEqual(len(test_list), 4)
+        self.assertEqual(len(test_list), 5)
 
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")

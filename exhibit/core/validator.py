@@ -210,7 +210,7 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set', 'anonymise']
+        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set']
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
@@ -244,7 +244,7 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set', 'anonymise']
+        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set']
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: Paired columns must have matching attributes (%(err_attr)s)

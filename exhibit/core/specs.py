@@ -206,9 +206,7 @@ class newSpec:
             'original_values' : self.original_values_path_resolver(path, weights, col),
             'allow_missing_values': True,
             'miss_probability': 0,
-            'anonymise':True,
             'anonymising_set':'random',
-            'anonymised_values':[]
         }
 
         return categorical_d
@@ -240,8 +238,6 @@ class newSpec:
         '''
         cont_d = {
             'type': 'continuous',
-            'anonymise':True,
-            'anonymising_pattern':'random',
             'allow_missing_values': bool(self.df[col].isna().any()),
             'miss_probability': 0,
             'sum': float(self.df[col].sum()),
@@ -260,7 +256,12 @@ class newSpec:
         '''
 
         #PART 1: COLUMN-SPECIFIC INFORMATION
-        for col in self.df.columns:
+        sorted_col_names = sorted(
+            self.df.columns.sort_values(),
+            key=lambda x: str(self.df.dtypes.to_dict()[x]), reverse=True
+        )
+
+        for col in sorted_col_names:
 
             if is_datetime64_dtype(self.df.dtypes[col]):
                 self.output['columns'][col] = self.time_dict(col)

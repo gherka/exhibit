@@ -4,11 +4,12 @@
 #please review each section and make necessary adjustments
 #---------------------------------------------------------
 metadata:
-  number_of_rows: 2950
+  number_of_rows: 2951
   categorical_columns:
   - BNFItemCode
   - BNFItemDescription
   - GPPracticeName
+  - HB2014
   - HB2014Name
   numerical_columns:
   - NumberOfPaidItems
@@ -38,65 +39,20 @@ metadata:
 #mountains.ranges
 #---------------------------------------------------------
 columns:
-  PaidDateMonth:
-    type: date
-    allow_missing_values: false
-    miss_probability: 0
-    from: '2019-04-01'
-    to: '2019-08-01'
-    uniques: 5
-    frequency: MS
-  HB2014Name:
-    type: categorical
-    paired_columns: []
-    uniques: 14
-    original_values:
-    - HB2014Name                    | probability_vector | NumberOfPaidItems
-    - NHS Ayrshire and Arran        | 0.077              | 0.092
-    - NHS Borders                   | 0.082              | 0.120
-    - NHS Dumfries and Galloway     | 0.082              | 0.072
-    - NHS Fife                      | 0.072              | 0.079
-    - NHS Forth Valley              | 0.077              | 0.077
-    - NHS Grampian                  | 0.083              | 0.094
-    - NHS Greater Glasgow and Clyde | 0.078              | 0.071
-    - NHS Highland                  | 0.065              | 0.050
-    - NHS Lanarkshire               | 0.081              | 0.077
-    - NHS Lothian                   | 0.069              | 0.081
-    - NHS Orkney                    | 0.044              | 0.027
-    - NHS Shetland                  | 0.065              | 0.031
-    - NHS Tayside                   | 0.075              | 0.093
-    - NHS Western Isles             | 0.050              | 0.034
-    allow_missing_values: true
-    miss_probability: 0
-    anonymise: true
-    anonymising_set: random
-    anonymised_values: []
-  GPPracticeName:
-    type: categorical
-    paired_columns: []
-    uniques: 136
-    original_values: Number of unique values is above category threshold
-    allow_missing_values: true
-    miss_probability: 0
-    anonymise: true
-    anonymising_set: random
-    anonymised_values: []
   BNFItemCode:
     type: categorical
     paired_columns:
     - BNFItemDescription
-    uniques: 23
+    uniques: 24
     original_values: See paired column
     allow_missing_values: true
     miss_probability: 0
-    anonymise: true
     anonymising_set: random
-    anonymised_values: []
   BNFItemDescription:
     type: categorical
     paired_columns:
     - BNFItemCode
-    uniques: 23
+    uniques: 24
     original_values:
     - BNFItemDescription                                       | paired_BNFItemCode | probability_vector | NumberOfPaidItems
     - 365 FILM 4CM X 5CM VP ADH FILM DRESS                     | 20030100662        | 0.001              | 0.001
@@ -119,22 +75,68 @@ columns:
     - PORTIA BLUE FINGER STALL PLASTIC MED/LGE                 | 21010800302        | 0.001              | 0.001
     - PREMIERPORE VP 10CM X 15CM VP ADH FILM DRESS             | 20030100422        | 0.001              | 0.001
     - PREMIERPORE VP 5CM X 7CM VP ADH FILM DRESS               | 20030100431        | 0.001              | 0.001
+    - SOD CHLOR_(S)                                            | 190400000AAPFPF    | 0.001              | 0.001
     - SUTHERLAND LUBRI JELLY SACH 5G STER                      | 21140000001        | 0.001              | 0.001
     - THICKEN AID_PDR SACH 9G                                  | 190700000BBCNBK    | 0.001              | 0.001
     - XARELTO_TAB 20MG                                         | 0208020Y0BBACAC    | 0.229              | 0.168
     allow_missing_values: true
     miss_probability: 0
-    anonymise: true
     anonymising_set: random
-    anonymised_values: []
+  GPPracticeName:
+    type: categorical
+    paired_columns: []
+    uniques: 136
+    original_values: Number of unique values is above category threshold
+    allow_missing_values: true
+    miss_probability: 0
+    anonymising_set: random
+  HB2014:
+    type: categorical
+    paired_columns:
+    - HB2014Name
+    uniques: 14
+    original_values: See paired column
+    allow_missing_values: true
+    miss_probability: 0
+    anonymising_set: random
+  HB2014Name:
+    type: categorical
+    paired_columns:
+    - HB2014
+    uniques: 14
+    original_values:
+    - HB2014Name                    | paired_HB2014 | probability_vector | NumberOfPaidItems
+    - NHS Ayrshire and Arran        | S08000015     | 0.077              | 0.092
+    - NHS Borders                   | S08000016     | 0.082              | 0.120
+    - NHS Dumfries and Galloway     | S08000017     | 0.082              | 0.072
+    - NHS Fife                      | S08000029     | 0.072              | 0.079
+    - NHS Forth Valley              | S08000019     | 0.077              | 0.077
+    - NHS Grampian                  | S08000020     | 0.083              | 0.094
+    - NHS Greater Glasgow and Clyde | S08000031     | 0.078              | 0.071
+    - NHS Highland                  | S08000022     | 0.065              | 0.050
+    - NHS Lanarkshire               | S08000032     | 0.081              | 0.077
+    - NHS Lothian                   | S08000024     | 0.069              | 0.081
+    - NHS Orkney                    | S08000025     | 0.044              | 0.027
+    - NHS Shetland                  | S08000026     | 0.065              | 0.031
+    - NHS Tayside                   | S08000030     | 0.075              | 0.093
+    - NHS Western Isles             | S08000028     | 0.050              | 0.034
+    allow_missing_values: true
+    miss_probability: 0
+    anonymising_set: random
   NumberOfPaidItems:
     type: continuous
-    anonymise: true
-    anonymising_pattern: random
     allow_missing_values: false
     miss_probability: 0
-    sum: 51444.0
+    sum: 51445.0
     dispersion: 0.1
+  PaidDateMonth:
+    type: date
+    allow_missing_values: false
+    miss_probability: 0
+    from: '2019-04-01'
+    to: '2019-08-01'
+    uniques: 5
+    frequency: MS
 #---------------------------------------------------------
 #The tool will try to guess which columns are "linked",
 #meaning that values cascade from one column to another.

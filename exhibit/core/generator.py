@@ -8,7 +8,6 @@ from contextlib import closing
 from itertools import chain
 import textwrap
 import re
-# import pdb
 
 # External library imports
 import pandas as pd
@@ -55,15 +54,28 @@ def apply_dispersion(value, dispersion_pct):
 
     if value == np.inf:
         value = 0
+    
+    if dispersion_pct == 0:
+        return value
 
     d = int(value * dispersion_pct)
+    #to avoid negative rmin, include max(0, n) check
     rmin, rmax = (max(0, (value - d)), (value + d))
 
-    #Make sure you get at least a range of 1
-    if rmin <= (1 / dispersion_pct):
-        return np.random.randint(0, (1 / dispersion_pct))
+    #if after applying jitter, the values are still the same, make
+    #further adjustments: the minimum range is at least 2, preferably
+    #on each side of the range, but if it results in a negative rmin,
+    #just extend rmax by 2.
+    if (rmin-rmax) == 0:
 
-    return np.random.randint(rmin, rmax)
+        if (rmin - 1) < 0:
+            rmax = rmax + 2
+        else:
+            rmin = rmin - 1
+            rmax = rmax + 1
+
+    #the upper limit of randint is exclusive, so we extend it by 1
+    return np.random.randint(rmin, rmax + 1)
 
 def generate_weights_table(spec):
     '''
@@ -110,16 +122,21 @@ def generate_weights_table(spec):
             continue
 
         if exceeds_ct(spec, cat_col):
-
-            safe_col_name = cat_col.replace(" ", "$")
-
-            if spec['metadata']['id'] == 'sample':
-                table_name = f"sample_{safe_col_name}"
-            else:
-                table_name = f"temp_{spec['metadata']['id']}_{safe_col_name}"
-
-            ws_df = query_anon_database(table_name)
             
+            #it's a bit weird, need to understand the flows better
+            try:
+                ws_df = spec['columns'][cat_col]['aliases']
+            except KeyError:
+
+                safe_col_name = cat_col.replace(" ", "$")
+
+                if spec['metadata']['id'] == 'sample':
+                    table_name = f"sample_{safe_col_name}"
+                else:
+                    table_name = f"temp_{spec['metadata']['id']}_{safe_col_name}"
+
+                ws_df = query_anon_database(table_name)
+                
             #generate equal weights among unlisted category values
             for num_col in num_cols:
                 ws_df[num_col] = 1 / ws_df.shape[0]
@@ -128,9 +145,6 @@ def generate_weights_table(spec):
 
             #get the original values with weights DF
             ws_df = spec['columns'][cat_col]['original_values']
-
-            # print("Cat col: ", cat_col)
-            # print("ws_df shape: ", ws_df.shape)
 
         for num_col in num_cols:
     
@@ -144,49 +158,33 @@ def generate_weights_table(spec):
     output_df = pd.DataFrame(tuple_list,
                              columns=['num_col', 'cat_col', 'cat_value', 'weight'])
 
+    #sort index for performance gains
     result = output_df.set_index(['num_col', 'cat_col', 'cat_value']).sort_index()
-
-    # pdb.set_trace()
 
     return result
 
-
 def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor):
     '''
-    
     Super inefficient, non-vectorised function
     
-    Given a dataframe row:
+    Given a dataframe row with pre-generated anon categorical values:
     
-    1)
-        for each value in row, try to find an entry in the weights table
-    2)
-        apply weights to the sum of the cont_col to get a "center value"
-        and divide by the number of of "complete" values generated for
-        every "other", probabilistically drawn, value.
-    3)
-        Next, calculate deciles and their standard deviations
-    
-    4) 
-        Finally, create a range around the center value +-
-        standard deviation of the decile in which the center value
-        falls.
-    
-    5) 
-        Get a random value from the range.
-    '''
-            
+    - for each categorical alue in row, try to find an entry in the weights table
+    - apply weights to the sum of the cont_col to get a "center value"
+      and divide by the number of of "complete" values generated for
+      every "other", probabilistically drawn, value.
+    - applu jitter or dispersion using a separate apply call
+
+    '''            
     for cat_col, val in row.iteritems():
-                
+               
         try:
             weight = weights_table.loc[num_col, cat_col, val]['weight']
             num_col_sum = num_col_sum * weight
         except KeyError:
-            # pdb.set_trace()
             continue           
     
     return round(num_col_sum / complete_factor, 0)
-
 
 def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     '''
@@ -213,16 +211,18 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
     all_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
     ct = spec_dict['metadata']['category_threshold']
-    #anon_set = spec_dict['columns'][all_cols[0]]['anonymising_set']
+    anon_set = spec_dict['columns'][all_cols[0]]['anonymising_set']
     base_col = None
     base_col_pos = None
     base_col_uniform = False
+    base_col_unique_count = None
 
     #find the first available "base_col", starting from the end of the list
     for i, col_name in enumerate(reversed(all_cols)):
         if spec_dict['columns'][col_name]['uniques'] <= ct:
             base_col = list(reversed(all_cols))[i]
             base_col_pos = i
+            base_col_unique_count = spec_dict['columns'][col_name]['uniques']
     
     #if all columns in the linked group have more unique values than allowed,
     #just generate uniform distribution from the most granular and do upstream lookup
@@ -230,6 +230,121 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         base_col = list(reversed(all_cols))[0]
         base_col_pos = 0
         base_col_uniform = True
+        base_col_unique_count = spec_dict['columns'][base_col]['uniques']
+    
+
+    #----------------------
+    #THREE RANDOM SCENARIOS
+    #----------------------
+
+    if anon_set != "random":
+        table_name = anon_set
+        #OK to limit the size ot base col uniques because it's the most granular
+        anon_df = query_anon_database(table_name, size=base_col_unique_count)
+        #rename the first column of the anon_set df to be same as original
+        anon_df.rename(columns={anon_df.columns[0]:base_col}, inplace=True)
+
+        #SCENARIO 1: All columns in linked group exceed max allowed num of unique values
+        if base_col_uniform:
+
+            idx = np.random.choice(len(anon_df), num_rows)
+            #to_records returns numpy records which look like tuples, but aren't
+            anon_list = [
+                list(anon_df.itertuples(index=False, name=None))[x] for x in idx
+                ]
+
+            linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
+            
+        #SCENARIO 2: base_col has original_values, but it isn't the most granular column
+        elif (not base_col_uniform) and (base_col_pos != 0):
+
+            #grab the full anonymising dataset
+            full_anon_df = query_anon_database(table_name)
+            full_anon_df.rename(
+                columns={full_anon_df.columns[0]:base_col}, inplace=True)
+ 
+            #replace original_values with anonymised aliases
+            orig_df = spec_dict['columns'][base_col]['original_values']
+            orig_df.iloc[:, 0] = (full_anon_df
+                                    .iloc[:, 0].unique()[0:base_col_unique_count])
+            spec_dict['columns'][base_col]['original_values'] = orig_df
+
+
+            base_col_df = spec_dict['columns'][base_col]['original_values']
+
+            base_col_prob = np.array(base_col_df['probability_vector'])
+
+            base_col_prob /= base_col_prob.sum()
+
+            base_col_series = pd.Series(
+                data=np.random.choice(
+                    a=base_col_df.iloc[:, 0].unique(),
+                    size=num_rows,
+                    p=base_col_prob),
+                name=base_col   
+            )
+
+            uniform_series = (
+                base_col_series
+                    .groupby(base_col_series)
+                    .transform(
+                        lambda x: np.random.choice(
+                            a=(full_anon_df[full_anon_df[base_col] == min(x)]
+                                .iloc[:, -1]),
+                            size=len(x)
+                        )
+                    ) 
+                )
+            
+            uniform_series.name = all_cols[-1]
+
+            #create a "hidden", internal key entry: "aliases" for anonymised values
+            #and use them to populate the weights table instead of default values
+
+            uniform_table = pd.DataFrame(pd.Series(
+                uniform_series.unique(),
+                name=uniform_series.name
+            ))
+
+            spec_dict['columns'][uniform_series.name]['aliases'] = uniform_table
+
+            linked_df = pd.concat([base_col_series, uniform_series], axis=1)
+
+
+        #SCENARIO 3: base_col has original_values, AND it's the most granular column
+
+        #<<<----TO-DO----->>>
+       
+
+        #FINALLY ADD 1:1 COLUMNS, IF THERE ARE ANY - OWN FUNCTION!
+        for c in all_cols:
+
+            if spec_dict['columns'][c]['anonymising_set'] != "random":
+                #just generate a DF with duplicate paired columns
+                for pair in spec_dict['columns'][c]['paired_columns']:
+                
+                    linked_df = pd.concat(
+                        [linked_df, pd.Series(linked_df[c], name=pair)],
+                        axis=1
+                    )
+
+                continue
+            
+            paired_columns_lookup = create_paired_columns_lookup(spec_dict, c)
+
+            if not paired_columns_lookup is None:
+                linked_df = pd.merge(
+                    left=linked_df,
+                    right=paired_columns_lookup,
+                    how="left",
+                    on=c)
+
+
+        return linked_df
+
+    #--------------------------
+    #THREE NON-RANDOM SCENARIOS
+    #--------------------------
 
     #sanitise the column name in case it has spaces in it
     base_col_sql = base_col.replace(" ", "$")
@@ -281,7 +396,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
                 a=base_col_df.iloc[:, 0].unique(),
                 size=num_rows,
                 p=base_col_prob),
-            name=base_col_sql   
+            name=base_col   
         )
 
         uniform_series = (
@@ -289,7 +404,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
                 .groupby(base_col_series)
                 .transform(
                     lambda x: np.random.choice(
-                        a=sql_df[sql_df[base_col_sql] == min(x)].iloc[:, -1],
+                        a=sql_df[sql_df[base_col] == min(x)].iloc[:, -1],
                         size=len(x)
                     )
                 ) 
@@ -305,7 +420,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
                 left=linked_df,
                 right=sql_df,
                 how='left',
-                on=[base_col_sql, all_cols[-1]]
+                on=[base_col, all_cols[-1]]
             )
       
     #SCENARIO 3: base_col has original_values, AND it's the most granular column
@@ -328,6 +443,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         paired_columns_lookup = create_paired_columns_lookup(spec_dict, c)
 
         if not paired_columns_lookup is None:
+
             linked_df = pd.merge(
                 left=linked_df,
                 right=paired_columns_lookup,
@@ -335,7 +451,6 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
                 on=c)
 
     return linked_df
-
 
 def create_paired_columns_lookup(spec_dict, base_column):
     '''
@@ -351,8 +466,9 @@ def create_paired_columns_lookup(spec_dict, base_column):
     Returns
     -------
     A dataframe with base column and paired columns, if any.
-    Paired columns are stripped of their "paired_" prefix
-    for joining downstream into the final anonymised dataframe
+    Paired columns are stripped of their "paired_" prefix and
+    the $ replacement for joining downstream into the final
+    anonymised dataframe
     '''
     #get a list of paired columns:
     pairs = spec_dict['columns'][base_column]['paired_columns']
@@ -370,6 +486,7 @@ def create_paired_columns_lookup(spec_dict, base_column):
 
             paired_df = query_anon_database(table_name=table_name)
             paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
+            paired_df.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
 
             return paired_df
 
@@ -390,13 +507,15 @@ def generate_anon_series(spec_dict, col_name, num_rows):
     '''
     Generate basic categorical series anonymised according to user input
 
+    Try to reduce complexity and break up branches!
+
     The code can take different paths depending on these things: 
      - whether a the anonymising method is set to random or a custom set
-     - whether the number of unique values exceed the threshold
+     - whether the number of unique values exceeds the threshold
      - whether the column has any paired columns
 
     The paths differ primarily in terms of where the data sits: as part
-    of the spec in original_values or in anon_db.
+    of the spec in original_values or in anon.db
 
     Things are further complicated if users want to use a single column
     from an anonymising table, like mountains.peak
@@ -439,6 +558,13 @@ def generate_anon_series(spec_dict, col_name, num_rows):
             table_name, *sql_column = anon_set.split(".")
             col_df = query_anon_database(table_name, sql_column, uniques)
 
+            #we must make sure that the anonymising set is suitable for paired column
+            #generation, meaning 1:1 and not 1:many or many:1 relationship
+            
+            for col in col_df.columns:
+                if col_df[col].nunique() != col_df.shape[0]:
+                    raise TypeError("anonymising dataset contains duplicates")
+
             #rename the first column of the anon_set df to be same as original
             col_df.rename(columns={col_df.columns[0]:col_name}, inplace=True)
 
@@ -460,13 +586,6 @@ def generate_anon_series(spec_dict, col_name, num_rows):
                 )
 
                 return pd.merge(original_series, col_df, how="left", on=col_name)
-
-            #we must make sure that the anonymising set is suitable for paired column
-            #generation, meaning 1:1 and not 1:many or many:1 relationship
-
-            for col in col_df.columns:
-                if col_df[col].nunique() != col_df.shape[0]:
-                    raise TypeError("anonymising dataset contains duplicates")
 
             col_df = col_df.iloc[:, 0:len(paired_cols)+1]
             col_df.columns = [col_name] + paired_cols
@@ -537,6 +656,11 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
     table_name, *sql_column = anon_set.split(".")
     col_df = query_anon_database(table_name, sql_column, uniques)
+
+    for col in col_df.columns:
+        if col_df[col].nunique() != col_df.shape[0]:
+            raise TypeError("anonymising dataset contains duplicates")
+
     col_df.rename(columns={col_df.columns[0]:col_name}, inplace=True)
 
     if len(paired_cols) + 1 > col_df.shape[1]:
@@ -573,7 +697,6 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
     return original_series
 
-
 def generate_complete_series(spec_dict, col_name):
     '''
     This function doesn't take num_rows argument because
@@ -597,7 +720,6 @@ def generate_complete_series(spec_dict, col_name):
     elif col_attrs['type'] == 'categorical':
 
         return pd.Series(col_attrs['original_values'], name=col_name)
-
 
 def generate_categorical_data(spec_dict, core_rows):
     '''
@@ -684,7 +806,6 @@ def generate_categorical_data(spec_dict, core_rows):
     anon_df.drop('key', axis=1, inplace=True)
 
     return anon_df
-
 
 def generate_YAML_string(spec_dict):
     '''

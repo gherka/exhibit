@@ -82,7 +82,7 @@ class validatorTests(unittest.TestCase):
         #modify list in place
         orig_vals = test_spec['columns']['HB2014Name']['original_values']
         #set the first value of the probality vector to 1
-        orig_vals[-1] = "Scotland| 1 | 0.016"
+        orig_vals[-1] = "Scotland| Scotland | 1 | 0.016"
         #parse the csv-like string into dataframe
         test_spec['columns']['HB2014Name']['original_values'] = (
             parse_original_values_into_dataframe(orig_vals))
@@ -105,12 +105,10 @@ class validatorTests(unittest.TestCase):
             "columns": {
                 "Board Code": {
                     "allow_missing_values": True,
-                    "anonymise": True,
                     "anonymising_set": "random"
                 },
                 "Board":  {
                     "allow_missing_values": True,
-                    "anonymise": True,
                     "anonymising_set": "random"
                 },
             },
@@ -124,14 +122,10 @@ class validatorTests(unittest.TestCase):
         test_dict1['columns']['Board']['allow_missing_values'] = False
 
         test_dict2 = deepcopy(test_dict)
-        test_dict2['columns']['Board']['anonymise'] = False
-
-        test_dict3 = deepcopy(test_dict)
-        test_dict3['columns']['Board']['anonymising_set'] = "fish"
+        test_dict2['columns']['Board']['anonymising_set'] = "fish"
         
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict1))
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict2))
-        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict3))
 
 
     def test_paired_cols_shared_attributes(self):
@@ -147,14 +141,12 @@ class validatorTests(unittest.TestCase):
                     "type": "categorical",
                     "allow_missing_values": True,
                     "paired_columns": ['Board'],
-                    "anonymise": True,
                     "anonymising_set": "random"
                 },
                 "Board":  {
                     "type": "categorical",
                     "allow_missing_values": True,
                     "paired_columns": ['Board Code'],
-                    "anonymise": True,
                     "anonymising_set": "random"
                 },
             }        
@@ -164,14 +156,10 @@ class validatorTests(unittest.TestCase):
         test_dict1['columns']['Board']['allow_missing_values'] = False
 
         test_dict2 = deepcopy(test_dict)
-        test_dict2['columns']['Board']['anonymise'] = False
-
-        test_dict3 = deepcopy(test_dict)
-        test_dict3['columns']['Board']['anonymising_set'] = "fish"
+        test_dict2['columns']['Board']['anonymising_set'] = "fish"
         
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict1))
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict2))
-        self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict3))
 
 
     def test_validator_no_nulls(self):

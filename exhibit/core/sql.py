@@ -32,7 +32,7 @@ def query_anon_database(table_name, column=None, size=None, db_uri=None):
 
     Returns
     -------
-    A dataframe
+    A dataframe with original column names
     '''
 
     if db_uri is None:
@@ -55,9 +55,14 @@ def query_anon_database(table_name, column=None, size=None, db_uri=None):
         result = c.fetchall()
  
     if len(column_names) == 1:
-        return pd.DataFrame(data={column_names[0]: [x[0] for x in result]})
+        output = pd.DataFrame(data={column_names[0]: [x[0] for x in result]})
+        output.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
+        return output
+    
+    output = pd.DataFrame(data=result, columns=column_names)
+    output.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
 
-    return pd.DataFrame(data=result, columns=column_names)
+    return output
 
 def create_temp_table(table_name, col_names, data, db_uri=None, return_table=False):
     '''

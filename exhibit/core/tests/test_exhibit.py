@@ -1,5 +1,5 @@
 '''
-Unit and reference tests for the Exhibit package
+Unit tests for the exhibit module
 '''
 
 # Standard library imports
@@ -7,17 +7,12 @@ import unittest
 from unittest.mock import patch, mock_open
 from pathlib import Path
 import argparse
-import json
 
 # External imports
 import pandas as pd
-from pandas.testing import assert_frame_equal
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
-from exhibit.sample.sample import (
-    prescribing_spec, prescribing_anon,
-    inpatients_anon)
 
 # Module under test
 from exhibit.core import exhibit  as tm
@@ -28,76 +23,6 @@ class exhibitTests(unittest.TestCase):
     via @patch decorator; internal intermediate functions
     are mocked inside each test.
     '''
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_prescribing_spec(self, mock_args):
-        '''
-        The reference test mirrors the logic of the bootstrap.main()
-
-        The round-trip from YAML string into dictionary loses some type
-        information so the two dictionaries are not exactly the same,
-        but if we serialise them as strings using JSON module, the results
-        should be identical.
-        '''
-        mock_args.return_value = argparse.Namespace(
-            command="fromdata",
-            source=Path(package_dir('sample', '_data', 'prescribing.csv')),
-            category_threshold=25,
-            verbose=True,
-            sample=True
-        )
-
-        xA = tm.newExhibit()
-        xA.read_data()
-        xA.generate_spec()
-
-        assert json.dumps(prescribing_spec) == json.dumps(xA.spec_dict)
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_prescribing_anon_data(self, mock_args):
-        '''
-        The reference test mirrors the logic of the bootstrap.main()
-        '''
-        mock_args.return_value = argparse.Namespace(
-            command="fromspec",
-            source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
-            verbose=True,
-            sample=True
-        )
-
-        xA = tm.newExhibit()
-        xA.read_spec()
-        if xA.validate_spec():
-            xA.execute_spec()
-
-        assert prescribing_anon.equals(xA.anon_df)
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_inpatient_anon_data(self, mock_args):
-        '''
-        Inpatients have a floating point column so we're using
-        Pandas internal testing assert to make sure the small
-        differences are not failing the reference test
-        '''
-        mock_args.return_value = argparse.Namespace(
-            command="fromspec",
-            source=Path(package_dir('sample', '_spec', 'inpatients_edited.yml')),
-            verbose=True,
-            sample=True
-        )
-
-        xA = tm.newExhibit()
-        xA.read_spec()
-        if xA.validate_spec():
-            xA.execute_spec()
-
-        assert_frame_equal(
-            left=inpatients_anon,
-            right=xA.anon_df,
-            check_exact=False,
-            check_less_precise=True,
-        )
-
 
     @patch('argparse.ArgumentParser.parse_args')
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
@@ -173,6 +98,7 @@ class exhibitTests(unittest.TestCase):
 
             mo.assert_called_with('source_dataset_SPEC.yml', 'w')
             mo.return_value.__enter__.return_value.write.assert_called_with('hello')
+    
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
