@@ -142,7 +142,7 @@ def generate_weights_table(spec):
                 ws_df[num_col] = 1 / ws_df.shape[0]
 
         else:
-
+            
             #get the original values with weights DF
             ws_df = spec['columns'][cat_col]['original_values']
 
@@ -177,7 +177,7 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor)
 
     '''            
     for cat_col, val in row.iteritems():
-               
+
         try:
             weight = weights_table.loc[num_col, cat_col, val]['weight']
             num_col_sum = num_col_sum * weight
@@ -223,6 +223,8 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
             base_col = list(reversed(all_cols))[i]
             base_col_pos = i
             base_col_unique_count = spec_dict['columns'][col_name]['uniques']
+            if base_col:
+                break
     
     #if all columns in the linked group have more unique values than allowed,
     #just generate uniform distribution from the most granular and do upstream lookup
@@ -263,7 +265,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
             full_anon_df.rename(
                 columns={full_anon_df.columns[0]:base_col}, inplace=True)
  
-            #replace original_values with anonymised aliases
+            #replace original_values with anonymised aliases for weights_table
             orig_df = spec_dict['columns'][base_col]['original_values']
             orig_df.iloc[:, 0] = (full_anon_df
                                     .iloc[:, 0].unique()[0:base_col_unique_count])
@@ -312,9 +314,31 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
 
         #SCENARIO 3: base_col has original_values, AND it's the most granular column
+        else:
+ 
+            #grab the full anonymising dataset
+            full_anon_df = query_anon_database(table_name)
 
-        #<<<----TO-DO----->>>
-       
+            #replace original_values with anonymised aliases for weights_table
+            orig_df = spec_dict['columns'][base_col]['original_values']
+            orig_df.iloc[:, 0] = (full_anon_df
+                                    .iloc[:, 1].unique()[0:base_col_unique_count])
+            spec_dict['columns'][base_col]['original_values'] = orig_df
+
+            #carry on with the programme
+            base_col_df = spec_dict['columns'][base_col]['original_values']
+
+            base_col_uniques = spec_dict['columns'][base_col]['uniques']
+
+            base_col_prob = np.array(base_col_df['probability_vector'])
+
+            base_col_prob /= base_col_prob.sum()
+
+            idx = np.random.choice(base_col_uniques, num_rows, p=base_col_prob)
+            anon_list = [full_anon_df.iloc[x,:].values for x in idx]
+
+            linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
+      
 
         #FINALLY ADD 1:1 COLUMNS, IF THERE ARE ANY - OWN FUNCTION!
         for c in all_cols:
@@ -322,7 +346,8 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
             if spec_dict['columns'][c]['anonymising_set'] != "random":
                 #just generate a DF with duplicate paired columns
                 for pair in spec_dict['columns'][c]['paired_columns']:
-                
+                    
+                    #overwrite linked_df
                     linked_df = pd.concat(
                         [linked_df, pd.Series(linked_df[c], name=pair)],
                         axis=1
