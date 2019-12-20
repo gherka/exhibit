@@ -7,6 +7,8 @@ and reading back user specification
 import pandas as pd
 from pandas.api.types import is_datetime64_dtype
 
+import pdb
+
 def format_header(dataframe, series_name, prefix=None):
     '''
     Function to pad the header values based on the length
@@ -220,38 +222,40 @@ def build_table_from_lists(
 
     return final
 
-def parse_original_values_into_dataframe(original_table):
+def parse_original_values(original_values):
     '''
-    Converts the output of "build table from lists" into a dataframe
+    Parses the value of the original_values attribute of the spec
+    for downstream processing. Can either be a list of strings with each
+    element being a row of the .csv-like table or a plain string.
 
     Parameters
     ----------
-    original_table : list of lists or str
-        The first list is the header row
+    original_values : list or str
+        If list, the first element is the header row
     
     Because the original_table is constructed with a lot of padding,
     each value in the list has to be stripped of spaces. 
 
-    The separator character between values is |
+    The separator character between .csv-like table values is |
 
     The only types we're likely to encounter in the original_table
     are strings and floats.
 
     Returns
     -------
-    Pandas DataFrame
+    Pandas DataFrame or untouched string
     '''
-    if original_table == "Number of unique values is above category threshold":
-        return original_table
+    if original_values == "Number of unique values is above category threshold":
+        return original_values
 
-    if original_table == "See paired column":
-        return original_table
+    if original_values == "See paired column":
+        return original_values
 
     df = pd.DataFrame(
         data=[
-            map(str.strip, x.split('|')) for x in original_table[1:]
+            map(str.strip, x.split('|')) for x in original_values[1:]
         ],
-        columns=[x.strip() for x in original_table[0].split('|')],
+        columns=[x.strip() for x in original_values[0].split('|')],
         dtype='float'
     )
 

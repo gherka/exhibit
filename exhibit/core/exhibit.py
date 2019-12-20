@@ -16,7 +16,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser
 from exhibit.core.utils import count_core_rows
-from exhibit.core.formatters import parse_original_values_into_dataframe
+from exhibit.core.formatters import parse_original_values
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 from exhibit.core.generator import (
@@ -57,12 +57,12 @@ class newExhibit:
             ------------------------------------------
             ''')
 
-        self.parser = argparse.ArgumentParser(
+        parser = argparse.ArgumentParser(
             description=desc,
             formatter_class=argparse.RawTextHelpFormatter
             )
 
-        self.parser.add_argument(
+        parser.add_argument(
             'command',
             type=str, choices=['fromdata', 'fromspec'],
             help=textwrap.dedent('''\
@@ -74,38 +74,38 @@ class newExhibit:
             metavar='command'
             )
 
-        self.parser.add_argument(
+        parser.add_argument(
             'source',
             type=path_checker,
             help='path to source file for processing'
             )
 
-        self.parser.add_argument(
+        parser.add_argument(
             '--verbose', '-v',
             default=False,
             action='store_true',
             help='control traceback length for debugging errors',
             )
-        self.parser.add_argument(
+        parser.add_argument(
             '--sample', '-s',
             default=False,
             action='store_true',
             help='flag to tell the tool to generate sample spec',
             )
 
-        self.parser.add_argument(
+        parser.add_argument(
             '--category_threshold', '-ct',
             type=int,
             default=30,
             help='maximum number of categories to include in .yml for manual editing',
             )
 
-        self.parser.add_argument(
+        parser.add_argument(
             '--output', '-o',
             help='output the generated spec to a given file name',
             )
  
-        self._args = self.parser.parse_args(sys.argv[1:])
+        self._args = parser.parse_args(sys.argv[1:])
         self.spec_dict = None
         self.df = None
         self.anon_df = None
@@ -163,21 +163,25 @@ class newExhibit:
         Categorical columns have an "original_values" attribute set
         to be a string that can either contain original column values
         formatted in a csv-like table or a plain string indicating 
-        how the original values were processed (either as Paired columns)
-        or stored away in a temporary table in the anon database.
+        how the original values were processed (either as Paired columns
+        or stored away in a temporary table in the anon database).
         
         If original values are a csv-like table, parse it early
         so that we can amend the dataframe in-place when using
         anonymised values from anon db in the generation process.
         '''
-        with open(self._args.source, "r") as f:
-            self.spec_dict = yaml.safe_load(f)
+        if self._args.source.suffix == '.yml':
+            with open(self._args.source) as f:
+                self.spec_dict = yaml.safe_load(f)
+        else:
+            raise TypeError('Specification is not in .yml format')
+
 
         for col in self.spec_dict['metadata']['categorical_columns']:
 
-            orig_str = self.spec_dict['columns'][col]['original_values']
+            original_values = self.spec_dict['columns'][col]['original_values']
     
-            parsed_values = parse_original_values_into_dataframe(orig_str)
+            parsed_values = parse_original_values(original_values)
 
             self.spec_dict['columns'][col]['original_values'] = parsed_values
 
@@ -191,7 +195,7 @@ class newExhibit:
 
         If validation passes, returns True, else returns False with helpful messages
         '''
-        return newValidator(self._args.source).run_validator()
+        return newValidator(self.spec_dict).run_validator()
 
     def execute_spec(self):
         '''

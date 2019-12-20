@@ -1,44 +1,44 @@
 BNFItemDescription,BNFItemCode,GPPracticeName,HB2014Name,HB2014,PaidDateMonth,NumberOfPaidItems
-Western Grebe,Aechmophorus occidentalis,Koryakskaya Sopka,Dom,Dom,2019-04-01,69
-Western Grebe,Aechmophorus occidentalis,Koryakskaya Sopka,Dom,Dom,2019-05-01,78
-Western Grebe,Aechmophorus occidentalis,Koryakskaya Sopka,Dom,Dom,2019-06-01,80
-Western Grebe,Aechmophorus occidentalis,Koryakskaya Sopka,Dom,Dom,2019-07-01,68
-Western Grebe,Aechmophorus occidentalis,Koryakskaya Sopka,Dom,Dom,2019-08-01,78
-Clark's Grebe,Aechmophorus clarkii,Kita-dake,Matterhorn,Matterhorn,2019-04-01,2
-Clark's Grebe,Aechmophorus clarkii,Kita-dake,Matterhorn,Matterhorn,2019-05-01,2
-Clark's Grebe,Aechmophorus clarkii,Kita-dake,Matterhorn,Matterhorn,2019-06-01,0
-Clark's Grebe,Aechmophorus clarkii,Kita-dake,Matterhorn,Matterhorn,2019-07-01,2
-Clark's Grebe,Aechmophorus clarkii,Kita-dake,Matterhorn,Matterhorn,2019-08-01,0
-Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-04-01,38
-Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-05-01,37
+Eared Grebe,Podiceps nigricollis,Koryakskaya Sopka,Dom,Dom,2019-04-01,304
+Eared Grebe,Podiceps nigricollis,Koryakskaya Sopka,Dom,Dom,2019-05-01,329
+Eared Grebe,Podiceps nigricollis,Koryakskaya Sopka,Dom,Dom,2019-06-01,283
+Eared Grebe,Podiceps nigricollis,Koryakskaya Sopka,Dom,Dom,2019-07-01,271
+Eared Grebe,Podiceps nigricollis,Koryakskaya Sopka,Dom,Dom,2019-08-01,329
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Matterhorn,Matterhorn,2019-04-01,74
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Matterhorn,Matterhorn,2019-05-01,74
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Matterhorn,Matterhorn,2019-06-01,75
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Matterhorn,Matterhorn,2019-07-01,76
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Matterhorn,Matterhorn,2019-08-01,82
+Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-04-01,36
+Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-05-01,38
 Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-06-01,37
-Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-07-01,33
-Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-08-01,34
-Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-04-01,309
-Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-05-01,361
-Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-06-01,298
-Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-07-01,333
-Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-08-01,307
-Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-04-01,312
-Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-05-01,302
-Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-06-01,298
-Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-07-01,328
-Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-08-01,272
-Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-04-01,88
-Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-05-01,100
-Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-06-01,102
-Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-07-01,104
-Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-08-01,91
-Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-04-01,424
-Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-05-01,406
-Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-06-01,423
-Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-07-01,362
-Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-08-01,368
-Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-04-01,163
-Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-05-01,174
-Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-06-01,163
-Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-07-01,147
-Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-08-01,174
+Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-07-01,37
+Western Grebe,Aechmophorus occidentalis,Chumpe,Koshtan-Tau,Koshtan-Tau,2019-08-01,33
+Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-04-01,323
+Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-05-01,309
+Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-06-01,361
+Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-07-01,298
+Eared Grebe,Podiceps nigricollis,Helvellyn,Weisshorn,Weisshorn,2019-08-01,333
+Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-04-01,280
+Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-05-01,312
+Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-06-01,302
+Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-07-01,298
+Eared Grebe,Podiceps nigricollis,Rimpfischhorn,Dom,Dom,2019-08-01,328
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-04-01,89
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-05-01,88
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-06-01,100
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-07-01,102
+Western Grebe,Aechmophorus occidentalis,Kita-dake,Shkhara,Shkhara,2019-08-01,104
+Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-04-01,389
+Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-05-01,424
+Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-06-01,406
+Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-07-01,423
+Eared Grebe,Podiceps nigricollis,Khuiten Peak,Dent Blanche,Dent Blanche,2019-08-01,362
+Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-04-01,160
+Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-05-01,163
+Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-06-01,174
+Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-07-01,163
+Black-capped Petrel,Pterodroma hasitata,Rams Head,Shkhara,Shkhara,2019-08-01,147
 Black-capped Petrel,Pterodroma hasitata,Pen yr Ole Wen,Dom,Dom,2019-04-01,129
 Black-capped Petrel,Pterodroma hasitata,Pen yr Ole Wen,Dom,Dom,2019-05-01,115
 Black-capped Petrel,Pterodroma hasitata,Pen yr Ole Wen,Dom,Dom,2019-06-01,136
@@ -464,11 +464,11 @@ Red-necked Grebe,Podiceps grisegena,Hotaka-dake,Dent Blanche,Dent Blanche,2019-0
 Red-necked Grebe,Podiceps grisegena,Hotaka-dake,Dent Blanche,Dent Blanche,2019-06-01,209
 Red-necked Grebe,Podiceps grisegena,Hotaka-dake,Dent Blanche,Dent Blanche,2019-07-01,209
 Red-necked Grebe,Podiceps grisegena,Hotaka-dake,Dent Blanche,Dent Blanche,2019-08-01,238
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-04-01,0
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-05-01,2
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-06-01,1
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-07-01,0
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-08-01,1
+Western Grebe,Aechmophorus occidentalis,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-04-01,92
+Western Grebe,Aechmophorus occidentalis,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-05-01,105
+Western Grebe,Aechmophorus occidentalis,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-06-01,100
+Western Grebe,Aechmophorus occidentalis,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-07-01,105
+Western Grebe,Aechmophorus occidentalis,Castell y Gwynt,Dent Blanche,Dent Blanche,2019-08-01,98
 Eared Grebe,Podiceps nigricollis,Klyuchevskaya Sopka,Grandes Jorasses,Grandes Jorasses,2019-04-01,337
 Eared Grebe,Podiceps nigricollis,Klyuchevskaya Sopka,Grandes Jorasses,Grandes Jorasses,2019-05-01,300
 Eared Grebe,Podiceps nigricollis,Klyuchevskaya Sopka,Grandes Jorasses,Grandes Jorasses,2019-06-01,323
@@ -1219,21 +1219,21 @@ Red-necked Grebe,Podiceps grisegena,Tsast Uul,Dom,Dom,2019-05-01,181
 Red-necked Grebe,Podiceps grisegena,Tsast Uul,Dom,Dom,2019-06-01,160
 Red-necked Grebe,Podiceps grisegena,Tsast Uul,Dom,Dom,2019-07-01,168
 Red-necked Grebe,Podiceps grisegena,Tsast Uul,Dom,Dom,2019-08-01,167
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Rams Head North,Dom,Dom,2019-04-01,0
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Rams Head North,Dom,Dom,2019-05-01,2
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Rams Head North,Dom,Dom,2019-06-01,2
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Rams Head North,Dom,Dom,2019-07-01,2
-Yellow-nosed Albatross,Thalassarche chlororhynchos,Rams Head North,Dom,Dom,2019-08-01,2
-Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-04-01,428
-Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-05-01,410
-Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-06-01,411
-Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-07-01,429
-Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-08-01,366
-Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-04-01,83
+Western Grebe,Aechmophorus occidentalis,Rams Head North,Dom,Dom,2019-04-01,67
+Western Grebe,Aechmophorus occidentalis,Rams Head North,Dom,Dom,2019-05-01,77
+Western Grebe,Aechmophorus occidentalis,Rams Head North,Dom,Dom,2019-06-01,74
+Western Grebe,Aechmophorus occidentalis,Rams Head North,Dom,Dom,2019-07-01,73
+Western Grebe,Aechmophorus occidentalis,Rams Head North,Dom,Dom,2019-08-01,69
+Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-04-01,411
+Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-05-01,428
+Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-06-01,410
+Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-07-01,411
+Eared Grebe,Podiceps nigricollis,Mount Tagubud,Dent Blanche,Dent Blanche,2019-08-01,429
+Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-04-01,88
 Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-05-01,83
-Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-06-01,85
-Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-07-01,87
-Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-08-01,77
+Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-06-01,83
+Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-07-01,85
+Western Grebe,Aechmophorus occidentalis,Tsast Uul,Rimpfischhorn,Rimpfischhorn,2019-08-01,87
 Red-necked Grebe,Podiceps grisegena,Ben Macdui,Grand Combin,Grand Combin,2019-04-01,160
 Red-necked Grebe,Podiceps grisegena,Ben Macdui,Grand Combin,Grand Combin,2019-05-01,172
 Red-necked Grebe,Podiceps grisegena,Ben Macdui,Grand Combin,Grand Combin,2019-06-01,155
@@ -1259,96 +1259,96 @@ Black-capped Petrel,Pterodroma hasitata,Severo-Chuyskiy Khrebet High Point,Mont 
 Black-capped Petrel,Pterodroma hasitata,Severo-Chuyskiy Khrebet High Point,Mont Blanc,Mont Blanc,2019-06-01,170
 Black-capped Petrel,Pterodroma hasitata,Severo-Chuyskiy Khrebet High Point,Mont Blanc,Mont Blanc,2019-07-01,160
 Black-capped Petrel,Pterodroma hasitata,Severo-Chuyskiy Khrebet High Point,Mont Blanc,Mont Blanc,2019-08-01,159
-Black-footed Albatross,Phoebastria nigripes,Mount Singakalsa,Dom,Dom,2019-04-01,1
-Black-footed Albatross,Phoebastria nigripes,Mount Singakalsa,Dom,Dom,2019-05-01,2
-Black-footed Albatross,Phoebastria nigripes,Mount Singakalsa,Dom,Dom,2019-06-01,1
-Black-footed Albatross,Phoebastria nigripes,Mount Singakalsa,Dom,Dom,2019-07-01,0
-Black-footed Albatross,Phoebastria nigripes,Mount Singakalsa,Dom,Dom,2019-08-01,1
-Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-04-01,96
-Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-05-01,100
-Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-06-01,93
-Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-07-01,97
-Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-08-01,98
-Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-04-01,117
-Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-05-01,117
-Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-06-01,120
-Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-07-01,132
-Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-08-01,127
-Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-04-01,79
+Wandering Albatross,Diomedea exulans,Mount Singakalsa,Dom,Dom,2019-04-01,68
+Wandering Albatross,Diomedea exulans,Mount Singakalsa,Dom,Dom,2019-05-01,70
+Wandering Albatross,Diomedea exulans,Mount Singakalsa,Dom,Dom,2019-06-01,81
+Wandering Albatross,Diomedea exulans,Mount Singakalsa,Dom,Dom,2019-07-01,70
+Wandering Albatross,Diomedea exulans,Mount Singakalsa,Dom,Dom,2019-08-01,68
+Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-04-01,91
+Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-05-01,90
+Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-06-01,96
+Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-07-01,96
+Wandering Albatross,Diomedea exulans,Harhiraa Uul,Shkhara,Shkhara,2019-08-01,100
+Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-04-01,133
+Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-05-01,118
+Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-06-01,136
+Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-07-01,122
+Black-capped Petrel,Pterodroma hasitata,Chumpe,Dom,Dom,2019-08-01,123
+Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-04-01,70
 Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-05-01,70
-Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-06-01,65
-Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-07-01,68
-Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-08-01,66
+Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-06-01,73
+Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-07-01,69
+Red-necked Grebe,Podiceps grisegena,Yr Elen,Dykh-Tau,Dykh-Tau,2019-08-01,79
 Western Grebe,Aechmophorus occidentalis,Symonds Knott,Elbrus,Elbrus,2019-04-01,26
 Western Grebe,Aechmophorus occidentalis,Symonds Knott,Elbrus,Elbrus,2019-05-01,29
-Western Grebe,Aechmophorus occidentalis,Symonds Knott,Elbrus,Elbrus,2019-06-01,30
+Western Grebe,Aechmophorus occidentalis,Symonds Knott,Elbrus,Elbrus,2019-06-01,27
 Western Grebe,Aechmophorus occidentalis,Symonds Knott,Elbrus,Elbrus,2019-07-01,26
 Western Grebe,Aechmophorus occidentalis,Symonds Knott,Elbrus,Elbrus,2019-08-01,29
-Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-04-01,69
-Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-05-01,76
-Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-06-01,70
-Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-07-01,69
-Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-08-01,76
-Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-04-01,91
-Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-05-01,88
-Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-06-01,86
-Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-07-01,91
-Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-08-01,88
-Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-04-01,488
-Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-05-01,492
-Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-06-01,517
-Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-07-01,477
-Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-08-01,510
-Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-04-01,320
-Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-05-01,339
-Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-06-01,355
-Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-07-01,349
-Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-08-01,357
-Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-04-01,187
-Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-05-01,173
-Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-06-01,179
-Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-07-01,167
-Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-08-01,181
-Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-04-01,72
-Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-05-01,69
-Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-06-01,78
-Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-07-01,75
-Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-08-01,67
-Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-04-01,111
-Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-05-01,122
-Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-06-01,120
-Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-07-01,129
-Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-08-01,124
-Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-04-01,105
-Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-05-01,99
-Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-06-01,96
-Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-07-01,95
-Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-08-01,88
-Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-04-01,161
-Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-05-01,161
-Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-06-01,159
-Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-07-01,160
-Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-08-01,161
-Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-04-01,359
-Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-05-01,334
-Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-06-01,306
-Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-07-01,343
-Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-08-01,309
+Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-04-01,71
+Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-05-01,72
+Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-06-01,75
+Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-07-01,78
+Western Grebe,Aechmophorus occidentalis,Pen yr Ole Wen,Dom,Dom,2019-08-01,69
+Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-04-01,87
+Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-05-01,81
+Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-06-01,80
+Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-07-01,87
+Black-capped Petrel,Pterodroma hasitata,Huandoy,Finsteraarhorn,Finsteraarhorn,2019-08-01,91
+Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-04-01,467
+Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-05-01,490
+Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-06-01,524
+Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-07-01,488
+Eared Grebe,Podiceps nigricollis,Pen yr Ole Wen,Monte Rosa,Monte Rosa,2019-08-01,492
+Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-04-01,332
+Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-05-01,365
+Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-06-01,320
+Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-07-01,339
+Eared Grebe,Podiceps nigricollis,Mount Apo,Rimpfischhorn,Rimpfischhorn,2019-08-01,355
+Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-04-01,182
+Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-05-01,187
+Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-06-01,173
+Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-07-01,179
+Red-necked Grebe,Podiceps grisegena,Kukurtlu Dome,Grandes Jorasses,Grandes Jorasses,2019-08-01,167
+Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-04-01,68
+Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-05-01,72
+Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-06-01,69
+Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-07-01,78
+Red-necked Grebe,Podiceps grisegena,Little Twynam,Dykh-Tau,Dykh-Tau,2019-08-01,75
+Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-04-01,129
+Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-05-01,111
+Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-06-01,122
+Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-07-01,120
+Black-capped Petrel,Pterodroma hasitata,Koshtan-Tau,Grand Combin,Grand Combin,2019-08-01,129
+Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-04-01,100
+Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-05-01,105
+Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-06-01,99
+Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-07-01,96
+Western Grebe,Aechmophorus occidentalis,Hotaka-dake,Shkhara,Shkhara,2019-08-01,95
+Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-04-01,169
+Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-05-01,145
+Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-06-01,161
+Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-07-01,161
+Black-capped Petrel,Pterodroma hasitata,Vulkan Shiveluch,Mont Blanc,Mont Blanc,2019-08-01,159
+Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-04-01,313
+Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-05-01,346
+Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-06-01,359
+Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-07-01,334
+Eared Grebe,Podiceps nigricollis,Grand Combin,Weisshorn,Weisshorn,2019-08-01,306
 Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-04-01,89
-Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-05-01,88
-Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-06-01,76
-Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-07-01,79
-Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-08-01,80
-Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-04-01,210
-Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-05-01,239
+Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-05-01,87
+Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-06-01,89
+Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-07-01,88
+Western Grebe,Aechmophorus occidentalis,Klyuchevskaya Sopka,Rimpfischhorn,Rimpfischhorn,2019-08-01,76
+Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-04-01,202
+Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-05-01,203
 Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-06-01,210
-Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-07-01,198
-Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-08-01,203
-Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-04-01,292
-Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-05-01,311
-Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-06-01,303
-Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-07-01,319
-Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-08-01,321
+Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-07-01,239
+Red-necked Grebe,Podiceps grisegena,Huascaran,Dent Blanche,Dent Blanche,2019-08-01,210
+Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-04-01,270
+Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-05-01,275
+Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-06-01,292
+Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-07-01,311
+Eared Grebe,Podiceps nigricollis,Alpamayo,Dom,Dom,2019-08-01,303
 Black-capped Petrel,Pterodroma hasitata,Mount Singakalsa,Monte Rosa,Monte Rosa,2019-04-01,188
 Black-capped Petrel,Pterodroma hasitata,Mount Singakalsa,Monte Rosa,Monte Rosa,2019-05-01,197
 Black-capped Petrel,Pterodroma hasitata,Mount Singakalsa,Monte Rosa,Monte Rosa,2019-06-01,193

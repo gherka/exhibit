@@ -61,7 +61,8 @@ def date_parser(row_tuple):
 def read_with_date_parser(path):
     '''
     Adapt the read_csv function of Pandas to
-    detect and parse datetime columns.
+    detect and parse datetime columns based on
+    values ONLY in the first row.
     '''
 
     if path.suffix in ['.csv',]:
@@ -179,15 +180,6 @@ def generate_table_id():
     new_id = str(hex(int(datetime.datetime.now().timestamp()*10))[6:])
 
     return new_id
-
-def trim_probabilities_to_1(p):
-    '''
-    We need to make sure the probabilities sum up to exactly 1
-    '''
-    diff = sum(p) - 1
-    output = [x if x != max(p) else x - diff for x in p]
-
-    return output
 
 def exceeds_ct(spec_dict, col):
     '''

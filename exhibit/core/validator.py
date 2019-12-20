@@ -10,6 +10,7 @@ from operator import mul
 from functools import reduce
 import textwrap
 import math
+import sys
 
 # External library imports
 import yaml
@@ -27,18 +28,12 @@ class newValidator:
     start with "validate" will be run before data is generated.
     '''
 
-    def __init__(self, spec_path):
+    def __init__(self, spec_dict):
         '''
         Save the spec path as class attribute and validate
         the format of the spec
         '''
-
-        if spec_path.suffix == '.yml':
-            with open(spec_path) as f:
-                self.spec_dict = yaml.safe_load(f)
-        else:
-            raise TypeError('Specification is not in .yml format')
-
+        self.spec_dict = spec_dict
         self.ct = self.spec_dict['metadata']['category_threshold']
         
 
@@ -113,14 +108,18 @@ class newValidator:
             return False
         return True
 
-    def validate_probability_vector(self, spec_dict=None):
+    def validate_probability_vector(self, spec_dict=None, out=sys.stdout):
         '''
         Each columns's probability vector should always sum up to 1
-        However, due to floating point arithmetic, the round-trip can
-        produce values that are slighly below or slightly above 1
-        so we validate using math.isclose() function instead.
+        However, it is easier for users to increase the probability
+        of values individually without adjusting others, so we'll be
+        normalising the range to between 0 and 1. Show warning if it
+        happens, but allow the generation to continue.
         '''
-        fail_msg = f"VALIDATION FAIL: the probability vector of err_col is not 1"
+        warning_msg = textwrap.dedent("""
+        VALIDATION WARNING: The probability vector of %(err_col)s doesn't
+        sum up to 1 and will be rescaled.
+        """)
 
         if spec_dict is None:
             spec_dict = self.spec_dict
@@ -135,8 +134,8 @@ class newValidator:
                 prob_vector = v["probability_vector"]
 
                 if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
-                    print(fail_msg.replace("err_col", c))
-                    return False
+                    out.write(warning_msg % {"err_col" : c})
+                    return True
         return True
 
     def validate_weights_and_probability_vector_have_no_nulls(self, spec_dict=None):

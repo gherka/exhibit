@@ -15,9 +15,7 @@ import numpy as np
 import yaml
 
 # Exhibit import
-from exhibit.core.utils import (
-    package_dir, trim_probabilities_to_1,
-    get_attr_values, exceeds_ct)
+from exhibit.core.utils import package_dir, get_attr_values, exceeds_ct
 from exhibit.core.sql import query_anon_database
 
 def generate_derived_column(anon_df, calculation):
@@ -652,14 +650,14 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
         col_df = spec_dict['columns'][col_name]['original_values']
 
-        col_prob = col_df['probability_vector'].to_list()
+        col_prob = np.array(col_df['probability_vector'])
+
+        col_prob /= col_prob.sum()
+
         col_values = col_df[col_name].to_list()
 
-        #because we're ensuring no probability == 0, we have to trim
-        col_prob_clean = trim_probabilities_to_1(col_prob)
-
         original_series = pd.Series(
-            data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
+            data=np.random.choice(a=col_values, size=num_rows, p=col_prob),
             name=col_name)
 
         if paired_cols:
@@ -702,14 +700,15 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
     col_df = spec_dict['columns'][col_name]['original_values']
 
-    col_prob = col_df['probability_vector'].to_list()
+
+    col_prob = np.array(col_df['probability_vector'])
+
+    col_prob /= col_prob.sum()
     
     col_values = col_df[col_name].to_list()
 
-    col_prob_clean = trim_probabilities_to_1(col_prob)
-
     original_series = pd.Series(
-        data=np.random.choice(a=col_values, size=num_rows, p=col_prob_clean),
+        data=np.random.choice(a=col_values, size=num_rows, p=col_prob),
         name=col_name)
 
     if paired_cols:

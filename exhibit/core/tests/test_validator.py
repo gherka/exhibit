@@ -6,10 +6,12 @@ Unit and reference tests for the Exhibit package
 import unittest
 from unittest.mock import Mock
 from copy import deepcopy
+from io import StringIO
+import textwrap
 
 # Exhibit imports
 from exhibit.sample import sample
-from exhibit.core.formatters import parse_original_values_into_dataframe
+from exhibit.core.formatters import parse_original_values
 
 # Module under test
 from exhibit.core.validator import newValidator as tm
@@ -85,14 +87,26 @@ class validatorTests(unittest.TestCase):
         orig_vals[-1] = "Scotland| Scotland | 1 | 0.016"
         #parse the csv-like string into dataframe
         test_spec['columns']['HB2014Name']['original_values'] = (
-            parse_original_values_into_dataframe(orig_vals))
+            parse_original_values(orig_vals))
         
         validatorMock = Mock()
         validatorMock.ct = 25
+        
+        out = StringIO()
 
-        test_func = tm.validate_probability_vector(validatorMock, test_spec)
+        expected =  textwrap.dedent("""
+        VALIDATION WARNING: The probability vector of HB2014Name doesn't
+        sum up to 1 and will be rescaled.
+        """)
 
-        self.assertFalse(test_func)
+        #We're only capturing the warning print message
+        tm.validate_probability_vector(
+            self=validatorMock,
+            spec_dict=test_spec,
+            out=out
+            )
+
+        self.assertEquals(expected, out.getvalue())
 
     def test_linked_cols_shared_attributes(self):
         '''
@@ -188,7 +202,7 @@ class validatorTests(unittest.TestCase):
         orig_vals = test_dict['columns']['Board Code']['original_values']
 
         test_dict['columns']['Board Code']['original_values'] = (
-            parse_original_values_into_dataframe(orig_vals))
+            parse_original_values(orig_vals))
 
         self.assertFalse(tm.validate_weights_and_probability_vector_have_no_nulls(
             validatorMock, spec_dict=test_dict))
