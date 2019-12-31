@@ -7,8 +7,6 @@ and reading back user specification
 import pandas as pd
 from pandas.api.types import is_datetime64_dtype
 
-import pdb
-
 def format_header(dataframe, series_name, prefix=None):
     '''
     Function to pad the header values based on the length

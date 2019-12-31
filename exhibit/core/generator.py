@@ -333,7 +333,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
             base_col_prob /= base_col_prob.sum()
 
             idx = np.random.choice(base_col_uniques, num_rows, p=base_col_prob)
-            anon_list = [full_anon_df.iloc[x,:].values for x in idx]
+            anon_list = [full_anon_df.iloc[x, :].values for x in idx]
 
             linked_df = pd.DataFrame(columns=all_cols, data=anon_list)
       
@@ -729,6 +729,10 @@ def generate_complete_series(spec_dict, col_name):
 
     Function path depends on the column type.
 
+    For now, the function doesn't support columns where values are
+    stored in the DB because the number of their uniques exceeds
+    category threshold or if they are anonymised using a set from DB.
+
     '''
     col_attrs = spec_dict['columns'][col_name]
     
@@ -741,9 +745,23 @@ def generate_complete_series(spec_dict, col_name):
         )
         return pd.Series(result, name=col_name)
 
-    elif col_attrs['type'] == 'categorical':
+    # only other possibility is that the column is categorical:
+    
+    # if paired column, skip, and add pairs as part of parent column's processing
+    if str(col_attrs['original_values']) == 'See paired column':
+        return None
 
-        return pd.Series(col_attrs['original_values'], name=col_name)
+    # if column has paired columns, return a dataframe with it + paired cols
+    paired_cols = col_attrs['paired_columns']
+
+    if paired_cols:
+        paired_complete_df = col_attrs['original_values'].iloc[:, 0:len(paired_cols)+1]
+        paired_complete_df.rename(
+            columns=lambda x: x.replace('paired_', ''), inplace=True)
+
+        return paired_complete_df
+
+    return pd.Series(col_attrs['original_values'].iloc[:, 0], name=col_name)
 
 def generate_categorical_data(spec_dict, core_rows):
     '''
@@ -785,24 +803,26 @@ def generate_categorical_data(spec_dict, core_rows):
         col_names=True, 
         types=['categorical', 'date']) if not v]
 
-    skipped_cols = list(chain.from_iterable(nested_linked_cols)) + complete_cols
-
-    #4) GENERATE NON-LINKED DFs
-
-    list_of_cat_tuples = get_attr_values(
+    list_of_orig_val_tuples = get_attr_values(
         spec_dict,
         'original_values',
-        col_names=True, types='categorical')
-    
-    #original_values can either be a string or a Pandas DataFrame
-    for col in [
-        k for k, v in list_of_cat_tuples if
-        (k not in skipped_cols) and (str(v) != "See paired column")]:
+        col_names=True,
+        types='categorical')
+
+    paired = [k for k, v in list_of_orig_val_tuples if str(v) == "See paired column"]
+
+    skipped_cols = (
+        list(chain.from_iterable(nested_linked_cols)) +
+        complete_cols +
+        paired
+    )
+
+    #4) GENERATE NON-LINKED DFs
+    for col in [k for k, v in list_of_orig_val_tuples if k not in skipped_cols]:
         s = generate_anon_series(spec_dict, col, core_rows)
         generated_dfs.append(s)
 
     #5) CONCAT GENERATED DFs AND SERIES
-
     temp_anon_df = pd.concat(generated_dfs, axis=1)
 
     #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
@@ -811,7 +831,9 @@ def generate_categorical_data(spec_dict, core_rows):
     for col in spec_dict['columns']:
         if col in complete_cols:
             s = generate_complete_series(spec_dict, col)
-            complete_series.append(s)
+            #paired columns return None
+            if not s is None:
+                complete_series.append(s)
     
     #7) OUTER JOIN
     temp_anon_df['key'] = 1
