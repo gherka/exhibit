@@ -17,13 +17,32 @@ import yaml
 # Exhibit import
 from exhibit.core.utils import package_dir, get_attr_values, exceeds_ct
 from exhibit.core.sql import query_anon_database
+from exhibit.core._generator import LinkedDataGenerator
 
 def generate_derived_column(anon_df, calculation):
     '''
-    Columns passed in calculation can have spaces hence RE
-    Returns series
+    Use Pandas eval() function to try to parse user calculations.
+
+    Parameters
+    -----------
+    anon_df : pd.DataFrame
+        derived columns are calculated as the last step so the anonymised
+        dataframe is nearly complete
+    calculation : str
+        user-defined calculation to create a new column
+
+    Returns
+    --------
+    pd.Series
+    
+
+    Columns passed in calculation might have spaces which will trip up
+    eval() so we take an extra step to replace whitespace with _ in
+    both the calculation and the anon_df
+
     '''
     safe_calculation = re.sub(r'\b\s\b', r'_', calculation)
+
     output = (anon_df
         .rename(columns=lambda x: x.replace(" ", "_"))
         .eval(safe_calculation)
@@ -32,22 +51,51 @@ def generate_derived_column(anon_df, calculation):
 
 def generate_weights(df, cat_col, num_col):
     '''
-    Returns a list of weights in ascending order of values
-    Rounded to 3 digits.
+    Weights are generated for a each value in each categorical column
+    where 1 means 100% of the numerical column is allocated to that value
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        source dataframe
+    cat_col : str
+        categorical column
+    num_col : str
+        numerical column
+
+    Returns
+    -------
+    List of weights in ascending order of values rounded to 3 digits.
     '''
     
     weights = df.groupby([cat_col])[num_col].sum()
     weights['ws'] = np.maximum(0.001, round(weights / weights.sum(), 3))
     
     output = weights['ws'].sort_index(kind="mergesort").to_list()
-    
+        
     return output
 
 def apply_dispersion(value, dispersion_pct):
     '''
-    Simply take a random positive value from a range
-    created by +- the dispersion value (which is 
-    expressed as a percentage)
+    Create an interval around value using dispersion_pct and return
+    a random value from the interval
+
+    Parameters
+    ----------
+    value : number
+        can be any value that we need to add noise to
+    dispersion_pct : decimal
+        number used to create the "noisy" interval around value
+
+    Returns
+    -------
+    Noisy value
+
+    If dispersion_pct is set to 0 then original value is returned
+    For now, expects data with positive values. If source data is expected
+    to have negative values that you need to anonymise, we'll need to
+    add a flag to the spec generation
+
     '''
 
     if value == np.inf:
@@ -60,11 +108,11 @@ def apply_dispersion(value, dispersion_pct):
     #to avoid negative rmin, include max(0, n) check
     rmin, rmax = (max(0, (value - d)), (value + d))
 
-    #if after applying jitter, the values are still the same, make
+    #if after applying dispersion, the values are still close, make
     #further adjustments: the minimum range is at least 2, preferably
     #on each side of the range, but if it results in a negative rmin,
     #just extend rmax by 2.
-    if (rmin-rmax) == 0:
+    if (rmax - rmin) < 2:
 
         if (rmin - 1) < 0:
             rmax = rmax + 2
@@ -75,14 +123,52 @@ def apply_dispersion(value, dispersion_pct):
     #the upper limit of randint is exclusive, so we extend it by 1
     return np.random.randint(rmin, rmax + 1)
 
+def target_columns_for_weights_table(spec):
+    '''
+    Helper function to determine which columns should be used
+    in the weights table.
+
+    We want to include columns whose values we'll be looking up
+    when determining how much they contribute to the total of
+    each numerical column (weights). This means we need to remove
+    "parent" linked columns and only use the "youngest" child.
+
+    Also, time columns are excluded as we assume they are always
+    "complete" so have no weights (CHANGE?).
+
+    Parameters
+    ----------
+    spec : dict
+        original user specification
+    
+    Returns
+    -------
+    A set of column names
+
+    '''
+    cat_cols = set(spec['metadata']['categorical_columns']) #includes linked
+    linked_cols = spec['constraints']['linked_columns']
+    
+    all_linked_cols = set(chain.from_iterable([x[1] for x in linked_cols]))
+    last_linked_cols = {x[1][-1] for x in linked_cols}
+    
+    target_cols = cat_cols - all_linked_cols | last_linked_cols
+
+    return target_cols
+
 def generate_weights_table(spec):
     '''
-    Be wary of multiple time columns!
+    Lookup table for weights
+
+    Parameters
+    ----------
+    spec : dict
+        original user spec
     
-    We only want to generate weigths for the LAST
-    aka most granular column among the linked columns
-    to avoid applying the weights twice to the same 
-    "cut" of the data.
+    Returns
+    -------
+    dictionary where index levels are keys and
+    the weight column is the lookup value
 
     Weights and probabilities should be at least 0.001;
     even if the original, non-anonymised data is 100% 
@@ -95,37 +181,23 @@ def generate_weights_table(spec):
         set(spec['metadata']['numerical_columns']) -
         set(spec['derived_columns'])
     )
-    cat_cols = set(spec['metadata']['categorical_columns'])
-    time_cols = set(spec['metadata']['time_columns'])
-    
-    all_linked_cols = list(
-        chain.from_iterable([x[1] for x in spec['constraints']['linked_columns']])
-    )
-    last_linked_cols = [x[1][-1] for x in spec['constraints']['linked_columns']]
-    
-    
-    target_cols = list(cat_cols - time_cols)
-        
-    #iterate over a new list
-    for col in list(target_cols):
-        #if column is linked, but not the most granular, remove it
-        if (col in all_linked_cols) & (col not in last_linked_cols):
-            target_cols.remove(col)
+
+    target_cols = target_columns_for_weights_table(spec)
        
     for cat_col in target_cols:
 
         orig_vals = spec['columns'][cat_col]['original_values']
 
+        #skip paired columns (as weights can come from any ONE of paired cols)
         if isinstance(orig_vals, str) and orig_vals == 'See paired column':
             continue
 
         if exceeds_ct(spec, cat_col):
-            
-            #it's a bit weird, need to understand the flows better
+
             try:
                 ws_df = spec['columns'][cat_col]['aliases']
             except KeyError:
-
+                #if aliases don't exist, look up values in anon.db
                 safe_col_name = cat_col.replace(" ", "$")
 
                 if spec['metadata']['id'] == 'sample':
@@ -156,28 +228,44 @@ def generate_weights_table(spec):
     output_df = pd.DataFrame(tuple_list,
                              columns=['num_col', 'cat_col', 'cat_value', 'weight'])
 
-    #sort index for performance gains
-    result = output_df.set_index(['num_col', 'cat_col', 'cat_value']).sort_index()
-
+    #move the indexed dataframe to dict for perfomance
+    result = (
+        output_df
+            .set_index(['num_col', 'cat_col', 'cat_value'])
+            .to_dict(orient="index")
+    )
+    
     return result
 
 def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor):
     '''
-    Super inefficient, non-vectorised function
-    
-    Given a dataframe row with pre-generated anon categorical values:
-    
-    - for each categorical alue in row, try to find an entry in the weights table
-    - apply weights to the sum of the cont_col to get a "center value"
-      and divide by the number of of "complete" values generated for
-      every "other", probabilistically drawn, value.
-    - applu jitter or dispersion using a separate apply call
+    Generate a continuous value, one dataframe row at a time
+
+    Parameters
+    ----------
+    row : dataframe row passed from df.apply(axis=1)
+        currently function isn't vectorised so rows are processed one at a time
+    weights_table : dict
+        dict of the form {(num_col, cat_col, cat_value)}:{weight: VALUE}
+    num_col : str
+        numerical column for which to generate values
+    num_col_sum : number
+        target sum of the numerical column; reduced by weights of each column in row
+    complete_factor: number
+        certain column, like time, are excluded from weight generation; they are
+        repeated for all generated values (each combination of generated values
+        will have all time periods, for example). So the total sum of numerical
+        column is reduced accordingly
+
+    Returns
+    -------
+    Rounded value
 
     '''            
     for cat_col, val in row.iteritems():
 
         try:
-            weight = weights_table.loc[num_col, cat_col, val]['weight']
+            weight = weights_table[(num_col, cat_col, val)]['weight']
             num_col_sum = num_col_sum * weight
         except KeyError:
             continue           
@@ -231,11 +319,27 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
         base_col_pos = 0
         base_col_uniform = True
         base_col_unique_count = spec_dict['columns'][base_col]['uniques']
-    
 
-    #----------------------
-    #THREE RANDOM SCENARIOS
-    #----------------------
+    # gen = LinkedDataGenerator(spec_dict, linked_group, num_rows)
+
+    # if base_col_uniform:
+    #     linked_df = gen.scenario_1()
+    #     linked_df = gen.add_paired_columns(linked_df)
+    #     return linked_df
+
+    # elif base_col_pos != 0:
+    #     linked_df = gen.scenario_2()
+    #     linked_df = gen.add_paired_columns(linked_df)
+    #     return linked_df
+
+    # elif base_col_pos == 0:
+    #     linked_df = gen.scenario_3()
+    #     linked_df = gen.add_paired_columns(linked_df)
+    #     return linked_df
+
+    #--------------------------
+    #THREE NON-RANDOM SCENARIOS
+    #--------------------------
 
     if anon_set != "random":
         table_name = anon_set
@@ -365,9 +469,9 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
         return linked_df
 
-    #--------------------------
-    #THREE NON-RANDOM SCENARIOS
-    #--------------------------
+    #----------------------
+    #THREE RANDOM SCENARIOS
+    #----------------------
 
     #sanitise the column name in case it has spaces in it
     base_col_sql = base_col.replace(" ", "$")
