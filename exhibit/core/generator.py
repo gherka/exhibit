@@ -3,8 +3,6 @@ Various functions to generate anonymised data
 '''
 
 # Standard library imports
-import sqlite3
-from contextlib import closing
 from itertools import chain
 import textwrap
 import re
@@ -15,7 +13,7 @@ import numpy as np
 import yaml
 
 # Exhibit import
-from exhibit.core.utils import package_dir, get_attr_values, exceeds_ct
+from exhibit.core.utils import get_attr_values, exceeds_ct
 from exhibit.core.sql import query_anon_database
 from exhibit.core.linkage import LinkedDataGenerator
 

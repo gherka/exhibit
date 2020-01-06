@@ -212,7 +212,6 @@ def find_linked_columns(df):
 
     return linked
 
-
 def create_paired_columns_lookup(spec_dict, base_column):
     '''
     Paired columns can either be in SQL or in original_values linked to base_column
@@ -265,13 +264,18 @@ def create_paired_columns_lookup(spec_dict, base_column):
     return None
 
 class LinkedDataGenerator:
+    '''
+    Generating data for linked columns is more challenging because
+    columns in the same linked group can follow different rules,
+    depending on the number of unique values and their anonymising
+    pattern.
+    '''
 
     def __init__(self, spec_dict, linked_group, num_rows):
 
-        self.linked_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
-        self.ct = spec_dict['metadata']['category_threshold']
-        self.anon_set = spec_dict['columns'][self.linked_cols[0]]['anonymising_set']
         self.spec_dict = spec_dict
+        self.linked_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
+        self.anon_set = spec_dict['columns'][self.linked_cols[0]]['anonymising_set']
 
         self.num_rows = num_rows
         self.base_col = None
@@ -282,27 +286,29 @@ class LinkedDataGenerator:
         self.sql_rows = None
         self.linked_df = None
 
-        #find the first available "base_col", starting from the end of the list
+        #find the FIRST "base_col" with weights, starting from the end of the list
+        #weights and probabilities are only there for columns whose unique count <= ct
+        ct = spec_dict['metadata']['category_threshold']
+
         for i, col_name in enumerate(reversed(self.linked_cols)):
-            if spec_dict['columns'][col_name]['uniques'] <= self.ct:
-                self.base_col = list(reversed(self.linked_cols))[i]
+            if spec_dict['columns'][col_name]['uniques'] <= ct:
+                self.base_col = col_name
                 self.base_col_pos = i
                 self.base_col_unique_count = spec_dict['columns'][col_name]['uniques']
-                if self.base_col:
-                    break
+                break
     
-        #if all columns in the linked group have more unique values than allowed,
-        #just generate uniform distribution from the most granular and do upstream lookup
+        #if ALL columns in the linked group have more unique values than allowed,
+        #generate uniform distribution from the most granular and do upstream lookup
         if not self.base_col:
             self.base_col = list(reversed(self.linked_cols))[0]
             self.base_col_pos = 0
-            self.base_col_uniform = True
+            self.all_cols_uniform = True
             self.base_col_unique_count = spec_dict['columns'][self.base_col]['uniques']
         
         #Generator can have two flavours: random (using existing values) and aliased
         if self.anon_set != "random":
             self.table_name = self.anon_set
-            #OK to limit the size ot base col uniques because it's the most granular
+            #OK to limit the size of base col uniques because it's the most granular
             self.anon_df = query_anon_database(self.table_name, size=self.base_col_unique_count)
             #rename the first column of the anon_set df to be same as original
             self.anon_df.rename(columns={self.anon_df.columns[0]:self.base_col}, inplace=True)
@@ -334,23 +340,50 @@ class LinkedDataGenerator:
 
     def pick_scenario(self):
         '''
-        Code path resolver
+        Code path resolver for linked data generation.
 
-        Because of multiple return points, it's cleaner
-        to add paired columns in this portion of the code
-        rather than in the main scenario run
+        Currently, there are three scenarios (each with two flavours: random & aliased)
+          - values in all linked columns are drawn from uniform distribution
+                This happens when the number of unique values in each column
+                exceeds the user-specified threshold. In this case, the values
+                are stored in anon.db and the user has no way to specify bespoke
+                probabilities.
+
+          - there ARE user-defined probabilities for ONE of the linked columns,
+            but it's not the most granular column in the group, like NHS Board
+            in the NHS Board + Hospital linked group.
+                For this scenario, we need to respect the probabilities of the 
+                given column and only draw from uniform distribution AFTER we
+                generated the probability-driven values of the base column.
+        
+          - The most granular column in the group has user-defined probabilities,
+            like Hospital in the NHS Board + Hospital linked group.
+                This scenario is the easiest one because once we generate values
+                for the base column, the rest of the linked columns can be derived
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        pd.DataFrame with linked data
+
+        Because of multiple return points inside each scenario,
+        it's cleaner to add paired columns in this portion of
+        the code.
         '''
         if self.all_cols_uniform:
             linked_df = self.scenario_1()
             linked_df = self.add_paired_columns(linked_df)
             return linked_df
 
-        elif self.base_col_pos != 0:
+        if self.base_col_pos != 0:
             linked_df = self.scenario_2()
             linked_df = self.add_paired_columns(linked_df)
             return linked_df
 
-        elif self.base_col_pos == 0:
+        if self.base_col_pos == 0:
             linked_df = self.scenario_3()
             linked_df = self.add_paired_columns(linked_df)
             return linked_df
@@ -358,13 +391,13 @@ class LinkedDataGenerator:
 
     def scenario_1(self):
         '''
-        all_cols_uniform = True
+        Values in all linked columns are drawn from a uniform distribution
         '''
 
         if self.anon_set != "random":
 
             idx = np.random.choice(len(self.anon_df), self.num_rows)
-            #to_records returns numpy records which look like tuples, but aren't
+
             anon_list = [
                 list(self.anon_df.itertuples(index=False, name=None))[x] for x in idx
                 ]
@@ -382,7 +415,8 @@ class LinkedDataGenerator:
 
     def scenario_2(self):
         '''
-        base_col has original_values, but it isn't the most granular column
+        There ARE user-defined probabilities for ONE of the linked columns,
+        but it's not the most granular column in the group.
         '''
 
         if self.anon_set != "random":
@@ -462,7 +496,7 @@ class LinkedDataGenerator:
         '''
         base_col has original_values, AND it's the most granular column
         '''
-        
+
         if self.anon_set != "random":
 
             #grab the full anonymising dataset
@@ -510,29 +544,18 @@ class LinkedDataGenerator:
         if self.anon_set != "random":
 
             for c in self.linked_cols:
-
-                if self.spec_dict['columns'][c]['anonymising_set'] != "random":
-                    #just generate a DF with duplicate paired columns
-                    for pair in self.spec_dict['columns'][c]['paired_columns']:
-                        
-                        #overwrite linked_df
-                        linked_df = pd.concat(
-                            [linked_df, pd.Series(linked_df[c], name=pair)],
-                            axis=1
-                        )
-
-                    continue
-            
-            paired_columns_lookup = create_paired_columns_lookup(self.spec_dict, c)
-
-            if not paired_columns_lookup is None:
-                linked_df = pd.merge(
-                    left=linked_df,
-                    right=paired_columns_lookup,
-                    how="left",
-                    on=c)
+                
+                #just generate a DF with duplicate paired columns
+                for pair in self.spec_dict['columns'][c]['paired_columns']:
+                    
+                    #overwrite linked_df
+                    linked_df = pd.concat(
+                        [linked_df, pd.Series(linked_df[c], name=pair)],
+                        axis=1
+                    )
 
             return linked_df
+
         #if anonimysing set IS random
         for c in self.linked_cols:
 

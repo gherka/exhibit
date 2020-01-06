@@ -1,0 +1,1501 @@
+hb_name,loc_name,hb_code,loc_code,age,measure,sex,quarter_date,avlos,los,stays
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,Elective Inpatients,Female,2018-04-01,1,152,62
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,Elective Inpatients,Female,2018-07-01,0,166,69
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,Elective Inpatients,Female,2018-10-01,1,159,69
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,40-49,All Daycases,Male,2018-04-01,2,2,254
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,40-49,All Daycases,Male,2018-07-01,0,3,227
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,40-49,All Daycases,Male,2018-10-01,0,3,226
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,Elective Inpatients,Female,2018-04-01,1,91,28
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,Elective Inpatients,Female,2018-07-01,3,97,27
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,Elective Inpatients,Female,2018-10-01,2,98,30
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Emergency Inpatients,Female,2018-04-01,9,8531,868
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Emergency Inpatients,Female,2018-07-01,9,9831,819
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Emergency Inpatients,Female,2018-10-01,11,9852,764
+Himalayas,Mount Everest,Himalayas,Mount Everest,30-39,All Daycases,Male,2018-04-01,1,6,1052
+Himalayas,Mount Everest,Himalayas,Mount Everest,30-39,All Daycases,Male,2018-07-01,2,5,1059
+Himalayas,Mount Everest,Himalayas,Mount Everest,30-39,All Daycases,Male,2018-10-01,2,5,1153
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,90+,Emergency Inpatients,Male,2018-04-01,4,110,19
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,90+,Emergency Inpatients,Male,2018-07-01,5,114,19
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,90+,Emergency Inpatients,Male,2018-10-01,4,111,18
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,80-89,Elective Inpatients,Male,2018-04-01,4,630,89
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,80-89,Elective Inpatients,Male,2018-07-01,6,624,89
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,80-89,Elective Inpatients,Male,2018-10-01,6,665,90
+Andes,Carnicero,Andes,Carnicero,0-9,All Daycases,Male,2018-04-01,0,0,36
+Andes,Carnicero,Andes,Carnicero,0-9,All Daycases,Male,2018-07-01,2,1,32
+Andes,Carnicero,Andes,Carnicero,0-9,All Daycases,Male,2018-10-01,2,2,35
+Andes,El Toro,Andes,El Toro,20-29,All Daycases,Male,2018-04-01,1,1,154
+Andes,El Toro,Andes,El Toro,20-29,All Daycases,Male,2018-07-01,0,1,143
+Andes,El Toro,Andes,El Toro,20-29,All Daycases,Male,2018-10-01,0,1,136
+Caucasus,Gistola,Caucasus,Gistola,40-49,Emergency Inpatients,Male,2018-04-01,5,2263,473
+Caucasus,Gistola,Caucasus,Gistola,40-49,Emergency Inpatients,Male,2018-07-01,6,2300,511
+Caucasus,Gistola,Caucasus,Gistola,40-49,Emergency Inpatients,Male,2018-10-01,5,2314,488
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,10-19,Elective Inpatients,Female,2018-04-01,1,1,0
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,10-19,Elective Inpatients,Female,2018-07-01,1,2,0
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,10-19,Elective Inpatients,Female,2018-10-01,2,3,2
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,30-39,All Daycases,Female,2018-04-01,1,2,23
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,30-39,All Daycases,Female,2018-07-01,0,1,22
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,30-39,All Daycases,Female,2018-10-01,2,0,24
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,All Daycases,Female,2018-04-01,1,1,330
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,All Daycases,Female,2018-07-01,1,2,315
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,All Daycases,Female,2018-10-01,1,1,303
+Andes,Coropuna,Andes,Coropuna,60-69,Elective Inpatients,Male,2018-04-01,2,23,24
+Andes,Coropuna,Andes,Coropuna,60-69,Elective Inpatients,Male,2018-07-01,2,24,23
+Andes,Coropuna,Andes,Coropuna,60-69,Elective Inpatients,Male,2018-10-01,2,24,24
+Alps,Matterhorn,Alps,Matterhorn,60-69,All Daycases,Male,2018-04-01,0,2,189
+Alps,Matterhorn,Alps,Matterhorn,60-69,All Daycases,Male,2018-07-01,2,0,180
+Alps,Matterhorn,Alps,Matterhorn,60-69,All Daycases,Male,2018-10-01,0,1,171
+Alps,Dent Blanche,Alps,Dent Blanche,70-79,Elective Inpatients,Female,2018-04-01,2,44,20
+Alps,Dent Blanche,Alps,Dent Blanche,70-79,Elective Inpatients,Female,2018-07-01,2,38,20
+Alps,Dent Blanche,Alps,Dent Blanche,70-79,Elective Inpatients,Female,2018-10-01,2,40,19
+Alps,Mont Blanc,Alps,Mont Blanc,20-29,Elective Inpatients,Male,2018-04-01,0,90,46
+Alps,Mont Blanc,Alps,Mont Blanc,20-29,Elective Inpatients,Male,2018-07-01,1,83,53
+Alps,Mont Blanc,Alps,Mont Blanc,20-29,Elective Inpatients,Male,2018-10-01,0,90,46
+Andes,Alpamayo,Andes,Alpamayo,30-39,All Daycases,Male,2018-04-01,2,0,143
+Andes,Alpamayo,Andes,Alpamayo,30-39,All Daycases,Male,2018-07-01,0,2,156
+Andes,Alpamayo,Andes,Alpamayo,30-39,All Daycases,Male,2018-10-01,0,2,144
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,60-69,Elective Inpatients,Female,2018-04-01,2,27,65
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,60-69,Elective Inpatients,Female,2018-07-01,1,28,61
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,60-69,Elective Inpatients,Female,2018-10-01,0,26,57
+Andes,Carnicero,Andes,Carnicero,80-89,Emergency Inpatients,Male,2018-04-01,10,3505,336
+Andes,Carnicero,Andes,Carnicero,80-89,Emergency Inpatients,Male,2018-07-01,8,3341,297
+Andes,Carnicero,Andes,Carnicero,80-89,Emergency Inpatients,Male,2018-10-01,8,3263,327
+Andes,El Toro,Andes,El Toro,50-59,All Daycases,Male,2018-04-01,2,2,379
+Andes,El Toro,Andes,El Toro,50-59,All Daycases,Male,2018-07-01,0,0,377
+Andes,El Toro,Andes,El Toro,50-59,All Daycases,Male,2018-10-01,2,1,390
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,30-39,Elective Inpatients,Male,2018-04-01,0,6,3
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,30-39,Elective Inpatients,Male,2018-07-01,1,4,3
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,30-39,Elective Inpatients,Male,2018-10-01,2,5,3
+Himalayas,Lhotse,Himalayas,Lhotse,0-9,Elective Inpatients,Male,2018-04-01,1,23,30
+Himalayas,Lhotse,Himalayas,Lhotse,0-9,Elective Inpatients,Male,2018-07-01,0,25,29
+Himalayas,Lhotse,Himalayas,Lhotse,0-9,Elective Inpatients,Male,2018-10-01,1,24,31
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,70-79,Emergency Inpatients,Male,2018-04-01,2,341,237
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,70-79,Emergency Inpatients,Male,2018-07-01,0,290,240
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,70-79,Emergency Inpatients,Male,2018-10-01,2,345,280
+Alps,Grand Combin,Alps,Grand Combin,0-9,Emergency Inpatients,Male,2018-04-01,0,25,14
+Alps,Grand Combin,Alps,Grand Combin,0-9,Emergency Inpatients,Male,2018-07-01,1,28,14
+Alps,Grand Combin,Alps,Grand Combin,0-9,Emergency Inpatients,Male,2018-10-01,1,24,14
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,40-49,Emergency Inpatients,Male,2018-04-01,7,3230,422
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,40-49,Emergency Inpatients,Male,2018-07-01,7,3268,432
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,40-49,Emergency Inpatients,Male,2018-10-01,5,2818,475
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,50-59,Elective Inpatients,Female,2018-04-01,3,172,54
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,50-59,Elective Inpatients,Female,2018-07-01,3,196,63
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,50-59,Elective Inpatients,Female,2018-10-01,2,186,60
+Andes,El Misti,Andes,El Misti,90+,All Daycases,Male,2018-04-01,2,1,51
+Andes,El Misti,Andes,El Misti,90+,All Daycases,Male,2018-07-01,2,3,58
+Andes,El Misti,Andes,El Misti,90+,All Daycases,Male,2018-10-01,0,2,51
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,10-19,Emergency Inpatients,Female,2018-04-01,1,14,9
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,10-19,Emergency Inpatients,Female,2018-07-01,1,13,11
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,10-19,Emergency Inpatients,Female,2018-10-01,0,13,9
+Himalayas,Mount Everest,Himalayas,Mount Everest,40-49,All Daycases,Male,2018-04-01,1,8,1619
+Himalayas,Mount Everest,Himalayas,Mount Everest,40-49,All Daycases,Male,2018-07-01,0,8,1574
+Himalayas,Mount Everest,Himalayas,Mount Everest,40-49,All Daycases,Male,2018-10-01,0,8,1378
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,0-9,Elective Inpatients,Female,2018-04-01,2,2,1
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,0-9,Elective Inpatients,Female,2018-07-01,2,0,2
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,0-9,Elective Inpatients,Female,2018-10-01,0,1,0
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,30-39,All Daycases,Male,2018-04-01,2,1,107
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,30-39,All Daycases,Male,2018-07-01,2,1,118
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,30-39,All Daycases,Male,2018-10-01,1,2,111
+Himalayas,Lhotse,Himalayas,Lhotse,60-69,Emergency Inpatients,Male,2018-04-01,6,6795,1315
+Himalayas,Lhotse,Himalayas,Lhotse,60-69,Emergency Inpatients,Male,2018-07-01,7,6755,1298
+Himalayas,Lhotse,Himalayas,Lhotse,60-69,Emergency Inpatients,Male,2018-10-01,5,6172,1337
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,30-39,Emergency Inpatients,Female,2018-04-01,0,50,131
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,30-39,Emergency Inpatients,Female,2018-07-01,2,46,134
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,30-39,Emergency Inpatients,Female,2018-10-01,2,55,132
+Alps,Mont Blanc,Alps,Mont Blanc,20-29,Emergency Inpatients,Female,2018-04-01,3,865,237
+Alps,Mont Blanc,Alps,Mont Blanc,20-29,Emergency Inpatients,Female,2018-07-01,4,753,218
+Alps,Mont Blanc,Alps,Mont Blanc,20-29,Emergency Inpatients,Female,2018-10-01,4,839,201
+Himalayas,Shishapangma,Himalayas,Shishapangma,10-19,Elective Inpatients,Male,2018-04-01,0,6,5
+Himalayas,Shishapangma,Himalayas,Shishapangma,10-19,Elective Inpatients,Male,2018-07-01,2,7,5
+Himalayas,Shishapangma,Himalayas,Shishapangma,10-19,Elective Inpatients,Male,2018-10-01,1,6,6
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,All Daycases,Male,2018-04-01,0,1,88
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,All Daycases,Male,2018-07-01,2,0,95
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,All Daycases,Male,2018-10-01,2,0,103
+Himalayas,Shishapangma,Himalayas,Shishapangma,70-79,All Daycases,Male,2018-04-01,1,1,116
+Himalayas,Shishapangma,Himalayas,Shishapangma,70-79,All Daycases,Male,2018-07-01,2,2,124
+Himalayas,Shishapangma,Himalayas,Shishapangma,70-79,All Daycases,Male,2018-10-01,0,1,131
+Andes,El Misti,Andes,El Misti,60-69,All Daycases,Male,2018-04-01,0,3,439
+Andes,El Misti,Andes,El Misti,60-69,All Daycases,Male,2018-07-01,0,5,433
+Andes,El Misti,Andes,El Misti,60-69,All Daycases,Male,2018-10-01,0,5,395
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,90+,Elective Inpatients,Female,2018-04-01,7,183,14
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,90+,Elective Inpatients,Female,2018-07-01,5,157,12
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,90+,Elective Inpatients,Female,2018-10-01,6,172,12
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,0-9,All Daycases,Female,2018-04-01,2,0,49
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,0-9,All Daycases,Female,2018-07-01,2,2,47
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,0-9,All Daycases,Female,2018-10-01,2,1,44
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,60-69,All Daycases,Male,2018-04-01,0,3,420
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,60-69,All Daycases,Male,2018-07-01,2,4,397
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,60-69,All Daycases,Male,2018-10-01,0,2,447
+Saint Elias,King Peak,Saint Elias,King Peak,60-69,Elective Inpatients,Female,2018-04-01,2,345,102
+Saint Elias,King Peak,Saint Elias,King Peak,60-69,Elective Inpatients,Female,2018-07-01,4,407,101
+Saint Elias,King Peak,Saint Elias,King Peak,60-69,Elective Inpatients,Female,2018-10-01,4,415,107
+Alps,Weisshorn,Alps,Weisshorn,60-69,Emergency Inpatients,Female,2018-04-01,4,214,40
+Alps,Weisshorn,Alps,Weisshorn,60-69,Emergency Inpatients,Female,2018-07-01,6,223,34
+Alps,Weisshorn,Alps,Weisshorn,60-69,Emergency Inpatients,Female,2018-10-01,6,224,38
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,90+,All Daycases,Female,2018-04-01,0,1,43
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,90+,All Daycases,Female,2018-07-01,0,2,47
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,90+,All Daycases,Female,2018-10-01,2,3,47
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,0-9,Elective Inpatients,Female,2018-04-01,0,10,10
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,0-9,Elective Inpatients,Female,2018-07-01,0,10,8
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,0-9,Elective Inpatients,Female,2018-10-01,1,10,10
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,70-79,Elective Inpatients,Male,2018-04-01,5,1031,198
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,70-79,Elective Inpatients,Male,2018-07-01,5,956,175
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,70-79,Elective Inpatients,Male,2018-10-01,5,934,185
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,80-89,Emergency Inpatients,Male,2018-04-01,13,3751,178
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,80-89,Emergency Inpatients,Male,2018-07-01,13,3423,184
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,80-89,Emergency Inpatients,Male,2018-10-01,11,3245,180
+Caucasus,Pushkin,Caucasus,Pushkin,50-59,Elective Inpatients,Female,2018-04-01,3,180,77
+Caucasus,Pushkin,Caucasus,Pushkin,50-59,Elective Inpatients,Female,2018-07-01,3,175,82
+Caucasus,Pushkin,Caucasus,Pushkin,50-59,Elective Inpatients,Female,2018-10-01,2,181,69
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Emergency Inpatients,Male,2018-04-01,2,744,158
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Emergency Inpatients,Male,2018-07-01,4,806,143
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Emergency Inpatients,Male,2018-10-01,4,742,148
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,All Daycases,Male,2018-04-01,2,1,333
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,All Daycases,Male,2018-07-01,2,2,286
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,All Daycases,Male,2018-10-01,0,1,276
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,10-19,All Daycases,Male,2018-04-01,1,1,63
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,10-19,All Daycases,Male,2018-07-01,1,1,62
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,10-19,All Daycases,Male,2018-10-01,2,0,63
+Andes,Huandoy,Andes,Huandoy,40-49,Elective Inpatients,Male,2018-04-01,3,146,73
+Andes,Huandoy,Andes,Huandoy,40-49,Elective Inpatients,Male,2018-07-01,3,141,84
+Andes,Huandoy,Andes,Huandoy,40-49,Elective Inpatients,Male,2018-10-01,3,139,80
+Alps,Dent Blanche,Alps,Dent Blanche,50-59,All Daycases,Female,2018-04-01,1,0,46
+Alps,Dent Blanche,Alps,Dent Blanche,50-59,All Daycases,Female,2018-07-01,1,1,48
+Alps,Dent Blanche,Alps,Dent Blanche,50-59,All Daycases,Female,2018-10-01,0,2,52
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,70-79,Emergency Inpatients,Female,2018-04-01,10,8599,737
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,70-79,Emergency Inpatients,Female,2018-07-01,10,9684,776
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,70-79,Emergency Inpatients,Female,2018-10-01,11,10044,757
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,10-19,All Daycases,Male,2018-04-01,0,0,39
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,10-19,All Daycases,Male,2018-07-01,1,2,45
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,10-19,All Daycases,Male,2018-10-01,1,2,43
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,20-29,All Daycases,Female,2018-04-01,0,2,36
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,20-29,All Daycases,Female,2018-07-01,2,0,34
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,20-29,All Daycases,Female,2018-10-01,1,0,33
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,Emergency Inpatients,Female,2018-04-01,4,80,18
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,Emergency Inpatients,Female,2018-07-01,3,79,19
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,Emergency Inpatients,Female,2018-10-01,4,82,17
+Himalayas,Lhotse,Himalayas,Lhotse,60-69,Emergency Inpatients,Male,2018-04-01,6,6758,1423
+Himalayas,Lhotse,Himalayas,Lhotse,60-69,Emergency Inpatients,Male,2018-07-01,6,7006,1471
+Himalayas,Lhotse,Himalayas,Lhotse,60-69,Emergency Inpatients,Male,2018-10-01,5,6922,1290
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Elective Inpatients,Male,2018-04-01,6,265,39
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Elective Inpatients,Male,2018-07-01,6,275,42
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Elective Inpatients,Male,2018-10-01,4,293,36
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,60-69,Emergency Inpatients,Male,2018-04-01,7,3562,388
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,60-69,Emergency Inpatients,Male,2018-07-01,8,3414,399
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,60-69,Emergency Inpatients,Male,2018-10-01,6,3200,390
+Alps,Grand Combin,Alps,Grand Combin,10-19,Elective Inpatients,Male,2018-04-01,0,4,5
+Alps,Grand Combin,Alps,Grand Combin,10-19,Elective Inpatients,Male,2018-07-01,1,4,7
+Alps,Grand Combin,Alps,Grand Combin,10-19,Elective Inpatients,Male,2018-10-01,1,5,7
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,90+,All Daycases,Female,2018-04-01,0,2,15
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,90+,All Daycases,Female,2018-07-01,0,0,15
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,90+,All Daycases,Female,2018-10-01,0,0,16
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,80-89,All Daycases,Male,2018-04-01,2,4,165
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,80-89,All Daycases,Male,2018-07-01,1,5,152
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,80-89,All Daycases,Male,2018-10-01,0,5,157
+Caucasus,Elbrus,Caucasus,Elbrus,50-59,Elective Inpatients,Male,2018-04-01,1,17,13
+Caucasus,Elbrus,Caucasus,Elbrus,50-59,Elective Inpatients,Male,2018-07-01,2,17,14
+Caucasus,Elbrus,Caucasus,Elbrus,50-59,Elective Inpatients,Male,2018-10-01,0,16,15
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,90+,All Daycases,Female,2018-04-01,1,3,44
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,90+,All Daycases,Female,2018-07-01,2,2,41
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,90+,All Daycases,Female,2018-10-01,0,2,43
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,50-59,All Daycases,Female,2018-04-01,1,2,296
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,50-59,All Daycases,Female,2018-07-01,0,3,282
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,50-59,All Daycases,Female,2018-10-01,1,1,317
+Alps,Dent Blanche,Alps,Dent Blanche,90+,Emergency Inpatients,Female,2018-04-01,8,135,10
+Alps,Dent Blanche,Alps,Dent Blanche,90+,Emergency Inpatients,Female,2018-07-01,9,133,9
+Alps,Dent Blanche,Alps,Dent Blanche,90+,Emergency Inpatients,Female,2018-10-01,9,143,9
+Andes,Alpamayo,Andes,Alpamayo,80-89,Emergency Inpatients,Female,2018-04-01,13,6573,325
+Andes,Alpamayo,Andes,Alpamayo,80-89,Emergency Inpatients,Female,2018-07-01,13,6483,345
+Andes,Alpamayo,Andes,Alpamayo,80-89,Emergency Inpatients,Female,2018-10-01,13,6679,329
+Alps,Dent Blanche,Alps,Dent Blanche,90+,All Daycases,Female,2018-04-01,1,1,8
+Alps,Dent Blanche,Alps,Dent Blanche,90+,All Daycases,Female,2018-07-01,2,0,8
+Alps,Dent Blanche,Alps,Dent Blanche,90+,All Daycases,Female,2018-10-01,1,1,9
+Andes,El Toro,Andes,El Toro,90+,All Daycases,Male,2018-04-01,1,0,69
+Andes,El Toro,Andes,El Toro,90+,All Daycases,Male,2018-07-01,0,0,65
+Andes,El Toro,Andes,El Toro,90+,All Daycases,Male,2018-10-01,1,1,60
+Himalayas,Lhotse,Himalayas,Lhotse,0-9,Emergency Inpatients,Male,2018-04-01,1,199,113
+Himalayas,Lhotse,Himalayas,Lhotse,0-9,Emergency Inpatients,Male,2018-07-01,2,227,129
+Himalayas,Lhotse,Himalayas,Lhotse,0-9,Emergency Inpatients,Male,2018-10-01,1,225,124
+Andes,El Toro,Andes,El Toro,20-29,All Daycases,Female,2018-04-01,2,0,166
+Andes,El Toro,Andes,El Toro,20-29,All Daycases,Female,2018-07-01,1,1,159
+Andes,El Toro,Andes,El Toro,20-29,All Daycases,Female,2018-10-01,1,2,141
+Himalayas,Shishapangma,Himalayas,Shishapangma,40-49,All Daycases,Female,2018-04-01,2,0,58
+Himalayas,Shishapangma,Himalayas,Shishapangma,40-49,All Daycases,Female,2018-07-01,0,0,66
+Himalayas,Shishapangma,Himalayas,Shishapangma,40-49,All Daycases,Female,2018-10-01,1,2,55
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,90+,Emergency Inpatients,Female,2018-04-01,15,44965,1798
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,90+,Emergency Inpatients,Female,2018-07-01,16,42582,1590
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,90+,Emergency Inpatients,Female,2018-10-01,16,42123,1858
+Alps,Dom,Alps,Dom,30-39,All Daycases,Female,2018-04-01,0,2,11
+Alps,Dom,Alps,Dom,30-39,All Daycases,Female,2018-07-01,0,1,11
+Alps,Dom,Alps,Dom,30-39,All Daycases,Female,2018-10-01,0,1,11
+Caucasus,Janga,Caucasus,Janga,20-29,All Daycases,Female,2018-04-01,1,0,241
+Caucasus,Janga,Caucasus,Janga,20-29,All Daycases,Female,2018-07-01,1,0,242
+Caucasus,Janga,Caucasus,Janga,20-29,All Daycases,Female,2018-10-01,2,1,220
+Alps,Grand Combin,Alps,Grand Combin,80-89,Emergency Inpatients,Male,2018-04-01,12,1566,111
+Alps,Grand Combin,Alps,Grand Combin,80-89,Emergency Inpatients,Male,2018-07-01,12,1479,108
+Alps,Grand Combin,Alps,Grand Combin,80-89,Emergency Inpatients,Male,2018-10-01,10,1385,109
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,Elective Inpatients,Male,2018-04-01,1,47,25
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,Elective Inpatients,Male,2018-07-01,1,47,23
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,Elective Inpatients,Male,2018-10-01,2,50,26
+Alps,Grand Combin,Alps,Grand Combin,90+,Elective Inpatients,Male,2018-04-01,5,55,6
+Alps,Grand Combin,Alps,Grand Combin,90+,Elective Inpatients,Male,2018-07-01,6,49,5
+Alps,Grand Combin,Alps,Grand Combin,90+,Elective Inpatients,Male,2018-10-01,4,53,6
+Caucasus,Pushkin,Caucasus,Pushkin,20-29,Elective Inpatients,Male,2018-04-01,1,36,24
+Caucasus,Pushkin,Caucasus,Pushkin,20-29,Elective Inpatients,Male,2018-07-01,0,34,27
+Caucasus,Pushkin,Caucasus,Pushkin,20-29,Elective Inpatients,Male,2018-10-01,1,38,27
+Himalayas,Mount Everest,Himalayas,Mount Everest,60-69,Emergency Inpatients,Male,2018-04-01,8,18485,4149
+Himalayas,Mount Everest,Himalayas,Mount Everest,60-69,Emergency Inpatients,Male,2018-07-01,9,18432,4096
+Himalayas,Mount Everest,Himalayas,Mount Everest,60-69,Emergency Inpatients,Male,2018-10-01,9,19511,3660
+Alps,Matterhorn,Alps,Matterhorn,40-49,All Daycases,Male,2018-04-01,1,2,78
+Alps,Matterhorn,Alps,Matterhorn,40-49,All Daycases,Male,2018-07-01,1,1,93
+Alps,Matterhorn,Alps,Matterhorn,40-49,All Daycases,Male,2018-10-01,2,0,79
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Emergency Inpatients,Male,2018-04-01,1,170,63
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Emergency Inpatients,Male,2018-07-01,2,158,54
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Emergency Inpatients,Male,2018-10-01,2,162,61
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Emergency Inpatients,Male,2018-04-01,0,331,407
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Emergency Inpatients,Male,2018-07-01,1,344,359
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Emergency Inpatients,Male,2018-10-01,1,328,346
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Elective Inpatients,Male,2018-04-01,0,4,2
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Elective Inpatients,Male,2018-07-01,2,4,3
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Elective Inpatients,Male,2018-10-01,2,5,3
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,0-9,All Daycases,Male,2018-04-01,1,1,4
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,0-9,All Daycases,Male,2018-07-01,2,2,5
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,0-9,All Daycases,Male,2018-10-01,2,2,4
+Alps,Dent Blanche,Alps,Dent Blanche,0-9,Emergency Inpatients,Female,2018-04-01,1,8,7
+Alps,Dent Blanche,Alps,Dent Blanche,0-9,Emergency Inpatients,Female,2018-07-01,1,6,7
+Alps,Dent Blanche,Alps,Dent Blanche,0-9,Emergency Inpatients,Female,2018-10-01,2,6,6
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Male,2018-04-01,1,12,44
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Male,2018-07-01,1,13,49
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Male,2018-10-01,2,12,48
+Andes,Coropuna,Andes,Coropuna,90+,Elective Inpatients,Female,2018-04-01,2,14,5
+Andes,Coropuna,Andes,Coropuna,90+,Elective Inpatients,Female,2018-07-01,4,14,4
+Andes,Coropuna,Andes,Coropuna,90+,Elective Inpatients,Female,2018-10-01,4,14,3
+Caucasus,Pushkin,Caucasus,Pushkin,70-79,Elective Inpatients,Male,2018-04-01,5,385,86
+Caucasus,Pushkin,Caucasus,Pushkin,70-79,Elective Inpatients,Male,2018-07-01,4,374,84
+Caucasus,Pushkin,Caucasus,Pushkin,70-79,Elective Inpatients,Male,2018-10-01,5,390,91
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,80-89,All Daycases,Male,2018-04-01,1,4,199
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,80-89,All Daycases,Male,2018-07-01,0,3,228
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,80-89,All Daycases,Male,2018-10-01,2,3,221
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,60-69,Emergency Inpatients,Female,2018-04-01,7,2129,302
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,60-69,Emergency Inpatients,Female,2018-07-01,9,2256,298
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,60-69,Emergency Inpatients,Female,2018-10-01,8,2173,284
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,50-59,Emergency Inpatients,Female,2018-04-01,7,4978,575
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,50-59,Emergency Inpatients,Female,2018-07-01,9,4439,578
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,50-59,Emergency Inpatients,Female,2018-10-01,7,4328,542
+Caucasus,Janga,Caucasus,Janga,30-39,All Daycases,Female,2018-04-01,1,1,295
+Caucasus,Janga,Caucasus,Janga,30-39,All Daycases,Female,2018-07-01,1,3,293
+Caucasus,Janga,Caucasus,Janga,30-39,All Daycases,Female,2018-10-01,2,3,261
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,90+,Emergency Inpatients,Male,2018-04-01,2,119,5
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,90+,Emergency Inpatients,Male,2018-07-01,0,113,6
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,90+,Emergency Inpatients,Male,2018-10-01,1,116,5
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,All Daycases,Female,2018-04-01,1,2,188
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,All Daycases,Female,2018-07-01,2,0,188
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,All Daycases,Female,2018-10-01,1,0,173
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Emergency Inpatients,Male,2018-04-01,5,1804,382
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Emergency Inpatients,Male,2018-07-01,5,1681,335
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Emergency Inpatients,Male,2018-10-01,4,1613,317
+Andes,Alpamayo,Andes,Alpamayo,40-49,Elective Inpatients,Male,2018-04-01,1,126,55
+Andes,Alpamayo,Andes,Alpamayo,40-49,Elective Inpatients,Male,2018-07-01,1,145,56
+Andes,Alpamayo,Andes,Alpamayo,40-49,Elective Inpatients,Male,2018-10-01,2,126,57
+Alps,Mont Blanc,Alps,Mont Blanc,90+,Elective Inpatients,Female,2018-04-01,7,329,24
+Alps,Mont Blanc,Alps,Mont Blanc,90+,Elective Inpatients,Female,2018-07-01,7,371,22
+Alps,Mont Blanc,Alps,Mont Blanc,90+,Elective Inpatients,Female,2018-10-01,7,326,23
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,20-29,All Daycases,Male,2018-04-01,0,0,98
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,20-29,All Daycases,Male,2018-07-01,1,2,87
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,20-29,All Daycases,Male,2018-10-01,0,0,96
+Caucasus,Janga,Caucasus,Janga,30-39,Emergency Inpatients,Female,2018-04-01,2,1415,365
+Caucasus,Janga,Caucasus,Janga,30-39,Emergency Inpatients,Female,2018-07-01,4,1293,327
+Caucasus,Janga,Caucasus,Janga,30-39,Emergency Inpatients,Female,2018-10-01,4,1349,382
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,60-69,All Daycases,Female,2018-04-01,1,97,10264
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,60-69,All Daycases,Female,2018-07-01,0,85,11308
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,60-69,All Daycases,Female,2018-10-01,1,85,10385
+Andes,El Toro,Andes,El Toro,10-19,Emergency Inpatients,Male,2018-04-01,1,35,81
+Andes,El Toro,Andes,El Toro,10-19,Emergency Inpatients,Male,2018-07-01,2,37,87
+Andes,El Toro,Andes,El Toro,10-19,Emergency Inpatients,Male,2018-10-01,1,38,77
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,60-69,Emergency Inpatients,Male,2018-04-01,5,206,36
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,60-69,Emergency Inpatients,Male,2018-07-01,4,201,33
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,60-69,Emergency Inpatients,Male,2018-10-01,4,223,35
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,50-59,Emergency Inpatients,Female,2018-04-01,2,150,340
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,50-59,Emergency Inpatients,Female,2018-07-01,0,162,327
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,50-59,Emergency Inpatients,Female,2018-10-01,2,169,307
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Elective Inpatients,Male,2018-04-01,1,105,47
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Elective Inpatients,Male,2018-07-01,2,93,46
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Elective Inpatients,Male,2018-10-01,0,103,51
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,20-29,All Daycases,Female,2018-04-01,2,2,95
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,20-29,All Daycases,Female,2018-07-01,2,0,91
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,20-29,All Daycases,Female,2018-10-01,1,1,94
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,Elective Inpatients,Male,2018-04-01,4,375,141
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,Elective Inpatients,Male,2018-07-01,3,392,141
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,Elective Inpatients,Male,2018-10-01,3,433,147
+Andes,El Misti,Andes,El Misti,40-49,Elective Inpatients,Male,2018-04-01,3,131,55
+Andes,El Misti,Andes,El Misti,40-49,Elective Inpatients,Male,2018-07-01,1,146,57
+Andes,El Misti,Andes,El Misti,40-49,Elective Inpatients,Male,2018-10-01,2,142,62
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,40-49,All Daycases,Male,2018-04-01,2,0,201
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,40-49,All Daycases,Male,2018-07-01,1,1,197
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,40-49,All Daycases,Male,2018-10-01,2,2,222
+Andes,Alpamayo,Andes,Alpamayo,30-39,Elective Inpatients,Female,2018-04-01,2,99,50
+Andes,Alpamayo,Andes,Alpamayo,30-39,Elective Inpatients,Female,2018-07-01,0,99,48
+Andes,Alpamayo,Andes,Alpamayo,30-39,Elective Inpatients,Female,2018-10-01,2,93,50
+Saint Elias,King Peak,Saint Elias,King Peak,90+,Elective Inpatients,Female,2018-04-01,5,205,14
+Saint Elias,King Peak,Saint Elias,King Peak,90+,Elective Inpatients,Female,2018-07-01,5,198,13
+Saint Elias,King Peak,Saint Elias,King Peak,90+,Elective Inpatients,Female,2018-10-01,4,224,15
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,All Daycases,Female,2018-04-01,1,0,25
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,All Daycases,Female,2018-07-01,0,0,25
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,All Daycases,Female,2018-10-01,2,0,24
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,10-19,Elective Inpatients,Male,2018-04-01,2,16,14
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,10-19,Elective Inpatients,Male,2018-07-01,2,16,14
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,10-19,Elective Inpatients,Male,2018-10-01,0,16,15
+Caucasus,Gistola,Caucasus,Gistola,30-39,All Daycases,Male,2018-04-01,1,1,335
+Caucasus,Gistola,Caucasus,Gistola,30-39,All Daycases,Male,2018-07-01,1,2,321
+Caucasus,Gistola,Caucasus,Gistola,30-39,All Daycases,Male,2018-10-01,2,2,330
+Andes,Carnicero,Andes,Carnicero,60-69,Elective Inpatients,Male,2018-04-01,2,259,121
+Andes,Carnicero,Andes,Carnicero,60-69,Elective Inpatients,Male,2018-07-01,1,239,130
+Andes,Carnicero,Andes,Carnicero,60-69,Elective Inpatients,Male,2018-10-01,1,245,119
+Himalayas,Annapurna I,Himalayas,Annapurna I,60-69,All Daycases,Female,2018-04-01,0,4,455
+Himalayas,Annapurna I,Himalayas,Annapurna I,60-69,All Daycases,Female,2018-07-01,0,6,449
+Himalayas,Annapurna I,Himalayas,Annapurna I,60-69,All Daycases,Female,2018-10-01,1,5,411
+Andes,Carnicero,Andes,Carnicero,40-49,Emergency Inpatients,Female,2018-04-01,3,789,242
+Andes,Carnicero,Andes,Carnicero,40-49,Emergency Inpatients,Female,2018-07-01,4,755,255
+Andes,Carnicero,Andes,Carnicero,40-49,Emergency Inpatients,Female,2018-10-01,5,851,238
+Saint Elias,King Peak,Saint Elias,King Peak,90+,Emergency Inpatients,Female,2018-04-01,13,1823,61
+Saint Elias,King Peak,Saint Elias,King Peak,90+,Emergency Inpatients,Female,2018-07-01,12,1713,60
+Saint Elias,King Peak,Saint Elias,King Peak,90+,Emergency Inpatients,Female,2018-10-01,13,1819,60
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,30-39,Elective Inpatients,Female,2018-04-01,3,164,59
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,30-39,Elective Inpatients,Female,2018-07-01,3,161,53
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,30-39,Elective Inpatients,Female,2018-10-01,3,181,59
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,Emergency Inpatients,Female,2018-04-01,7,356,43
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,Emergency Inpatients,Female,2018-07-01,6,340,39
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,Emergency Inpatients,Female,2018-10-01,6,351,44
+Andes,El Misti,Andes,El Misti,60-69,Emergency Inpatients,Male,2018-04-01,7,3799,517
+Andes,El Misti,Andes,El Misti,60-69,Emergency Inpatients,Male,2018-07-01,6,3218,457
+Andes,El Misti,Andes,El Misti,60-69,Emergency Inpatients,Male,2018-10-01,6,3571,503
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,80-89,All Daycases,Male,2018-04-01,1,16,500
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,80-89,All Daycases,Male,2018-07-01,2,18,462
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,80-89,All Daycases,Male,2018-10-01,0,16,499
+Himalayas,Mount Everest,Himalayas,Mount Everest,90+,Elective Inpatients,Male,2018-04-01,7,1303,117
+Himalayas,Mount Everest,Himalayas,Mount Everest,90+,Elective Inpatients,Male,2018-07-01,5,1252,109
+Himalayas,Mount Everest,Himalayas,Mount Everest,90+,Elective Inpatients,Male,2018-10-01,7,1255,120
+Himalayas,Shishapangma,Himalayas,Shishapangma,80-89,Emergency Inpatients,Male,2018-04-01,10,1787,88
+Himalayas,Shishapangma,Himalayas,Shishapangma,80-89,Emergency Inpatients,Male,2018-07-01,8,1660,87
+Himalayas,Shishapangma,Himalayas,Shishapangma,80-89,Emergency Inpatients,Male,2018-10-01,8,1961,97
+Alps,Mont Blanc,Alps,Mont Blanc,70-79,Emergency Inpatients,Male,2018-04-01,10,7523,684
+Alps,Mont Blanc,Alps,Mont Blanc,70-79,Emergency Inpatients,Male,2018-07-01,9,7254,739
+Alps,Mont Blanc,Alps,Mont Blanc,70-79,Emergency Inpatients,Male,2018-10-01,9,7599,814
+Caucasus,Kazbek,Caucasus,Kazbek,70-79,Elective Inpatients,Male,2018-04-01,3,211,58
+Caucasus,Kazbek,Caucasus,Kazbek,70-79,Elective Inpatients,Male,2018-07-01,4,231,58
+Caucasus,Kazbek,Caucasus,Kazbek,70-79,Elective Inpatients,Male,2018-10-01,3,205,58
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,30-39,All Daycases,Male,2018-04-01,2,0,45
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,30-39,All Daycases,Male,2018-07-01,1,1,43
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,30-39,All Daycases,Male,2018-10-01,0,2,43
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Elective Inpatients,Male,2018-04-01,0,8,6
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Elective Inpatients,Male,2018-07-01,2,7,8
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Elective Inpatients,Male,2018-10-01,0,7,8
+Himalayas,Shishapangma,Himalayas,Shishapangma,10-19,All Daycases,Female,2018-04-01,2,2,18
+Himalayas,Shishapangma,Himalayas,Shishapangma,10-19,All Daycases,Female,2018-07-01,1,2,18
+Himalayas,Shishapangma,Himalayas,Shishapangma,10-19,All Daycases,Female,2018-10-01,0,2,16
+Himalayas,Mount Everest,Himalayas,Mount Everest,20-29,All Daycases,Male,2018-04-01,2,2,923
+Himalayas,Mount Everest,Himalayas,Mount Everest,20-29,All Daycases,Male,2018-07-01,1,3,947
+Himalayas,Mount Everest,Himalayas,Mount Everest,20-29,All Daycases,Male,2018-10-01,0,3,872
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,40-49,Emergency Inpatients,Female,2018-04-01,4,759,136
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,40-49,Emergency Inpatients,Female,2018-07-01,6,894,143
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,40-49,Emergency Inpatients,Female,2018-10-01,4,817,133
+Caucasus,Kazbek,Caucasus,Kazbek,50-59,All Daycases,Female,2018-04-01,2,1,159
+Caucasus,Kazbek,Caucasus,Kazbek,50-59,All Daycases,Female,2018-07-01,0,2,147
+Caucasus,Kazbek,Caucasus,Kazbek,50-59,All Daycases,Female,2018-10-01,1,0,164
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Elective Inpatients,Female,2018-04-01,0,46,100
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Elective Inpatients,Female,2018-07-01,2,39,87
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Elective Inpatients,Female,2018-10-01,2,42,104
+Himalayas,Annapurna I,Himalayas,Annapurna I,90+,All Daycases,Female,2018-04-01,2,3,55
+Himalayas,Annapurna I,Himalayas,Annapurna I,90+,All Daycases,Female,2018-07-01,1,2,57
+Himalayas,Annapurna I,Himalayas,Annapurna I,90+,All Daycases,Female,2018-10-01,0,2,66
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Male,2018-04-01,0,11,48
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Male,2018-07-01,0,13,46
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Male,2018-10-01,2,13,47
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,10-19,Emergency Inpatients,Female,2018-04-01,2,14,23
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,10-19,Emergency Inpatients,Female,2018-07-01,0,14,20
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,10-19,Emergency Inpatients,Female,2018-10-01,2,14,20
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,60-69,All Daycases,Male,2018-04-01,0,2,118
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,60-69,All Daycases,Male,2018-07-01,0,1,117
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,60-69,All Daycases,Male,2018-10-01,2,2,105
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,70-79,Emergency Inpatients,Male,2018-04-01,9,4327,529
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,70-79,Emergency Inpatients,Male,2018-07-01,11,4388,568
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,70-79,Emergency Inpatients,Male,2018-10-01,9,4488,595
+Andes,Chumpe,Andes,Chumpe,80-89,All Daycases,Female,2018-04-01,2,4,283
+Andes,Chumpe,Andes,Chumpe,80-89,All Daycases,Female,2018-07-01,2,4,263
+Andes,Chumpe,Andes,Chumpe,80-89,All Daycases,Female,2018-10-01,2,6,256
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,90+,Elective Inpatients,Female,2018-04-01,5,255,13
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,90+,Elective Inpatients,Female,2018-07-01,5,236,12
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,90+,Elective Inpatients,Female,2018-10-01,6,265,13
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,90+,All Daycases,Male,2018-04-01,0,1,53
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,90+,All Daycases,Male,2018-07-01,0,1,59
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,90+,All Daycases,Male,2018-10-01,0,1,52
+Andes,Carnicero,Andes,Carnicero,40-49,Emergency Inpatients,Female,2018-04-01,4,790,279
+Andes,Carnicero,Andes,Carnicero,40-49,Emergency Inpatients,Female,2018-07-01,4,752,257
+Andes,Carnicero,Andes,Carnicero,40-49,Emergency Inpatients,Female,2018-10-01,3,809,253
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,40-49,All Daycases,Male,2018-04-01,0,0,179
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,40-49,All Daycases,Male,2018-07-01,2,2,180
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,40-49,All Daycases,Male,2018-10-01,0,0,176
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Elective Inpatients,Male,2018-04-01,2,19,15
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Elective Inpatients,Male,2018-07-01,0,19,14
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Elective Inpatients,Male,2018-10-01,2,20,14
+Alps,Dent Blanche,Alps,Dent Blanche,60-69,All Daycases,Male,2018-04-01,1,1,63
+Alps,Dent Blanche,Alps,Dent Blanche,60-69,All Daycases,Male,2018-07-01,1,0,62
+Alps,Dent Blanche,Alps,Dent Blanche,60-69,All Daycases,Male,2018-10-01,0,1,61
+Andes,Coropuna,Andes,Coropuna,60-69,Elective Inpatients,Female,2018-04-01,2,25,25
+Andes,Coropuna,Andes,Coropuna,60-69,Elective Inpatients,Female,2018-07-01,2,27,26
+Andes,Coropuna,Andes,Coropuna,60-69,Elective Inpatients,Female,2018-10-01,3,29,29
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,80-89,Elective Inpatients,Male,2018-04-01,6,1173,103
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,80-89,Elective Inpatients,Male,2018-07-01,5,1162,87
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,80-89,Elective Inpatients,Male,2018-10-01,5,1257,102
+Andes,Huandoy,Andes,Huandoy,10-19,Emergency Inpatients,Female,2018-04-01,3,225,96
+Andes,Huandoy,Andes,Huandoy,10-19,Emergency Inpatients,Female,2018-07-01,2,241,92
+Andes,Huandoy,Andes,Huandoy,10-19,Emergency Inpatients,Female,2018-10-01,3,242,99
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,50-59,All Daycases,Female,2018-04-01,0,2,296
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,50-59,All Daycases,Female,2018-07-01,2,4,267
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,50-59,All Daycases,Female,2018-10-01,1,3,265
+Andes,Artesonraju,Andes,Artesonraju,60-69,Elective Inpatients,Female,2018-04-01,2,286,103
+Andes,Artesonraju,Andes,Artesonraju,60-69,Elective Inpatients,Female,2018-07-01,4,272,114
+Andes,Artesonraju,Andes,Artesonraju,60-69,Elective Inpatients,Female,2018-10-01,3,292,116
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,20-29,All Daycases,Female,2018-04-01,0,1,101
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,20-29,All Daycases,Female,2018-07-01,1,2,104
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,20-29,All Daycases,Female,2018-10-01,2,1,92
+Himalayas,Shishapangma,Himalayas,Shishapangma,20-29,All Daycases,Male,2018-04-01,1,0,32
+Himalayas,Shishapangma,Himalayas,Shishapangma,20-29,All Daycases,Male,2018-07-01,2,0,35
+Himalayas,Shishapangma,Himalayas,Shishapangma,20-29,All Daycases,Male,2018-10-01,2,1,33
+Alps,Grand Combin,Alps,Grand Combin,80-89,Emergency Inpatients,Male,2018-04-01,10,1489,115
+Alps,Grand Combin,Alps,Grand Combin,80-89,Emergency Inpatients,Male,2018-07-01,12,1347,107
+Alps,Grand Combin,Alps,Grand Combin,80-89,Emergency Inpatients,Male,2018-10-01,12,1559,114
+Andes,Artesonraju,Andes,Artesonraju,0-9,Emergency Inpatients,Female,2018-04-01,0,80,39
+Andes,Artesonraju,Andes,Artesonraju,0-9,Emergency Inpatients,Female,2018-07-01,2,76,39
+Andes,Artesonraju,Andes,Artesonraju,0-9,Emergency Inpatients,Female,2018-10-01,0,85,37
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,40-49,All Daycases,Male,2018-04-01,0,2,175
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,40-49,All Daycases,Male,2018-07-01,2,2,178
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,40-49,All Daycases,Male,2018-10-01,1,0,177
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Female,2018-04-01,2,13,50
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Female,2018-07-01,1,13,50
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,10-19,Emergency Inpatients,Female,2018-10-01,2,14,51
+Himalayas,Mount Everest,Himalayas,Mount Everest,40-49,All Daycases,Male,2018-04-01,0,7,1407
+Himalayas,Mount Everest,Himalayas,Mount Everest,40-49,All Daycases,Male,2018-07-01,2,8,1517
+Himalayas,Mount Everest,Himalayas,Mount Everest,40-49,All Daycases,Male,2018-10-01,0,7,1624
+Alps,Matterhorn,Alps,Matterhorn,90+,Elective Inpatients,Male,2018-04-01,4,82,8
+Alps,Matterhorn,Alps,Matterhorn,90+,Elective Inpatients,Male,2018-07-01,5,74,6
+Alps,Matterhorn,Alps,Matterhorn,90+,Elective Inpatients,Male,2018-10-01,4,79,6
+Saint Elias,King Peak,Saint Elias,King Peak,40-49,Emergency Inpatients,Male,2018-04-01,5,1002,193
+Saint Elias,King Peak,Saint Elias,King Peak,40-49,Emergency Inpatients,Male,2018-07-01,3,1110,190
+Saint Elias,King Peak,Saint Elias,King Peak,40-49,Emergency Inpatients,Male,2018-10-01,3,1035,194
+Himalayas,Lhotse,Himalayas,Lhotse,80-89,All Daycases,Female,2018-04-01,2,14,808
+Himalayas,Lhotse,Himalayas,Lhotse,80-89,All Daycases,Female,2018-07-01,1,14,836
+Himalayas,Lhotse,Himalayas,Lhotse,80-89,All Daycases,Female,2018-10-01,2,14,875
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,10-19,Elective Inpatients,Male,2018-04-01,2,39,18
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,10-19,Elective Inpatients,Male,2018-07-01,2,36,18
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,10-19,Elective Inpatients,Male,2018-10-01,1,38,22
+Andes,Artesonraju,Andes,Artesonraju,30-39,Emergency Inpatients,Female,2018-04-01,4,556,183
+Andes,Artesonraju,Andes,Artesonraju,30-39,Emergency Inpatients,Female,2018-07-01,2,509,185
+Andes,Artesonraju,Andes,Artesonraju,30-39,Emergency Inpatients,Female,2018-10-01,4,545,174
+Andes,El Toro,Andes,El Toro,40-49,All Daycases,Male,2018-04-01,2,1,220
+Andes,El Toro,Andes,El Toro,40-49,All Daycases,Male,2018-07-01,0,2,237
+Andes,El Toro,Andes,El Toro,40-49,All Daycases,Male,2018-10-01,2,2,234
+Andes,Artesonraju,Andes,Artesonraju,40-49,All Daycases,Female,2018-04-01,1,2,179
+Andes,Artesonraju,Andes,Artesonraju,40-49,All Daycases,Female,2018-07-01,2,0,173
+Andes,Artesonraju,Andes,Artesonraju,40-49,All Daycases,Female,2018-10-01,1,0,180
+Alps,Mont Blanc,Alps,Mont Blanc,60-69,Elective Inpatients,Female,2018-04-01,4,599,197
+Alps,Mont Blanc,Alps,Mont Blanc,60-69,Elective Inpatients,Female,2018-07-01,4,679,183
+Alps,Mont Blanc,Alps,Mont Blanc,60-69,Elective Inpatients,Female,2018-10-01,4,668,196
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Elective Inpatients,Male,2018-04-01,1,78,35
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Elective Inpatients,Male,2018-07-01,0,78,33
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Elective Inpatients,Male,2018-10-01,2,93,33
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,70-79,Emergency Inpatients,Female,2018-04-01,12,131902,14563
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,70-79,Emergency Inpatients,Female,2018-07-01,12,116537,13361
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,70-79,Emergency Inpatients,Female,2018-10-01,10,132733,13947
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,60-69,Emergency Inpatients,Female,2018-04-01,9,3712,430
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,60-69,Emergency Inpatients,Female,2018-07-01,8,4355,407
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,60-69,Emergency Inpatients,Female,2018-10-01,7,3926,419
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,40-49,All Daycases,Male,2018-04-01,1,0,27
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,40-49,All Daycases,Male,2018-07-01,1,0,29
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,40-49,All Daycases,Male,2018-10-01,0,2,26
+Alps,Weisshorn,Alps,Weisshorn,40-49,Elective Inpatients,Male,2018-04-01,0,7,5
+Alps,Weisshorn,Alps,Weisshorn,40-49,Elective Inpatients,Male,2018-07-01,2,7,4
+Alps,Weisshorn,Alps,Weisshorn,40-49,Elective Inpatients,Male,2018-10-01,0,7,4
+Caucasus,Elbrus,Caucasus,Elbrus,60-69,Elective Inpatients,Female,2018-04-01,2,27,19
+Caucasus,Elbrus,Caucasus,Elbrus,60-69,Elective Inpatients,Female,2018-07-01,3,26,19
+Caucasus,Elbrus,Caucasus,Elbrus,60-69,Elective Inpatients,Female,2018-10-01,1,26,19
+Alps,Mont Blanc,Alps,Mont Blanc,10-19,Elective Inpatients,Female,2018-04-01,1,32,26
+Alps,Mont Blanc,Alps,Mont Blanc,10-19,Elective Inpatients,Female,2018-07-01,0,33,25
+Alps,Mont Blanc,Alps,Mont Blanc,10-19,Elective Inpatients,Female,2018-10-01,2,36,25
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,80-89,Emergency Inpatients,Male,2018-04-01,1,332,25
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,80-89,Emergency Inpatients,Male,2018-07-01,0,357,22
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,80-89,Emergency Inpatients,Male,2018-10-01,2,327,22
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,60-69,Emergency Inpatients,Male,2018-04-01,7,5131,705
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,60-69,Emergency Inpatients,Male,2018-07-01,9,5278,719
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,60-69,Emergency Inpatients,Male,2018-10-01,8,5305,639
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,70-79,Elective Inpatients,Male,2018-04-01,3,695,176
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,70-79,Elective Inpatients,Male,2018-07-01,2,600,156
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,70-79,Elective Inpatients,Male,2018-10-01,3,713,152
+Andes,Coropuna,Andes,Coropuna,50-59,All Daycases,Female,2018-04-01,0,2,74
+Andes,Coropuna,Andes,Coropuna,50-59,All Daycases,Female,2018-07-01,0,0,79
+Andes,Coropuna,Andes,Coropuna,50-59,All Daycases,Female,2018-10-01,1,2,75
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Emergency Inpatients,Female,2018-04-01,1,188,65
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Emergency Inpatients,Female,2018-07-01,1,200,62
+Saint Elias,King Peak,Saint Elias,King Peak,10-19,Emergency Inpatients,Female,2018-10-01,2,175,61
+Alps,Dom,Alps,Dom,40-49,All Daycases,Female,2018-04-01,2,1,14
+Alps,Dom,Alps,Dom,40-49,All Daycases,Female,2018-07-01,0,0,16
+Alps,Dom,Alps,Dom,40-49,All Daycases,Female,2018-10-01,0,1,14
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,40-49,Emergency Inpatients,Male,2018-04-01,4,1248,190
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,40-49,Emergency Inpatients,Male,2018-07-01,5,1343,195
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,40-49,Emergency Inpatients,Male,2018-10-01,6,1358,176
+Himalayas,Shishapangma,Himalayas,Shishapangma,30-39,Emergency Inpatients,Male,2018-04-01,3,216,54
+Himalayas,Shishapangma,Himalayas,Shishapangma,30-39,Emergency Inpatients,Male,2018-07-01,3,243,52
+Himalayas,Shishapangma,Himalayas,Shishapangma,30-39,Emergency Inpatients,Male,2018-10-01,3,224,54
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,0-9,Elective Inpatients,Male,2018-04-01,2,2,7
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,0-9,Elective Inpatients,Male,2018-07-01,1,2,8
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,0-9,Elective Inpatients,Male,2018-10-01,1,0,8
+Caucasus,Shkhara,Caucasus,Shkhara,70-79,Elective Inpatients,Female,2018-04-01,4,263,73
+Caucasus,Shkhara,Caucasus,Shkhara,70-79,Elective Inpatients,Female,2018-07-01,5,295,68
+Caucasus,Shkhara,Caucasus,Shkhara,70-79,Elective Inpatients,Female,2018-10-01,5,269,72
+Andes,Coropuna,Andes,Coropuna,10-19,All Daycases,Female,2018-04-01,2,1,12
+Andes,Coropuna,Andes,Coropuna,10-19,All Daycases,Female,2018-07-01,2,0,14
+Andes,Coropuna,Andes,Coropuna,10-19,All Daycases,Female,2018-10-01,1,1,12
+Himalayas,Shishapangma,Himalayas,Shishapangma,60-69,Elective Inpatients,Female,2018-04-01,3,132,36
+Himalayas,Shishapangma,Himalayas,Shishapangma,60-69,Elective Inpatients,Female,2018-07-01,1,145,36
+Himalayas,Shishapangma,Himalayas,Shishapangma,60-69,Elective Inpatients,Female,2018-10-01,2,147,36
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,70-79,Emergency Inpatients,Female,2018-04-01,5,371,86
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,70-79,Emergency Inpatients,Female,2018-07-01,7,399,86
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,70-79,Emergency Inpatients,Female,2018-10-01,5,365,86
+Himalayas,Annapurna I,Himalayas,Annapurna I,60-69,Elective Inpatients,Male,2018-04-01,3,512,130
+Himalayas,Annapurna I,Himalayas,Annapurna I,60-69,Elective Inpatients,Male,2018-07-01,3,476,130
+Himalayas,Annapurna I,Himalayas,Annapurna I,60-69,Elective Inpatients,Male,2018-10-01,3,441,138
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,90+,Emergency Inpatients,Male,2018-04-01,13,36914,1590
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,90+,Emergency Inpatients,Male,2018-07-01,14,38733,1595
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,90+,Emergency Inpatients,Male,2018-10-01,14,36478,1748
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Emergency Inpatients,Male,2018-04-01,1,73,29
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Emergency Inpatients,Male,2018-07-01,3,75,29
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Emergency Inpatients,Male,2018-10-01,2,75,30
+Caucasus,Gistola,Caucasus,Gistola,80-89,Emergency Inpatients,Male,2018-04-01,15,9643,678
+Caucasus,Gistola,Caucasus,Gistola,80-89,Emergency Inpatients,Male,2018-07-01,15,9843,648
+Caucasus,Gistola,Caucasus,Gistola,80-89,Emergency Inpatients,Male,2018-10-01,14,10081,669
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,0-9,Emergency Inpatients,Female,2018-04-01,0,198,64
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,0-9,Emergency Inpatients,Female,2018-07-01,2,200,61
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,0-9,Emergency Inpatients,Female,2018-10-01,0,179,60
+Caucasus,Elbrus,Caucasus,Elbrus,50-59,All Daycases,Male,2018-04-01,1,2,52
+Caucasus,Elbrus,Caucasus,Elbrus,50-59,All Daycases,Male,2018-07-01,1,0,49
+Caucasus,Elbrus,Caucasus,Elbrus,50-59,All Daycases,Male,2018-10-01,1,2,46
+Andes,El Misti,Andes,El Misti,40-49,Elective Inpatients,Female,2018-04-01,2,175,60
+Andes,El Misti,Andes,El Misti,40-49,Elective Inpatients,Female,2018-07-01,2,150,60
+Andes,El Misti,Andes,El Misti,40-49,Elective Inpatients,Female,2018-10-01,2,170,65
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,50-59,Elective Inpatients,Female,2018-04-01,2,6376,2426
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,50-59,Elective Inpatients,Female,2018-07-01,3,5689,2509
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,50-59,Elective Inpatients,Female,2018-10-01,4,5600,2741
+Himalayas,Makalu,Himalayas,Makalu,30-39,Elective Inpatients,Male,2018-04-01,3,280,176
+Himalayas,Makalu,Himalayas,Makalu,30-39,Elective Inpatients,Male,2018-07-01,2,268,177
+Himalayas,Makalu,Himalayas,Makalu,30-39,Elective Inpatients,Male,2018-10-01,1,295,166
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,20-29,Emergency Inpatients,Female,2018-04-01,3,927,240
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,20-29,Emergency Inpatients,Female,2018-07-01,3,867,217
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,20-29,Emergency Inpatients,Female,2018-10-01,3,967,229
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,0-9,All Daycases,Male,2018-04-01,1,0,2
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,0-9,All Daycases,Male,2018-07-01,0,2,1
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,0-9,All Daycases,Male,2018-10-01,2,1,2
+Alps,Weisshorn,Alps,Weisshorn,50-59,All Daycases,Female,2018-04-01,2,1,26
+Alps,Weisshorn,Alps,Weisshorn,50-59,All Daycases,Female,2018-07-01,2,1,25
+Alps,Weisshorn,Alps,Weisshorn,50-59,All Daycases,Female,2018-10-01,2,0,23
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,80-89,Elective Inpatients,Male,2018-04-01,6,658,76
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,80-89,Elective Inpatients,Male,2018-07-01,6,635,88
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,80-89,Elective Inpatients,Male,2018-10-01,4,612,86
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,All Daycases,Male,2018-04-01,1,1,87
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,All Daycases,Male,2018-07-01,0,1,86
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,All Daycases,Male,2018-10-01,0,0,90
+Saint Elias,King Peak,Saint Elias,King Peak,20-29,Emergency Inpatients,Male,2018-04-01,2,473,131
+Saint Elias,King Peak,Saint Elias,King Peak,20-29,Emergency Inpatients,Male,2018-07-01,2,409,129
+Saint Elias,King Peak,Saint Elias,King Peak,20-29,Emergency Inpatients,Male,2018-10-01,2,465,131
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Emergency Inpatients,Male,2018-04-01,1,195,49
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Emergency Inpatients,Male,2018-07-01,2,185,48
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Emergency Inpatients,Male,2018-10-01,1,180,57
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,10-19,Emergency Inpatients,Female,2018-04-01,0,13,6
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,10-19,Emergency Inpatients,Female,2018-07-01,2,13,6
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,10-19,Emergency Inpatients,Female,2018-10-01,2,12,6
+Alps,Dom,Alps,Dom,20-29,Elective Inpatients,Female,2018-04-01,1,5,3
+Alps,Dom,Alps,Dom,20-29,Elective Inpatients,Female,2018-07-01,0,4,3
+Alps,Dom,Alps,Dom,20-29,Elective Inpatients,Female,2018-10-01,2,5,4
+Alps,Matterhorn,Alps,Matterhorn,10-19,All Daycases,Male,2018-04-01,0,2,24
+Alps,Matterhorn,Alps,Matterhorn,10-19,All Daycases,Male,2018-07-01,2,2,25
+Alps,Matterhorn,Alps,Matterhorn,10-19,All Daycases,Male,2018-10-01,2,0,24
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,30-39,Elective Inpatients,Female,2018-04-01,3,61,36
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,30-39,Elective Inpatients,Female,2018-07-01,3,61,35
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,30-39,Elective Inpatients,Female,2018-10-01,1,63,38
+Himalayas,Lhotse,Himalayas,Lhotse,10-19,Emergency Inpatients,Female,2018-04-01,2,447,214
+Himalayas,Lhotse,Himalayas,Lhotse,10-19,Emergency Inpatients,Female,2018-07-01,3,462,213
+Himalayas,Lhotse,Himalayas,Lhotse,10-19,Emergency Inpatients,Female,2018-10-01,3,399,200
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,10-19,All Daycases,Female,2018-04-01,1,2,9
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,10-19,All Daycases,Female,2018-07-01,0,1,8
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,10-19,All Daycases,Female,2018-10-01,2,0,7
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-04-01,10,4105,327
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-07-01,9,4232,340
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-10-01,9,4193,309
+Andes,Huandoy,Andes,Huandoy,20-29,All Daycases,Female,2018-04-01,0,1,157
+Andes,Huandoy,Andes,Huandoy,20-29,All Daycases,Female,2018-07-01,0,2,178
+Andes,Huandoy,Andes,Huandoy,20-29,All Daycases,Female,2018-10-01,0,0,185
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,Emergency Inpatients,Female,2018-04-01,8,3825,577
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,Emergency Inpatients,Female,2018-07-01,8,4407,609
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,Emergency Inpatients,Female,2018-10-01,6,3869,670
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,70-79,Emergency Inpatients,Female,2018-04-01,11,4227,453
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,70-79,Emergency Inpatients,Female,2018-07-01,10,4384,436
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,70-79,Emergency Inpatients,Female,2018-10-01,12,3642,457
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,All Daycases,Male,2018-04-01,1,0,13
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,All Daycases,Male,2018-07-01,2,1,14
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,All Daycases,Male,2018-10-01,2,2,13
+Alps,Mont Blanc,Alps,Mont Blanc,10-19,Elective Inpatients,Female,2018-04-01,1,34,25
+Alps,Mont Blanc,Alps,Mont Blanc,10-19,Elective Inpatients,Female,2018-07-01,0,36,23
+Alps,Mont Blanc,Alps,Mont Blanc,10-19,Elective Inpatients,Female,2018-10-01,0,38,25
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,20-29,Elective Inpatients,Female,2018-04-01,2,27,25
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,20-29,Elective Inpatients,Female,2018-07-01,1,30,28
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,20-29,Elective Inpatients,Female,2018-10-01,1,28,28
+Caucasus,Pushkin,Caucasus,Pushkin,40-49,All Daycases,Female,2018-04-01,2,0,157
+Caucasus,Pushkin,Caucasus,Pushkin,40-49,All Daycases,Female,2018-07-01,1,1,156
+Caucasus,Pushkin,Caucasus,Pushkin,40-49,All Daycases,Female,2018-10-01,2,1,154
+Caucasus,Gistola,Caucasus,Gistola,50-59,All Daycases,Male,2018-04-01,1,4,718
+Caucasus,Gistola,Caucasus,Gistola,50-59,All Daycases,Male,2018-07-01,0,5,751
+Caucasus,Gistola,Caucasus,Gistola,50-59,All Daycases,Male,2018-10-01,2,4,717
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Emergency Inpatients,Female,2018-04-01,4,987,200
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Emergency Inpatients,Female,2018-07-01,4,1025,220
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Emergency Inpatients,Female,2018-10-01,4,940,222
+Andes,Alpamayo,Andes,Alpamayo,70-79,Elective Inpatients,Male,2018-04-01,5,590,135
+Andes,Alpamayo,Andes,Alpamayo,70-79,Elective Inpatients,Male,2018-07-01,4,633,122
+Andes,Alpamayo,Andes,Alpamayo,70-79,Elective Inpatients,Male,2018-10-01,4,597,136
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,70-79,Emergency Inpatients,Male,2018-04-01,12,14388,973
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,70-79,Emergency Inpatients,Male,2018-07-01,13,12655,1013
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,70-79,Emergency Inpatients,Male,2018-10-01,13,13407,1032
+Andes,Carnicero,Andes,Carnicero,90+,Emergency Inpatients,Male,2018-04-01,9,1172,64
+Andes,Carnicero,Andes,Carnicero,90+,Emergency Inpatients,Male,2018-07-01,11,1139,66
+Andes,Carnicero,Andes,Carnicero,90+,Emergency Inpatients,Male,2018-10-01,11,1180,70
+Caucasus,Janga,Caucasus,Janga,0-9,Emergency Inpatients,Female,2018-04-01,2,184,74
+Caucasus,Janga,Caucasus,Janga,0-9,Emergency Inpatients,Female,2018-07-01,0,192,89
+Caucasus,Janga,Caucasus,Janga,0-9,Emergency Inpatients,Female,2018-10-01,0,204,89
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,80-89,All Daycases,Female,2018-04-01,1,0,20
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,80-89,All Daycases,Female,2018-07-01,2,1,21
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,80-89,All Daycases,Female,2018-10-01,1,2,18
+Caucasus,Elbrus,Caucasus,Elbrus,40-49,Emergency Inpatients,Male,2018-04-01,3,80,32
+Caucasus,Elbrus,Caucasus,Elbrus,40-49,Emergency Inpatients,Male,2018-07-01,3,78,38
+Caucasus,Elbrus,Caucasus,Elbrus,40-49,Emergency Inpatients,Male,2018-10-01,4,70,35
+Andes,El Misti,Andes,El Misti,80-89,All Daycases,Female,2018-04-01,2,9,292
+Andes,El Misti,Andes,El Misti,80-89,All Daycases,Female,2018-07-01,0,7,281
+Andes,El Misti,Andes,El Misti,80-89,All Daycases,Female,2018-10-01,0,9,258
+Saint Elias,King Peak,Saint Elias,King Peak,70-79,Elective Inpatients,Female,2018-04-01,4,555,103
+Saint Elias,King Peak,Saint Elias,King Peak,70-79,Elective Inpatients,Female,2018-07-01,4,563,122
+Saint Elias,King Peak,Saint Elias,King Peak,70-79,Elective Inpatients,Female,2018-10-01,5,600,123
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,90+,Emergency Inpatients,Female,2018-04-01,14,3600,104
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,90+,Emergency Inpatients,Female,2018-07-01,15,3466,96
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,90+,Emergency Inpatients,Female,2018-10-01,15,3587,98
+Andes,El Misti,Andes,El Misti,70-79,All Daycases,Female,2018-04-01,0,6,488
+Andes,El Misti,Andes,El Misti,70-79,All Daycases,Female,2018-07-01,2,8,422
+Andes,El Misti,Andes,El Misti,70-79,All Daycases,Female,2018-10-01,1,7,481
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,30-39,Elective Inpatients,Female,2018-04-01,3,2057,1070
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,30-39,Elective Inpatients,Female,2018-07-01,2,2113,1284
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,30-39,Elective Inpatients,Female,2018-10-01,3,1786,1079
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,50-59,All Daycases,Female,2018-04-01,1,0,26
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,50-59,All Daycases,Female,2018-07-01,1,2,27
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,50-59,All Daycases,Female,2018-10-01,1,1,25
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,40-49,All Daycases,Female,2018-04-01,2,3,308
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,40-49,All Daycases,Female,2018-07-01,0,3,284
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,40-49,All Daycases,Female,2018-10-01,2,1,317
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,30-39,All Daycases,Female,2018-04-01,2,1,11
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,30-39,All Daycases,Female,2018-07-01,2,0,10
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,30-39,All Daycases,Female,2018-10-01,1,0,11
+Alps,Dom,Alps,Dom,20-29,Elective Inpatients,Female,2018-04-01,1,5,2
+Alps,Dom,Alps,Dom,20-29,Elective Inpatients,Female,2018-07-01,2,5,2
+Alps,Dom,Alps,Dom,20-29,Elective Inpatients,Female,2018-10-01,2,4,3
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,All Daycases,Female,2018-04-01,1,5,484
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,All Daycases,Female,2018-07-01,0,5,547
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,50-59,All Daycases,Female,2018-10-01,1,5,554
+Himalayas,Mount Everest,Himalayas,Mount Everest,60-69,Elective Inpatients,Female,2018-04-01,4,2695,953
+Himalayas,Mount Everest,Himalayas,Mount Everest,60-69,Elective Inpatients,Female,2018-07-01,5,2622,895
+Himalayas,Mount Everest,Himalayas,Mount Everest,60-69,Elective Inpatients,Female,2018-10-01,5,2708,934
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Elective Inpatients,Female,2018-04-01,1,93,39
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Elective Inpatients,Female,2018-07-01,2,92,40
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,30-39,Elective Inpatients,Female,2018-10-01,1,95,34
+Himalayas,Lhotse,Himalayas,Lhotse,50-59,Elective Inpatients,Male,2018-04-01,1,487,260
+Himalayas,Lhotse,Himalayas,Lhotse,50-59,Elective Inpatients,Male,2018-07-01,3,473,266
+Himalayas,Lhotse,Himalayas,Lhotse,50-59,Elective Inpatients,Male,2018-10-01,1,475,295
+Caucasus,Janga,Caucasus,Janga,10-19,All Daycases,Male,2018-04-01,1,0,90
+Caucasus,Janga,Caucasus,Janga,10-19,All Daycases,Male,2018-07-01,0,1,105
+Caucasus,Janga,Caucasus,Janga,10-19,All Daycases,Male,2018-10-01,2,0,102
+Himalayas,Annapurna I,Himalayas,Annapurna I,20-29,All Daycases,Female,2018-04-01,0,1,130
+Himalayas,Annapurna I,Himalayas,Annapurna I,20-29,All Daycases,Female,2018-07-01,2,2,135
+Himalayas,Annapurna I,Himalayas,Annapurna I,20-29,All Daycases,Female,2018-10-01,0,1,126
+Andes,Artesonraju,Andes,Artesonraju,0-9,All Daycases,Male,2018-04-01,2,2,28
+Andes,Artesonraju,Andes,Artesonraju,0-9,All Daycases,Male,2018-07-01,1,2,29
+Andes,Artesonraju,Andes,Artesonraju,0-9,All Daycases,Male,2018-10-01,0,1,28
+Alps,Grand Combin,Alps,Grand Combin,90+,All Daycases,Male,2018-04-01,0,1,18
+Alps,Grand Combin,Alps,Grand Combin,90+,All Daycases,Male,2018-07-01,0,0,20
+Alps,Grand Combin,Alps,Grand Combin,90+,All Daycases,Male,2018-10-01,2,1,19
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,0-9,Emergency Inpatients,Female,2018-04-01,0,8,3
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,0-9,Emergency Inpatients,Female,2018-07-01,0,6,3
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,0-9,Emergency Inpatients,Female,2018-10-01,2,7,2
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,20-29,All Daycases,Male,2018-04-01,2,0,74
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,20-29,All Daycases,Male,2018-07-01,0,0,66
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,20-29,All Daycases,Male,2018-10-01,0,2,64
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,60-69,Emergency Inpatients,Male,2018-04-01,10,5523,652
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,60-69,Emergency Inpatients,Male,2018-07-01,8,5668,576
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,60-69,Emergency Inpatients,Male,2018-10-01,8,5941,585
+Caucasus,Gistola,Caucasus,Gistola,10-19,Elective Inpatients,Male,2018-04-01,1,38,31
+Caucasus,Gistola,Caucasus,Gistola,10-19,Elective Inpatients,Male,2018-07-01,1,40,32
+Caucasus,Gistola,Caucasus,Gistola,10-19,Elective Inpatients,Male,2018-10-01,0,38,33
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,80-89,Elective Inpatients,Female,2018-04-01,1,43,63
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,80-89,Elective Inpatients,Female,2018-07-01,1,51,62
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,80-89,Elective Inpatients,Female,2018-10-01,2,44,60
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,70-79,Elective Inpatients,Female,2018-04-01,0,45,10
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,70-79,Elective Inpatients,Female,2018-07-01,0,43,9
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,70-79,Elective Inpatients,Female,2018-10-01,1,45,9
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Emergency Inpatients,Female,2018-04-01,14,1276,39
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Emergency Inpatients,Female,2018-07-01,13,1414,37
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Emergency Inpatients,Female,2018-10-01,15,1282,37
+Himalayas,Makalu,Himalayas,Makalu,50-59,Elective Inpatients,Female,2018-04-01,2,895,375
+Himalayas,Makalu,Himalayas,Makalu,50-59,Elective Inpatients,Female,2018-07-01,4,1013,396
+Himalayas,Makalu,Himalayas,Makalu,50-59,Elective Inpatients,Female,2018-10-01,2,892,356
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,30-39,Emergency Inpatients,Male,2018-04-01,2,753,258
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,30-39,Emergency Inpatients,Male,2018-07-01,4,755,242
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,30-39,Emergency Inpatients,Male,2018-10-01,4,868,227
+Andes,El Misti,Andes,El Misti,50-59,Elective Inpatients,Female,2018-04-01,3,308,104
+Andes,El Misti,Andes,El Misti,50-59,Elective Inpatients,Female,2018-07-01,3,293,102
+Andes,El Misti,Andes,El Misti,50-59,Elective Inpatients,Female,2018-10-01,3,275,115
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,90+,Elective Inpatients,Male,2018-04-01,5,96,10
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,90+,Elective Inpatients,Male,2018-07-01,5,97,10
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,90+,Elective Inpatients,Male,2018-10-01,4,86,11
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,50-59,Emergency Inpatients,Female,2018-04-01,6,50859,9832
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,50-59,Emergency Inpatients,Female,2018-07-01,8,57640,10746
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,50-59,Emergency Inpatients,Female,2018-10-01,7,56441,10468
+Andes,Chumpe,Andes,Chumpe,30-39,Elective Inpatients,Female,2018-04-01,0,70,51
+Andes,Chumpe,Andes,Chumpe,30-39,Elective Inpatients,Female,2018-07-01,0,66,43
+Andes,Chumpe,Andes,Chumpe,30-39,Elective Inpatients,Female,2018-10-01,0,70,47
+Alps,Matterhorn,Alps,Matterhorn,80-89,All Daycases,Female,2018-04-01,1,4,113
+Alps,Matterhorn,Alps,Matterhorn,80-89,All Daycases,Female,2018-07-01,1,2,132
+Alps,Matterhorn,Alps,Matterhorn,80-89,All Daycases,Female,2018-10-01,0,3,120
+Himalayas,Manaslu,Himalayas,Manaslu,40-49,Elective Inpatients,Male,2018-04-01,2,228,92
+Himalayas,Manaslu,Himalayas,Manaslu,40-49,Elective Inpatients,Male,2018-07-01,2,197,76
+Himalayas,Manaslu,Himalayas,Manaslu,40-49,Elective Inpatients,Male,2018-10-01,3,217,90
+Himalayas,Annapurna I,Himalayas,Annapurna I,0-9,Emergency Inpatients,Male,2018-04-01,1,123,49
+Himalayas,Annapurna I,Himalayas,Annapurna I,0-9,Emergency Inpatients,Male,2018-07-01,0,121,43
+Himalayas,Annapurna I,Himalayas,Annapurna I,0-9,Emergency Inpatients,Male,2018-10-01,0,118,42
+Andes,El Toro,Andes,El Toro,20-29,Emergency Inpatients,Female,2018-04-01,3,100,174
+Andes,El Toro,Andes,El Toro,20-29,Emergency Inpatients,Female,2018-07-01,3,106,181
+Andes,El Toro,Andes,El Toro,20-29,Emergency Inpatients,Female,2018-10-01,2,111,199
+Caucasus,Kazbek,Caucasus,Kazbek,30-39,Emergency Inpatients,Male,2018-04-01,2,258,80
+Caucasus,Kazbek,Caucasus,Kazbek,30-39,Emergency Inpatients,Male,2018-07-01,3,264,83
+Caucasus,Kazbek,Caucasus,Kazbek,30-39,Emergency Inpatients,Male,2018-10-01,3,264,73
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,All Daycases,Female,2018-04-01,2,4,135
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,All Daycases,Female,2018-07-01,0,2,127
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,All Daycases,Female,2018-10-01,1,4,139
+Alps,Dent Blanche,Alps,Dent Blanche,40-49,Emergency Inpatients,Male,2018-04-01,3,75,34
+Alps,Dent Blanche,Alps,Dent Blanche,40-49,Emergency Inpatients,Male,2018-07-01,3,69,34
+Alps,Dent Blanche,Alps,Dent Blanche,40-49,Emergency Inpatients,Male,2018-10-01,2,68,35
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Elective Inpatients,Female,2018-04-01,3,240,96
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Elective Inpatients,Female,2018-07-01,2,227,92
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Elective Inpatients,Female,2018-10-01,3,199,97
+Andes,Coropuna,Andes,Coropuna,30-39,Elective Inpatients,Male,2018-04-01,0,5,11
+Andes,Coropuna,Andes,Coropuna,30-39,Elective Inpatients,Male,2018-07-01,2,6,10
+Andes,Coropuna,Andes,Coropuna,30-39,Elective Inpatients,Male,2018-10-01,2,5,10
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,80-89,Emergency Inpatients,Female,2018-04-01,15,4537,286
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,80-89,Emergency Inpatients,Female,2018-07-01,13,4891,268
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,80-89,Emergency Inpatients,Female,2018-10-01,13,4112,252
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,90+,Emergency Inpatients,Male,2018-04-01,1,127,33
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,90+,Emergency Inpatients,Male,2018-07-01,1,120,36
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,90+,Emergency Inpatients,Male,2018-10-01,1,123,31
+Caucasus,Janga,Caucasus,Janga,90+,Emergency Inpatients,Male,2018-04-01,13,3284,117
+Caucasus,Janga,Caucasus,Janga,90+,Emergency Inpatients,Male,2018-07-01,13,3213,114
+Caucasus,Janga,Caucasus,Janga,90+,Emergency Inpatients,Male,2018-10-01,13,3128,110
+Himalayas,Annapurna I,Himalayas,Annapurna I,40-49,Elective Inpatients,Male,2018-04-01,1,176,62
+Himalayas,Annapurna I,Himalayas,Annapurna I,40-49,Elective Inpatients,Male,2018-07-01,2,157,60
+Himalayas,Annapurna I,Himalayas,Annapurna I,40-49,Elective Inpatients,Male,2018-10-01,1,158,69
+Alps,Matterhorn,Alps,Matterhorn,90+,Emergency Inpatients,Male,2018-04-01,12,688,27
+Alps,Matterhorn,Alps,Matterhorn,90+,Emergency Inpatients,Male,2018-07-01,11,668,28
+Alps,Matterhorn,Alps,Matterhorn,90+,Emergency Inpatients,Male,2018-10-01,10,734,26
+Himalayas,Makalu,Himalayas,Makalu,70-79,Elective Inpatients,Female,2018-04-01,5,2200,463
+Himalayas,Makalu,Himalayas,Makalu,70-79,Elective Inpatients,Female,2018-07-01,5,2421,491
+Himalayas,Makalu,Himalayas,Makalu,70-79,Elective Inpatients,Female,2018-10-01,5,2165,445
+Andes,El Toro,Andes,El Toro,60-69,Elective Inpatients,Male,2018-04-01,4,77,150
+Andes,El Toro,Andes,El Toro,60-69,Elective Inpatients,Male,2018-07-01,4,69,133
+Andes,El Toro,Andes,El Toro,60-69,Elective Inpatients,Male,2018-10-01,3,66,153
+Andes,Carnicero,Andes,Carnicero,20-29,All Daycases,Male,2018-04-01,2,1,122
+Andes,Carnicero,Andes,Carnicero,20-29,All Daycases,Male,2018-07-01,0,0,123
+Andes,Carnicero,Andes,Carnicero,20-29,All Daycases,Male,2018-10-01,0,1,112
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,20-29,Emergency Inpatients,Female,2018-04-01,2,618,215
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,20-29,Emergency Inpatients,Female,2018-07-01,4,578,209
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,20-29,Emergency Inpatients,Female,2018-10-01,3,610,211
+Andes,El Toro,Andes,El Toro,20-29,Elective Inpatients,Male,2018-04-01,0,10,46
+Andes,El Toro,Andes,El Toro,20-29,Elective Inpatients,Male,2018-07-01,0,10,44
+Andes,El Toro,Andes,El Toro,20-29,Elective Inpatients,Male,2018-10-01,2,10,42
+Caucasus,Shkhara,Caucasus,Shkhara,90+,Emergency Inpatients,Female,2018-04-01,14,948,33
+Caucasus,Shkhara,Caucasus,Shkhara,90+,Emergency Inpatients,Female,2018-07-01,14,849,34
+Caucasus,Shkhara,Caucasus,Shkhara,90+,Emergency Inpatients,Female,2018-10-01,13,857,32
+Andes,El Misti,Andes,El Misti,30-39,Emergency Inpatients,Female,2018-04-01,3,828,192
+Andes,El Misti,Andes,El Misti,30-39,Emergency Inpatients,Female,2018-07-01,4,882,205
+Andes,El Misti,Andes,El Misti,30-39,Emergency Inpatients,Female,2018-10-01,2,861,191
+Andes,El Misti,Andes,El Misti,40-49,Emergency Inpatients,Female,2018-04-01,6,1284,270
+Andes,El Misti,Andes,El Misti,40-49,Emergency Inpatients,Female,2018-07-01,4,1384,267
+Andes,El Misti,Andes,El Misti,40-49,Emergency Inpatients,Female,2018-10-01,6,1345,245
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,50-59,All Daycases,Female,2018-04-01,1,2,25
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,50-59,All Daycases,Female,2018-07-01,0,1,25
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,50-59,All Daycases,Female,2018-10-01,1,1,24
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,70-79,Emergency Inpatients,Female,2018-04-01,12,16377,1135
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,70-79,Emergency Inpatients,Female,2018-07-01,12,14645,1074
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,70-79,Emergency Inpatients,Female,2018-10-01,14,13847,973
+Andes,Carnicero,Andes,Carnicero,80-89,Elective Inpatients,Male,2018-04-01,3,419,79
+Andes,Carnicero,Andes,Carnicero,80-89,Elective Inpatients,Male,2018-07-01,5,402,83
+Andes,Carnicero,Andes,Carnicero,80-89,Elective Inpatients,Male,2018-10-01,4,372,79
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Elective Inpatients,Male,2018-04-01,2,8,7
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Elective Inpatients,Male,2018-07-01,1,9,7
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,Elective Inpatients,Male,2018-10-01,1,8,7
+Andes,Artesonraju,Andes,Artesonraju,40-49,Emergency Inpatients,Male,2018-04-01,5,753,228
+Andes,Artesonraju,Andes,Artesonraju,40-49,Emergency Inpatients,Male,2018-07-01,3,879,199
+Andes,Artesonraju,Andes,Artesonraju,40-49,Emergency Inpatients,Male,2018-10-01,4,860,197
+Himalayas,Shishapangma,Himalayas,Shishapangma,80-89,All Daycases,Male,2018-04-01,0,2,83
+Himalayas,Shishapangma,Himalayas,Shishapangma,80-89,All Daycases,Male,2018-07-01,1,1,82
+Himalayas,Shishapangma,Himalayas,Shishapangma,80-89,All Daycases,Male,2018-10-01,1,1,79
+Alps,Mont Blanc,Alps,Mont Blanc,80-89,All Daycases,Female,2018-04-01,1,10,413
+Alps,Mont Blanc,Alps,Mont Blanc,80-89,All Daycases,Female,2018-07-01,2,10,403
+Alps,Mont Blanc,Alps,Mont Blanc,80-89,All Daycases,Female,2018-10-01,2,9,442
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,10-19,All Daycases,Male,2018-04-01,1,2,73
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,10-19,All Daycases,Male,2018-07-01,2,0,71
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,10-19,All Daycases,Male,2018-10-01,2,1,77
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,10-19,Emergency Inpatients,Female,2018-04-01,2,125,42
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,10-19,Emergency Inpatients,Female,2018-07-01,2,132,42
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,10-19,Emergency Inpatients,Female,2018-10-01,3,124,42
+Andes,Huandoy,Andes,Huandoy,30-39,All Daycases,Female,2018-04-01,2,0,209
+Andes,Huandoy,Andes,Huandoy,30-39,All Daycases,Female,2018-07-01,1,1,205
+Andes,Huandoy,Andes,Huandoy,30-39,All Daycases,Female,2018-10-01,2,0,217
+Himalayas,Makalu,Himalayas,Makalu,10-19,All Daycases,Female,2018-04-01,1,2,194
+Himalayas,Makalu,Himalayas,Makalu,10-19,All Daycases,Female,2018-07-01,0,0,224
+Himalayas,Makalu,Himalayas,Makalu,10-19,All Daycases,Female,2018-10-01,1,0,196
+Himalayas,Makalu,Himalayas,Makalu,40-49,All Daycases,Male,2018-04-01,1,3,774
+Himalayas,Makalu,Himalayas,Makalu,40-49,All Daycases,Male,2018-07-01,1,3,656
+Himalayas,Makalu,Himalayas,Makalu,40-49,All Daycases,Male,2018-10-01,0,5,703
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,10-19,All Daycases,Female,2018-04-01,1,1,105
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,10-19,All Daycases,Female,2018-07-01,1,1,118
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,10-19,All Daycases,Female,2018-10-01,1,1,108
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,50-59,All Daycases,Male,2018-04-01,0,3,251
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,50-59,All Daycases,Male,2018-07-01,0,3,284
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,50-59,All Daycases,Male,2018-10-01,2,3,261
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,20-29,Emergency Inpatients,Male,2018-04-01,2,343,83
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,20-29,Emergency Inpatients,Male,2018-07-01,3,317,87
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,20-29,Emergency Inpatients,Male,2018-10-01,3,324,91
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,60-69,Emergency Inpatients,Female,2018-04-01,7,2534,472
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,60-69,Emergency Inpatients,Female,2018-07-01,7,2410,491
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,60-69,Emergency Inpatients,Female,2018-10-01,6,2359,429
+Caucasus,Elbrus,Caucasus,Elbrus,10-19,Elective Inpatients,Male,2018-04-01,2,1,2
+Caucasus,Elbrus,Caucasus,Elbrus,10-19,Elective Inpatients,Male,2018-07-01,0,0,1
+Caucasus,Elbrus,Caucasus,Elbrus,10-19,Elective Inpatients,Male,2018-10-01,1,0,2
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,90+,All Daycases,Male,2018-04-01,1,0,5
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,90+,All Daycases,Male,2018-07-01,0,2,3
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,90+,All Daycases,Male,2018-10-01,1,1,3
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,90+,Emergency Inpatients,Male,2018-04-01,14,3007,89
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,90+,Emergency Inpatients,Male,2018-07-01,13,2938,84
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,90+,Emergency Inpatients,Male,2018-10-01,15,3303,85
+Alps,Dent Blanche,Alps,Dent Blanche,40-49,Elective Inpatients,Male,2018-04-01,1,7,9
+Alps,Dent Blanche,Alps,Dent Blanche,40-49,Elective Inpatients,Male,2018-07-01,0,9,8
+Alps,Dent Blanche,Alps,Dent Blanche,40-49,Elective Inpatients,Male,2018-10-01,0,8,9
+Andes,Artesonraju,Andes,Artesonraju,20-29,All Daycases,Male,2018-04-01,2,1,99
+Andes,Artesonraju,Andes,Artesonraju,20-29,All Daycases,Male,2018-07-01,2,0,103
+Andes,Artesonraju,Andes,Artesonraju,20-29,All Daycases,Male,2018-10-01,1,1,112
+Andes,El Toro,Andes,El Toro,20-29,Emergency Inpatients,Male,2018-04-01,2,87,165
+Andes,El Toro,Andes,El Toro,20-29,Emergency Inpatients,Male,2018-07-01,3,85,194
+Andes,El Toro,Andes,El Toro,20-29,Emergency Inpatients,Male,2018-10-01,2,97,191
+Andes,El Toro,Andes,El Toro,50-59,All Daycases,Female,2018-04-01,0,0,392
+Andes,El Toro,Andes,El Toro,50-59,All Daycases,Female,2018-07-01,1,1,468
+Andes,El Toro,Andes,El Toro,50-59,All Daycases,Female,2018-10-01,1,0,417
+Andes,Chumpe,Andes,Chumpe,0-9,Emergency Inpatients,Male,2018-04-01,0,73,39
+Andes,Chumpe,Andes,Chumpe,0-9,Emergency Inpatients,Male,2018-07-01,0,65,44
+Andes,Chumpe,Andes,Chumpe,0-9,Emergency Inpatients,Male,2018-10-01,1,76,47
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,60-69,All Daycases,Female,2018-04-01,2,3,311
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,60-69,All Daycases,Female,2018-07-01,0,3,291
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,60-69,All Daycases,Female,2018-10-01,2,3,282
+Caucasus,Pushkin,Caucasus,Pushkin,40-49,Elective Inpatients,Male,2018-04-01,2,77,46
+Caucasus,Pushkin,Caucasus,Pushkin,40-49,Elective Inpatients,Male,2018-07-01,3,81,42
+Caucasus,Pushkin,Caucasus,Pushkin,40-49,Elective Inpatients,Male,2018-10-01,3,86,38
+Alps,Matterhorn,Alps,Matterhorn,40-49,Emergency Inpatients,Female,2018-04-01,3,526,121
+Alps,Matterhorn,Alps,Matterhorn,40-49,Emergency Inpatients,Female,2018-07-01,3,491,101
+Alps,Matterhorn,Alps,Matterhorn,40-49,Emergency Inpatients,Female,2018-10-01,5,531,106
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Emergency Inpatients,Female,2018-04-01,14,41251,2815
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Emergency Inpatients,Female,2018-07-01,16,39559,2888
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Emergency Inpatients,Female,2018-10-01,16,35948,2721
+Caucasus,Shkhara,Caucasus,Shkhara,70-79,Emergency Inpatients,Female,2018-04-01,9,2512,282
+Caucasus,Shkhara,Caucasus,Shkhara,70-79,Emergency Inpatients,Female,2018-07-01,10,2712,305
+Caucasus,Shkhara,Caucasus,Shkhara,70-79,Emergency Inpatients,Female,2018-10-01,9,2636,261
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Elective Inpatients,Male,2018-04-01,4,126,8
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Elective Inpatients,Male,2018-07-01,6,120,8
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Elective Inpatients,Male,2018-10-01,5,124,10
+Alps,Weisshorn,Alps,Weisshorn,30-39,All Daycases,Female,2018-04-01,1,0,11
+Alps,Weisshorn,Alps,Weisshorn,30-39,All Daycases,Female,2018-07-01,1,0,11
+Alps,Weisshorn,Alps,Weisshorn,30-39,All Daycases,Female,2018-10-01,2,0,10
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,80-89,Emergency Inpatients,Male,2018-04-01,13,10825,436
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,80-89,Emergency Inpatients,Male,2018-07-01,15,10684,411
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,80-89,Emergency Inpatients,Male,2018-10-01,13,11332,413
+Alps,Mont Blanc,Alps,Mont Blanc,70-79,Emergency Inpatients,Male,2018-04-01,10,7506,771
+Alps,Mont Blanc,Alps,Mont Blanc,70-79,Emergency Inpatients,Male,2018-07-01,11,7371,719
+Alps,Mont Blanc,Alps,Mont Blanc,70-79,Emergency Inpatients,Male,2018-10-01,10,6668,748
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,30-39,Emergency Inpatients,Male,2018-04-01,2,328,142
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,30-39,Emergency Inpatients,Male,2018-07-01,3,305,127
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,30-39,Emergency Inpatients,Male,2018-10-01,3,333,128
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,60-69,All Daycases,Male,2018-04-01,0,1,241
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,60-69,All Daycases,Male,2018-07-01,0,3,242
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,60-69,All Daycases,Male,2018-10-01,1,2,243
+Alps,Matterhorn,Alps,Matterhorn,30-39,Elective Inpatients,Male,2018-04-01,0,32,18
+Alps,Matterhorn,Alps,Matterhorn,30-39,Elective Inpatients,Male,2018-07-01,2,28,20
+Alps,Matterhorn,Alps,Matterhorn,30-39,Elective Inpatients,Male,2018-10-01,2,30,18
+Alps,Dent Blanche,Alps,Dent Blanche,80-89,All Daycases,Male,2018-04-01,0,0,36
+Alps,Dent Blanche,Alps,Dent Blanche,80-89,All Daycases,Male,2018-07-01,2,1,37
+Alps,Dent Blanche,Alps,Dent Blanche,80-89,All Daycases,Male,2018-10-01,1,1,40
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,10-19,Emergency Inpatients,Male,2018-04-01,2,126,54
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,10-19,Emergency Inpatients,Male,2018-07-01,4,120,54
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,10-19,Emergency Inpatients,Male,2018-10-01,2,117,57
+Caucasus,Shkhara,Caucasus,Shkhara,20-29,Emergency Inpatients,Male,2018-04-01,4,211,77
+Caucasus,Shkhara,Caucasus,Shkhara,20-29,Emergency Inpatients,Male,2018-07-01,2,235,77
+Caucasus,Shkhara,Caucasus,Shkhara,20-29,Emergency Inpatients,Male,2018-10-01,3,216,68
+Himalayas,Mount Everest,Himalayas,Mount Everest,20-29,Emergency Inpatients,Female,2018-04-01,4,3606,1284
+Himalayas,Mount Everest,Himalayas,Mount Everest,20-29,Emergency Inpatients,Female,2018-07-01,3,3359,1263
+Himalayas,Mount Everest,Himalayas,Mount Everest,20-29,Emergency Inpatients,Female,2018-10-01,5,3751,1197
+Himalayas,Manaslu,Himalayas,Manaslu,40-49,Emergency Inpatients,Female,2018-04-01,6,2214,373
+Himalayas,Manaslu,Himalayas,Manaslu,40-49,Emergency Inpatients,Female,2018-07-01,4,2061,349
+Himalayas,Manaslu,Himalayas,Manaslu,40-49,Emergency Inpatients,Female,2018-10-01,6,2371,349
+Andes,Artesonraju,Andes,Artesonraju,70-79,Emergency Inpatients,Male,2018-04-01,9,3378,438
+Andes,Artesonraju,Andes,Artesonraju,70-79,Emergency Inpatients,Male,2018-07-01,7,3645,445
+Andes,Artesonraju,Andes,Artesonraju,70-79,Emergency Inpatients,Male,2018-10-01,9,3250,440
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,50-59,Emergency Inpatients,Male,2018-04-01,7,3640,488
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,50-59,Emergency Inpatients,Male,2018-07-01,8,3913,545
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,50-59,Emergency Inpatients,Male,2018-10-01,6,3633,553
+Caucasus,Janga,Caucasus,Janga,50-59,Elective Inpatients,Male,2018-04-01,1,394,193
+Caucasus,Janga,Caucasus,Janga,50-59,Elective Inpatients,Male,2018-07-01,1,448,185
+Caucasus,Janga,Caucasus,Janga,50-59,Elective Inpatients,Male,2018-10-01,2,441,170
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,0-9,All Daycases,Female,2018-04-01,2,0,22
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,0-9,All Daycases,Female,2018-07-01,0,1,21
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,0-9,All Daycases,Female,2018-10-01,0,0,23
+Alps,Weisshorn,Alps,Weisshorn,40-49,All Daycases,Female,2018-04-01,0,2,16
+Alps,Weisshorn,Alps,Weisshorn,40-49,All Daycases,Female,2018-07-01,2,1,14
+Alps,Weisshorn,Alps,Weisshorn,40-49,All Daycases,Female,2018-10-01,2,0,14
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,All Daycases,Male,2018-04-01,2,0,22
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,All Daycases,Male,2018-07-01,2,0,25
+Caucasus,Kazbek,Caucasus,Kazbek,10-19,All Daycases,Male,2018-10-01,2,0,26
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Emergency Inpatients,Male,2018-04-01,3,30,9
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Emergency Inpatients,Male,2018-07-01,1,33,9
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Emergency Inpatients,Male,2018-10-01,2,32,9
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Male,2018-04-01,10,3644,195
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Male,2018-07-01,11,4029,177
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Male,2018-10-01,10,4043,186
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,20-29,Emergency Inpatients,Male,2018-04-01,2,330,119
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,20-29,Emergency Inpatients,Male,2018-07-01,3,358,126
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,20-29,Emergency Inpatients,Male,2018-10-01,2,376,104
+Saint Elias,King Peak,Saint Elias,King Peak,80-89,All Daycases,Male,2018-04-01,1,5,212
+Saint Elias,King Peak,Saint Elias,King Peak,80-89,All Daycases,Male,2018-07-01,1,7,221
+Saint Elias,King Peak,Saint Elias,King Peak,80-89,All Daycases,Male,2018-10-01,1,5,227
+Caucasus,Janga,Caucasus,Janga,80-89,All Daycases,Female,2018-04-01,0,12,534
+Caucasus,Janga,Caucasus,Janga,80-89,All Daycases,Female,2018-07-01,2,12,519
+Caucasus,Janga,Caucasus,Janga,80-89,All Daycases,Female,2018-10-01,0,13,475
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,20-29,Emergency Inpatients,Female,2018-04-01,2,601,120
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,20-29,Emergency Inpatients,Female,2018-07-01,3,598,131
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,20-29,Emergency Inpatients,Female,2018-10-01,3,581,109
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,60-69,All Daycases,Female,2018-04-01,2,1,31
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,60-69,All Daycases,Female,2018-07-01,1,0,27
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,60-69,All Daycases,Female,2018-10-01,2,0,31
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,10-19,Elective Inpatients,Male,2018-04-01,0,2,1
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,10-19,Elective Inpatients,Male,2018-07-01,1,0,2
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,10-19,Elective Inpatients,Male,2018-10-01,0,0,2
+Alps,Weisshorn,Alps,Weisshorn,70-79,Emergency Inpatients,Female,2018-04-01,8,390,44
+Alps,Weisshorn,Alps,Weisshorn,70-79,Emergency Inpatients,Female,2018-07-01,8,373,39
+Alps,Weisshorn,Alps,Weisshorn,70-79,Emergency Inpatients,Female,2018-10-01,8,373,40
+Saint Elias,King Peak,Saint Elias,King Peak,60-69,Elective Inpatients,Male,2018-04-01,2,309,95
+Saint Elias,King Peak,Saint Elias,King Peak,60-69,Elective Inpatients,Male,2018-07-01,4,332,96
+Saint Elias,King Peak,Saint Elias,King Peak,60-69,Elective Inpatients,Male,2018-10-01,4,339,94
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,80-89,Elective Inpatients,Male,2018-04-01,0,42,40
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,80-89,Elective Inpatients,Male,2018-07-01,0,38,37
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,80-89,Elective Inpatients,Male,2018-10-01,2,43,40
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,50-59,Elective Inpatients,Female,2018-04-01,1,18,56
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,50-59,Elective Inpatients,Female,2018-07-01,2,19,49
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,50-59,Elective Inpatients,Female,2018-10-01,1,18,48
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,90+,Emergency Inpatients,Male,2018-04-01,9,121,4
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,90+,Emergency Inpatients,Male,2018-07-01,9,118,4
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,90+,Emergency Inpatients,Male,2018-10-01,9,119,5
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,0-9,Elective Inpatients,Female,2018-04-01,0,15,8
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,0-9,Elective Inpatients,Female,2018-07-01,0,15,8
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,0-9,Elective Inpatients,Female,2018-10-01,0,14,10
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,All Daycases,Male,2018-04-01,0,2,155
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,All Daycases,Male,2018-07-01,1,0,171
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,All Daycases,Male,2018-10-01,2,2,155
+Caucasus,Janga,Caucasus,Janga,70-79,All Daycases,Female,2018-04-01,2,12,883
+Caucasus,Janga,Caucasus,Janga,70-79,All Daycases,Female,2018-07-01,0,12,816
+Caucasus,Janga,Caucasus,Janga,70-79,All Daycases,Female,2018-10-01,0,11,795
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,40-49,All Daycases,Male,2018-04-01,0,2,171
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,40-49,All Daycases,Male,2018-07-01,2,0,156
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,40-49,All Daycases,Male,2018-10-01,1,1,142
+Caucasus,Elbrus,Caucasus,Elbrus,20-29,Elective Inpatients,Male,2018-04-01,1,5,5
+Caucasus,Elbrus,Caucasus,Elbrus,20-29,Elective Inpatients,Male,2018-07-01,1,5,5
+Caucasus,Elbrus,Caucasus,Elbrus,20-29,Elective Inpatients,Male,2018-10-01,2,4,5
+Himalayas,Lhotse,Himalayas,Lhotse,10-19,Emergency Inpatients,Female,2018-04-01,2,434,205
+Himalayas,Lhotse,Himalayas,Lhotse,10-19,Emergency Inpatients,Female,2018-07-01,1,459,201
+Himalayas,Lhotse,Himalayas,Lhotse,10-19,Emergency Inpatients,Female,2018-10-01,1,479,216
+Alps,Dom,Alps,Dom,80-89,Emergency Inpatients,Female,2018-04-01,9,394,24
+Alps,Dom,Alps,Dom,80-89,Emergency Inpatients,Female,2018-07-01,8,392,24
+Alps,Dom,Alps,Dom,80-89,Emergency Inpatients,Female,2018-10-01,9,414,24
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,50-59,Emergency Inpatients,Male,2018-04-01,2,146,31
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,50-59,Emergency Inpatients,Male,2018-07-01,1,132,32
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,50-59,Emergency Inpatients,Male,2018-10-01,1,125,29
+Alps,Matterhorn,Alps,Matterhorn,80-89,Emergency Inpatients,Male,2018-04-01,9,2178,127
+Alps,Matterhorn,Alps,Matterhorn,80-89,Emergency Inpatients,Male,2018-07-01,10,2295,131
+Alps,Matterhorn,Alps,Matterhorn,80-89,Emergency Inpatients,Male,2018-10-01,10,2323,140
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,All Daycases,Female,2018-04-01,0,0,30
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,All Daycases,Female,2018-07-01,0,0,34
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,All Daycases,Female,2018-10-01,0,0,32
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,Elective Inpatients,Male,2018-04-01,1,45,24
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,Elective Inpatients,Male,2018-07-01,2,47,25
+Caucasus,Kazbek,Caucasus,Kazbek,40-49,Elective Inpatients,Male,2018-10-01,3,53,23
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,40-49,Elective Inpatients,Female,2018-04-01,2,10,46
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,40-49,Elective Inpatients,Female,2018-07-01,2,9,46
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,40-49,Elective Inpatients,Female,2018-10-01,0,11,45
+Andes,El Toro,Andes,El Toro,50-59,Emergency Inpatients,Female,2018-04-01,6,462,515
+Andes,El Toro,Andes,El Toro,50-59,Emergency Inpatients,Female,2018-07-01,7,487,507
+Andes,El Toro,Andes,El Toro,50-59,Emergency Inpatients,Female,2018-10-01,6,468,496
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,80-89,All Daycases,Female,2018-04-01,1,2,78
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,80-89,All Daycases,Female,2018-07-01,0,1,76
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,80-89,All Daycases,Female,2018-10-01,0,0,79
+Alps,Dom,Alps,Dom,70-79,All Daycases,Female,2018-04-01,1,0,35
+Alps,Dom,Alps,Dom,70-79,All Daycases,Female,2018-07-01,1,0,34
+Alps,Dom,Alps,Dom,70-79,All Daycases,Female,2018-10-01,1,0,33
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,0-9,Elective Inpatients,Female,2018-04-01,1,12,11
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,0-9,Elective Inpatients,Female,2018-07-01,1,12,13
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,0-9,Elective Inpatients,Female,2018-10-01,1,12,11
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,Emergency Inpatients,Female,2018-04-01,6,355,39
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,Emergency Inpatients,Female,2018-07-01,7,384,37
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,Emergency Inpatients,Female,2018-10-01,7,370,44
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,90+,Elective Inpatients,Male,2018-04-01,4,12,1
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,90+,Elective Inpatients,Male,2018-07-01,4,14,2
+Himalayas,Dhaulagiri I,Himalayas,Dhaulagiri I,90+,Elective Inpatients,Male,2018-10-01,4,13,1
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,70-79,All Daycases,Female,2018-04-01,0,4,353
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,70-79,All Daycases,Female,2018-07-01,1,5,360
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,70-79,All Daycases,Female,2018-10-01,0,5,360
+Caucasus,Janga,Caucasus,Janga,20-29,All Daycases,Female,2018-04-01,1,1,221
+Caucasus,Janga,Caucasus,Janga,20-29,All Daycases,Female,2018-07-01,0,2,233
+Caucasus,Janga,Caucasus,Janga,20-29,All Daycases,Female,2018-10-01,0,0,224
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,50-59,Elective Inpatients,Male,2018-04-01,1,157,55
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,50-59,Elective Inpatients,Male,2018-07-01,1,167,52
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,50-59,Elective Inpatients,Male,2018-10-01,3,151,52
+Caucasus,Gistola,Caucasus,Gistola,10-19,Emergency Inpatients,Male,2018-04-01,2,334,132
+Caucasus,Gistola,Caucasus,Gistola,10-19,Emergency Inpatients,Male,2018-07-01,2,338,135
+Caucasus,Gistola,Caucasus,Gistola,10-19,Emergency Inpatients,Male,2018-10-01,3,318,134
+Andes,El Misti,Andes,El Misti,30-39,Emergency Inpatients,Female,2018-04-01,3,862,183
+Andes,El Misti,Andes,El Misti,30-39,Emergency Inpatients,Female,2018-07-01,4,884,193
+Andes,El Misti,Andes,El Misti,30-39,Emergency Inpatients,Female,2018-10-01,2,813,202
+Caucasus,Elbrus,Caucasus,Elbrus,90+,Emergency Inpatients,Male,2018-04-01,8,118,10
+Caucasus,Elbrus,Caucasus,Elbrus,90+,Emergency Inpatients,Male,2018-07-01,7,106,8
+Caucasus,Elbrus,Caucasus,Elbrus,90+,Emergency Inpatients,Male,2018-10-01,7,108,10
+Andes,Chumpe,Andes,Chumpe,90+,Emergency Inpatients,Female,2018-04-01,11,1371,64
+Andes,Chumpe,Andes,Chumpe,90+,Emergency Inpatients,Female,2018-07-01,12,1468,65
+Andes,Chumpe,Andes,Chumpe,90+,Emergency Inpatients,Female,2018-10-01,12,1478,63
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,All Daycases,Female,2018-04-01,0,2,209
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,All Daycases,Female,2018-07-01,0,1,238
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,All Daycases,Female,2018-10-01,0,0,223
+Himalayas,Lhotse,Himalayas,Lhotse,30-39,Elective Inpatients,Female,2018-04-01,1,199,128
+Himalayas,Lhotse,Himalayas,Lhotse,30-39,Elective Inpatients,Female,2018-07-01,0,177,132
+Himalayas,Lhotse,Himalayas,Lhotse,30-39,Elective Inpatients,Female,2018-10-01,2,182,144
+Andes,Carnicero,Andes,Carnicero,60-69,Elective Inpatients,Female,2018-04-01,1,249,136
+Andes,Carnicero,Andes,Carnicero,60-69,Elective Inpatients,Female,2018-07-01,3,272,128
+Andes,Carnicero,Andes,Carnicero,60-69,Elective Inpatients,Female,2018-10-01,2,248,117
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Female,2018-04-01,10,4444,182
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Female,2018-07-01,11,4529,217
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Female,2018-10-01,12,3957,201
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,10-19,Emergency Inpatients,Female,2018-04-01,3,355,92
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,10-19,Emergency Inpatients,Female,2018-07-01,3,366,92
+Saint Elias,Mount Steele,Saint Elias,Mount Steele,10-19,Emergency Inpatients,Female,2018-10-01,3,376,84
+Caucasus,Gistola,Caucasus,Gistola,20-29,All Daycases,Male,2018-04-01,0,0,238
+Caucasus,Gistola,Caucasus,Gistola,20-29,All Daycases,Male,2018-07-01,1,2,255
+Caucasus,Gistola,Caucasus,Gistola,20-29,All Daycases,Male,2018-10-01,2,2,242
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-04-01,9,4183,334
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-07-01,11,3850,337
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-10-01,11,3610,356
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Male,2018-04-01,1,219,77
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Male,2018-07-01,2,200,78
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Male,2018-10-01,2,224,93
+Saint Elias,King Peak,Saint Elias,King Peak,80-89,Elective Inpatients,Male,2018-04-01,4,570,62
+Saint Elias,King Peak,Saint Elias,King Peak,80-89,Elective Inpatients,Male,2018-07-01,4,629,66
+Saint Elias,King Peak,Saint Elias,King Peak,80-89,Elective Inpatients,Male,2018-10-01,4,624,61
+Caucasus,Pushkin,Caucasus,Pushkin,20-29,Emergency Inpatients,Male,2018-04-01,4,286,111
+Caucasus,Pushkin,Caucasus,Pushkin,20-29,Emergency Inpatients,Male,2018-07-01,4,339,94
+Caucasus,Pushkin,Caucasus,Pushkin,20-29,Emergency Inpatients,Male,2018-10-01,2,304,99
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,50-59,Emergency Inpatients,Female,2018-04-01,5,1066,342
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,50-59,Emergency Inpatients,Female,2018-07-01,5,1150,327
+Saint Elias,Mount Wood,Saint Elias,Mount Wood,50-59,Emergency Inpatients,Female,2018-10-01,5,1177,336
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,30-39,All Daycases,Female,2018-04-01,2,1,315
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,30-39,All Daycases,Female,2018-07-01,0,2,276
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,30-39,All Daycases,Female,2018-10-01,1,1,322
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,All Daycases,Female,2018-04-01,0,1,88
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,All Daycases,Female,2018-07-01,2,1,81
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,All Daycases,Female,2018-10-01,1,2,73
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,40-49,Emergency Inpatients,Male,2018-04-01,6,1204,194
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,40-49,Emergency Inpatients,Male,2018-07-01,5,1173,210
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,40-49,Emergency Inpatients,Male,2018-10-01,4,1320,205
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,40-49,All Daycases,Female,2018-04-01,1,1,14
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,40-49,All Daycases,Female,2018-07-01,1,0,15
+Saint Elias,Mount Churchill,Saint Elias,Mount Churchill,40-49,All Daycases,Female,2018-10-01,2,1,16
+Andes,El Toro,Andes,El Toro,30-39,Elective Inpatients,Female,2018-04-01,0,16,57
+Andes,El Toro,Andes,El Toro,30-39,Elective Inpatients,Female,2018-07-01,0,18,58
+Andes,El Toro,Andes,El Toro,30-39,Elective Inpatients,Female,2018-10-01,1,16,56
+Himalayas,Lhotse,Himalayas,Lhotse,90+,All Daycases,Male,2018-04-01,2,4,161
+Himalayas,Lhotse,Himalayas,Lhotse,90+,All Daycases,Male,2018-07-01,1,3,146
+Himalayas,Lhotse,Himalayas,Lhotse,90+,All Daycases,Male,2018-10-01,2,4,158
+Himalayas,Annapurna I,Himalayas,Annapurna I,70-79,All Daycases,Female,2018-04-01,1,9,479
+Himalayas,Annapurna I,Himalayas,Annapurna I,70-79,All Daycases,Female,2018-07-01,1,9,457
+Himalayas,Annapurna I,Himalayas,Annapurna I,70-79,All Daycases,Female,2018-10-01,2,8,499
+Andes,Artesonraju,Andes,Artesonraju,70-79,Emergency Inpatients,Male,2018-04-01,8,3692,461
+Andes,Artesonraju,Andes,Artesonraju,70-79,Emergency Inpatients,Male,2018-07-01,7,3779,430
+Andes,Artesonraju,Andes,Artesonraju,70-79,Emergency Inpatients,Male,2018-10-01,7,3755,420
+Himalayas,Lhotse,Himalayas,Lhotse,30-39,All Daycases,Female,2018-04-01,2,2,445
+Himalayas,Lhotse,Himalayas,Lhotse,30-39,All Daycases,Female,2018-07-01,2,1,500
+Himalayas,Lhotse,Himalayas,Lhotse,30-39,All Daycases,Female,2018-10-01,1,1,481
+Andes,El Misti,Andes,El Misti,50-59,Emergency Inpatients,Female,2018-04-01,6,2408,458
+Andes,El Misti,Andes,El Misti,50-59,Emergency Inpatients,Female,2018-07-01,5,2625,466
+Andes,El Misti,Andes,El Misti,50-59,Emergency Inpatients,Female,2018-10-01,7,2648,451
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Elective Inpatients,Female,2018-04-01,2,46,99
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Elective Inpatients,Female,2018-07-01,0,39,98
+Himalayas,Nanga Parbat,Himalayas,Nanga Parbat,70-79,Elective Inpatients,Female,2018-10-01,2,46,88
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Elective Inpatients,Male,2018-04-01,3,414,118
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Elective Inpatients,Male,2018-07-01,4,384,98
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Elective Inpatients,Male,2018-10-01,4,372,117
+Andes,Chumpe,Andes,Chumpe,30-39,Elective Inpatients,Female,2018-04-01,1,70,46
+Andes,Chumpe,Andes,Chumpe,30-39,Elective Inpatients,Female,2018-07-01,1,70,49
+Andes,Chumpe,Andes,Chumpe,30-39,Elective Inpatients,Female,2018-10-01,0,61,46
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Elective Inpatients,Female,2018-04-01,2,435,104
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Elective Inpatients,Female,2018-07-01,2,425,116
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Elective Inpatients,Female,2018-10-01,4,438,106
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,70-79,All Daycases,Male,2018-04-01,1,6,363
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,70-79,All Daycases,Male,2018-07-01,2,7,366
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,70-79,All Daycases,Male,2018-10-01,1,5,328
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,10-19,All Daycases,Female,2018-04-01,1,1,115
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,10-19,All Daycases,Female,2018-07-01,2,0,115
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,10-19,All Daycases,Female,2018-10-01,2,2,114
+Caucasus,Gistola,Caucasus,Gistola,80-89,All Daycases,Male,2018-04-01,2,11,510
+Caucasus,Gistola,Caucasus,Gistola,80-89,All Daycases,Male,2018-07-01,1,11,520
+Caucasus,Gistola,Caucasus,Gistola,80-89,All Daycases,Male,2018-10-01,1,11,574
+Alps,Matterhorn,Alps,Matterhorn,40-49,All Daycases,Male,2018-04-01,2,1,85
+Alps,Matterhorn,Alps,Matterhorn,40-49,All Daycases,Male,2018-07-01,1,1,87
+Alps,Matterhorn,Alps,Matterhorn,40-49,All Daycases,Male,2018-10-01,1,2,85
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Elective Inpatients,Male,2018-04-01,4,1434,841
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Elective Inpatients,Male,2018-07-01,3,1493,782
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Elective Inpatients,Male,2018-10-01,2,1489,749
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,All Daycases,Male,2018-04-01,2,0,15
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,All Daycases,Male,2018-07-01,0,2,14
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,40-49,All Daycases,Male,2018-10-01,0,1,15
+Andes,Artesonraju,Andes,Artesonraju,50-59,Emergency Inpatients,Male,2018-04-01,4,1596,356
+Andes,Artesonraju,Andes,Artesonraju,50-59,Emergency Inpatients,Male,2018-07-01,4,1532,330
+Andes,Artesonraju,Andes,Artesonraju,50-59,Emergency Inpatients,Male,2018-10-01,4,1529,337
+Alps,Dom,Alps,Dom,60-69,Emergency Inpatients,Female,2018-04-01,4,221,39
+Alps,Dom,Alps,Dom,60-69,Emergency Inpatients,Female,2018-07-01,6,256,35
+Alps,Dom,Alps,Dom,60-69,Emergency Inpatients,Female,2018-10-01,6,256,34
+Andes,El Toro,Andes,El Toro,50-59,Elective Inpatients,Male,2018-04-01,2,47,117
+Andes,El Toro,Andes,El Toro,50-59,Elective Inpatients,Male,2018-07-01,3,51,110
+Andes,El Toro,Andes,El Toro,50-59,Elective Inpatients,Male,2018-10-01,1,46,124
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,80-89,Elective Inpatients,Male,2018-04-01,5,794,102
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,80-89,Elective Inpatients,Male,2018-07-01,3,710,104
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,80-89,Elective Inpatients,Male,2018-10-01,3,754,110
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,60-69,Emergency Inpatients,Male,2018-04-01,7,3507,696
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,60-69,Emergency Inpatients,Male,2018-07-01,5,3936,586
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,60-69,Emergency Inpatients,Male,2018-10-01,5,3655,583
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Emergency Inpatients,Female,2018-04-01,4,1827,373
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Emergency Inpatients,Female,2018-07-01,4,2038,348
+Alps,Mont Blanc,Alps,Mont Blanc,40-49,Emergency Inpatients,Female,2018-10-01,4,2050,367
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,40-49,Emergency Inpatients,Male,2018-04-01,2,73,17
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,40-49,Emergency Inpatients,Male,2018-07-01,0,68,17
+Alps,Rimpfischhorn,Alps,Rimpfischhorn,40-49,Emergency Inpatients,Male,2018-10-01,2,67,17
+Caucasus,Gistola,Caucasus,Gistola,80-89,All Daycases,Male,2018-04-01,2,12,530
+Caucasus,Gistola,Caucasus,Gistola,80-89,All Daycases,Male,2018-07-01,2,12,564
+Caucasus,Gistola,Caucasus,Gistola,80-89,All Daycases,Male,2018-10-01,2,13,585
+Andes,Coropuna,Andes,Coropuna,30-39,Elective Inpatients,Male,2018-04-01,2,5,10
+Andes,Coropuna,Andes,Coropuna,30-39,Elective Inpatients,Male,2018-07-01,0,6,10
+Andes,Coropuna,Andes,Coropuna,30-39,Elective Inpatients,Male,2018-10-01,2,5,9
+Alps,Dent Blanche,Alps,Dent Blanche,20-29,All Daycases,Male,2018-04-01,2,1,18
+Alps,Dent Blanche,Alps,Dent Blanche,20-29,All Daycases,Male,2018-07-01,1,0,16
+Alps,Dent Blanche,Alps,Dent Blanche,20-29,All Daycases,Male,2018-10-01,2,1,17
+Andes,El Misti,Andes,El Misti,0-9,Elective Inpatients,Female,2018-04-01,2,16,10
+Andes,El Misti,Andes,El Misti,0-9,Elective Inpatients,Female,2018-07-01,1,14,12
+Andes,El Misti,Andes,El Misti,0-9,Elective Inpatients,Female,2018-10-01,2,14,11
+Andes,Carnicero,Andes,Carnicero,80-89,Emergency Inpatients,Male,2018-04-01,8,3596,336
+Andes,Carnicero,Andes,Carnicero,80-89,Emergency Inpatients,Male,2018-07-01,10,3718,349
+Andes,Carnicero,Andes,Carnicero,80-89,Emergency Inpatients,Male,2018-10-01,9,3330,348
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Male,2018-04-01,12,3684,172
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Male,2018-07-01,10,4122,196
+Himalayas,Lhotse,Himalayas,Lhotse,90+,Emergency Inpatients,Male,2018-10-01,12,3945,194
+Caucasus,Pushkin,Caucasus,Pushkin,10-19,All Daycases,Male,2018-04-01,0,2,40
+Caucasus,Pushkin,Caucasus,Pushkin,10-19,All Daycases,Male,2018-07-01,0,1,37
+Caucasus,Pushkin,Caucasus,Pushkin,10-19,All Daycases,Male,2018-10-01,1,1,37
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,All Daycases,Male,2018-04-01,1,1,71
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,All Daycases,Male,2018-07-01,0,2,79
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,All Daycases,Male,2018-10-01,2,2,80
+Himalayas,Shishapangma,Himalayas,Shishapangma,20-29,Emergency Inpatients,Male,2018-04-01,2,158,42
+Himalayas,Shishapangma,Himalayas,Shishapangma,20-29,Emergency Inpatients,Male,2018-07-01,2,142,38
+Himalayas,Shishapangma,Himalayas,Shishapangma,20-29,Emergency Inpatients,Male,2018-10-01,1,151,39
+Alps,Dom,Alps,Dom,10-19,Elective Inpatients,Male,2018-04-01,1,1,1
+Alps,Dom,Alps,Dom,10-19,Elective Inpatients,Male,2018-07-01,2,1,1
+Alps,Dom,Alps,Dom,10-19,Elective Inpatients,Male,2018-10-01,1,2,1
+Alps,Mont Blanc,Alps,Mont Blanc,80-89,All Daycases,Female,2018-04-01,2,9,428
+Alps,Mont Blanc,Alps,Mont Blanc,80-89,All Daycases,Female,2018-07-01,0,9,427
+Alps,Mont Blanc,Alps,Mont Blanc,80-89,All Daycases,Female,2018-10-01,0,10,418
+Himalayas,Mount Everest,Himalayas,Mount Everest,0-9,Emergency Inpatients,Male,2018-04-01,1,677,316
+Himalayas,Mount Everest,Himalayas,Mount Everest,0-9,Emergency Inpatients,Male,2018-07-01,1,664,317
+Himalayas,Mount Everest,Himalayas,Mount Everest,0-9,Emergency Inpatients,Male,2018-10-01,0,634,334
+Alps,Matterhorn,Alps,Matterhorn,90+,Elective Inpatients,Female,2018-04-01,5,83,8
+Alps,Matterhorn,Alps,Matterhorn,90+,Elective Inpatients,Female,2018-07-01,5,99,8
+Alps,Matterhorn,Alps,Matterhorn,90+,Elective Inpatients,Female,2018-10-01,6,97,8
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,10-19,All Daycases,Female,2018-04-01,1,0,5
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,10-19,All Daycases,Female,2018-07-01,0,1,4
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,10-19,All Daycases,Female,2018-10-01,0,2,5
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,80-89,All Daycases,Female,2018-04-01,0,11,405
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,80-89,All Daycases,Female,2018-07-01,2,13,407
+Caucasus,Dykh-Tau,Caucasus,Dykh-Tau,80-89,All Daycases,Female,2018-10-01,1,13,410
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,50-59,All Daycases,Female,2018-04-01,2,2,24
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,50-59,All Daycases,Female,2018-07-01,0,1,27
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,50-59,All Daycases,Female,2018-10-01,0,0,26
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,40-49,All Daycases,Male,2018-04-01,0,2,103
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,40-49,All Daycases,Male,2018-07-01,0,1,124
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,40-49,All Daycases,Male,2018-10-01,2,1,121
+Alps,Mont Blanc,Alps,Mont Blanc,30-39,All Daycases,Male,2018-04-01,0,1,201
+Alps,Mont Blanc,Alps,Mont Blanc,30-39,All Daycases,Male,2018-07-01,2,2,223
+Alps,Mont Blanc,Alps,Mont Blanc,30-39,All Daycases,Male,2018-10-01,1,2,223
+Alps,Grand Combin,Alps,Grand Combin,70-79,All Daycases,Female,2018-04-01,1,2,174
+Alps,Grand Combin,Alps,Grand Combin,70-79,All Daycases,Female,2018-07-01,1,1,176
+Alps,Grand Combin,Alps,Grand Combin,70-79,All Daycases,Female,2018-10-01,2,2,161
+Himalayas,Shishapangma,Himalayas,Shishapangma,30-39,Emergency Inpatients,Female,2018-04-01,3,243,52
+Himalayas,Shishapangma,Himalayas,Shishapangma,30-39,Emergency Inpatients,Female,2018-07-01,3,263,56
+Himalayas,Shishapangma,Himalayas,Shishapangma,30-39,Emergency Inpatients,Female,2018-10-01,2,275,58
+Andes,El Toro,Andes,El Toro,60-69,All Daycases,Female,2018-04-01,0,0,566
+Andes,El Toro,Andes,El Toro,60-69,All Daycases,Female,2018-07-01,2,0,509
+Andes,El Toro,Andes,El Toro,60-69,All Daycases,Female,2018-10-01,2,0,497
+Andes,Huandoy,Andes,Huandoy,50-59,All Daycases,Male,2018-04-01,1,3,478
+Andes,Huandoy,Andes,Huandoy,50-59,All Daycases,Male,2018-07-01,0,2,437
+Andes,Huandoy,Andes,Huandoy,50-59,All Daycases,Male,2018-10-01,0,2,447
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,All Daycases,Female,2018-04-01,1,18,2858
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,All Daycases,Female,2018-07-01,1,17,2577
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,All Daycases,Female,2018-10-01,1,16,2775
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,80-89,All Daycases,Female,2018-04-01,2,7,210
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,80-89,All Daycases,Female,2018-07-01,2,9,226
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,80-89,All Daycases,Female,2018-10-01,0,9,230
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,50-59,All Daycases,Male,2018-04-01,0,5,604
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,50-59,All Daycases,Male,2018-07-01,0,5,564
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,50-59,All Daycases,Male,2018-10-01,2,5,631
+Himalayas,Makalu,Himalayas,Makalu,80-89,All Daycases,Male,2018-04-01,0,19,938
+Himalayas,Makalu,Himalayas,Makalu,80-89,All Daycases,Male,2018-07-01,0,22,938
+Himalayas,Makalu,Himalayas,Makalu,80-89,All Daycases,Male,2018-10-01,0,19,917
+Andes,Huandoy,Andes,Huandoy,70-79,Emergency Inpatients,Female,2018-04-01,15,5867,691
+Andes,Huandoy,Andes,Huandoy,70-79,Emergency Inpatients,Female,2018-07-01,15,6765,782
+Andes,Huandoy,Andes,Huandoy,70-79,Emergency Inpatients,Female,2018-10-01,14,5840,766
+Alps,Matterhorn,Alps,Matterhorn,0-9,Emergency Inpatients,Male,2018-04-01,0,42,19
+Alps,Matterhorn,Alps,Matterhorn,0-9,Emergency Inpatients,Male,2018-07-01,2,37,19
+Alps,Matterhorn,Alps,Matterhorn,0-9,Emergency Inpatients,Male,2018-10-01,0,39,17
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,70-79,Elective Inpatients,Male,2018-04-01,2,39,60
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,70-79,Elective Inpatients,Male,2018-07-01,1,38,65
+Saint Elias,Mount Vancouver,Saint Elias,Mount Vancouver,70-79,Elective Inpatients,Male,2018-10-01,2,34,57
+Caucasus,Janga,Caucasus,Janga,20-29,Emergency Inpatients,Female,2018-04-01,4,891,268
+Caucasus,Janga,Caucasus,Janga,20-29,Emergency Inpatients,Female,2018-07-01,2,960,284
+Caucasus,Janga,Caucasus,Janga,20-29,Emergency Inpatients,Female,2018-10-01,2,1052,280
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Elective Inpatients,Female,2018-04-01,4,316,42
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Elective Inpatients,Female,2018-07-01,6,303,40
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Elective Inpatients,Female,2018-10-01,4,352,40
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,0-9,All Daycases,Female,2018-04-01,0,1,11
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,0-9,All Daycases,Female,2018-07-01,1,0,12
+Saint Elias,Mount Saint Elias,Saint Elias,Mount Saint Elias,0-9,All Daycases,Female,2018-10-01,0,1,12
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Elective Inpatients,Female,2018-04-01,0,42,25
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Elective Inpatients,Female,2018-07-01,2,45,22
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Elective Inpatients,Female,2018-10-01,1,40,24
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,10-19,All Daycases,Male,2018-04-01,0,2,46
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,10-19,All Daycases,Male,2018-07-01,0,1,40
+Saint Elias,Mount Lucania,Saint Elias,Mount Lucania,10-19,All Daycases,Male,2018-10-01,2,0,44
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,50-59,Elective Inpatients,Female,2018-04-01,1,19,9
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,50-59,Elective Inpatients,Female,2018-07-01,1,18,7
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,50-59,Elective Inpatients,Female,2018-10-01,1,18,7
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Elective Inpatients,Male,2018-04-01,6,3883,651
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Elective Inpatients,Male,2018-07-01,6,3608,593
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Elective Inpatients,Male,2018-10-01,6,3580,605
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,Elective Inpatients,Female,2018-04-01,0,160,70
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,Elective Inpatients,Female,2018-07-01,2,153,65
+Himalayas,Manaslu,Himalayas,Manaslu,30-39,Elective Inpatients,Female,2018-10-01,2,149,68
+Caucasus,Janga,Caucasus,Janga,10-19,Emergency Inpatients,Female,2018-04-01,1,350,121
+Caucasus,Janga,Caucasus,Janga,10-19,Emergency Inpatients,Female,2018-07-01,3,362,119
+Caucasus,Janga,Caucasus,Janga,10-19,Emergency Inpatients,Female,2018-10-01,3,339,127
+Saint Elias,King Peak,Saint Elias,King Peak,30-39,Emergency Inpatients,Male,2018-04-01,4,587,150
+Saint Elias,King Peak,Saint Elias,King Peak,30-39,Emergency Inpatients,Male,2018-07-01,3,669,172
+Saint Elias,King Peak,Saint Elias,King Peak,30-39,Emergency Inpatients,Male,2018-10-01,4,565,147
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Emergency Inpatients,Female,2018-04-01,15,40638,2623
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Emergency Inpatients,Female,2018-07-01,14,37151,2609
+Himalayas,Mount Everest,Himalayas,Mount Everest,80-89,Emergency Inpatients,Female,2018-10-01,14,41248,2734
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Elective Inpatients,Male,2018-04-01,2,25,12
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Elective Inpatients,Male,2018-07-01,1,24,14
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Elective Inpatients,Male,2018-10-01,1,21,14
+Andes,Alpamayo,Andes,Alpamayo,20-29,All Daycases,Male,2018-04-01,0,2,113
+Andes,Alpamayo,Andes,Alpamayo,20-29,All Daycases,Male,2018-07-01,1,2,110
+Andes,Alpamayo,Andes,Alpamayo,20-29,All Daycases,Male,2018-10-01,0,1,122
+Andes,Coropuna,Andes,Coropuna,10-19,Elective Inpatients,Female,2018-04-01,2,2,4
+Andes,Coropuna,Andes,Coropuna,10-19,Elective Inpatients,Female,2018-07-01,1,1,4
+Andes,Coropuna,Andes,Coropuna,10-19,Elective Inpatients,Female,2018-10-01,0,1,3
+Alps,Weisshorn,Alps,Weisshorn,70-79,Emergency Inpatients,Male,2018-04-01,6,298,41
+Alps,Weisshorn,Alps,Weisshorn,70-79,Emergency Inpatients,Male,2018-07-01,5,293,35
+Alps,Weisshorn,Alps,Weisshorn,70-79,Emergency Inpatients,Male,2018-10-01,7,315,36
+Caucasus,Shkhara,Caucasus,Shkhara,40-49,All Daycases,Male,2018-04-01,1,1,96
+Caucasus,Shkhara,Caucasus,Shkhara,40-49,All Daycases,Male,2018-07-01,1,2,93
+Caucasus,Shkhara,Caucasus,Shkhara,40-49,All Daycases,Male,2018-10-01,1,1,91
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,30-39,All Daycases,Female,2018-04-01,1,2,200
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,30-39,All Daycases,Female,2018-07-01,0,0,213
+Caucasus,Katyn-Tau,Caucasus,Katyn-Tau,30-39,All Daycases,Female,2018-10-01,2,0,186
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Emergency Inpatients,Female,2018-04-01,9,4359,438
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Emergency Inpatients,Female,2018-07-01,7,4255,464
+Saint Elias,Mount Slaggard,Saint Elias,Mount Slaggard,70-79,Emergency Inpatients,Female,2018-10-01,9,4237,507
+Andes,Huandoy,Andes,Huandoy,30-39,Emergency Inpatients,Female,2018-04-01,5,809,273
+Andes,Huandoy,Andes,Huandoy,30-39,Emergency Inpatients,Female,2018-07-01,6,901,267
+Andes,Huandoy,Andes,Huandoy,30-39,Emergency Inpatients,Female,2018-10-01,5,784,253
+Andes,El Toro,Andes,El Toro,70-79,Elective Inpatients,Male,2018-04-01,3,116,158
+Andes,El Toro,Andes,El Toro,70-79,Elective Inpatients,Male,2018-07-01,3,115,163
+Andes,El Toro,Andes,El Toro,70-79,Elective Inpatients,Male,2018-10-01,3,107,151
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-04-01,9,3745,314
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-07-01,11,4106,328
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Male,2018-10-01,10,3651,338
+Caucasus,Kazbek,Caucasus,Kazbek,20-29,Emergency Inpatients,Male,2018-04-01,3,180,56
+Caucasus,Kazbek,Caucasus,Kazbek,20-29,Emergency Inpatients,Male,2018-07-01,2,189,65
+Caucasus,Kazbek,Caucasus,Kazbek,20-29,Emergency Inpatients,Male,2018-10-01,4,183,62
+Andes,Huandoy,Andes,Huandoy,90+,Elective Inpatients,Male,2018-04-01,7,207,23
+Andes,Huandoy,Andes,Huandoy,90+,Elective Inpatients,Male,2018-07-01,8,240,19
+Andes,Huandoy,Andes,Huandoy,90+,Elective Inpatients,Male,2018-10-01,8,207,21
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Emergency Inpatients,Female,2018-04-01,3,36,10
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Emergency Inpatients,Female,2018-07-01,1,39,10
+Caucasus,Koshtan-Tau,Caucasus,Koshtan-Tau,20-29,Emergency Inpatients,Female,2018-10-01,3,35,10
+Alps,Grand Combin,Alps,Grand Combin,30-39,Emergency Inpatients,Male,2018-04-01,3,180,64
+Alps,Grand Combin,Alps,Grand Combin,30-39,Emergency Inpatients,Male,2018-07-01,2,188,65
+Alps,Grand Combin,Alps,Grand Combin,30-39,Emergency Inpatients,Male,2018-10-01,3,168,71
+Andes,El Misti,Andes,El Misti,20-29,All Daycases,Female,2018-04-01,2,0,126
+Andes,El Misti,Andes,El Misti,20-29,All Daycases,Female,2018-07-01,1,1,125
+Andes,El Misti,Andes,El Misti,20-29,All Daycases,Female,2018-10-01,0,1,120
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Elective Inpatients,Male,2018-04-01,1,37,20
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Elective Inpatients,Male,2018-07-01,2,38,21
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Elective Inpatients,Male,2018-10-01,1,38,22
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Male,2018-04-01,2,214,80
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Male,2018-07-01,3,220,79
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Male,2018-10-01,3,233,78
+Alps,Weisshorn,Alps,Weisshorn,50-59,Elective Inpatients,Male,2018-04-01,2,17,6
+Alps,Weisshorn,Alps,Weisshorn,50-59,Elective Inpatients,Male,2018-07-01,3,15,7
+Alps,Weisshorn,Alps,Weisshorn,50-59,Elective Inpatients,Male,2018-10-01,1,16,6
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,80-89,Emergency Inpatients,Female,2018-04-01,14,134963,8694
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,80-89,Emergency Inpatients,Female,2018-07-01,15,125639,8124
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,80-89,Emergency Inpatients,Female,2018-10-01,14,141146,8322
+Andes,Carnicero,Andes,Carnicero,80-89,All Daycases,Female,2018-04-01,0,6,301
+Andes,Carnicero,Andes,Carnicero,80-89,All Daycases,Female,2018-07-01,0,4,260
+Andes,Carnicero,Andes,Carnicero,80-89,All Daycases,Female,2018-10-01,2,4,271
+Caucasus,Janga,Caucasus,Janga,20-29,Emergency Inpatients,Female,2018-04-01,3,996,269
+Caucasus,Janga,Caucasus,Janga,20-29,Emergency Inpatients,Female,2018-07-01,2,977,270
+Caucasus,Janga,Caucasus,Janga,20-29,Emergency Inpatients,Female,2018-10-01,2,1056,278
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,60-69,Emergency Inpatients,Male,2018-04-01,7,3350,419
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,60-69,Emergency Inpatients,Male,2018-07-01,6,3237,354
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,60-69,Emergency Inpatients,Male,2018-10-01,6,3663,400
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Elective Inpatients,Male,2018-04-01,0,24,12
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Elective Inpatients,Male,2018-07-01,0,25,13
+Caucasus,Kukurtlu Dome,Caucasus,Kukurtlu Dome,10-19,Elective Inpatients,Male,2018-10-01,0,23,13
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,40-49,Emergency Inpatients,Female,2018-04-01,6,25841,6411
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,40-49,Emergency Inpatients,Female,2018-07-01,4,26384,7008
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,40-49,Emergency Inpatients,Female,2018-10-01,4,30468,6837
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Emergency Inpatients,Male,2018-04-01,3,338,100
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Emergency Inpatients,Male,2018-07-01,3,325,101
+Caucasus,Shkhara,Caucasus,Shkhara,30-39,Emergency Inpatients,Male,2018-10-01,4,300,92
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,30-39,Emergency Inpatients,Female,2018-04-01,5,808,163
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,30-39,Emergency Inpatients,Female,2018-07-01,3,812,154
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,30-39,Emergency Inpatients,Female,2018-10-01,4,901,164
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,50-59,All Daycases,Female,2018-04-01,0,3,380
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,50-59,All Daycases,Female,2018-07-01,1,3,353
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,50-59,All Daycases,Female,2018-10-01,2,3,350
+Caucasus,Kazbek,Caucasus,Kazbek,70-79,All Daycases,Female,2018-04-01,0,1,183
+Caucasus,Kazbek,Caucasus,Kazbek,70-79,All Daycases,Female,2018-07-01,0,1,192
+Caucasus,Kazbek,Caucasus,Kazbek,70-79,All Daycases,Female,2018-10-01,2,2,184
+Andes,Alpamayo,Andes,Alpamayo,10-19,Emergency Inpatients,Male,2018-04-01,2,191,71
+Andes,Alpamayo,Andes,Alpamayo,10-19,Emergency Inpatients,Male,2018-07-01,3,174,72
+Andes,Alpamayo,Andes,Alpamayo,10-19,Emergency Inpatients,Male,2018-10-01,1,195,63
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Emergency Inpatients,Female,2018-04-01,12,2810,156
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Emergency Inpatients,Female,2018-07-01,11,2638,170
+Caucasus,Shkhara,Caucasus,Shkhara,80-89,Emergency Inpatients,Female,2018-10-01,13,3007,183
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,All Daycases,Male,2018-04-01,1,2,30
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,All Daycases,Male,2018-07-01,0,0,30
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,70-79,All Daycases,Male,2018-10-01,1,1,33
+Andes,El Misti,Andes,El Misti,20-29,Elective Inpatients,Female,2018-04-01,1,76,40
+Andes,El Misti,Andes,El Misti,20-29,Elective Inpatients,Female,2018-07-01,1,65,36
+Andes,El Misti,Andes,El Misti,20-29,Elective Inpatients,Female,2018-10-01,1,72,36
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,90+,Elective Inpatients,Female,2018-04-01,8,600,28
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,90+,Elective Inpatients,Female,2018-07-01,6,587,33
+Saint Elias,Mount Logan,Saint Elias,Mount Logan,90+,Elective Inpatients,Female,2018-10-01,6,691,34
+Andes,Artesonraju,Andes,Artesonraju,50-59,Emergency Inpatients,Female,2018-04-01,4,1710,400
+Andes,Artesonraju,Andes,Artesonraju,50-59,Emergency Inpatients,Female,2018-07-01,6,1769,389
+Andes,Artesonraju,Andes,Artesonraju,50-59,Emergency Inpatients,Female,2018-10-01,4,1791,342
+Andes,El Misti,Andes,El Misti,90+,All Daycases,Female,2018-04-01,1,2,52
+Andes,El Misti,Andes,El Misti,90+,All Daycases,Female,2018-07-01,0,3,56
+Andes,El Misti,Andes,El Misti,90+,All Daycases,Female,2018-10-01,1,3,56
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,20-29,Elective Inpatients,Male,2018-04-01,1,1305,870
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,20-29,Elective Inpatients,Male,2018-07-01,1,1280,942
+Saint Elias,Mount Bona,Saint Elias,Mount Bona,20-29,Elective Inpatients,Male,2018-10-01,2,1253,877
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Female,2018-04-01,1,237,91
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Female,2018-07-01,3,260,83
+Saint Elias,King Peak,Saint Elias,King Peak,50-59,Elective Inpatients,Female,2018-10-01,2,269,91
+Andes,El Toro,Andes,El Toro,30-39,All Daycases,Male,2018-04-01,0,0,168
+Andes,El Toro,Andes,El Toro,30-39,All Daycases,Male,2018-07-01,2,2,167
+Andes,El Toro,Andes,El Toro,30-39,All Daycases,Male,2018-10-01,2,1,166
+Andes,Huandoy,Andes,Huandoy,30-39,Emergency Inpatients,Male,2018-04-01,5,800,270
+Andes,Huandoy,Andes,Huandoy,30-39,Emergency Inpatients,Male,2018-07-01,5,700,238
+Andes,Huandoy,Andes,Huandoy,30-39,Emergency Inpatients,Male,2018-10-01,5,767,234
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,60-69,Emergency Inpatients,Female,2018-04-01,8,3189,540
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,60-69,Emergency Inpatients,Female,2018-07-01,10,3205,522
+Himalayas,Kanchenjunga,Himalayas,Kanchenjunga,60-69,Emergency Inpatients,Female,2018-10-01,9,3781,609
+Alps,Matterhorn,Alps,Matterhorn,90+,All Daycases,Male,2018-04-01,2,0,21
+Alps,Matterhorn,Alps,Matterhorn,90+,All Daycases,Male,2018-07-01,1,1,21
+Alps,Matterhorn,Alps,Matterhorn,90+,All Daycases,Male,2018-10-01,2,0,22
+Caucasus,Kazbek,Caucasus,Kazbek,80-89,All Daycases,Male,2018-04-01,1,1,112
+Caucasus,Kazbek,Caucasus,Kazbek,80-89,All Daycases,Male,2018-07-01,2,1,107
+Caucasus,Kazbek,Caucasus,Kazbek,80-89,All Daycases,Male,2018-10-01,0,2,117
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,70-79,All Daycases,Female,2018-04-01,0,6,379
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,70-79,All Daycases,Female,2018-07-01,0,8,356
+Alps,Grandes Jorasses,Alps,Grandes Jorasses,70-79,All Daycases,Female,2018-10-01,1,8,384
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Emergency Inpatients,Male,2018-04-01,7,13799,3117
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Emergency Inpatients,Male,2018-07-01,8,13429,2963
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Emergency Inpatients,Male,2018-10-01,8,13034,3161
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Emergency Inpatients,Male,2018-04-01,12,1094,39
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Emergency Inpatients,Male,2018-07-01,13,1198,36
+Alps,Finsteraarhorn,Alps,Finsteraarhorn,90+,Emergency Inpatients,Male,2018-10-01,13,1056,40
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,Emergency Inpatients,Female,2018-04-01,5,849,126
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,Emergency Inpatients,Female,2018-07-01,5,773,116
+Himalayas,Shishapangma,Himalayas,Shishapangma,50-59,Emergency Inpatients,Female,2018-10-01,4,769,117
+Caucasus,Gistola,Caucasus,Gistola,80-89,Elective Inpatients,Female,2018-04-01,6,1346,156
+Caucasus,Gistola,Caucasus,Gistola,80-89,Elective Inpatients,Female,2018-07-01,6,1470,167
+Caucasus,Gistola,Caucasus,Gistola,80-89,Elective Inpatients,Female,2018-10-01,5,1401,163
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Female,2018-04-01,10,4882,375
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Female,2018-07-01,12,4833,345
+Andes,Chumpe,Andes,Chumpe,80-89,Emergency Inpatients,Female,2018-10-01,10,4682,345
+Andes,El Toro,Andes,El Toro,20-29,Elective Inpatients,Male,2018-04-01,2,11,46
+Andes,El Toro,Andes,El Toro,20-29,Elective Inpatients,Male,2018-07-01,0,11,45
+Andes,El Toro,Andes,El Toro,20-29,Elective Inpatients,Male,2018-10-01,0,12,47
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Elective Inpatients,Male,2018-04-01,4,947,165
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Elective Inpatients,Male,2018-07-01,4,920,189
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Elective Inpatients,Male,2018-10-01,3,1040,175
+Caucasus,Janga,Caucasus,Janga,0-9,Elective Inpatients,Female,2018-04-01,1,23,20
+Caucasus,Janga,Caucasus,Janga,0-9,Elective Inpatients,Female,2018-07-01,2,24,18
+Caucasus,Janga,Caucasus,Janga,0-9,Elective Inpatients,Female,2018-10-01,0,25,18
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Elective Inpatients,Male,2018-04-01,2,103,46
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Elective Inpatients,Male,2018-07-01,0,95,44
+Himalayas,Annapurna I,Himalayas,Annapurna I,30-39,Elective Inpatients,Male,2018-10-01,0,94,49
+Andes,Chumpe,Andes,Chumpe,20-29,Elective Inpatients,Female,2018-04-01,0,47,40
+Andes,Chumpe,Andes,Chumpe,20-29,Elective Inpatients,Female,2018-07-01,0,41,35
+Andes,Chumpe,Andes,Chumpe,20-29,Elective Inpatients,Female,2018-10-01,0,49,37
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Emergency Inpatients,Male,2018-04-01,7,11994,3025
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Emergency Inpatients,Male,2018-07-01,8,12428,3164
+Himalayas,Mount Everest,Himalayas,Mount Everest,50-59,Emergency Inpatients,Male,2018-10-01,6,14036,3179
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Emergency Inpatients,Female,2018-04-01,10,10085,842
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Emergency Inpatients,Female,2018-07-01,9,8815,735
+Himalayas,Manaslu,Himalayas,Manaslu,70-79,Emergency Inpatients,Female,2018-10-01,9,9928,823
+Caucasus,Janga,Caucasus,Janga,10-19,All Daycases,Male,2018-04-01,2,2,94
+Caucasus,Janga,Caucasus,Janga,10-19,All Daycases,Male,2018-07-01,0,0,98
+Caucasus,Janga,Caucasus,Janga,10-19,All Daycases,Male,2018-10-01,2,0,105
+Himalayas,Lhotse,Himalayas,Lhotse,50-59,All Daycases,Male,2018-04-01,0,6,873
+Himalayas,Lhotse,Himalayas,Lhotse,50-59,All Daycases,Male,2018-07-01,1,4,898
+Himalayas,Lhotse,Himalayas,Lhotse,50-59,All Daycases,Male,2018-10-01,0,5,1056
+Caucasus,Gistola,Caucasus,Gistola,90+,All Daycases,Female,2018-04-01,1,5,124
+Caucasus,Gistola,Caucasus,Gistola,90+,All Daycases,Female,2018-07-01,1,4,120
+Caucasus,Gistola,Caucasus,Gistola,90+,All Daycases,Female,2018-10-01,1,4,124
+Caucasus,Shkhara,Caucasus,Shkhara,20-29,All Daycases,Male,2018-04-01,1,1,56
+Caucasus,Shkhara,Caucasus,Shkhara,20-29,All Daycases,Male,2018-07-01,0,2,58
+Caucasus,Shkhara,Caucasus,Shkhara,20-29,All Daycases,Male,2018-10-01,0,2,62
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,60-69,All Daycases,Male,2018-04-01,1,1,31
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,60-69,All Daycases,Male,2018-07-01,1,2,30
+Himalayas,Cho Oyu,Himalayas,Cho Oyu,60-69,All Daycases,Male,2018-10-01,2,1,28
