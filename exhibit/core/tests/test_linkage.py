@@ -106,7 +106,11 @@ class helperTests(unittest.TestCase):
                 "C1", "C2", "C3", "C4", "C5"]
         )
 
-        assert tm.find_pair_linked_columns(test_df) == [["C2", "C3"], ["C5", "C4"]]
+        #values in C5 are longer than in C4
+        self.assertEqual(
+            tm.find_pair_linked_columns(test_df),
+            [["C2", "C3"], ["C5", "C4"]]
+        )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

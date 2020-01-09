@@ -6,6 +6,7 @@ Module isolating methods and classes to find, process and generate linked column
 from itertools import chain, combinations
 import sqlite3
 from contextlib import closing
+from collections import deque, defaultdict
 
 # External library imports
 import pandas as pd
@@ -14,6 +15,76 @@ import numpy as np
 # Exhibit import
 from exhibit.core.utils import package_dir, exceeds_ct
 from exhibit.core.sql import query_anon_database
+
+class key_dependent_dict(defaultdict):
+    '''
+    Monkey-patch default dict to make it accept an argument
+    so that we have the back-up sort in a lexiographic order
+    '''
+    def __init__(self, f_of_x):
+        super().__init__(None) # base class doesn't get a factory
+        self.f_of_x = f_of_x # save f(x)
+    def __missing__(self, key): # called when a default needed
+        ret = self.f_of_x(key) # calculate default value
+        self[key] = ret # and install it in the dict
+        return ret
+
+
+def merge_common_member_tuples(paired_tuples):
+    '''
+    Merge tuples while preserving sort order
+    (codes are paired with descriptions, not the other way round)
+
+    The position in the original paried_tuples is important: 
+    it's based on the average length of all values in each column
+    so in (Description, Code), Description is meant to go first
+
+    Parameters
+    ----------
+    paired_tuples : list
+        list of pairs of 1:1 linked columns
+    
+    Returns
+    -------
+    A list of tuples where common members have been merged into
+    a single new tuple:
+    Given [("A","B"), ("B","C"), ("D","E")] we want
+    [["A", "B", "C"], ("D", "E")]
+    '''
+    original_sort_order = key_dependent_dict(lambda x: [None, x])
+    for a, b in paired_tuples:
+
+        if not original_sort_order[a][0]:
+            original_sort_order[a][0] = 0
+        else:
+            original_sort_order[a][0] -= 1
+
+        if not original_sort_order[b][0]:
+            original_sort_order[b][0] = 1
+        else:
+            original_sort_order[b][0] -= 0
+
+    l = sorted(paired_tuples, key=min)
+    queue = deque(l)
+
+    grouped = []
+    while len(queue) >= 2:
+        l1 = queue.popleft()
+        l2 = queue.popleft()
+        s1 = set(l1)
+        s2 = set(l2)
+
+        if s1 & s2:
+            queue.appendleft(s1 | s2)
+        else:
+            grouped.append(s1)
+            queue.appendleft(s2)
+    if queue:
+        grouped.append(queue.pop())
+
+    #convert back to mutable lists so that we can access indices
+    result = [list(sorted(x, key=lambda x: original_sort_order[x])) for x in grouped]
+    return result
 
 class linkedColumnsTree:
     '''
@@ -108,7 +179,8 @@ def find_hierarchically_linked_columns(df):
     linked = []
     
     #single value columns are ignored
-    cols = [col for col in df.columns if df[col].nunique() > 1]
+    cols = [col for col in df.select_dtypes(exclude=np.number).columns
+            if df[col].nunique() > 1]
     
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):
@@ -147,10 +219,6 @@ def find_pair_linked_columns(df):
     Currently, reference column is decided based on
     the length of its values; codes and other identifiers
     tend to have shorter values.
-
-    Need to implement a "common member" merging of tuples
-    so that [(A,B), (B,C), (D,E)] gets changed into 
-    [(A,B,C), (D,E)]
     '''
     linked = []
     
@@ -165,6 +233,7 @@ def find_pair_linked_columns(df):
                 df.groupby(col2)[col1].nunique().max() == 1
             ):
             #column with a higher average value length is appended first
+            #so that codes are paired with descriptions
             if (
                 sum(map(len, df[col1].astype(str).unique())) / df[col1].nunique() >
                 sum(map(len, df[col2].astype(str).unique())) / df[col2].nunique()
@@ -176,7 +245,7 @@ def find_pair_linked_columns(df):
 
                 linked.append([col2, col1])
 
-    return linked
+    return merge_common_member_tuples(linked)
 
 def find_linked_columns(df):
     '''

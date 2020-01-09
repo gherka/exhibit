@@ -48,8 +48,8 @@ def date_parser(row_tuple):
     column_name, row_value = map(str, row_tuple)
 
     date_regex = r"([-:/])"
-
-    if len(re.findall(date_regex, row_value)) == 2:
+    #2 is just date, 4 is date AND time
+    if len(re.findall(date_regex, row_value)) in [2, 4]:
 
         try:
             dateutil.parser.parse(row_value)
