@@ -70,10 +70,10 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
     if paired_series_name:
 
         working_list = (dataframe[[original_series_name, paired_series_name]]
+            .dropna()
             .astype(str)
             .sort_values(by=original_series_name, kind="mergesort")
             [paired_series_name]
-            .dropna()
             .unique()
             .tolist()
         )
@@ -83,14 +83,17 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
     else:
 
         working_list = (dataframe[original_series_name]
+            .dropna()
             .astype(str)
             .sort_values(kind="mergesort")
-            .dropna()
             .unique()
             .tolist()
         )
 
         working_name = original_series_name
+
+    #appending to a list is in place and returns None 
+    working_list.append("Missing data")
 
     longest = max(len(working_name), len(max(working_list, key=len)))
 
@@ -122,12 +125,25 @@ def build_list_of_probability_vectors(dataframe, original_series_name):
 
     total_count = len(original_series)
 
-    vectors = (original_series.value_counts()
+    temp_vectors = (original_series
+                     .fillna("Missing data")
+                     .value_counts()
                      .sort_index(kind="mergesort")
-                     .apply(lambda x: max(0.001, x / total_count))
-                     .values
-                     .tolist()
+                     .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
     )
+
+    if "Missing data" not in temp_vectors:
+        temp_vectors = temp_vectors.append(pd.Series(
+            index=["Missing data"],
+            data=0
+        ))
+    #pop and reinsert "Missing data" at the end of the list
+    else:
+        cached = temp_vectors[temp_vectors.index.str.contains("Missing data")]
+        temp_vectors = temp_vectors.drop("Missing data")
+        temp_vectors = temp_vectors.append(cached)
+    
+    vectors = temp_vectors.values.tolist()
 
     string_vectors = ["{0:.3f}".format(x).ljust(len(HEADER) + 1) for x in vectors]
 

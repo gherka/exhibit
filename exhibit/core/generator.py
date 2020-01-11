@@ -66,11 +66,30 @@ def generate_weights(df, cat_col, num_col):
     List of weights in ascending order of values rounded to 3 digits.
     '''
     
-    weights = df.groupby([cat_col])[num_col].sum()
-    weights['ws'] = np.maximum(0.001, round(weights / weights.sum(), 3))
+    weights = df.fillna({cat_col:"Missing data"}).groupby([cat_col])[num_col].sum()
+    weights['ws'] = weights.transform(
+        lambda x: 0 if x == 0 else max(0.001, round(x / weights.sum(), 3))
+    )
     
-    output = weights['ws'].sort_index(kind="mergesort").to_list()
-        
+    temp_output = output = weights['ws'].sort_index(kind="mergesort")
+
+    if "Missing data" not in temp_output:
+        temp_output = temp_output.append(pd.Series(
+            index=["Missing data"],
+            data=0
+        ))
+    
+    #pop and reinsert "Missing data" at the end of the list
+    else:
+        cached = temp_output[temp_output.index.str.contains("Missing data")]
+        temp_output = temp_output.drop("Missing data")
+        temp_output = temp_output.append(cached)
+
+    #last item in the list must be Missing data weight for the num_col, 
+    #regardless of whether Missing data is a value in cat_col
+
+    output = temp_output.to_list()
+
     return output
 
 def apply_dispersion(value, dispersion_pct):

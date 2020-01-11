@@ -93,6 +93,14 @@ class newSpec:
             'demo_records': {},
             }
 
+    def missing_data_chance(self, col):
+        '''
+        Doc string
+        '''
+        result = round(sum(self.df[col].isna()) / self.df.shape[0],3)
+
+        return result
+
     def list_of_paired_cols(self, col):
         '''
         If a column has one to one matching values
@@ -205,7 +213,7 @@ class newSpec:
             'uniques': self.df[col].nunique(),
             'original_values' : self.original_values_path_resolver(path, weights, col),
             'allow_missing_values': True,
-            'miss_probability': 0,
+            'miss_probability': self.missing_data_chance(col),
             'anonymising_set':'random',
         }
 
@@ -221,7 +229,7 @@ class newSpec:
         time_d = {
             'type': 'date',
             'allow_missing_values': False,
-            'miss_probability': 0,
+            'miss_probability': self.missing_data_chance(col),
             'from': self.df[col].min().date().isoformat(),
             'to': self.df[col].max().date().isoformat(),
             'uniques': int(self.df[col].nunique()),
@@ -238,8 +246,7 @@ class newSpec:
         '''
         cont_d = {
             'type': 'continuous',
-            'allow_missing_values': bool(self.df[col].isna().any()),
-            'miss_probability': 0,
+            'miss_probability': self.missing_data_chance(col),
             'sum': float(self.df[col].sum()),
             'dispersion': 0.1
         }
