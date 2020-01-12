@@ -556,6 +556,31 @@ def generate_complete_series(spec_dict, col_name):
 
     return pd.Series(col_attrs['original_values'].iloc[:, 0], name=col_name)
 
+
+def add_missing_data_to_cat_data(spec_dict, rands, series):
+    '''
+    Fall back to make sure columns with original values have
+    the expected % of missing values and that columns that
+    are taken from anon.db are also populated with missing
+    data as per spec's miss_probability attribute.
+    '''
+
+    miss_pct = spec_dict['columns'][series.name]['miss_probability']
+    existing_miss = sum(series == "Missing data") / series.shape[0]
+
+    miss_to_add = miss_pct - existing_miss
+
+    if miss_to_add > 0:
+        new_series = np.where(
+            np.logical_and(rands < miss_to_add, ~(series=="Missing data")),
+            "Missing data",
+            series
+        )
+        return new_series
+
+    return series
+
+
 def generate_categorical_data(spec_dict, core_rows):
     '''
     Brings together all the components of categorical (inc. timeseries)
@@ -642,7 +667,15 @@ def generate_categorical_data(spec_dict, core_rows):
         
     anon_df = temp_anon_df
     
+    #Tidy up
     anon_df.drop('key', axis=1, inplace=True)
+
+    #add missing data
+    rands = np.random.random(size=anon_df.shape[0])
+    for col in anon_df.columns:
+        anon_df[col] = add_missing_data_to_cat_data(spec_dict, rands, anon_df[col])
+
+    anon_df.replace("Missing data", np.NaN, inplace=True)
 
     return anon_df
 

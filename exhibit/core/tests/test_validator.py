@@ -175,38 +175,6 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict1))
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict2))
 
-
-    def test_validator_no_nulls(self):
-        '''
-        Doc string
-        '''
-
-        validatorMock = Mock()
-        validatorMock.ct = 25
-
-        test_dict = {
-            "columns": {
-                "Board Code": {
-                    "type":"categorical",
-                    "uniques": 4,
-                    "original_values": [
-
-                        "name|probability_vector|A|B|C",
-                        "D|0.5|0.5|0.5|0.5",
-                        "E|0.6||0.5|0.5",
-                    ]
-                }     
-            }
-        }
-
-        orig_vals = test_dict['columns']['Board Code']['original_values']
-
-        test_dict['columns']['Board Code']['original_values'] = (
-            parse_original_values(orig_vals))
-
-        self.assertFalse(tm.validate_weights_and_probability_vector_have_no_nulls(
-            validatorMock, spec_dict=test_dict))
-
     def test_anonymising_set_names(self):
         '''
         So far, only two are available: mountain ranges and random
