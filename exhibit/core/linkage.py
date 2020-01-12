@@ -222,8 +222,10 @@ def find_pair_linked_columns(df):
     '''
     linked = []
     
-    #single value columns are ignored
-    cols = [col for col in df.columns if df[col].nunique() > 1]
+    #single value & numeric columns are ignored
+    cols = [col for col in df.columns if
+    df[col].nunique() > 1 and col not in df.select_dtypes(include=np.number)
+    ]
     
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):

@@ -235,7 +235,21 @@ class newExhibit:
                 apply_dispersion,
                 args=[d]
             )
-    
+
+            #Check that the total % of missing values matches miss_probability
+            miss_pct = self.spec_dict['columns'][num_col]['miss_probability']
+            existing_miss = sum(anon_df[num_col].isna()) / anon_df.shape[0]
+
+            miss_to_add = miss_pct - existing_miss
+
+            if miss_to_add > 0:
+                rands = np.random.random(size=anon_df.shape[0])
+                anon_df[num_col] = np.where(
+                    np.logical_and(rands < miss_to_add, ~np.isnan(anon_df[num_col])),
+                    np.NaN,
+                    anon_df[num_col]
+                )
+
         #4) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:

@@ -47,6 +47,18 @@ def generate_derived_column(anon_df, calculation):
     )
     return output  
 
+def _weights_transform(x, weights):
+    '''
+    Transform weights values, including zeroes and NaNs
+    '''
+    if x == 0:
+        return 0
+
+    if np.isnan(x):
+        return np.NaN
+    
+    return max(0.001, round(x / weights.sum(), 3))
+
 def generate_weights(df, cat_col, num_col):
     '''
     Weights are generated for a each value in each categorical column
@@ -66,10 +78,14 @@ def generate_weights(df, cat_col, num_col):
     List of weights in ascending order of values rounded to 3 digits.
     '''
     
-    weights = df.fillna({cat_col:"Missing data"}).groupby([cat_col])[num_col].sum()
-    weights['ws'] = weights.transform(
-        lambda x: 0 if x == 0 else max(0.001, round(x / weights.sum(), 3))
+    #min_count=1 ensures that [np.NaN, np.NaN] is summed to np.NaN and not zero
+    weights = (
+        df
+        .fillna({cat_col:"Missing data"})
+        .groupby([cat_col])[num_col].sum(min_count=1)
     )
+
+    weights['ws'] = weights.transform(_weights_transform, args=[weights])
     
     temp_output = output = weights['ws'].sort_index(kind="mergesort")
 
@@ -120,6 +136,9 @@ def apply_dispersion(value, dispersion_pct):
     
     if dispersion_pct == 0:
         return value
+    
+    if np.isnan(value):
+        return np.NaN
 
     d = int(value * dispersion_pct)
     #to avoid negative rmin, include max(0, n) check

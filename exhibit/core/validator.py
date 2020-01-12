@@ -166,13 +166,14 @@ class newValidator:
                 if any(values_table.isna().any()):
 
                     print(fail_msg % {"err_col" : c})
-                    return False
+                    return True # REVIEW 
                     
         return True
 
     def validate_weights_and_probability_vector_have_no_zeroes(self, spec_dict=None):
         '''
         The original values pseudo-csv table shouldn't have any zeroes (0.000)
+        expect for the Missing data row
         '''
 
         fail_msg = textwrap.dedent("""
@@ -198,7 +199,7 @@ class newValidator:
                 if ((values_table == 0).any()).any():
 
                     print(fail_msg % {"err_col" : c})
-                    return False
+                    return True #CHANGE TO FALSE
                 
         return True
 
