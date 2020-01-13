@@ -487,7 +487,8 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
     orig_df = spec_dict['columns'][col_name]['original_values']
 
-    orig_df.iloc[:, 0:len(paired_cols)+1] = col_df.iloc[:, 0:len(paired_cols)+1].values
+    #missing data is the last row
+    orig_df.iloc[0:-1, 0:len(paired_cols)+1] = col_df.iloc[:, 0:len(paired_cols)+1].values
 
     spec_dict['columns'][col_name]['original_values'] = orig_df
 
@@ -533,7 +534,7 @@ def generate_complete_series(spec_dict, col_name):
 
         result = pd.date_range(
             start=col_attrs['from'],
-            end=col_attrs['to'],
+            periods=col_attrs['uniques'],
             freq=col_attrs['frequency'],            
         )
         return pd.Series(result, name=col_name)

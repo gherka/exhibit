@@ -498,8 +498,9 @@ class LinkedDataGenerator:
                 columns={full_anon_df.columns[0]:self.base_col}, inplace=True)
 
             #replace original_values with anonymised aliases for weights_table
+            #except for the Missing data which is a special value and is always last
             orig_df = self.spec_dict['columns'][self.base_col]['original_values']
-            orig_df.iloc[:, 0] = (full_anon_df
+            orig_df.iloc[0:-1, 0] = (full_anon_df
                                     .iloc[:, 0].unique()[0:self.base_col_unique_count])
             self.spec_dict['columns'][self.base_col]['original_values'] = orig_df
 
@@ -574,13 +575,18 @@ class LinkedDataGenerator:
             full_anon_df = query_anon_database(self.table_name)
 
             #replace original_values with anonymised aliases for weights_table
+            #except for the last Missing data row
             orig_df = self.spec_dict['columns'][self.base_col]['original_values']
-            orig_df.iloc[:, 0] = (full_anon_df
+            orig_df.iloc[0:-1, 0] = (full_anon_df
                                     .iloc[:, 1].unique()[0:self.base_col_unique_count])
             self.spec_dict['columns'][self.base_col]['original_values'] = orig_df
 
             #carry on with the programme
-            base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
+            #again, iloc is to exclude Missing data row
+            base_col_df = (
+                self.spec_dict['columns'][self.base_col]
+                ['original_values'].iloc[0:-1,:]
+            )
 
             base_col_prob = np.array(base_col_df['probability_vector'])
 
@@ -594,7 +600,10 @@ class LinkedDataGenerator:
             return linked_df
         
         #random
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
+        #ignore Missing data row at this point?
+        base_col_df = (
+            self.spec_dict['columns'][self.base_col]['original_values'].iloc[0:-1,:]
+        )
 
         base_col_prob = np.array(base_col_df['probability_vector'])
 

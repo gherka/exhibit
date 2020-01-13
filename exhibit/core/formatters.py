@@ -38,7 +38,11 @@ def format_header(dataframe, series_name, prefix=None):
     if prefix:
         series_name = prefix + series_name
 
-    longest = max(len(series_name), len(max(series, key=len)))
+    longest = max(
+        len("Missing data"),
+        len(series_name),
+        len(max(series, key=len))
+    )
 
     return series_name.ljust(longest)
 

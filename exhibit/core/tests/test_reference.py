@@ -141,7 +141,7 @@ class referenceTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             command="fromdata",
             source=Path(package_dir('sample', '_data', 'prescribing.csv')),
-            category_threshold=25,
+            category_threshold=30,
             verbose=True,
             sample=True
         )

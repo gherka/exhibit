@@ -15,7 +15,7 @@ metadata:
   - NumberOfPaidItems
   time_columns:
   - PaidDateMonth
-  category_threshold: 25
+  category_threshold: 30
   random_seed: 0
   id: sample
 #---------------------------------------------------------
@@ -46,7 +46,7 @@ columns:
     uniques: 24
     original_values: See paired column
     allow_missing_values: true
-    miss_probability: 0
+    miss_probability: 0.0
     anonymising_set: random
   BNFItemDescription:
     type: categorical
@@ -79,8 +79,9 @@ columns:
     - SUTHERLAND LUBRI JELLY SACH 5G STER                      | 21140000001        | 0.001              | 0.001
     - THICKEN AID_PDR SACH 9G                                  | 190700000BBCNBK    | 0.001              | 0.001
     - XARELTO_TAB 20MG                                         | 0208020Y0BBACAC    | 0.229              | 0.168
+    - Missing data                                             | Missing data       | 0.000              | 0.000
     allow_missing_values: true
-    miss_probability: 0
+    miss_probability: 0.0
     anonymising_set: random
   GPPracticeName:
     type: categorical
@@ -88,7 +89,7 @@ columns:
     uniques: 136
     original_values: Number of unique values is above category threshold
     allow_missing_values: true
-    miss_probability: 0
+    miss_probability: 0.0
     anonymising_set: random
   HB2014:
     type: categorical
@@ -97,7 +98,7 @@ columns:
     uniques: 14
     original_values: See paired column
     allow_missing_values: true
-    miss_probability: 0
+    miss_probability: 0.0
     anonymising_set: random
   HB2014Name:
     type: categorical
@@ -120,19 +121,19 @@ columns:
     - NHS Shetland                  | S08000026     | 0.065              | 0.031
     - NHS Tayside                   | S08000030     | 0.075              | 0.093
     - NHS Western Isles             | S08000028     | 0.050              | 0.034
+    - Missing data                  | Missing data  | 0.000              | 0.000
     allow_missing_values: true
-    miss_probability: 0
+    miss_probability: 0.0
     anonymising_set: random
   NumberOfPaidItems:
     type: continuous
-    allow_missing_values: false
-    miss_probability: 0
+    miss_probability: 0.0
     sum: 51445.0
     dispersion: 0.1
   PaidDateMonth:
     type: date
     allow_missing_values: false
-    miss_probability: 0
+    miss_probability: 0.0
     from: '2019-04-01'
     to: '2019-08-01'
     uniques: 5
