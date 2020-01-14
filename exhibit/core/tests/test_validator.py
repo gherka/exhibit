@@ -106,7 +106,7 @@ class validatorTests(unittest.TestCase):
             out=out
             )
 
-        self.assertEquals(expected, out.getvalue())
+        self.assertEqual(expected, out.getvalue())
 
     def test_linked_cols_shared_attributes(self):
         '''

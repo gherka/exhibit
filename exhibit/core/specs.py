@@ -282,6 +282,14 @@ class newSpec:
         linked_cols = find_hierarchically_linked_columns(self.df)
         linked_tree = linkedColumnsTree(linked_cols).tree
 
+        #Remove paired columns from linked groups
+        #[(0, [...]),(1, [...])]
+        for linked_group in linked_tree:
+            col_list = linked_group[1]
+            for col in col_list.copy():
+                if self.output['columns'][col]['original_values'] == 'See paired column':
+                    col_list.remove(col) #removes in-place, separate from the iterable
+
         self.output['constraints']['linked_columns'] = linked_tree
 
         #Add linked column values to the temp tables in anon_db

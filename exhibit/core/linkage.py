@@ -249,40 +249,6 @@ def find_pair_linked_columns(df):
 
     return merge_common_member_tuples(linked)
 
-def find_linked_columns(df):
-    '''
-    Given a dataframe df, return a list
-    of tuples with column names where values in 
-    one column are always paired with the 
-    same value in another, as in, for example,
-    an NHS Board and NHS Board Code.
-
-    Columns with the same value in all rows are skipped.
-
-    The column that maps 1 to many is appended first,
-    judging by the number of unique values it has.
-    '''
-    linked = []
-    
-    cols = [col for col in df.columns if df[col].nunique() > 1]
-    
-    for col1, col2 in combinations(cols, 2):
-
-        if ( 
-                df.groupby(col1)[col2].nunique().max() == 1 or
-                df.groupby(col2)[col1].nunique().max() == 1
-            ): 
-            
-            if df[col1].nunique() <= df[col2].nunique():
-
-                linked.append((col1, col2))
-
-            else:
-
-                linked.append((col2, col1))
-
-    return linked
-
 def create_paired_columns_lookup(spec_dict, base_column):
     '''
     Paired columns can either be in SQL or in original_values linked to base_column
