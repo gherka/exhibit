@@ -37,7 +37,6 @@ class specsTests(unittest.TestCase):
             'columns',
             'constraints',
             'derived_columns',
-            'demo_records'
             ]
 
         self.assertListEqual(

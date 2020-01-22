@@ -14,6 +14,7 @@ from os.path import join
 # External imports
 from pandas.testing import assert_frame_equal
 import pandas as pd
+import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
@@ -155,8 +156,7 @@ class referenceTests(unittest.TestCase):
     @patch('argparse.ArgumentParser.parse_args')
     def test_reference_prescribing_anon_data(self, mock_args):
         '''
-        The reference test mirrors the logic of the bootstrap.main()
-        Also testing Scenario 2 in the linked data generation
+        Most basic round-trip reference test
         '''
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
@@ -175,9 +175,14 @@ class referenceTests(unittest.TestCase):
     @patch('argparse.ArgumentParser.parse_args')
     def test_reference_prescribing_non_linked_anon_data(self, mock_args):
         '''
-        This particular reference test modifies the prescribing spec
-        to test particular conditons, in this case various non-linked
-        columns anonymised from database sets, including paired variants
+        What this reference test is covering:
+            - anonymisation using single DB column (peaks)
+            - paired 1:1 anonymisation set (birds)
+            - unlinking of columns
+
+        Note that the resulting sum of NumberOfPaidItems is considerably smaller
+        because the columns HB and GPPractice are not longer linked and thus
+        each contribute to the reduction.
         '''
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
@@ -222,11 +227,11 @@ class referenceTests(unittest.TestCase):
     @patch('argparse.ArgumentParser.parse_args')
     def test_reference_prescribing_linked_mnt_anon_data(self, mock_args):
         '''
-        This particular reference test modifies the prescribing spec
-        to test particular conditons, in this case a single scenario
-        where the base column is shown in full in the spec and the 
-        "child" column is stored away in DB because of its high number
-        of unique values
+        What this reference test is covering:
+            - one of the linked columns is in the spec, another is in DB
+            - anonymisation is done using "mountains" set
+
+        Note that prescribing datasets has duplicate categorical rows
         '''
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
@@ -267,9 +272,13 @@ class referenceTests(unittest.TestCase):
     @patch('argparse.ArgumentParser.parse_args')
     def test_reference_inpatient_anon_data(self, mock_args):
         '''
-        Inpatients have a floating point column so we're using
-        Pandas internal testing assert to make sure the small
-        differences are not failing the reference test
+        What this reference test is covering:
+            - manually change labels in Sex column (Female to A, Male to B)
+            - manually added derived column (avlos)
+            - removed linked columns from spec
+            - removed Scotland from HBs and deleted loc columns
+            - changed the totals for stays and los
+            - DB is not used at all
         '''
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
@@ -292,24 +301,47 @@ class referenceTests(unittest.TestCase):
 
     def test_reference_inpatient_ct10_random_data(self):
         '''
-        Test Scenario 1 where all values in linked columns exceed CT
-        and the anonymisation method is "random"
+        What this reference test is covering:
+            - number of unique values exceeds CT in all linked columns
+            - anonymisation method is "random"
+            - non-linked categorical column (Sex) has missing data
+            - linked columns share missing categorical data
         '''
+        np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
+        test_dataframe = pd.read_csv(
+            source_data_path,
+            parse_dates=['quarter_date'],
+            dayfirst=True
+        )
+
+        # Modify test_dataframe to suit test conditions
+        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
+        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
+
+        rand_idx2 = np.random.randint(0, test_dataframe.shape[0], size=1000)
+        na_cols = ['sex']
+        test_dataframe.loc[rand_idx2, na_cols] = np.NaN
+
+        # modify CLI namespace
         fromdata_namespace = {
-            "source"            : source_data_path,
+            "source"            : test_dataframe,
             "category_threshold": 10,
         }
-
-        test_spec_dict = {"metadata": {"number_of_rows": 2000}}
+        
+        # modify spec
+        test_spec_dict = {
+            "metadata": {"number_of_rows": 2000},
+            "columns" : {"sex": {"allow_missing_values" : False}}
+        }
 
         generated_df = self.temp_spec(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
-
 
         inpatients_anon_ct10 = pd.read_csv(
             package_dir(
@@ -327,24 +359,45 @@ class referenceTests(unittest.TestCase):
 
     def test_reference_inpatient_ct50_random_data(self):
         '''
-        Test Scenario 3 where the number of unique values doesn't exceed CT
-        in any of linked columns and the anonymisation method is "random".
+        What this reference test is covering:
+            - number of unique values is within CT in all columns
+            - anonymisation method is "random"
+            - linked columns share missing categorical data
+            - manually change date frequency from QS to M
         '''
-        
+        np.random.seed(0)
+
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
+        test_dataframe = pd.read_csv(
+            source_data_path,
+            parse_dates=['quarter_date'],
+            dayfirst=True
+        )
+
+        # Modify test_dataframe to suit test conditions
+        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
+        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
+
+        # modify CLI namespace
         fromdata_namespace = {
-            "source"            : source_data_path,
+            "source"            : test_dataframe,
             "category_threshold": 50,
         }
 
-        test_spec_dict = {"metadata": {"number_of_rows": 2000}}
+        # modify spec
+        test_spec_dict = {
+            "metadata": {"number_of_rows": 2000},
+            "columns" : {"quarter_date": 
+                    {"from" : '2018-01-01', "frequency": "M"}
+                }
+            }
 
         generated_df = self.temp_spec(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
-
 
         inpatients_anon_ct50 = pd.read_csv(
             package_dir(
@@ -362,21 +415,41 @@ class referenceTests(unittest.TestCase):
 
     def test_reference_inpatient_ct10_mountains_data(self):
         '''
-        Test Scenario 1 where all values in linked columns exceed CT
-        and the anonymisation method is "mountains"
+        What this reference test is covering:
+            - number of unique values exceeds CT in all columns
+            - anonymisation method is hierarchical "mountains"
+            - sex is a "complete" categorical column
+            - only the most granular linked column has missing values
         '''
-        
+        np.random.seed(0)
+
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
+        test_dataframe = pd.read_csv(
+            source_data_path,
+            parse_dates=['quarter_date'],
+            dayfirst=True
+        )
+
+        # Modify test_dataframe to suit test conditions
+        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        linked_cols = ['loc_code', 'loc_name']
+        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN)
+
+        # modify CLI namespace
         fromdata_namespace = {
-            "source"            : source_data_path,
+            "source"            : test_dataframe,
             "category_threshold": 10,
         }
 
+        # Modify test_dataframe to suit test conditions
         test_spec_dict = {
             "metadata": 
                 {"number_of_rows": 2000},
             "columns": {
+                "sex" : 
+                    {"allow_missing_values": False}
+                ,
                 "hb_code": 
                     {"anonymising_set":"mountains"}
                 ,
@@ -391,12 +464,10 @@ class referenceTests(unittest.TestCase):
                 },
         }
                  
-
         generated_df = self.temp_spec(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
-
 
         inpatients_anon_mnt_ct10 = pd.read_csv(
             package_dir(
@@ -414,17 +485,33 @@ class referenceTests(unittest.TestCase):
 
     def test_reference_inpatient_ct50_mountains_data(self):
         '''
-        Test Scenario 3 where the number of unique values doesn't exceed CT
-        in any of linked columns and the anonymisation method is "mountains".
+        What this reference test is covering:
+            - number of unique values is within CT in all columns
+            - anonymisation method is hierarchical "mountains"
+            - linked columns share missing categorical data
         '''
-        
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        np.random.seed(0)
 
+        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+    
+        test_dataframe = pd.read_csv(
+            source_data_path,
+            parse_dates=['quarter_date'],
+            dayfirst=True
+        )
+
+        # Modify test_dataframe to suit test conditions
+        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
+        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
+
+        # modify CLI namespace
         fromdata_namespace = {
-            "source"            : source_data_path,
+            "source"            : test_dataframe,
             "category_threshold": 50,
         }
 
+        # modify spec
         test_spec_dict = {
             "metadata": 
                 {"number_of_rows": 2000},
@@ -443,12 +530,10 @@ class referenceTests(unittest.TestCase):
                 },
         }
                  
-
         generated_df = self.temp_spec(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
-
 
         inpatients_anon_mnt_ct50 = pd.read_csv(
             package_dir(

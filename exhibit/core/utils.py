@@ -6,7 +6,7 @@ A collection of helper functions to keep the main module tidy
 from os.path import abspath, dirname, join, exists
 from pathlib import Path
 from functools import reduce
-from operator import add
+from operator import mul
 import re
 import datetime
 import dateutil
@@ -233,7 +233,7 @@ def count_core_rows(spec_dict):
     if not complete_uniques:
         complete_uniques.append(1)
 
-    complete_count = reduce(add, complete_uniques)
+    complete_count = reduce(mul, complete_uniques)
 
     core_rows = int(spec_dict['metadata']['number_of_rows'] / complete_count)
 

@@ -221,19 +221,47 @@ def generate_weights_table(spec):
     target_cols = target_columns_for_weights_table(spec)
        
     for cat_col in target_cols:
-
+        
         orig_vals = spec['columns'][cat_col]['original_values']
+        anon_set = spec['columns'][cat_col]['anonymising_set']
+        val_count = spec['columns'][cat_col]['uniques']
+        table_name, *sql_column = anon_set.split(".")
+        full_anon_flag = False
 
         #skip paired columns (as weights can come from any ONE of paired cols)
         if isinstance(orig_vals, str) and orig_vals == 'See paired column':
             continue
 
-        if exceeds_ct(spec, cat_col):
+        if anon_set != "random":
 
-            try:
-                ws_df = spec['columns'][cat_col]['aliases']
-            except KeyError:
-                #if aliases don't exist, look up values in anon.db
+            if exceeds_ct(spec, cat_col):
+                #take the last, most granular column of the anon_set
+                #because values were picked randomly from the entire set,
+                #they will NOT be in the same order or might be missing!
+                #so we pick EVERYTHING and adjust the EQUAL weights to
+                #be based on the ACTUAL number of values
+                ws_df = pd.DataFrame(
+                    data=query_anon_database(table_name, sql_column).iloc[:, -1]
+                )
+   
+                #think of a better way to rename the column coming in from anon_db.
+                ws_df.columns = [cat_col]
+
+                #generate equal weights among unlisted category values
+                for num_col in num_cols:
+                    ws_df[num_col] = 1 / val_count
+                full_anon_flag = True
+
+            else:
+                #meaning, there are original_values, including weights.
+                #by this point, original_values had been replaced with anon_set.
+                #review - maybe more intuitive to also have "aliased column"
+                ws_df = orig_vals
+
+        else:
+
+            if exceeds_ct(spec, cat_col):
+                #get values from DB
                 safe_col_name = cat_col.replace(" ", "$")
 
                 if spec['metadata']['id'] == 'sample':
@@ -242,25 +270,31 @@ def generate_weights_table(spec):
                     table_name = f"temp_{spec['metadata']['id']}_{safe_col_name}"
 
                 ws_df = query_anon_database(table_name)
-                
-            #generate equal weights among unlisted category values
-            for num_col in num_cols:
-                ws_df[num_col] = 1 / ws_df.shape[0]
 
-        else:
-            
-            #get the original values with weights DF
-            ws_df = spec['columns'][cat_col]['original_values']
+                #generate equal weights among unlisted, random category values
+                for num_col in num_cols:
+                    ws_df[num_col] = 1 / ws_df.shape[0]
 
+            else:
+                #meaning, there are original_values, including weights
+                ws_df = spec['columns'][cat_col]['original_values']
+
+
+        #get weights and values, from whatever WS was created
         for num_col in num_cols:
-    
+
             ws = ws_df[num_col]
+            # because we might've taken the FULL anon_set (150 or more), 
+            # we need to make sure the weights are correct!
+            if not full_anon_flag:
+                ws /= ws.sum() 
             ws_vals = ws_df[cat_col]
-            
+
             for val, weight in zip(ws_vals, ws):
             
                 tuple_list.append((num_col, cat_col, val, weight))
 
+    #collect everything into output_df
     output_df = pd.DataFrame(tuple_list,
                              columns=['num_col', 'cat_col', 'cat_value', 'weight'])
 
@@ -270,7 +304,7 @@ def generate_weights_table(spec):
             .set_index(['num_col', 'cat_col', 'cat_value'])
             .to_dict(orient="index")
     )
-    
+
     return result
 
 def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor):
@@ -297,7 +331,7 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor)
     -------
     Rounded value
 
-    '''            
+    '''
     for cat_col, val in row.iteritems():
 
         try:
@@ -494,7 +528,6 @@ def generate_anon_series(spec_dict, col_name, num_rows):
 
     col_df = spec_dict['columns'][col_name]['original_values']
 
-
     col_prob = np.array(col_df['probability_vector'])
 
     col_prob /= col_prob.sum()
@@ -548,33 +581,38 @@ def generate_complete_series(spec_dict, col_name):
     # if column has paired columns, return a dataframe with it + paired cols
     paired_cols = col_attrs['paired_columns']
 
+    # all categorical columns have "Missing data" as -1 row so we exclude it
     if paired_cols:
-        paired_complete_df = col_attrs['original_values'].iloc[:, 0:len(paired_cols)+1]
+        paired_complete_df = col_attrs['original_values'].iloc[:-1, 0:len(paired_cols)+1]
         paired_complete_df.rename(
             columns=lambda x: x.replace('paired_', ''), inplace=True)
 
         return paired_complete_df
 
-    return pd.Series(col_attrs['original_values'].iloc[:, 0], name=col_name)
+    return pd.Series(col_attrs['original_values'].iloc[:-1, 0], name=col_name)
 
 
-def add_missing_data_to_cat_data(spec_dict, rands, series):
+def add_missing_data_to_dataframe(spec_dict, rands, series):
     '''
     Fall back to make sure columns with original values have
     the expected % of missing values and that columns that
     are taken from anon.db are also populated with missing
     data as per spec's miss_probability attribute.
     '''
-
+    col_type = spec_dict['columns'][series.name]['type']
     miss_pct = spec_dict['columns'][series.name]['miss_probability']
-    existing_miss = sum(series == "Missing data") / series.shape[0]
+    miss_cond = (
+        np.isnan(series) if col_type == "continuous" else series == "Missing data"
+    )
+    existing_miss = sum(miss_cond) / series.shape[0]
+    missing_val = np.NaN if col_type == "continuous" else "Missing data"
 
     miss_to_add = miss_pct - existing_miss
 
     if miss_to_add > 0:
         new_series = np.where(
-            np.logical_and(rands < miss_to_add, ~(series=="Missing data")),
-            "Missing data",
+            np.logical_and(rands < miss_to_add, ~(miss_cond)),
+            missing_val,
             series
         )
         return new_series
@@ -671,13 +709,6 @@ def generate_categorical_data(spec_dict, core_rows):
     #Tidy up
     anon_df.drop('key', axis=1, inplace=True)
 
-    #add missing data
-    rands = np.random.random(size=anon_df.shape[0])
-    for col in anon_df.columns:
-        anon_df[col] = add_missing_data_to_cat_data(spec_dict, rands, anon_df[col])
-
-    anon_df.replace("Missing data", np.NaN, inplace=True)
-
     return anon_df
 
 def generate_YAML_string(spec_dict):
@@ -759,17 +790,9 @@ def generate_YAML_string(spec_dict):
     """)
 
     yaml_derived = yaml.safe_dump(yaml_list[3], sort_keys=False, width=1000)
-
-    c5 = textwrap.dedent("""\
-    #---------------------------------------------------------
-    #Please add any demonstrator patterns in this section.
-    #---------------------------------------------------------
-    """)
-
-    yaml_demo = yaml.safe_dump(yaml_list[4], sort_keys=False, width=1000)
     
     spec_yaml = (
         c1 + yaml_meta + c2 + yaml_columns + c3 + yaml_constraints +
-        c4 + yaml_derived + c5 + yaml_demo)
+        c4 + yaml_derived)
 
     return spec_yaml

@@ -177,6 +177,11 @@ def find_hierarchically_linked_columns(df):
     same value in the first column (many:1 relationship)
     '''
     linked = []
+
+    #drop NAs because replacing them with Missing data means
+    #that columns that are normally linked, won't be (Missing data will
+    #appear for multiple "parent" columns)
+    df = df.dropna()
     
     #single value columns are ignored
     cols = [col for col in df.select_dtypes(exclude=np.number).columns
@@ -551,7 +556,7 @@ class LinkedDataGenerator:
             #again, iloc is to exclude Missing data row
             base_col_df = (
                 self.spec_dict['columns'][self.base_col]
-                ['original_values'].iloc[0:-1,:]
+                ['original_values'].iloc[0:-1, :]
             )
 
             base_col_prob = np.array(base_col_df['probability_vector'])
@@ -566,13 +571,11 @@ class LinkedDataGenerator:
             return linked_df
         
         #random
-        #ignore Missing data row at this point?
         base_col_df = (
-            self.spec_dict['columns'][self.base_col]['original_values'].iloc[0:-1,:]
+            self.spec_dict['columns'][self.base_col]['original_values']
         )
 
         base_col_prob = np.array(base_col_df['probability_vector'])
-
         base_col_prob /= base_col_prob.sum()
 
         idx = np.random.choice(len(self.sql_rows), self.num_rows, p=base_col_prob)

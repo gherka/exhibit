@@ -135,7 +135,6 @@ columns:
     allow_missing_values: false
     miss_probability: 0.0
     from: '2019-04-01'
-    to: '2019-08-01'
     uniques: 5
     frequency: MS
 #---------------------------------------------------------
@@ -159,7 +158,3 @@ constraints:
 #---------------------------------------------------------
 derived_columns:
   Example_Column: Example_Calculation
-#---------------------------------------------------------
-#Please add any demonstrator patterns in this section.
-#---------------------------------------------------------
-demo_records: {}

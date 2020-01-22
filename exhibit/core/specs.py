@@ -90,14 +90,13 @@ class newSpec:
             'columns': {},
             'constraints': {},
             'derived_columns': {"Example_Column": "Example_Calculation"},
-            'demo_records': {},
             }
 
     def missing_data_chance(self, col):
         '''
         Doc string
         '''
-        result = round(sum(self.df[col].isna()) / self.df.shape[0],3)
+        result = round(sum(self.df[col].isna()) / self.df.shape[0], 3)
 
         return result
 
@@ -231,7 +230,6 @@ class newSpec:
             'allow_missing_values': False,
             'miss_probability': self.missing_data_chance(col),
             'from': self.df[col].min().date().isoformat(),
-            'to': self.df[col].max().date().isoformat(),
             'uniques': int(self.df[col].nunique()),
             'frequency': guess_date_frequency(self.df[col]),
         }
@@ -278,6 +276,8 @@ class newSpec:
                 self.output['columns'][col] = self.categorical_dict(col)
 
         #PART 2: DATASET-WIDE CONSTRAINTS
+        # if we don't replace nans here, they don't get put into SQL
+        linked_temp_df = self.df[self.cat_cols].fillna("Missing data")
 
         linked_cols = find_hierarchically_linked_columns(self.df)
         linked_tree = linkedColumnsTree(linked_cols).tree
@@ -304,10 +304,12 @@ class newSpec:
                         (linked_col in pair_col_list) and
                         (linked_col != pair_col_list[0])):
                         linked_group_tuple[1].remove(linked_col)
-        
-            linked_data = list(self.df.groupby(linked_group_tuple[1]).groups.keys())
 
-        #PART 3: STORE LINKED GROUPS INFORMATION IN A SQLITE3 DB
+            linked_data = list(
+                linked_temp_df.groupby(linked_group_tuple[1]).groups.keys()
+            )
+
+            #PART 3: STORE LINKED GROUPS INFORMATION IN A SQLITE3 DB
 
             #Column names can't have spaces; replace with $ and then back when
             #reading the data from the SQLite DB at execution stage.

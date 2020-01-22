@@ -12,6 +12,7 @@ import sys
 # External library imports
 import yaml
 import numpy as np
+import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import path_checker, read_with_date_parser
@@ -22,7 +23,8 @@ from exhibit.core.validator import newValidator
 from exhibit.core.generator import (
                                     generate_weights_table, generate_cont_val,
                                     apply_dispersion, generate_YAML_string,
-                                    generate_derived_column, generate_categorical_data)
+                                    generate_derived_column, generate_categorical_data,
+                                    add_missing_data_to_dataframe)
 
 class newExhibit:
     '''
@@ -120,7 +122,10 @@ class newExhibit:
         Only called on "fromdata" CLI command.
         '''
 
-        self.df = read_with_date_parser(self._args.source)
+        if isinstance(self._args.source, pd.DataFrame):
+            self.df = self._args.source
+        else:
+            self.df = read_with_date_parser(self._args.source)
 
     def generate_spec(self):
         '''
@@ -236,19 +241,17 @@ class newExhibit:
                 args=[d]
             )
 
-            #Check that the total % of missing values matches miss_probability
-            miss_pct = self.spec_dict['columns'][num_col]['miss_probability']
-            existing_miss = sum(anon_df[num_col].isna()) / anon_df.shape[0]
+        #add missing data AFTER generating continuous values because
+        #weights table doesn't have nans - only Missing data at this point
+        rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
+        for col in anon_df.columns:
+            anon_df[col] = add_missing_data_to_dataframe(
+                self.spec_dict,
+                rands,
+                anon_df[col]
+            )
 
-            miss_to_add = miss_pct - existing_miss
-
-            if miss_to_add > 0:
-                rands = np.random.random(size=anon_df.shape[0])
-                anon_df[num_col] = np.where(
-                    np.logical_and(rands < miss_to_add, ~np.isnan(anon_df[num_col])),
-                    np.NaN,
-                    anon_df[num_col]
-                )
+        anon_df.replace("Missing data", np.NaN, inplace=True)
 
         #4) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
