@@ -311,3 +311,94 @@ def find_boolean_columns(df):
                 break
             
     return output
+
+def tokenise_boolean_constraint(constraint):
+    '''
+    Given a constraint string, separate it into Column A,
+    Column B and Operator tokens
+
+    Returns
+    -------
+    A 3-element tuple
+    '''
+
+    pattern = r"`.+?`|\b[^\s]+?\b|[<>]=?|=="
+    result = re.findall(pattern, constraint)
+
+    return tuple(x.replace("`", "") for x in result)
+
+def _recursive_randint(new_x_min, new_x_max, y, op):
+    '''
+    Helper function to generate a random integer that conforms
+    to the given constraint.
+
+    Occasionally, you might get into a situation when determining
+    a noisy value is not straight-forward; fall-back at the end
+    of recursion depth is to go 1 up or down depending on the 
+    constraint.
+    '''
+    new_x = round(np.random.uniform(new_x_min, new_x_max))
+
+    try:
+
+        if op(new_x, y):
+            return new_x
+        return _recursive_randint(new_x_min, new_x_max, y, op)
+    
+    except RecursionError:
+
+        if op.__name__ == 'less':
+            return y - 1
+        if op.__name__ == 'greater':
+            return y + 1
+        else:
+            return y
+
+def _generate_value_with_condition(x, y, op, pct_diff=None):
+    '''
+    Doc string
+    '''
+
+    abs_diff = max(1, abs(y-x))
+
+    if pct_diff is None:
+        pct_diff = 0.5
+
+    new_x_min = max(0, x - abs_diff * (1 + pct_diff))
+    new_x_max = x + abs_diff * (1 + pct_diff)
+
+    return _recursive_randint(new_x_min, new_x_max, y, op)
+
+
+def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
+    '''
+    Row-based function, supplied to apply()
+
+    Parameters
+    ----------
+    row : pd.Series object
+        automatically supplied by apply()
+    col_name_A : str
+        values in this column will be adjusted to fit the constraint
+    col_name_B : str
+        values in this column will NOT be changed
+    operator : str
+        has to be one of >,<.<=,>=,==
+    
+    Returns
+    -------
+    A series with adjusted values
+    '''
+
+    op_dict = {
+        "<": less,
+        ">": greater,
+        "<=": less_equal,
+        ">=": greater_equal,
+        "==": equal
+    }
+
+    x = row[col_name_A]
+    y = row[col_name_B]
+
+    return _generate_value_with_condition(x, y, op_dict[operator])

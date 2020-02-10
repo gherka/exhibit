@@ -144,6 +144,46 @@ class helperTests(unittest.TestCase):
         self.assertEqual(lt_expected, lt_result)
         self.assertEqual(ge_expected, ge_result)
 
+    def test_tokenise_boolean_constraint(self):
+        '''
+        Separate the constraint string into 3-element tuple
+        '''
+
+        c1 = "`A A` > B"
+        c2 = "A == B"
+
+        c1_expected = ("A A", ">", "B")
+        c2_expected = ("A", "==", "B")
+
+        c1_result = tm.tokenise_boolean_constraint(c1)
+        c2_result = tm.tokenise_boolean_constraint(c2)
+
+        self.assertEqual(c1_expected, c1_result)
+        self.assertEqual(c2_expected, c2_result)
+
+    def test_adjust_value_to_constraint(self):
+        '''
+        Inner functions not yet tested
+        '''
+
+        test_df = pd.DataFrame(
+            data={
+                "A":[1,0,20,2,50],
+                "B":[1,5,21,1,1000]
+            }
+        )
+
+        constraint = "A >= B"
+        mask = test_df.eval(constraint)
+
+        test_df.loc[~mask, "A"] = test_df[~mask].apply(
+            tm.adjust_value_to_constraint, axis=1,
+            args=('A', 'B', '>=')
+        )
+
+        self.assertTrue(all(test_df.eval(constraint)))
+
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
