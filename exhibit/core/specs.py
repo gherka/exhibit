@@ -6,7 +6,9 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.utils import guess_date_frequency, generate_table_id
+from exhibit.core.utils import (
+    guess_date_frequency, generate_table_id,
+    find_boolean_columns)
 from exhibit.core.linkage import (
     linkedColumnsTree,
     find_hierarchically_linked_columns,
@@ -276,6 +278,13 @@ class newSpec:
                 self.output['columns'][col] = self.categorical_dict(col)
 
         #PART 2: DATASET-WIDE CONSTRAINTS
+
+        # add numerical column pairs where all values can described by
+        # boolean logic, e.g. A > B
+
+        bool_constraints = find_boolean_columns(self.df)
+        self.output['constraints']['boolean_constraints'] = bool_constraints
+
         # if we don't replace nans here, they don't get put into SQL
         linked_temp_df = self.df[self.cat_cols].fillna("Missing data")
 

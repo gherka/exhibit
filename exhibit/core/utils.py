@@ -7,12 +7,16 @@ from os.path import abspath, dirname, join, exists
 from pathlib import Path
 from functools import reduce
 from operator import mul
+from itertools import combinations
+
 import re
 import datetime
 import dateutil
 
 # External library imports
 import pandas as pd
+import numpy as np
+from numpy import greater, greater_equal, less, less_equal, equal
 
 def path_checker(string):
     '''
@@ -252,3 +256,58 @@ def whole_number_column(series):
     '''
 
     return all(series.fillna(0) * 10 % 10 == 0)
+
+def find_boolean_columns(df):
+    '''
+    Given a Pandas dataframe, find all numerical column pairs
+    that have a relationship that can be described using standard
+    comparison operators, e.g. values in A are always greater than
+    values in B.
+
+    Returns
+    -------
+    A list of strings that are interpretable by Pandas eval() method
+
+    Note that each column pair can be described by at most one "rule":
+    if > is identified, the inner loop exists rather than check for >=
+    Comparisons need to be made element-wise, which is why we import
+    operators from numpy and not from standard library.
+
+    Sadly, ` is a reserved character in YAML so it will print inside
+    single quotes. Consider hacking something around this to make 
+    the spec more user-friendly
+    '''
+
+    op_dict = {
+        "<": less,
+        ">": greater,
+        "<=": less_equal,
+        ">=": greater_equal,
+        "==": equal
+    }
+
+    num_cols = df.select_dtypes(include=np.number).columns
+    pairs = list(combinations(num_cols, 2))
+    output = []
+
+    for pair in pairs:
+        for op_name, op_func in op_dict.items():
+
+            col_A_name = pair[0]
+            col_B_name = pair[1]
+            
+            col_A = df[col_A_name].fillna(0)
+            col_B = df[col_B_name].fillna(0)
+
+            if all(op_func(col_A, col_B)):
+                #escape whitespace
+                if " " in pair[0]:
+                    col_A_name = "`"+pair[0]+"`"
+                if " " in pair[1]:
+                    col_B_name = "`"+pair[1]+"`"
+                output.append(
+                    f"{col_A_name} {op_name} {col_B_name}"
+                )
+                break
+            
+    return output

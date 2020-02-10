@@ -112,6 +112,37 @@ class helperTests(unittest.TestCase):
         self.assertTrue(tm.whole_number_column(test_series_2))
         self.assertFalse(tm.whole_number_column(test_series_3))
 
+    def test_boolean_columns_identified(self):
+        '''
+        When a relationship exists between two numerical columns,
+        add the pair to the spec, in a format that Pandas understand
+        '''
+ 
+        lt_df = pd.DataFrame(
+            data={
+                "A":[1,2,3],
+                "B":[4,5,6],
+                "C":[0,6,2],
+                "D":list("ABC")
+            }
+        )
+
+        ge_df = pd.DataFrame(
+            data={
+                "A A":[5,10,3],
+                "B":[1,2,2],
+                "C":[0,10,2]
+            }
+        )
+
+        lt_expected = ["A < B"]
+        ge_expected = ["`A A` > B", "`A A` >= C"]
+
+        lt_result = tm.find_boolean_columns(lt_df)
+        ge_result = tm.find_boolean_columns(ge_df)
+
+        self.assertEqual(lt_expected, lt_result)
+        self.assertEqual(ge_expected, ge_result)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

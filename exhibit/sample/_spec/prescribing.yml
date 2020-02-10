@@ -143,6 +143,7 @@ columns:
 #If any grouping is missed, please add it manually.
 #---------------------------------------------------------
 constraints:
+  boolean_constraints: []
   linked_columns:
   - - 0
     - - HB2014Name
