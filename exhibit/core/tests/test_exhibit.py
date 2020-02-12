@@ -33,6 +33,7 @@ class exhibitTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             source=Path(package_dir('sample', '_data', 'inpatients.csv')),
             verbose=True,
+            skip_columns=[]
         )
 
         xA = tm.newExhibit()

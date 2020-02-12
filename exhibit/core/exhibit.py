@@ -15,15 +15,17 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.utils import path_checker, read_with_date_parser
-from exhibit.core.utils import count_core_rows
+from exhibit.core.utils import (
+                                path_checker, read_with_date_parser,
+                                count_core_rows, tokenise_boolean_constraint,
+                                adjust_value_to_constraint)
 from exhibit.core.formatters import parse_original_values
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
 from exhibit.core.generator import (
                                     generate_weights_table, generate_cont_val,
-                                    apply_dispersion, generate_YAML_string,
-                                    generate_derived_column, generate_categorical_data,
+                                    generate_YAML_string, generate_derived_column,
+                                    generate_categorical_data,
                                     add_missing_data_to_dataframe)
 
 class newExhibit:
@@ -106,6 +108,13 @@ class newExhibit:
             '--output', '-o',
             help='output the generated spec to a given file name',
             )
+
+        parser.add_argument(
+            '--skip_columns', '-skip',
+            default=[],
+            nargs='+',
+            help='list of columns to skip when reading in data',
+            )
  
         self._args = parser.parse_args(sys.argv[1:])
         self.spec_dict = None
@@ -125,7 +134,9 @@ class newExhibit:
         if isinstance(self._args.source, pd.DataFrame):
             self.df = self._args.source
         else:
-            self.df = read_with_date_parser(self._args.source)
+            self.df = read_with_date_parser(
+                path=self._args.source,
+                skip_columns=self._args.skip_columns)
 
     def generate_spec(self):
         '''
@@ -225,39 +236,70 @@ class newExhibit:
             if num_col in self.spec_dict['derived_columns']:
                 continue
 
-            anon_df[num_col] = anon_df.apply(
-                generate_cont_val,
-                args=(
-                    wt,
-                    num_col,
-                    self.spec_dict['columns'][num_col]['sum'],
-                    complete_factor),
-                axis=1)
+            #3a) Generate index for nulls based on spec
+            null_pct = self.spec_dict['columns'][num_col]['miss_probability']
 
-            d = self.spec_dict['columns'][num_col]['dispersion']
-
-            anon_df[num_col] = anon_df[num_col].apply(
-                apply_dispersion,
-                args=[d]
+            null_idx = np.random.choice(
+                a=[True, False],
+                size=anon_df.shape[0],
+                p=[null_pct, 1-null_pct]
             )
 
-        #add missing data AFTER generating continuous values because
-        #weights table doesn't have nans - only Missing data at this point
-        rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
-        for col in anon_df.columns:
-            anon_df[col] = add_missing_data_to_dataframe(
-                self.spec_dict,
-                rands,
-                anon_df[col]
-            )
+            anon_df.loc[null_idx, num_col] = np.NaN
 
+            #3b) Generate real values in non-null cells
+            anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
+
+            anon_df.loc[~null_idx, num_col] = anon_df_cat[~null_idx].apply(
+                func=generate_cont_val,
+                axis=1,
+                weights_table=wt,
+                num_col=num_col,
+                num_col_sum=self.spec_dict['columns'][num_col]['sum'],
+                complete_factor=complete_factor,
+                dispersion=self.spec_dict['columns'][num_col]['dispersion'])
+
+        #Missing data is a special value used in categorical columns as a placeholder
         anon_df.replace("Missing data", np.NaN, inplace=True)
+
+        #add missing data to categorical columns (inc. those pulled from DB)
+        rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
+
+        for col in anon_df_cat.columns:
+            anon_df[col] = add_missing_data_to_dataframe(
+                spec_dict=self.spec_dict,
+                rands=rands,
+                series=anon_df[col]
+            )
 
         #4) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
 
+        #5) Run through boolean conditions and propagate nulls / adjust values
+        for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
+
+            mask = anon_df.eval(bool_constraint)
+        
+            col_A_name, op, col_B_name = tokenise_boolean_constraint(bool_constraint)
+                    
+            anon_df.loc[~mask, col_A_name] = (
+                anon_df[~mask].apply(
+                    adjust_value_to_constraint,
+                    axis=1,
+                    args=(col_A_name, col_B_name, op)
+                )
+            )
+
+            #propagate nulls from column A to column B if it exists
+            if col_B_name in anon_df.columns:
+                anon_df.loc[~mask, col_B_name] = np.where(
+                    np.isnan(anon_df.loc[~mask, col_A_name]),
+                    np.NaN,
+                    anon_df.loc[~mask, col_B_name]
+                )
+            
         #5) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 

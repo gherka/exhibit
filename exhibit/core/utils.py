@@ -62,7 +62,7 @@ def date_parser(row_tuple):
         except ValueError:
             pass
 
-def read_with_date_parser(path):
+def read_with_date_parser(path, **kwargs):
     '''
     Adapt the read_csv function of Pandas to
     detect and parse datetime columns based on
@@ -71,13 +71,17 @@ def read_with_date_parser(path):
 
     if path.suffix in ['.csv',]:
 
+        skipped_cols = kwargs["skip_columns"]
+    
         df = pd.read_csv(path)
+
+        df = df[[x for x in df.columns if x not in skipped_cols]]
 
         for x in df.loc[0, :].iteritems():
             time_col = date_parser(x)
             if not time_col is None:
                 df[time_col] = pd.to_datetime(df[time_col], dayfirst=True)
-                
+
         return df
     
     raise TypeError("Only .csv file format is supported")
@@ -295,9 +299,14 @@ def find_boolean_columns(df):
 
             col_A_name = pair[0]
             col_B_name = pair[1]
-            
-            col_A = df[col_A_name].fillna(0)
-            col_B = df[col_B_name].fillna(0)
+
+            #we need to find the intersection of non-null indices for two columns
+            non_null_idx = df[col_A_name].dropna().index.intersection(
+                df[col_B_name].dropna().index
+            )
+
+            col_A = df.loc[non_null_idx, col_A_name]
+            col_B = df.loc[non_null_idx, col_B_name]
 
             if all(op_func(col_A, col_B)):
                 #escape whitespace
@@ -337,10 +346,10 @@ def _recursive_randint(new_x_min, new_x_max, y, op):
     of recursion depth is to go 1 up or down depending on the 
     constraint.
     '''
+
     new_x = round(np.random.uniform(new_x_min, new_x_max))
 
     try:
-
         if op(new_x, y):
             return new_x
         return _recursive_randint(new_x_min, new_x_max, y, op)
@@ -351,13 +360,16 @@ def _recursive_randint(new_x_min, new_x_max, y, op):
             return y - 1
         if op.__name__ == 'greater':
             return y + 1
-        else:
-            return y
+        return y
 
 def _generate_value_with_condition(x, y, op, pct_diff=None):
     '''
-    Doc string
+    Comparisons where one of the values in NaN are not possible
+    so we return NaN if one of the comparison values in NaN
     '''
+
+    if np.isnan(x) or np.isnan(y):
+        return np.nan
 
     abs_diff = max(1, abs(y-x))
 
@@ -381,7 +393,7 @@ def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     col_name_A : str
         values in this column will be adjusted to fit the constraint
     col_name_B : str
-        values in this column will NOT be changed
+        values in this column will NOT be changed; can also be a scalar
     operator : str
         has to be one of >,<.<=,>=,==
     
@@ -399,6 +411,10 @@ def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     }
 
     x = row[col_name_A]
-    y = row[col_name_B]
+
+    if col_name_B.isdigit():
+        y = float(col_name_B)
+    else:
+        y = row[col_name_B]
 
     return _generate_value_with_condition(x, y, op_dict[operator])

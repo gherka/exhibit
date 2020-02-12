@@ -120,18 +120,18 @@ class helperTests(unittest.TestCase):
  
         lt_df = pd.DataFrame(
             data={
-                "A":[1,2,3],
-                "B":[4,5,6],
-                "C":[0,6,2],
+                "A":[1, 2, 3],
+                "B":[4, 5, 6],
+                "C":[0, 6, 2],
                 "D":list("ABC")
             }
         )
 
         ge_df = pd.DataFrame(
             data={
-                "A A":[5,10,3],
-                "B":[1,2,2],
-                "C":[0,10,2]
+                "A A":[5, 10, 3],
+                "B"  :[1, 2, 2],
+                "C"  :[0, 10, 2]
             }
         )
 
@@ -143,6 +143,28 @@ class helperTests(unittest.TestCase):
 
         self.assertEqual(lt_expected, lt_result)
         self.assertEqual(ge_expected, ge_result)
+
+
+    def test_boolean_columns_with_nulls_identified(self):
+        '''
+        When a relationship exists between two numerical columns,
+        add the pair to the spec, in a format that Pandas understand
+        '''
+ 
+        test_df = pd.DataFrame(
+            data={
+                "A":[np.nan, 2, 3, 5],
+                "B":[4, 5, np.nan, 6],
+                "C":[0, 6, 2, np.nan],
+                "D":list("ABCD")
+            }
+        )
+
+        expected = ["A < B"]
+
+        result = tm.find_boolean_columns(test_df)
+
+        self.assertEqual(expected, result)
 
     def test_tokenise_boolean_constraint(self):
         '''
@@ -161,15 +183,16 @@ class helperTests(unittest.TestCase):
         self.assertEqual(c1_expected, c1_result)
         self.assertEqual(c2_expected, c2_result)
 
-    def test_adjust_value_to_constraint(self):
+    def test_adjust_value_to_constraint_column(self):
         '''
-        Inner functions not yet tested
+        Inner functions not yet tested; if tokenised value is not
+        an operator OR a column name, try to parse it as a scalar
         '''
 
         test_df = pd.DataFrame(
             data={
-                "A":[1,0,20,2,50],
-                "B":[1,5,21,1,1000]
+                "A":[1, 0, 20, 2, 50],
+                "B":[1, 5, 21, 1, 1000]
             }
         )
 
@@ -179,6 +202,29 @@ class helperTests(unittest.TestCase):
         test_df.loc[~mask, "A"] = test_df[~mask].apply(
             tm.adjust_value_to_constraint, axis=1,
             args=('A', 'B', '>=')
+        )
+
+        self.assertTrue(all(test_df.eval(constraint)))
+
+    def test_adjust_value_to_constraint_scalar(self):
+        '''
+        Inner functions not yet tested; if tokenised value is not
+        an operator OR a column name, try to parse it as a scalar
+        '''
+
+        test_df = pd.DataFrame(
+            data={
+                "A":[1, 0, 20, 2, 50],
+                "B":[1, 5, 21, 1, 1000]
+            }
+        )
+
+        constraint = "A >= 30"
+        mask = test_df.eval(constraint)
+
+        test_df.loc[~mask, "A"] = test_df[~mask].apply(
+            tm.adjust_value_to_constraint, axis=1,
+            args=('A', '30', '>=')
         )
 
         self.assertTrue(all(test_df.eval(constraint)))

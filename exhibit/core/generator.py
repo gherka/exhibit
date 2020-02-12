@@ -307,7 +307,13 @@ def generate_weights_table(spec):
 
     return result
 
-def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor):
+def generate_cont_val(
+    row,
+    weights_table,
+    num_col,
+    num_col_sum,
+    complete_factor,
+    dispersion_pct):
     '''
     Generate a continuous value, one dataframe row at a time
 
@@ -321,11 +327,13 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor)
         numerical column for which to generate values
     num_col_sum : number
         target sum of the numerical column; reduced by weights of each column in row
-    complete_factor: number
+    complete_factor : number
         certain column, like time, are excluded from weight generation; they are
         repeated for all generated values (each combination of generated values
         will have all time periods, for example). So the total sum of numerical
         column is reduced accordingly
+    dispersion_pct : float
+        A measure of how much to perturb the data point
 
     Returns
     -------
@@ -339,8 +347,9 @@ def generate_cont_val(row, weights_table, num_col, num_col_sum, complete_factor)
             num_col_sum = num_col_sum * weight
         except KeyError:
             continue           
+    result = round(num_col_sum / complete_factor, 0)
     
-    return round(num_col_sum / complete_factor, 0)
+    return apply_dispersion(result, dispersion_pct)
 
 def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     '''
@@ -734,6 +743,9 @@ def generate_YAML_string(spec_dict):
 
     c1 = textwrap.dedent("""\
     #---------------------------------------------------------
+    #EXHIBIT SPECIFICATION
+    #=====================
+    #
     #This specification describes the dataset in great detail.
     #In order to vary the degree to which it is anonymised,
     #please review each section and make necessary adjustments
@@ -744,6 +756,9 @@ def generate_YAML_string(spec_dict):
 
     c2 = textwrap.dedent("""\
     #---------------------------------------------------------
+    #COLUMN DETAILS
+    #==============
+    #
     #Dataset columns can be one of the three types: 
     #Categorical | Continuous | Timeseries
     #
@@ -769,9 +784,22 @@ def generate_YAML_string(spec_dict):
 
     c3 = textwrap.dedent("""\
     #---------------------------------------------------------
-    #The tool will try to guess which columns are "linked",
-    #meaning that values cascade from one column to another.
-    #If any grouping is missed, please add it manually.
+    #CONSTRAINTS
+    #===========
+    #
+    #The tool will try to guess which columns are "linked". The
+    #meaning of "linked" varies depending on whether the columns
+    #are categorical or numerical.
+    #
+    #For linked categorical columns, values in one column will map
+    #1 : many to values in another column. The order in which the
+    #columns are listed goes from parent to child/children.
+    #
+    #For linked numerical columns, all non-null values in one column
+    #are smaller / larger than corresponding row values in another.
+    #If a column name has spaces, make sure to enclose it in backticks
+    #You can add custom links, provided they can be safely evaluated
+    #by Pandas' method eval().
     #---------------------------------------------------------
     """)
 
@@ -779,8 +807,11 @@ def generate_YAML_string(spec_dict):
 
     c4 = textwrap.dedent("""\
     #---------------------------------------------------------
+    #DERIVED COLUMNS
+    #===============
+    #
     #Please add any derived columns to be calculated from anonymised
-    #continuous variable in this section, alongside with
+    #continuous variables in this section, alongside with
     #the calculation used. The calculation should follow the format
     #of the evaluate method from Pandas framework: 
     #
