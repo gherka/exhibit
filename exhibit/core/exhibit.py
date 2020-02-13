@@ -15,26 +15,28 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.utils import (
-                                path_checker, read_with_date_parser,
-                                count_core_rows, tokenise_boolean_constraint,
-                                adjust_value_to_constraint)
 from exhibit.core.formatters import parse_original_values
 from exhibit.core.specs import newSpec
 from exhibit.core.validator import newValidator
+
+from exhibit.core.utils import (
+                                path_checker, read_with_date_parser,
+                                count_core_rows, adjust_value_to_constraint)
+
+from exhibit.core.utils import (
+                                _constraint_clean_up_for_eval,
+                                _tokenise_constraint)
+
 from exhibit.core.generator import (
-                                    generate_weights_table, generate_cont_val,
-                                    generate_YAML_string, generate_derived_column,
-                                    generate_categorical_data,
-                                    add_missing_data_to_dataframe)
+                                generate_weights_table, generate_cont_val,
+                                generate_YAML_string, generate_derived_column,
+                                generate_categorical_data,
+                                add_missing_data_to_dataframe)
 
 class newExhibit:
     '''
     The main class encapsulating the demonstrator
     
-    Parameters
-    ----------
-
     Attributes
     ----------
     spec_dict : dict
@@ -247,7 +249,9 @@ class newExhibit:
 
             anon_df.loc[null_idx, num_col] = np.NaN
 
-            #3b) Generate real values in non-null cells
+            #3b) Generate real values in non-null cells by looking up values of 
+            #    categorical columns in the weights table and progressively reduce
+            #    the sum total of the column by the weight of each columns' value
             anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
 
             anon_df.loc[~null_idx, num_col] = anon_df_cat[~null_idx].apply(
@@ -257,12 +261,12 @@ class newExhibit:
                 num_col=num_col,
                 num_col_sum=self.spec_dict['columns'][num_col]['sum'],
                 complete_factor=complete_factor,
-                dispersion=self.spec_dict['columns'][num_col]['dispersion'])
+                dispersion_pct=self.spec_dict['columns'][num_col]['dispersion'])
 
         #Missing data is a special value used in categorical columns as a placeholder
         anon_df.replace("Missing data", np.NaN, inplace=True)
 
-        #add missing data to categorical columns (inc. those pulled from DB)
+        #add missing data to categorical columns (spec. for those pulled from DB)
         rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
 
         for col in anon_df_cat.columns:
@@ -277,12 +281,16 @@ class newExhibit:
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
 
-        #5) Run through boolean conditions and propagate nulls / adjust values
+        #5) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
         for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
-
-            mask = anon_df.eval(bool_constraint)
+            
+            clean_rule = _constraint_clean_up_for_eval(bool_constraint)
+            mask = (anon_df
+                        .rename(lambda x: x.replace(" ", "_"), axis="columns")
+                        .eval(clean_rule)
+            )
         
-            col_A_name, op, col_B_name = tokenise_boolean_constraint(bool_constraint)
+            col_A_name, op, col_B_name = _tokenise_constraint(bool_constraint)
                     
             anon_df.loc[~mask, col_A_name] = (
                 anon_df[~mask].apply(
@@ -300,7 +308,7 @@ class newExhibit:
                     anon_df.loc[~mask, col_B_name]
                 )
             
-        #5) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #6) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self):

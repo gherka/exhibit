@@ -94,7 +94,7 @@ class validatorTests(unittest.TestCase):
         
         out = StringIO()
 
-        expected =  textwrap.dedent("""
+        expected = textwrap.dedent("""
         VALIDATION WARNING: The probability vector of HB2014Name doesn't
         sum up to 1 and will be rescaled.
         """)
@@ -242,4 +242,22 @@ class validatorTests(unittest.TestCase):
 
         self.assertFalse(
             tm.validate_anonymising_set_width(validatorMock, spec_dict=test_dict)
+            )
+
+    def test_boolean_constraints(self):
+        '''
+        Boolean constraints are only valid if they can be tokenised into 3 elements
+        '''
+        validatorMock = Mock()
+
+        test_dict = {
+            "constraints": {
+                "boolean_constraints": [
+                    "Spam Eggs > Spam" #invalid
+                    ] 
+            }
+        }
+
+        self.assertFalse(
+            tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict)
             )

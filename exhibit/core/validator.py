@@ -13,12 +13,10 @@ import math
 import sys
 
 # External library imports
-import yaml
-import numpy as np
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.utils import get_attr_values
+from exhibit.core.utils import get_attr_values, _tokenise_constraint
 from exhibit.core.sql import number_of_query_rows, number_of_table_columns
 
 class newValidator:
@@ -294,4 +292,27 @@ class newValidator:
                         "col" : ", ".join(linked_group[1])
                         })
                         return False
+        return True
+    
+    def validate_boolean_constraints(self, spec_dict=None):
+        '''
+        User can enter boolean constraints linking two numerical columns
+        or a single column and a scalar value, like Column A < 100.
+
+        Each constraint should yield 3-element tuple: Column A, operator
+        and the comparison value / column.
+        '''
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: Tokenisation failed for %s
+        """)
+
+        if spec_dict['constraints']['boolean_constraints']:
+
+            for constraint in spec_dict['constraints']['boolean_constraints']:
+                if len(_tokenise_constraint(constraint)) != 3:
+                    print(fail_msg % constraint)
+                    return False
         return True

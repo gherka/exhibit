@@ -7,7 +7,8 @@ from os.path import abspath, dirname, join, exists
 from pathlib import Path
 from functools import reduce
 from operator import mul
-from itertools import combinations
+from io import StringIO
+import itertools as it
 
 import re
 import datetime
@@ -60,13 +61,16 @@ def date_parser(row_tuple):
             return column_name
 
         except ValueError:
-            pass
+            return None
+    return None
 
 def read_with_date_parser(path, **kwargs):
     '''
     Adapt the read_csv function of Pandas to
     detect and parse datetime columns based on
     values ONLY in the first row.
+
+    We assume that the date columns come in dayfirst format
     '''
 
     if path.suffix in ['.csv',]:
@@ -191,7 +195,8 @@ def generate_table_id():
 
 def exceeds_ct(spec_dict, col):
     '''
-    Returns true if column exceeds category threshold
+    Returns true if the number of unique values in a column
+    exceeds category threshold parameter given at spec generation
     '''
     result = (
         spec_dict['columns'][col]['uniques'] > 
@@ -277,9 +282,7 @@ def find_boolean_columns(df):
     Comparisons need to be made element-wise, which is why we import
     operators from numpy and not from standard library.
 
-    Sadly, ` is a reserved character in YAML so it will print inside
-    single quotes. Consider hacking something around this to make 
-    the spec more user-friendly
+    Use tilde character (~) to enclose column names with spaces
     '''
 
     op_dict = {
@@ -291,7 +294,7 @@ def find_boolean_columns(df):
     }
 
     num_cols = df.select_dtypes(include=np.number).columns
-    pairs = list(combinations(num_cols, 2))
+    pairs = list(it.combinations(num_cols, 2))
     output = []
 
     for pair in pairs:
@@ -311,9 +314,9 @@ def find_boolean_columns(df):
             if all(op_func(col_A, col_B)):
                 #escape whitespace
                 if " " in pair[0]:
-                    col_A_name = "`"+pair[0]+"`"
+                    col_A_name = "~"+pair[0]+"~"
                 if " " in pair[1]:
-                    col_B_name = "`"+pair[1]+"`"
+                    col_B_name = "~"+pair[1]+"~"
                 output.append(
                     f"{col_A_name} {op_name} {col_B_name}"
                 )
@@ -321,20 +324,26 @@ def find_boolean_columns(df):
             
     return output
 
-def tokenise_boolean_constraint(constraint):
+def _tokenise_constraint(constraint):
     '''
-    Given a constraint string, separate it into Column A,
-    Column B and Operator tokens
+    Given a constraint string, split it into individual tokens
+    Orders of tokens matters.
 
     Returns
     -------
-    A 3-element tuple
+    A tuple with tokens
+    
+    If the constraint is in a valid format, the returned tuple
+    is made up of Column A, Column B and Operator; the format is
+    checked as part of validation, earlier in the process
     '''
 
-    pattern = r"`.+?`|\b[^\s]+?\b|[<>]=?|=="
-    result = re.findall(pattern, constraint)
+    pattern = r"~.+?~|\b[^\s]+?\b|[<>]=?|=="
+    token_list = re.findall(pattern, constraint)
 
-    return tuple(x.replace("`", "") for x in result)
+    result = tuple(x.replace("~", "") for x in token_list)
+
+    return result
 
 def _recursive_randint(new_x_min, new_x_max, y, op):
     '''
@@ -343,8 +352,8 @@ def _recursive_randint(new_x_min, new_x_max, y, op):
 
     Occasionally, you might get into a situation when determining
     a noisy value is not straight-forward; fall-back at the end
-    of recursion depth is to go 1 up or down depending on the 
-    constraint.
+    of recursion depth is to go 1 up or down while still satisfying
+    the constraint operator.
     '''
 
     new_x = round(np.random.uniform(new_x_min, new_x_max))
@@ -418,3 +427,30 @@ def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
         y = row[col_name_B]
 
     return _generate_value_with_condition(x, y, op_dict[operator])
+
+def _constraint_clean_up_for_eval(rule_string):
+    '''
+    The default way to handle column names with whitespace in eval strings
+    is to enclose them in backticks. However, the default tokeniser will
+    occasionally tokenise elements of the column name that weren't separated by
+    whitespace originally, leading to errors when tokens are reassembled with
+    a safe character. For example, "Clinical Pathway 31Day" will be reassembled
+    as "Clinical_Pathway_31_Day".
+
+    The solution is to process the constraint first, before passing it to eval,
+    not forgetting to rename the dataframe columns with a _ instead of a whitespace
+    '''
+    
+    ops_re = r'[<>]=?|=='
+    split_str = rule_string.split("~")
+    clean_str = StringIO()
+    
+    for token in split_str:
+        if re.search(ops_re, token):
+            clean_str.write(token)
+        else:
+            clean_str.write(token.replace(" ", "_"))
+    
+    result = clean_str.getvalue()
+
+    return result

@@ -136,7 +136,7 @@ class helperTests(unittest.TestCase):
         )
 
         lt_expected = ["A < B"]
-        ge_expected = ["`A A` > B", "`A A` >= C"]
+        ge_expected = ["~A A~ > B", "~A A~ >= C"]
 
         lt_result = tm.find_boolean_columns(lt_df)
         ge_result = tm.find_boolean_columns(ge_df)
@@ -166,19 +166,19 @@ class helperTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
-    def test_tokenise_boolean_constraint(self):
+    def test_tokenise_constraint(self):
         '''
         Separate the constraint string into 3-element tuple
         '''
 
-        c1 = "`A A` > B"
+        c1 = "~A A~ > B"
         c2 = "A == B"
 
         c1_expected = ("A A", ">", "B")
         c2_expected = ("A", "==", "B")
 
-        c1_result = tm.tokenise_boolean_constraint(c1)
-        c2_result = tm.tokenise_boolean_constraint(c2)
+        c1_result = tm._tokenise_constraint(c1)
+        c2_result = tm._tokenise_constraint(c2)
 
         self.assertEqual(c1_expected, c1_result)
         self.assertEqual(c2_expected, c2_result)
@@ -229,6 +229,27 @@ class helperTests(unittest.TestCase):
 
         self.assertTrue(all(test_df.eval(constraint)))
 
+    def test_constraint_clean_up_for_eval(self):
+        '''
+        Re-assemble the given constraint in a safe way
+        '''
+
+        c1 = "Spam Eggs > Spam" #invalid constraint - will be caught by validator
+        c1_expected = "Spam Eggs > Spam"
+
+        c2 = "~Spam Eggs~ > Spam"
+        c2_expected = "Spam_Eggs > Spam"
+
+        self.assertEqual(
+            tm._constraint_clean_up_for_eval(c1),
+            c1_expected
+        )
+
+        self.assertEqual(
+            tm._constraint_clean_up_for_eval(c2),
+            c2_expected
+        )
+        
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
