@@ -159,7 +159,7 @@ def apply_dispersion(value, dispersion_pct):
     #the upper limit of randint is exclusive, so we extend it by 1
     return np.random.randint(rmin, rmax + 1)
 
-def target_columns_for_weights_table(spec):
+def target_columns_for_weights_table(spec_dict):
     '''
     Helper function to determine which columns should be used
     in the weights table.
@@ -174,7 +174,7 @@ def target_columns_for_weights_table(spec):
 
     Parameters
     ----------
-    spec : dict
+    spec_dict : dict
         original user specification
     
     Returns
@@ -182,17 +182,25 @@ def target_columns_for_weights_table(spec):
     A set of column names
 
     '''
-    cat_cols = set(spec['metadata']['categorical_columns']) #includes linked
-    linked_cols = spec['constraints']['linked_columns']
+    cat_cols = spec_dict['metadata']['categorical_columns'] #includes linked
+    cat_cols_set = set(cat_cols)
+
+    #drop paired columns
+    for cat_col in cat_cols:
+        orig_vals = spec_dict['columns'][cat_col]['original_values']
+        if isinstance(orig_vals, str) and orig_vals == 'See paired column':
+            cat_cols_set.remove(cat_col)
+
+    linked_cols = spec_dict['constraints']['linked_columns']
     
     all_linked_cols = set(chain.from_iterable([x[1] for x in linked_cols]))
     last_linked_cols = {x[1][-1] for x in linked_cols}
     
-    target_cols = cat_cols - all_linked_cols | last_linked_cols
+    target_cols = cat_cols_set - all_linked_cols | last_linked_cols
 
     return target_cols
 
-def generate_weights_table(spec):
+def generate_weights_table(spec, target_cols):
     '''
     Lookup table for weights
 
@@ -200,6 +208,8 @@ def generate_weights_table(spec):
     ----------
     spec : dict
         original user spec
+    target_cols:
+        a subset of columns meant for the weights_table
     
     Returns
     -------
@@ -217,8 +227,6 @@ def generate_weights_table(spec):
         set(spec['metadata']['numerical_columns']) -
         set(spec['derived_columns'])
     )
-
-    target_cols = target_columns_for_weights_table(spec)
        
     for cat_col in target_cols:
         
@@ -227,10 +235,6 @@ def generate_weights_table(spec):
         val_count = spec['columns'][cat_col]['uniques']
         table_name, *sql_column = anon_set.split(".")
         full_anon_flag = False
-
-        #skip paired columns (as weights can come from any ONE of paired cols)
-        if isinstance(orig_vals, str) and orig_vals == 'See paired column':
-            continue
 
         if anon_set != "random":
 
@@ -312,7 +316,7 @@ def generate_cont_val(
     weights_table,
     num_col,
     num_col_sum,
-    complete_factor,
+    scaling_factor,
     dispersion_pct):
     '''
     Generate a continuous value, one dataframe row at a time
@@ -327,11 +331,8 @@ def generate_cont_val(
         numerical column for which to generate values
     num_col_sum : number
         target sum of the numerical column; reduced by weights of each column in row
-    complete_factor : number
-        certain column, like time, are excluded from weight generation; they are
-        repeated for all generated values (each combination of generated values
-        will have all time periods, for example). So the total sum of numerical
-        column is reduced accordingly
+    scaling_factor : number
+        each continuous variable is further reduced by this number
     dispersion_pct : float
         A measure of how much to perturb the data point
 
@@ -342,12 +343,10 @@ def generate_cont_val(
     '''
     for cat_col, val in row.iteritems():
 
-        try:
-            weight = weights_table[(num_col, cat_col, val)]['weight']
-            num_col_sum = num_col_sum * weight
-        except KeyError:
-            continue           
-    result = round(num_col_sum / complete_factor, 0)
+        weight = weights_table[(num_col, cat_col, val)]['weight']
+        num_col_sum = num_col_sum * weight
+
+    result = round(num_col_sum * scaling_factor, 0)
     
     return apply_dispersion(result, dispersion_pct)
 

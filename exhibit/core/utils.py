@@ -205,6 +205,26 @@ def exceeds_ct(spec_dict, col):
 
     return result
 
+def _determine_scaling_factor(spec_dict):
+    '''
+    Currently, simply scales numerical columns to
+    account for time series columns that are not
+    part of the weights generation. Might change in the future.
+    '''
+    
+    time_col_tuples = get_attr_values(
+        spec_dict=spec_dict,
+        attr='uniques',
+        col_names=True,
+        types=['date']
+    )
+
+    base_col_uniques = max(time_col_tuples, key=lambda x: x[1])[1]
+
+    result = 1 / base_col_uniques
+
+    return result
+
 def count_core_rows(spec_dict):
     '''
     Calculate number of rows to generate probabilistically
@@ -216,8 +236,7 @@ def count_core_rows(spec_dict):
 
     Returns
     -------
-    A tuple (number of core rows, count of complete values)
-
+    Number of core rows
 
     There are two types of columns:
      - probability driven columns where values can be "skipped" if probability too low
@@ -250,7 +269,7 @@ def count_core_rows(spec_dict):
 
     core_rows = int(spec_dict['metadata']['number_of_rows'] / complete_count)
 
-    return (core_rows, complete_count)
+    return core_rows
 
 def whole_number_column(series):
     '''
@@ -377,18 +396,51 @@ def _generate_value_with_condition(x, y, op, pct_diff=None):
     so we return NaN if one of the comparison values in NaN
     '''
 
-    if np.isnan(x) or np.isnan(y):
-        return np.nan
-
-    abs_diff = max(1, abs(y-x))
-
     if pct_diff is None:
         pct_diff = 0.5
+
+    if np.isnan(x):
+        return np.nan
+    
+    if np.isnan(y):
+        return x
+
+    abs_diff = max(1, abs(y-x))
 
     new_x_min = max(0, x - abs_diff * (1 + pct_diff))
     new_x_max = x + abs_diff * (1 + pct_diff)
 
     return _recursive_randint(new_x_min, new_x_max, y, op)
+
+
+def adjust_nulls_to_reference_column(
+                                    row,
+                                    reference_col_name,
+                                    operator,
+                                    pct_diff=None):
+    '''
+    Reverse operator
+    '''
+    x = row[reference_col_name]
+
+    if np.isnan(x):
+        return x
+
+    reverse_op_dict = {
+        "<": greater,
+        ">": less,
+        "<=": greater_equal,
+        ">=": less_equal,
+        "==": equal
+    }
+    
+    if pct_diff is None:
+        pct_diff = 0.5
+
+    new_x_min = max(0, x - x * pct_diff)
+    new_x_max = x + x * pct_diff
+
+    return _recursive_randint(new_x_min, new_x_max, x, reverse_op_dict[operator])
 
 
 def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
@@ -408,7 +460,7 @@ def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     
     Returns
     -------
-    A series with adjusted values
+    A single adjusted value
     '''
 
     op_dict = {

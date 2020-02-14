@@ -418,17 +418,66 @@ class LinkedDataGenerator:
         if self.all_cols_uniform:
             linked_df = self.scenario_1()
             linked_df = self.add_paired_columns(linked_df)
-            return linked_df
+
+            result = self.alias_linked_column_values(linked_df)
+            return result
 
         if self.base_col_pos != 0:
             linked_df = self.scenario_2()
             linked_df = self.add_paired_columns(linked_df)
-            return linked_df
+
+            result = self.alias_linked_column_values(linked_df)
+            return result
 
         if self.base_col_pos == 0:
             linked_df = self.scenario_3()
             linked_df = self.add_paired_columns(linked_df)
-            return linked_df
+
+            result = self.alias_linked_column_values(linked_df)
+            return result
+
+
+    def alias_linked_column_values(self, linked_df):
+        '''
+        If anonymising set is random and a linked column has "original values"
+        in the spec, we must respect any user-made changes to values. The linked
+        dataframe is still generated using original values, but if those are changed
+        by the user, we will alias the originals to match.
+
+        Make changes in-place
+        '''
+
+        for linked_group in self.spec_dict['constraints']['linked_columns']:
+            for linked_col in linked_group[1]:
+
+                anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
+                orig_vals = self.spec_dict['columns'][linked_col]['original_values']
+                paired_cols = self.spec_dict['columns'][linked_col]['paired_columns']
+
+                if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
+
+                    repl_dict = dict(
+                        zip(
+                            sorted(linked_df[linked_col].unique()),
+                            orig_vals[linked_col]
+                        )
+                    )
+
+                    linked_df[linked_col] = linked_df[linked_col].map(repl_dict)
+
+                    if paired_cols:
+                        for paired_col in paired_cols:
+
+                            repl_dict = dict(
+                                    zip(
+                                sorted(linked_df[paired_col].unique()),
+                                orig_vals["paired_"+ paired_col]
+                                )
+                            )
+
+                            linked_df[paired_col] = linked_df[paired_col].map(repl_dict)
+
+        return linked_df
 
 
     def scenario_1(self):

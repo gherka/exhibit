@@ -21,16 +21,19 @@ from exhibit.core.validator import newValidator
 
 from exhibit.core.utils import (
                                 path_checker, read_with_date_parser,
-                                count_core_rows, adjust_value_to_constraint)
+                                count_core_rows, adjust_value_to_constraint,
+                                adjust_nulls_to_reference_column)
 
 from exhibit.core.utils import (
                                 _constraint_clean_up_for_eval,
-                                _tokenise_constraint)
+                                _tokenise_constraint,
+                                _determine_scaling_factor)
 
 from exhibit.core.generator import (
                                 generate_weights_table, generate_cont_val,
                                 generate_YAML_string, generate_derived_column,
                                 generate_categorical_data,
+                                target_columns_for_weights_table,
                                 add_missing_data_to_dataframe)
 
 class newExhibit:
@@ -224,13 +227,14 @@ class newExhibit:
         np.random.seed(self.spec_dict['metadata']['random_seed'])
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
-        core_rows, complete_factor = count_core_rows(self.spec_dict)
+        core_rows = count_core_rows(self.spec_dict)
 
         #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
         anon_df = generate_categorical_data(self.spec_dict, core_rows)
 
         #3) ADD CONTINUOUS VARIABLES TO ANON DF
-        wt = generate_weights_table(self.spec_dict)
+        target_cols = target_columns_for_weights_table(self.spec_dict)
+        wt = generate_weights_table(self.spec_dict, target_cols)
    
         for num_col in self.spec_dict['metadata']['numerical_columns']:
             
@@ -253,14 +257,15 @@ class newExhibit:
             #    categorical columns in the weights table and progressively reduce
             #    the sum total of the column by the weight of each columns' value
             anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
+            scaling_factor = _determine_scaling_factor(self.spec_dict)
 
-            anon_df.loc[~null_idx, num_col] = anon_df_cat[~null_idx].apply(
+            anon_df.loc[~null_idx, num_col] = anon_df.loc[~null_idx, target_cols].apply(
                 func=generate_cont_val,
                 axis=1,
                 weights_table=wt,
                 num_col=num_col,
                 num_col_sum=self.spec_dict['columns'][num_col]['sum'],
-                complete_factor=complete_factor,
+                scaling_factor=scaling_factor,
                 dispersion_pct=self.spec_dict['columns'][num_col]['dispersion'])
 
         #Missing data is a special value used in categorical columns as a placeholder
@@ -300,12 +305,14 @@ class newExhibit:
                 )
             )
 
-            #propagate nulls from column A to column B if it exists
+            #propagate nulls / adjust values from column A to column B if it exists
             if col_B_name in anon_df.columns:
-                anon_df.loc[~mask, col_B_name] = np.where(
-                    np.isnan(anon_df.loc[~mask, col_A_name]),
-                    np.NaN,
-                    anon_df.loc[~mask, col_B_name]
+                anon_df.loc[~mask, col_B_name] = (
+                    anon_df[~mask].apply(
+                        adjust_nulls_to_reference_column,
+                        axis=1,
+                        args=(col_A_name, op)
+                    )
                 )
             
         #6) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
