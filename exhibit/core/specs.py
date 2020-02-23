@@ -6,16 +6,16 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.utils import (
-    guess_date_frequency, generate_table_id,
-    find_boolean_columns)
-from exhibit.core.linkage import (
-    linkedColumnsTree,
-    find_hierarchically_linked_columns,
-    find_pair_linked_columns)
-from exhibit.core.formatters import build_table_from_lists
-from exhibit.core.sql import create_temp_table
-from exhibit.core.generator import generate_weights
+from .constraints import find_boolean_columns
+from .utils import guess_date_frequency, generate_table_id
+from .formatters import build_table_from_lists
+from .sql import create_temp_table
+from .generate.weights import generate_weights
+
+from .linkage import (
+            LinkedColumnsTree,
+            find_hierarchically_linked_columns,
+            find_pair_linked_columns)
 
 class newSpec:
     '''
@@ -29,11 +29,8 @@ class newSpec:
         specifies the maximum number of unique values (categories) a column can
         have for them to be displayed in full for manual editing; default is 30.
         If the full list is too long to display, the values are put in a dedicated
-        anon_db table for later retrieval and the weights and probability vectors 
+        anon.db table for later retrieval and the weights and probability vectors 
         are drawn from a uniform distribution.
-    sample : bool
-        special flag for generating sample spec and anonymised dataframe
-        OPTIONAL. Default is False
     random_seed : int
         OPTIONAL. Default is 0    
 
@@ -45,8 +42,6 @@ class newSpec:
         threshold for deciding the maximum number of unique values per column
     random_seed : int
         random seed to use; defaults to 0
-    sample : bool
-        flag to say whether the spec is a persistent sample spec
     id : str
         each spec instance is given its ID for reference in temporary SQL table
     numerical_cols : list
@@ -60,15 +55,13 @@ class newSpec:
         map 1:1 to each other
     output : dict
         processed specification
-
     '''
 
-    def __init__(self, data, ct, sample=False, random_seed=0):
+    def __init__(self, data, ct, random_seed=0):
 
         self.df = data.copy()
         self.ct = ct
         self.random_seed = random_seed
-        self.sample = sample
         self.id = generate_table_id()
         self.numerical_cols = set(
             self.df.select_dtypes(include=np.number).columns.values)
@@ -87,7 +80,7 @@ class newSpec:
                 "time_columns": sorted(list(self.time_cols)),
                 "category_threshold": self.ct,
                 "random_seed": self.random_seed,
-                "id": "sample" if self.sample else self.id
+                "id": self.id
             },
             'columns': {},
             'constraints': {},
@@ -146,10 +139,7 @@ class newSpec:
         safe_col_name = col.replace(" ", "$")
         paired_cols = self.list_of_paired_cols(col)
 
-        if self.sample:
-            table_name = f"sample_{safe_col_name}"
-        else:
-            table_name = f"temp_{self.id}_{safe_col_name}"
+        table_name = f"temp_{self.id}_{safe_col_name}"
 
         if path == "long":
             
@@ -289,7 +279,7 @@ class newSpec:
         linked_temp_df = self.df[self.cat_cols].fillna("Missing data")
 
         linked_cols = find_hierarchically_linked_columns(self.df)
-        linked_tree = linkedColumnsTree(linked_cols).tree
+        linked_tree = LinkedColumnsTree(linked_cols).tree
 
         #Remove paired columns from linked groups
         #[(0, [...]),(1, [...])]
@@ -301,7 +291,7 @@ class newSpec:
 
         self.output['constraints']['linked_columns'] = linked_tree
 
-        #Add linked column values to the temp tables in anon_db
+        #Add linked column values to the temp tables in anon.db
         #Remember that linked_tree is a list of tuples:
         #(i, [column_names])
         for linked_group_tuple in linked_tree:
@@ -322,10 +312,8 @@ class newSpec:
 
             #Column names can't have spaces; replace with $ and then back when
             #reading the data from the SQLite DB at execution stage.
-            if self.sample:
-                table_name = f"sample_{linked_group_tuple[0]}"
-            else:
-                table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
+
+            table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
 
             create_temp_table(
                 table_name=table_name,

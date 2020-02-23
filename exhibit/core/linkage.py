@@ -1,7 +1,6 @@
 '''
 Module isolating methods and classes to find, process and generate linked columns
 '''
-
 # Standard library imports
 from itertools import chain, combinations
 import sqlite3
@@ -13,80 +12,12 @@ import pandas as pd
 import numpy as np
 
 # Exhibit import
-from exhibit.core.utils import package_dir, exceeds_ct
-from exhibit.core.sql import query_anon_database
+from .utils import package_dir, exceeds_ct
+from .sql import query_anon_database
 
-class key_dependent_dict(defaultdict):
-    '''
-    Monkey-patch default dict to make it accept an argument
-    so that we have the back-up sort in a lexiographic order
-    '''
-    def __init__(self, f_of_x):
-        super().__init__(None) # base class doesn't get a factory
-        self.f_of_x = f_of_x # save f(x)
-    def __missing__(self, key): # called when a default needed
-        ret = self.f_of_x(key) # calculate default value
-        self[key] = ret # and install it in the dict
-        return ret
-
-
-def merge_common_member_tuples(paired_tuples):
-    '''
-    Merge tuples while preserving sort order
-    (codes are paired with descriptions, not the other way round)
-
-    The position in the original paried_tuples is important: 
-    it's based on the average length of all values in each column
-    so in (Description, Code), Description is meant to go first
-
-    Parameters
-    ----------
-    paired_tuples : list
-        list of pairs of 1:1 linked columns
-    
-    Returns
-    -------
-    A list of tuples where common members have been merged into
-    a single new tuple:
-    Given [("A","B"), ("B","C"), ("D","E")] we want
-    [["A", "B", "C"], ("D", "E")]
-    '''
-    original_sort_order = key_dependent_dict(lambda x: [None, x])
-    for a, b in paired_tuples:
-
-        if not original_sort_order[a][0]:
-            original_sort_order[a][0] = 0
-        else:
-            original_sort_order[a][0] -= 1
-
-        if not original_sort_order[b][0]:
-            original_sort_order[b][0] = 1
-        else:
-            original_sort_order[b][0] -= 0
-
-    l = sorted(paired_tuples, key=min)
-    queue = deque(l)
-
-    grouped = []
-    while len(queue) >= 2:
-        l1 = queue.popleft()
-        l2 = queue.popleft()
-        s1 = set(l1)
-        s2 = set(l2)
-
-        if s1 & s2:
-            queue.appendleft(s1 | s2)
-        else:
-            grouped.append(s1)
-            queue.appendleft(s2)
-    if queue:
-        grouped.append(queue.pop())
-
-    #convert back to mutable lists so that we can access indices
-    result = [list(sorted(x, key=lambda x: original_sort_order[x])) for x in grouped]
-    return result
-
-class linkedColumnsTree:
+# EXPORTABLE METHODS & CLASSES
+# ============================
+class LinkedColumnsTree:
     '''
     Organizes a list of tuples into a matrix of sorts
     where each row is a list of columns ordered from
@@ -168,6 +99,17 @@ class linkedColumnsTree:
                 self._tree[di][dj-1].append(node1)
             else:
                 self._tree[di][dj-1].append([node1])
+
+def generate_linked_anon_df(spec_dict, linked_group, num_rows):
+    '''
+    Doc string
+    '''  
+
+    gen = _LinkedDataGenerator(spec_dict, linked_group, num_rows)
+
+    linked_df = gen.pick_scenario()
+
+    return linked_df
 
 def find_hierarchically_linked_columns(df):
     '''
@@ -252,60 +194,33 @@ def find_pair_linked_columns(df):
 
                 linked.append([col2, col1])
 
-    return merge_common_member_tuples(linked)
+    return _merge_common_member_tuples(linked)
 
-def create_paired_columns_lookup(spec_dict, base_column):
+# INNER MODULE METHODS & CLASSES
+# ==============================
+class _CustomDict(defaultdict):
     '''
-    Paired columns can either be in SQL or in original_values linked to base_column
-    
-    Parameters
-    ----------
-    spec_dict : dict
-        the usual
-    base_column : str
-        column to check for presence of any paired columns
+    Merging tuples involves sets which in turn involves arbitrary
+    sort order, breaking the parent-child relationships of the
+    initial pairs (Location Code, Location Desc).
 
-    Returns
-    -------
-    A dataframe with base column and paired columns, if any.
-    Paired columns are stripped of their "paired_" prefix and
-    the $ replacement for joining downstream into the final
-    anonymised dataframe
+    Here we monkey-patch default dict so that on encountering a missing
+    key, the factory can make use of that key and create a custom 
+    ordering list allowing us to recall the original sort order of the tuples
+    after they have been merged.
+
+    Key-value pairs look like {"A": [n, "A"]} where n is the "A"s position
+    in the pecking order of columns.  
     '''
-    #get a list of paired columns:
-    pairs = spec_dict['columns'][base_column]['paired_columns']
-    #sanitse base_columns name for SQL
-    safe_base_col_name = base_column.replace(" ", "$")
+    def __init__(self, f_of_x):
+        super().__init__(None) # base class doesn't get a factory
+        self.f_of_x = f_of_x # save f(x)
+    def __missing__(self, key): # called when a default needed
+        ret = self.f_of_x(key) # calculate default value
+        self[key] = ret # and install it in the dict
+        return ret
 
-    if spec_dict['metadata']['id'] == 'sample':
-        table_name = f"sample_{safe_base_col_name}"
-    else:
-        table_name = f"temp_{spec_dict['metadata']['id']}_{safe_base_col_name}"
-
-    if pairs:
-        #check if paired column values live in SQL or are part of original_values
-        if exceeds_ct(spec_dict, base_column):
-
-            paired_df = query_anon_database(table_name=table_name)
-            paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
-            paired_df.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
-
-            return paired_df
-
-        #code to pull the base_column + paired column(s) from original_values
-        base_df = spec_dict['columns'][base_column]['original_values']
-
-        paired_df = (
-            base_df[[base_column] + [f"paired_{x}" for x in pairs]]
-                .rename(columns=lambda x: x.replace('paired_', ''))
-        )
-        
-        return paired_df
-                            
-    #if no pairs, just return None
-    return None
-
-class LinkedDataGenerator:
+class _LinkedDataGenerator:
     '''
     Generating data for linked columns is more challenging because
     columns in the same linked group can follow different rules,
@@ -359,11 +274,7 @@ class LinkedDataGenerator:
             #sanitise the column name in case it has spaces in it
             base_col_sql = self.base_col.replace(" ", "$")
             
-            #special case for reference test table for the prescribing dataset
-            if spec_dict['metadata']['id'] == "sample":
-                self.table_name = f"sample_{linked_group}"
-            else:
-                self.table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group}"
+            self.table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group}"
 
             #get the linked data out for lookup purposes later
             db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
@@ -657,7 +568,7 @@ class LinkedDataGenerator:
         #if anonimysing set IS random
         for c in self.linked_cols:
 
-            paired_columns_lookup = create_paired_columns_lookup(self.spec_dict, c)
+            paired_columns_lookup = _create_paired_columns_lookup(self.spec_dict, c)
 
             if not paired_columns_lookup is None:
 
@@ -668,4 +579,107 @@ class LinkedDataGenerator:
                     on=c)
 
         return linked_df
-                
+
+def _merge_common_member_tuples(paired_tuples):
+    '''
+    Merge tuples while preserving sort order
+    (codes are paired with descriptions, not the other way round)
+
+    The position in the original paried_tuples is important: 
+    it's based on the average length of all values in each column
+    so in (Description, Code), Description is meant to go first
+
+    Parameters
+    ----------
+    paired_tuples : list
+        list of pairs of 1:1 linked columns
+    
+    Returns
+    -------
+    A list of tuples where common members have been merged into
+    a single new tuple:
+    Given [("A","B"), ("B","C"), ("D","E")] we want
+    [["A", "B", "C"], ["D", "E"]]
+    '''
+    original_sort_order = _CustomDict(lambda x: [None, x])
+    for a, b in paired_tuples:
+
+        if not original_sort_order[a][0]:
+            original_sort_order[a][0] = 0
+        else:
+            original_sort_order[a][0] -= 1
+
+        if not original_sort_order[b][0]:
+            original_sort_order[b][0] = 1
+        else:
+            original_sort_order[b][0] -= 0
+
+    l = sorted(paired_tuples, key=min)
+    queue = deque(l)
+
+    grouped = []
+    while len(queue) >= 2:
+        l1 = queue.popleft()
+        l2 = queue.popleft()
+        s1 = set(l1)
+        s2 = set(l2)
+
+        if s1 & s2:
+            queue.appendleft(s1 | s2)
+        else:
+            grouped.append(s1)
+            queue.appendleft(s2)
+    if queue:
+        grouped.append(queue.pop())
+
+    #convert back to mutable lists so that we can access indices
+    result = [list(sorted(x, key=lambda x: original_sort_order[x])) for x in grouped]
+    return result
+
+def _create_paired_columns_lookup(spec_dict, base_column):
+    '''
+    Paired columns can either be in SQL or in original_values linked to base_column
+    
+    Parameters
+    ----------
+    spec_dict : dict
+        the usual
+    base_column : str
+        column to check for presence of any paired columns
+
+    Returns
+    -------
+    A dataframe with base column and paired columns, if any.
+    Paired columns are stripped of their "paired_" prefix and
+    the $ replacement for joining downstream into the final
+    anonymised dataframe
+    '''
+    #get a list of paired columns:
+    pairs = spec_dict['columns'][base_column]['paired_columns']
+    #sanitse base_columns name for SQL
+    safe_base_col_name = base_column.replace(" ", "$")
+
+    table_name = f"temp_{spec_dict['metadata']['id']}_{safe_base_col_name}"
+
+    if pairs:
+        #check if paired column values live in SQL or are part of original_values
+        if exceeds_ct(spec_dict, base_column):
+
+            paired_df = query_anon_database(table_name=table_name)
+            paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
+            paired_df.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
+
+            return paired_df
+
+        #code to pull the base_column + paired column(s) from original_values
+        base_df = spec_dict['columns'][base_column]['original_values']
+
+        paired_df = (
+            base_df[[base_column] + [f"paired_{x}" for x in pairs]]
+                .rename(columns=lambda x: x.replace('paired_', ''))
+        )
+        
+        return paired_df
+                            
+    #if no pairs, just return None
+    return None

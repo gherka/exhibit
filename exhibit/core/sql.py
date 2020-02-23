@@ -15,16 +15,16 @@ from exhibit.core.utils import package_dir
 
 def query_anon_database(table_name, column=None, size=None, db_uri=None):
     '''
-    Query anon_db and return a nice dataframe or series
+    Query anon.db and return a nice dataframe or series
 
     Parameters
     ----------
     table_name : str
-        table_name comes in a fixed format either prefixed with temp_ or sample_
-        followed by the spec id and then either the linked group number of the
+        table_name comes in a fixed format with temp_ prefix followed
+        by the spec id and then either the linked group number of the
         column name in case of non-linked, many-valued columns
     column : str
-        optional. Single column to be extracted from given table
+        optional. Single column to be extracted from the given table
     size : int
         optional. The parameter to go into LIMIT statement
     db_uri : str
@@ -40,13 +40,10 @@ def query_anon_database(table_name, column=None, size=None, db_uri=None):
 
     conn = sqlite3.connect(db_uri, uri=True)
 
-    if column:
-        column = column[0]
-
     if size:
-        sql = f"SELECT {str(column or '*')} FROM {table_name} LIMIT {size}"
+        sql = f"SELECT DISTINCT {str(column or '*')} FROM {table_name} LIMIT {size}"
     else:
-        sql = f"SELECT {str(column or '*')} FROM {table_name}"
+        sql = f"SELECT DISTINCT {str(column or '*')} FROM {table_name}"
 
     with closing(conn):
         c = conn.cursor()
@@ -66,7 +63,7 @@ def query_anon_database(table_name, column=None, size=None, db_uri=None):
 
 def create_temp_table(table_name, col_names, data, db_uri=None, return_table=False):
     '''
-    Create a lookup table in the anon_db SQLite3 database
+    Create a lookup table in the anon.db SQLite3 database
 
     Parameters
     ----------
@@ -128,14 +125,14 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
             return c.fetchall()
     return True
 
-def number_of_query_rows(table_name, column=None, db_uri=None):
+def number_of_table_rows(table_name, column=None, db_uri=None):
     '''
-    Returns the number of rows for a given query
+    Returns the number of rows in the given table
 
     Parameters
     ----------
     table_name : str
-        table in anon_db to query
+        table in anon.db to query
     column : str
         optional. column name in the given table
     Returns
@@ -171,7 +168,7 @@ def number_of_table_columns(table_name, db_uri=None):
     Parameters
     ----------
     table_name : str
-        table in anon_db to query
+        table in anon.db to query
     Returns
     -------
     Count of columns

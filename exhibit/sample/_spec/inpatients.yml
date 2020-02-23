@@ -7,11 +7,13 @@
 #please review each section and make necessary adjustments
 #----------------------------------------------------------
 metadata:
-  number_of_rows: 2000
+  number_of_rows: 10225
   categorical_columns:
   - age
   - hb_code
   - hb_name
+  - loc_code
+  - loc_name
   - measure
   - sex
   numerical_columns:
@@ -20,9 +22,9 @@ metadata:
   - stays
   time_columns:
   - quarter_date
-  category_threshold: 150
+  category_threshold: 30
   random_seed: 0
-  id: bc379
+  id: b0e9b
 #----------------------------------------------------------
 #COLUMN DETAILS
 #==============
@@ -98,7 +100,26 @@ columns:
     - NHS Orkney                  | S08000025      | 0.041              | 0.033 | 0.002 | 0.003
     - NHS Shetland                | S08000026      | 0.042              | 0.031 | 0.002 | 0.003
     - NHS Tayside                 | S08000030      | 0.083              | 0.075 | 0.052 | 0.039
+    - Scotland                    | scot           | 0.023              | 0.028 | 0.339 | 0.346
     - Missing data                | Missing data   | 0.000              | 0.000 | 0.000 | 0.000
+    allow_missing_values: true
+    miss_probability: 0.0
+    anonymising_set: random
+  loc_code:
+    type: categorical
+    paired_columns:
+    - loc_name
+    uniques: 48
+    original_values: See paired column
+    allow_missing_values: true
+    miss_probability: 0.0
+    anonymising_set: random
+  loc_name:
+    type: categorical
+    paired_columns:
+    - loc_code
+    uniques: 48
+    original_values: Number of unique values is above category threshold
     allow_missing_values: true
     miss_probability: 0.0
     anonymising_set: random
@@ -121,8 +142,8 @@ columns:
     uniques: 2
     original_values:
     - sex          | probability_vector | avlos | los   | stays
-    - A            | 0.500              | 0.514 | 0.533 | 0.514
-    - B            | 0.500              | 0.486 | 0.467 | 0.486
+    - Female       | 0.500              | 0.514 | 0.533 | 0.514
+    - Male         | 0.500              | 0.486 | 0.467 | 0.486
     - Missing data | 0.000              | 0.000 | 0.000 | 0.000
     allow_missing_values: true
     miss_probability: 0.0
@@ -130,12 +151,17 @@ columns:
   los:
     type: continuous
     miss_probability: 0.0
-    sum: 200000
+    sum: 12441120.0
     dispersion: 0.1
   stays:
     type: continuous
     miss_probability: 0.0
-    sum: 100000
+    sum: 3034766.0
+    dispersion: 0.1
+  avlos:
+    type: continuous
+    miss_probability: 0.065
+    sum: 28258.352214630533
     dispersion: 0.1
   quarter_date:
     type: date
@@ -166,8 +192,11 @@ columns:
 #----------------------------------------------------------
 constraints:
   boolean_constraints:
-  - los >= stays
-  linked_columns: []
+  - los >= avlos
+  linked_columns:
+  - - 0
+    - - hb_name
+      - loc_name
 #----------------------------------------------------------
 #DERIVED COLUMNS
 #===============
@@ -183,4 +212,3 @@ constraints:
 #----------------------------------------------------------
 derived_columns:
   Example_Column: Example_Calculation
-  avlos: (los / stays)

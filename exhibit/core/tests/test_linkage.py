@@ -14,7 +14,7 @@ import numpy as np
 # Module under test
 from exhibit.core import linkage as tm
 
-class helperTests(unittest.TestCase):
+class linkageTests(unittest.TestCase):
     '''
     Doc string
     '''

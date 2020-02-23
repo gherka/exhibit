@@ -21,7 +21,7 @@ from exhibit.core.utils import package_dir
 from exhibit.db import db_util
 from exhibit.sample.sample import (
     prescribing_spec, prescribing_anon,
-    inpatients_anon)
+    inpatients_spec, inpatients_anon)
 
 # Module under test
 from exhibit.core import exhibit  as tm
@@ -30,6 +30,7 @@ def replace_nested_dict_values(d1, d2):
     '''
     Recursive replacement of dictionary values in matching keys
     '''
+
     for key2 in d2:
         if key2 in d1:
             if isinstance(d1[key2], dict):
@@ -43,6 +44,15 @@ class referenceTests(unittest.TestCase):
     via @patch decorator; internal intermediate functions
     are mocked inside each test.
     '''
+
+    @classmethod
+    def setUpClass(cls):
+        '''
+        Create a list of tables to drop after reference tests finish
+        '''
+
+        cls._temp_tables = []
+
     @staticmethod
     def temp_spec(
         fromdata_namespace=None,
@@ -76,7 +86,6 @@ class referenceTests(unittest.TestCase):
                 "source"            : default_data_path,
                 "category_threshold": 50,
                 "verbose"           : True,
-                "sample"            : False,
                 "output"            : f_name,
             }
 
@@ -84,7 +93,6 @@ class referenceTests(unittest.TestCase):
                 "command"           : "fromspec",
                 "source"            : Path(f_name),
                 "verbose"           : True,
-                "sample"            : False,
             }
 
             if fromdata_namespace:
@@ -100,7 +108,6 @@ class referenceTests(unittest.TestCase):
                     source=fromdata_defaults["source"],
                     category_threshold=fromdata_defaults["category_threshold"],
                     verbose=fromdata_defaults["verbose"],
-                    sample=fromdata_defaults["sample"],
                     output=fromdata_defaults["output"]
                 )
                 
@@ -115,7 +122,6 @@ class referenceTests(unittest.TestCase):
                     command=fromspec_defaults["command"],
                     source=fromspec_defaults["source"],
                     verbose=fromspec_defaults["verbose"],
-                    sample=fromspec_defaults["sample"],
                 )
 
                 xA = tm.newExhibit()
@@ -129,9 +135,8 @@ class referenceTests(unittest.TestCase):
 
         return xA.anon_df
 
-    @unittest.skip("Major changes - expected failure")
     @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_prescribing_spec(self, mock_args):
+    def test_reference_inpatients_spec(self, mock_args):
         '''
         The reference test mirrors the logic of the bootstrap.main()
 
@@ -140,40 +145,28 @@ class referenceTests(unittest.TestCase):
         but if we serialise them as strings using JSON module, the results
         should be identical.
         '''
+
         mock_args.return_value = argparse.Namespace(
             command="fromdata",
-            source=Path(package_dir('sample', '_data', 'prescribing.csv')),
+            source=Path(package_dir('sample', '_data', 'inpatients.csv')),
             category_threshold=30,
             skip_columns=[],
             verbose=True,
-            sample=True
         )
 
         xA = tm.newExhibit()
         xA.read_data()
         xA.generate_spec()
 
-        assert json.dumps(prescribing_spec) == json.dumps(xA.spec_dict)
+        table_id = xA.spec_dict['metadata']['id']
 
-    @unittest.skip("Major changes - expected failure")
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_prescribing_anon_data(self, mock_args):
-        '''
-        Most basic round-trip reference test
-        '''
-        mock_args.return_value = argparse.Namespace(
-            command="fromspec",
-            source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
-            verbose=True,
-            sample=True
-        )
+        #overwrite ID in reference spec with a newly generated one to match
+        inpatients_spec['metadata']['id'] = table_id
 
-        xA = tm.newExhibit()
-        xA.read_spec()
-        if xA.validate_spec():
-            xA.execute_spec()
+        #save ID to tidy up temp columns created as part of testing
+        self._temp_tables.append(table_id)
 
-        assert prescribing_anon.equals(xA.anon_df)
+        assert json.dumps(inpatients_spec) == json.dumps(xA.spec_dict)
 
     @unittest.skip("Major changes - expected failure")
     @patch('argparse.ArgumentParser.parse_args')
@@ -188,11 +181,11 @@ class referenceTests(unittest.TestCase):
         because the columns HB and GPPractice are not longer linked and thus
         each contribute to the reduction.
         '''
+
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
             source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
             verbose=True,
-            sample=True
         )
 
         expected_df = pd.read_csv(
@@ -238,11 +231,11 @@ class referenceTests(unittest.TestCase):
 
         Note that prescribing datasets has duplicate categorical rows
         '''
+
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
             source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
             verbose=True,
-            sample=True
         )
 
         expected_df = pd.read_csv(
@@ -274,7 +267,6 @@ class referenceTests(unittest.TestCase):
             check_less_precise=True,
         )
 
-    @unittest.skip("Major changes - expected failure")
     @patch('argparse.ArgumentParser.parse_args')
     def test_reference_inpatient_anon_data(self, mock_args):
         '''
@@ -283,14 +275,15 @@ class referenceTests(unittest.TestCase):
             - manually added derived column (avlos)
             - removed linked columns from spec
             - removed Scotland from HBs and deleted loc columns
-            - changed the totals for stays and los
-            - DB is not used at all
+            - changed the totals for stays (100 000) and los (200 000)
+            - changed boolean constraint to los >= stays
+            - DB is not used at all so no need for ID
         '''
+
         mock_args.return_value = argparse.Namespace(
             command="fromspec",
             source=Path(package_dir('sample', '_spec', 'inpatients_edited.yml')),
             verbose=True,
-            sample=True,
             skip_columns=[]
         )
 
@@ -298,6 +291,11 @@ class referenceTests(unittest.TestCase):
         xA.read_spec()
         if xA.validate_spec():
             xA.execute_spec()
+
+        table_id = xA.spec_dict['metadata']['id']
+        
+        #save ID to tidy up temp columns created as part of testing
+        self._temp_tables.append(table_id)
 
         assert_frame_equal(
             left=inpatients_anon,
@@ -315,6 +313,7 @@ class referenceTests(unittest.TestCase):
             - non-linked categorical column (Sex) has missing data
             - linked columns share missing categorical data
         '''
+
         np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
@@ -374,6 +373,7 @@ class referenceTests(unittest.TestCase):
             - linked columns share missing categorical data
             - manually change date frequency from QS to M
         '''
+
         np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
@@ -431,6 +431,7 @@ class referenceTests(unittest.TestCase):
             - sex is a "complete" categorical column
             - only the most granular linked column has missing values
         '''
+
         np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
@@ -501,6 +502,7 @@ class referenceTests(unittest.TestCase):
             - anonymisation method is hierarchical "mountains"
             - linked columns share missing categorical data
         '''
+
         np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
@@ -565,7 +567,8 @@ class referenceTests(unittest.TestCase):
         '''
         Clean up anon.db from temp tables
         '''
-        db_util.purge_temp_tables()
+        
+        db_util.drop_tables(cls._temp_tables)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

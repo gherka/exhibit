@@ -18,7 +18,7 @@ from exhibit.core import sql  as tm
 
 class sqlTests(unittest.TestCase):
     '''
-    Doc string
+    Collection of unit tests for the sql.py module
     '''
 
     def test_connection_to_sqlite(self):
@@ -35,17 +35,20 @@ class sqlTests(unittest.TestCase):
 
     def test_query_function(self):
         '''
-        Doc string
+        Test two modes for the function: full table or single column
         '''
 
-        output = tm.query_anon_database('mountains', size=2)
+        output_1 = tm.query_anon_database('mountains', size=2)
+        output_2 = tm.query_anon_database('mountains', column="range", size=2)
 
-        self.assertIsInstance(output, pd.DataFrame)
+        self.assertIsInstance(output_1, pd.DataFrame)
+        self.assertIsInstance(output_2, pd.DataFrame)
 
     def test_temp_table_insertion(self):
         '''
-        Doc string
+        Temporary lookup table in anon.db
         '''
+
         expected = [(1, 2), (1, 2)]
         output = tm.create_temp_table(
             table_name='test_table',
@@ -56,21 +59,23 @@ class sqlTests(unittest.TestCase):
 
         self.assertListEqual(expected, output)
 
-    def test_number_of_query_rows_ranges(self):
+    def test_number_of_table_rows_single_column(self):
         '''
         There are 15 mountain ranges with 150 peaks
         '''
+
         self.assertEqual(
-            tm.number_of_query_rows("mountains.range"),
+            tm.number_of_table_rows("mountains.range"),
             15
         )
 
-    def test_number_of_query_rows_table(self):
+    def test_number_of_table_rows(self):
         '''
         There are 15 mountain ranges with 150 peaks
         '''
+
         self.assertEqual(
-            tm.number_of_query_rows("mountains"),
+            tm.number_of_table_rows("mountains"),
             150
         )
 
@@ -78,6 +83,7 @@ class sqlTests(unittest.TestCase):
         '''
         There are 2 columns in the mountains table
         '''
+        
         self.assertEqual(
             tm.number_of_table_columns("mountains"),
             2

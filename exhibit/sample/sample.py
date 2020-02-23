@@ -26,7 +26,7 @@ prescribing_anon = pd.read_csv(
     package_dir('sample', '_data', 'prescribing_anon.csv'), parse_dates=['PaidDateMonth'])
 
 #Load specs
-with open(package_dir("sample", "_spec", "inpatients_edited.yml")) as f:
+with open(package_dir("sample", "_spec", "inpatients.yml")) as f:
     inpatients_spec = yaml.safe_load(f)
 
 with open(package_dir("sample", "_spec", "prescribing.yml")) as f:

@@ -15,26 +15,24 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.formatters import parse_original_values
-from exhibit.core.specs import newSpec
-from exhibit.core.validator import newValidator
+from .formatters import parse_original_values
+from .specs import newSpec
+from .validator import newValidator
 
-from exhibit.core.utils import (
-                                path_checker, read_with_date_parser,
-                                count_core_rows, adjust_value_to_constraint,
-                                adjust_nulls_to_reference_column)
+from .utils import (
+                    path_checker, read_with_date_parser,
+                    count_core_rows, determine_scaling_factor)
 
-from exhibit.core.utils import (
-                                _constraint_clean_up_for_eval,
-                                _tokenise_constraint,
-                                _determine_scaling_factor)
+from .constraints import adjust_dataframe_to_fit_constraint
 
-from exhibit.core.generator import (
-                                generate_weights_table, generate_cont_val,
-                                generate_YAML_string, generate_derived_column,
-                                generate_categorical_data,
-                                target_columns_for_weights_table,
-                                add_missing_data_to_dataframe)
+from .generate.missing import add_missing_data_to_series
+from .generate.categorical import generate_categorical_data
+from .generate.continuous import generate_derived_column, generate_cont_val
+from .generate.yaml import generate_YAML_string
+from .generate.weights import (
+                    generate_weights,
+                    target_columns_for_weights_table,
+                    generate_weights_table)
 
 class newExhibit:
     '''
@@ -44,18 +42,17 @@ class newExhibit:
     ----------
     spec_dict : dict
         complete specification of the source dataframe which serves
-        as the final output when tool called with "fromdata" command
+        as the final output when tool is used with "fromdata" command
     df : pd.DataFrame
         source dataframe
     anon_df : pd.DataFrame
         generated anonymised dataframe which serves as the final
-        output when the tool is called with "fromspec" command    
-
+        output when the tool is used with "fromspec" command    
     '''
 
     def __init__(self):
         '''
-        Setup the tool to parse command line arguments
+        Set up the tool to parse command line arguments
         '''
 
         desc = textwrap.dedent('''\
@@ -78,7 +75,7 @@ class newExhibit:
             fromdata:
             Use the source data to generate specification\n
             fromspec:
-            Use the source spec to generate anonymised data\n
+            Use the source specification to generate anonymised data\n
             '''),
             metavar='command'
             )
@@ -94,12 +91,6 @@ class newExhibit:
             default=False,
             action='store_true',
             help='control traceback length for debugging errors',
-            )
-        parser.add_argument(
-            '--sample', '-s',
-            default=False,
-            action='store_true',
-            help='flag to tell the tool to generate sample spec',
             )
 
         parser.add_argument(
@@ -153,7 +144,6 @@ class newExhibit:
             new_spec = newSpec(
                 data=self.df,
                 ct=self._args.category_threshold,
-                sample=self._args.sample,
                 )
 
             self.spec_dict = new_spec.output_spec_dict()
@@ -257,7 +247,7 @@ class newExhibit:
             #    categorical columns in the weights table and progressively reduce
             #    the sum total of the column by the weight of each columns' value
             anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
-            scaling_factor = _determine_scaling_factor(self.spec_dict)
+            scaling_factor = determine_scaling_factor(self.spec_dict)
 
             anon_df.loc[~null_idx, num_col] = anon_df.loc[~null_idx, target_cols].apply(
                 func=generate_cont_val,
@@ -275,45 +265,21 @@ class newExhibit:
         rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
 
         for col in anon_df_cat.columns:
-            anon_df[col] = add_missing_data_to_dataframe(
+            anon_df[col] = add_missing_data_to_series(
                 spec_dict=self.spec_dict,
                 rands=rands,
                 series=anon_df[col]
             )
 
-        #4) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #4) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
+        for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
+
+            adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
+
+        #5) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
-
-        #5) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
-        for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
-            
-            clean_rule = _constraint_clean_up_for_eval(bool_constraint)
-            mask = (anon_df
-                        .rename(lambda x: x.replace(" ", "_"), axis="columns")
-                        .eval(clean_rule)
-            )
-        
-            col_A_name, op, col_B_name = _tokenise_constraint(bool_constraint)
-                    
-            anon_df.loc[~mask, col_A_name] = (
-                anon_df[~mask].apply(
-                    adjust_value_to_constraint,
-                    axis=1,
-                    args=(col_A_name, col_B_name, op)
-                )
-            )
-
-            #propagate nulls / adjust values from column A to column B if it exists
-            if col_B_name in anon_df.columns:
-                anon_df.loc[~mask, col_B_name] = (
-                    anon_df[~mask].apply(
-                        adjust_nulls_to_reference_column,
-                        axis=1,
-                        args=(col_A_name, op)
-                    )
-                )
             
         #6) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df

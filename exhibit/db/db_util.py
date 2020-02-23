@@ -1,9 +1,11 @@
 '''
-Basic command line utility for interacting with anon_db
+Basic command line utility for interacting with anon.db
+Currently not unit-tested.
 '''
 
 # Standard library imports
 import argparse
+import re
 import textwrap
 import sys
 import sqlite3
@@ -17,13 +19,13 @@ from exhibit.core.utils import package_dir, path_checker
 
 def main():
     '''
-    Doc string
+    Parse command line arguments and run the program
     '''
 
     desc = textwrap.dedent('''\
     ------------------------------------------
     Exhibit: Utility to simplify working with
-    the anon_db SQLite3 database.
+    the anon.db SQLite3 database.
     ------------------------------------------
     ''')
 
@@ -37,7 +39,7 @@ def main():
         action="store_true",
         default=False,
         help=textwrap.dedent('''\
-        Remove all tables that start with temp prefix\n
+        Remove all tables that start with "temp" prefix\n
         ''')
     )
 
@@ -46,7 +48,7 @@ def main():
         action="store_true",
         default=False,
         help=textwrap.dedent('''\
-        Print the list of all tables in the anon_db
+        Print the list of all tables in the anon.db
         ''')
     )
 
@@ -68,9 +70,10 @@ def main():
 
     parser.add_argument(
         '--drop',
-        default=False,
+        default=[],
+        nargs='+',
         help=textwrap.dedent('''\
-        Drop the given table from the database
+        Drop the given table(s) from the database
         ''')
     )
 
@@ -85,18 +88,27 @@ def main():
     if args.insert:
         insert_table(args.insert)
     if args.drop:
-        drop_table(args.drop)
+        drop_tables(args.drop)
 
-
+    #All arguments are optional - exit with a message if none are passed
     if not [v for k, v in vars(args).items() if v]:
         print("Dry run. For the list of commands see -h")
 
-
 def purge_temp_tables(db_uri=None):
     '''
-    db_uri is added as function paramter so that we 
-    can test it using SQLite in-memory DB.
+    Delete all tables with "temp_" prefix from anon.db
+
+    Parameters
+    ----------
+    db_uri : string or None
+        added so that we can test the function using
+        SQLite in-memory DB.
+    
+    Returns
+    -------
+    Prints out confirmation with the number of columns dropped
     '''
+
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
@@ -107,18 +119,33 @@ def purge_temp_tables(db_uri=None):
         c.execute('SELECT name from sqlite_master where type= "table"')
         table_names = c.fetchall()
 
+        count = 0
+
         for table in table_names:
             if 'temp' in table[0]:
                 c.execute(f"DROP TABLE {table[0]}")
+                count += 1
+
         conn.execute("VACUUM")
         conn.commit()
 
+    print(f"Successfully deleted {count} tables")
 
 def list_all_tables(db_uri=None):
     '''
-    db_uri is added as function paramter so that we 
-    can test it using SQLite in-memory DB.
+    Print out a list of all tables in anon.db
+
+    Parameters
+    ----------
+    db_uri : string or None
+        added so that we can test the function using
+        SQLite in-memory DB.
+
+    Returns
+    -------
+    Prints out a simple list to console
     '''
+
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
@@ -132,11 +159,23 @@ def list_all_tables(db_uri=None):
 
 def table_info(table_name, db_uri=None):
     '''
-    db_uri is added as function paramter so that we 
-    can test it using SQLite in-memory DB.
+    Print out basic information about a given table
 
-    Output can be piped straight to a .csv file
+    Parameters
+    ----------
+    table_name : string
+        the name of a single table in the database
+    db_uri : string or None
+        added so that we can test the function using
+        SQLite in-memory DB.
+
+    Returns
+    -------
+    Prints out the headers + all rows in the table. Values are 
+    comma separated to allow piping directly into a new
+    .csv file
     '''
+
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
@@ -152,25 +191,41 @@ def table_info(table_name, db_uri=None):
             c.execute(f"SELECT * FROM {table_name}")
             result = c.fetchall()
             c.execute(f"PRAGMA table_info({table_name})")
-            info = ",".join([x[1] for x in c.fetchall()])
+            headers = ",".join([x[1] for x in c.fetchall()])
 
-            print(info)
+            print(headers)
             print(*[",".join(x) for x in result], sep="\n")
 
         else:
 
             print(f"{table_name} not in schema")   
 
-def insert_table(file_path, db_uri=None):
+def insert_table(file_path, table_name=None, db_uri=None):
     '''
-    Doc string
+    Parse a .csv file and insert it into anon.db under its stem name
+
+    Parameters
+    ----------
+    file_path : string
+        Any format that Pandas can read is potentially suitable, but
+        only .csv is currently implemented
+    table_name : string
+        Optional parameter if you don't want to use filename's stem
+        part as the table name
+
+    Returns
+    -------
+    No return; prints out confirmation if insertion is successful
     '''
+
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
     if path_checker(file_path):
 
-        table_name = path_checker(file_path).stem
+        if table_name is None:
+
+            table_name = path_checker(file_path).stem
         
         #when creating a .csv from piping it from console on Windows,
         #encoding is changed from UTF-8 to ANSI
@@ -192,34 +247,45 @@ def insert_table(file_path, db_uri=None):
         
         print(f"Successfully inserted a new table {table_name}")
 
+def drop_tables(table_names, db_uri=None):
+    '''
+    Drop named table(s) from anon.db
 
-def drop_table(table_name, db_uri=None):
+    Parameters
+    ----------
+    table_names : list of table names or regex strings
+ 
+    Returns
+    -------
+    Prints outcome (if successful) to console
+
+    Note that in CLI, multiple table names must be separated with a space
     '''
-    Doc string
-    '''
+
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
     conn = sqlite3.connect(db_uri, uri=True)
 
-
+    if not isinstance(table_names, list):
+        table_names = list(table_names)
+ 
     with closing(conn):
         c = conn.cursor()
         c.execute('SELECT name from sqlite_master where type= "table"')
-        table_names = c.fetchall()
+        source_tables = [tbl[0] for tbl in c.fetchall()]
 
-        if table_name in [tbl[0] for tbl in table_names]:
+        for table_name in table_names:
+            
+            for source_table in source_tables:
 
-            c.execute(f"DROP TABLE {table_name}")
-            conn.execute("VACUUM")
-            conn.commit()
+                if re.search(table_name, source_table):
 
-            print(f"Successfully deleted table {table_name}")
+                    c.execute(f"DROP TABLE {source_table}")
+                    conn.execute("VACUUM")
+                    conn.commit()
 
-        else:
-
-            print(f"{table_name} not in schema") 
-
+                    print(f"Successfully deleted table {source_table}")
 
 if __name__ == "__main__":
     main()

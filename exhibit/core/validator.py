@@ -16,21 +16,25 @@ import sys
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.utils import get_attr_values, _tokenise_constraint
-from exhibit.core.sql import number_of_query_rows, number_of_table_columns
+from .constraints import tokenise_constraint
+from .utils import get_attr_values
+from .sql import number_of_table_rows, number_of_table_columns
 
 class newValidator:
     '''
     Add any methods used to validate the spec prior to
-    executing it to this class. All methods that
-    start with "validate" will be run before data is generated.
+    executing it to this class.
+
+    All methods that start with "validate" will be run
+    before the spec is handed over to data generation routine
     '''
 
     def __init__(self, spec_dict):
         '''
-        Save the spec path as class attribute and validate
-        the format of the spec
+        Save the specification dictionary and the category threshold
+        as class attributes for re-use by validation methods.
         '''
+
         self.spec_dict = spec_dict
         self.ct = self.spec_dict['metadata']['category_threshold']
         
@@ -38,6 +42,10 @@ class newValidator:
     def run_validator(self):
         '''
         Run all validator methods defined in the class
+        
+        Each validator methods returns True or False so
+        return False at the first methods that returns False
+        or return True if all methods returned True
         '''
 
         gen = (m for m in dir(self) if "validate" in m)
@@ -52,6 +60,7 @@ class newValidator:
         Make sure there are no identically-named columns
         between the main and derived sections.
         '''
+
         if spec_dict is None:
             spec_dict = self.spec_dict
 
@@ -75,11 +84,7 @@ class newValidator:
         The number of rows requested by the user can't 
         be fewer than the multiplication of numbers of
         unique values in columns set to NOT have any
-        missing 
-        
-        spec argument must be a dictionary parsed by YAML
-
-        Returns True or False
+        missing.
         '''
 
         if spec_dict is None:
@@ -114,6 +119,7 @@ class newValidator:
         normalising the range to between 0 and 1. Show warning if it
         happens, but allow the generation to continue.
         '''
+
         warning_msg = textwrap.dedent("""
         VALIDATION WARNING: The probability vector of %(err_col)s doesn't
         sum up to 1 and will be rescaled.
@@ -123,8 +129,8 @@ class newValidator:
             spec_dict = self.spec_dict
 
         for c, v in get_attr_values(
-                spec_dict,
-                'original_values',
+                spec_dict=spec_dict,
+                attr='original_values',
                 col_names=True,
                 types=['categorical']):
 
@@ -134,12 +140,14 @@ class newValidator:
                 if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
                     out.write(warning_msg % {"err_col" : c})
                     return True
+
         return True
 
     def validate_linked_cols(self, spec_dict=None):
         '''
         All linked columns should share certain attributes
         '''
+
         if spec_dict is None:
             spec_dict = self.spec_dict
 
@@ -155,19 +163,18 @@ class newValidator:
 
             for attr in LINKED_ATTRS:
 
-                group_flags = []
+                group_flags = set()
 
                 for col in linked_cols:
                 
-                    group_flags.append(spec_dict["columns"][col][attr])
-
-                if len(set(group_flags)) != 1:
-
+                    group_flags.add(spec_dict["columns"][col][attr])
+                
+                #each linked group should have 1 value for each attribute
+                if len(group_flags) != 1:
                     print(fail_msg % {"err_attr" : attr})
                     return False
 
         return True
-
 
     def validate_paired_cols(self, spec_dict=None):
         '''
@@ -184,8 +191,8 @@ class newValidator:
         """)
 
         for c, v in get_attr_values(
-            spec_dict,
-            'paired_columns',
+            spec_dict=spec_dict,
+            attr='paired_columns',
             col_names=True,
             types=['categorical']):
 
@@ -196,15 +203,15 @@ class newValidator:
 
                 for attr in LINKED_ATTRS:
 
-                    group_flags = []
+                    group_flags = set()
 
-                    group_flags.append(spec_dict["columns"][orig_col_name][attr])
+                    group_flags.add(spec_dict["columns"][orig_col_name][attr])
 
                     for pair in paired_col_names:
 
-                        group_flags.append(spec_dict["columns"][pair][attr])
+                        group_flags.add(spec_dict["columns"][pair][attr])
 
-                    if len(set(group_flags)) != 1:
+                    if len(group_flags) != 1:
 
                         print(fail_msg % {"err_attr" : attr})
                         return False
@@ -213,7 +220,7 @@ class newValidator:
 
     def validate_anonymising_set_names(self, spec_dict=None):
         '''
-        So far, only two are available: mountain ranges and random
+        So far, only three are available: mountains, birds and random
         '''
 
         VALID_SETS = ['random', 'mountains', 'birds']
@@ -226,8 +233,12 @@ class newValidator:
         """)
 
         for c, v in get_attr_values(
-                spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
-
+                spec_dict=spec_dict,
+                attr='anonymising_set',
+                col_names=True,
+                types=['categorical']):
+            
+            #mountains.peak is a valid mountains set
             if v.split(".")[0] not in VALID_SETS:
 
                 print(fail_msg % {
@@ -235,6 +246,7 @@ class newValidator:
                     "col" : c
                     })
                 return False
+
         return True
 
     def validate_anonymising_set_length(self, spec_dict=None):
@@ -252,11 +264,14 @@ class newValidator:
         """)
 
         for c, v in get_attr_values(
-                spec_dict, 'anonymising_set', col_names=True, types=['categorical']):
+                spec_dict=spec_dict,
+                attr='anonymising_set',
+                col_names=True,
+                types=['categorical']):
             
             if v != "random":
                 col_uniques = spec_dict['columns'][c]['uniques']
-                anon_uniques = number_of_query_rows(v)
+                anon_uniques = number_of_table_rows(v)
 
                 if col_uniques > anon_uniques:
                     print(fail_msg % {
@@ -264,11 +279,14 @@ class newValidator:
                     "col" : c
                     })
                     return False
+        
         return True
     
     def validate_anonymising_set_width(self, spec_dict=None):
         '''
-        Doc string
+        To anonymise linked columns with a non-random set, this set
+        needs to have the same (or greater) number of columns as the
+        linked columns group
         '''
 
         if spec_dict is None:
@@ -299,9 +317,10 @@ class newValidator:
         User can enter boolean constraints linking two numerical columns
         or a single column and a scalar value, like Column A < 100.
 
-        Each constraint should yield 3-element tuple: Column A, operator
+        Each constraint must yield 3-element tuple: Column A, operator
         and the comparison value / column.
         '''
+
         if spec_dict is None:
             spec_dict = self.spec_dict
 
@@ -312,7 +331,7 @@ class newValidator:
         if spec_dict['constraints']['boolean_constraints']:
 
             for constraint in spec_dict['constraints']['boolean_constraints']:
-                if len(_tokenise_constraint(constraint)) != 3:
+                if len(tokenise_constraint(constraint)) != 3:
                     print(fail_msg % constraint)
                     return False
         return True

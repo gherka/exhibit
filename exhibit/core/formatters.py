@@ -46,7 +46,6 @@ def format_header(dataframe, series_name, prefix=None):
 
     return series_name.ljust(longest)
 
-
 def build_list_of_values(dataframe, original_series_name, paired_series_name=None):
     '''
     Feeder function for build_table_from_lists
@@ -104,7 +103,6 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
     padded_values = [x.ljust(longest + 1) for x in working_list]
 
     return padded_values
-
 
 def build_list_of_probability_vectors(dataframe, original_series_name):
     '''
@@ -181,7 +179,6 @@ def build_list_of_column_weights(weights):
 
     return sorted_final
     
-
 def build_table_from_lists(
     dataframe, numerical_cols, weights,
     original_series_name, paired_series_names):

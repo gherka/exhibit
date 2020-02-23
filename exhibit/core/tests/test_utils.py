@@ -19,9 +19,9 @@ from exhibit.sample.sample import prescribing_spec
 # Module under test
 from exhibit.core import utils as tm
 
-class helperTests(unittest.TestCase):
+class utilsTests(unittest.TestCase):
     '''
-    Doc string
+    Collection of unit tests for the utils.py module
     '''
 
     def test_path_checker_raises_exception_on_incorrect_path(self):
@@ -29,6 +29,7 @@ class helperTests(unittest.TestCase):
         All arguments entered at command line are type-cast
         by argparse as strings by default.
         '''
+
         self.assertRaises(FileNotFoundError, tm.path_checker, '123')
 
     def test_path_checker_returns_path_object(self):
@@ -37,6 +38,7 @@ class helperTests(unittest.TestCase):
         that the source is a file that can be read into
         a dataframe in a separate test
         '''
+
         self.assertIsInstance(
             tm.path_checker(os.getcwd()),
             Path)
@@ -64,6 +66,7 @@ class helperTests(unittest.TestCase):
         '''
         Currently only .csv files are supported
         '''
+        
         self.assertRaises(TypeError, tm.read_with_date_parser, Path('basic.xlsx'))
 
     def test_date_frequency_guesser(self):
@@ -99,6 +102,42 @@ class helperTests(unittest.TestCase):
         test_list = tm.get_attr_values(test_spec, "spam")
         assert test_list.count(None) == len(test_list)
 
+    def test_scaling_factor(self):
+        '''
+        Current implementation only accounts for datetime columns
+        '''
+        
+        test_spec = prescribing_spec
+
+        #add another time column to the spec
+        test_spec['columns']['test_date'] = {
+            "type": "date",
+            "uniques": 10
+        }
+
+        expected = 0.1
+        result = tm.determine_scaling_factor(test_spec)
+
+        self.assertEqual(expected, result)
+
+    def test_count_core_rows(self):
+        '''
+        Key function in determining the size of the anonymised dataframe
+        '''
+        
+        test_spec = prescribing_spec
+
+        #test setup
+        test_spec['metadata']['number_of_rows'] = 1000
+        test_spec['columns']['PaidDateMonth']['uniques'] = 5
+        test_spec['columns']['HB2014Name']['uniques'] = 5
+        test_spec['columns']['HB2014Name']['allow_missing_values'] = False
+
+        expected = 40
+        result = tm.count_core_rows(test_spec)
+
+        self.assertEqual(expected, result)
+
     def test_whole_number_column(self):
         '''
         If any value has a decimal point, flag up as false
@@ -111,145 +150,6 @@ class helperTests(unittest.TestCase):
         self.assertTrue(tm.whole_number_column(test_series_1))
         self.assertTrue(tm.whole_number_column(test_series_2))
         self.assertFalse(tm.whole_number_column(test_series_3))
-
-    def test_boolean_columns_identified(self):
-        '''
-        When a relationship exists between two numerical columns,
-        add the pair to the spec, in a format that Pandas understand
-        '''
- 
-        lt_df = pd.DataFrame(
-            data={
-                "A":[1, 2, 3],
-                "B":[4, 5, 6],
-                "C":[0, 6, 2],
-                "D":list("ABC")
-            }
-        )
-
-        ge_df = pd.DataFrame(
-            data={
-                "A A":[5, 10, 3],
-                "B"  :[1, 2, 2],
-                "C"  :[0, 10, 2]
-            }
-        )
-
-        lt_expected = ["A < B"]
-        ge_expected = ["~A A~ > B", "~A A~ >= C"]
-
-        lt_result = tm.find_boolean_columns(lt_df)
-        ge_result = tm.find_boolean_columns(ge_df)
-
-        self.assertEqual(lt_expected, lt_result)
-        self.assertEqual(ge_expected, ge_result)
-
-
-    def test_boolean_columns_with_nulls_identified(self):
-        '''
-        When a relationship exists between two numerical columns,
-        add the pair to the spec, in a format that Pandas understand
-        '''
- 
-        test_df = pd.DataFrame(
-            data={
-                "A":[np.nan, 2, 3, 5],
-                "B":[4, 5, np.nan, 6],
-                "C":[0, 6, 2, np.nan],
-                "D":list("ABCD")
-            }
-        )
-
-        expected = ["A < B"]
-
-        result = tm.find_boolean_columns(test_df)
-
-        self.assertEqual(expected, result)
-
-    def test_tokenise_constraint(self):
-        '''
-        Separate the constraint string into 3-element tuple
-        '''
-
-        c1 = "~A A~ > B"
-        c2 = "A == B"
-
-        c1_expected = ("A A", ">", "B")
-        c2_expected = ("A", "==", "B")
-
-        c1_result = tm._tokenise_constraint(c1)
-        c2_result = tm._tokenise_constraint(c2)
-
-        self.assertEqual(c1_expected, c1_result)
-        self.assertEqual(c2_expected, c2_result)
-
-    def test_adjust_value_to_constraint_column(self):
-        '''
-        Inner functions not yet tested; if tokenised value is not
-        an operator OR a column name, try to parse it as a scalar
-        '''
-
-        test_df = pd.DataFrame(
-            data={
-                "A":[1, 0, 20, 2, 50],
-                "B":[1, 5, 21, 1, 1000]
-            }
-        )
-
-        constraint = "A >= B"
-        mask = test_df.eval(constraint)
-
-        test_df.loc[~mask, "A"] = test_df[~mask].apply(
-            tm.adjust_value_to_constraint, axis=1,
-            args=('A', 'B', '>=')
-        )
-
-        self.assertTrue(all(test_df.eval(constraint)))
-
-    def test_adjust_value_to_constraint_scalar(self):
-        '''
-        Inner functions not yet tested; if tokenised value is not
-        an operator OR a column name, try to parse it as a scalar
-        '''
-
-        test_df = pd.DataFrame(
-            data={
-                "A":[1, 0, 20, 2, 50],
-                "B":[1, 5, 21, 1, 1000]
-            }
-        )
-
-        constraint = "A >= 30"
-        mask = test_df.eval(constraint)
-
-        test_df.loc[~mask, "A"] = test_df[~mask].apply(
-            tm.adjust_value_to_constraint, axis=1,
-            args=('A', '30', '>=')
-        )
-
-        self.assertTrue(all(test_df.eval(constraint)))
-
-    def test_constraint_clean_up_for_eval(self):
-        '''
-        Re-assemble the given constraint in a safe way
-        '''
-
-        c1 = "Spam Eggs > Spam" #invalid constraint - will be caught by validator
-        c1_expected = "Spam Eggs > Spam"
-
-        c2 = "~Spam Eggs~ > Spam"
-        c2_expected = "Spam_Eggs > Spam"
-
-        self.assertEqual(
-            tm._constraint_clean_up_for_eval(c1),
-            c1_expected
-        )
-
-        self.assertEqual(
-            tm._constraint_clean_up_for_eval(c2),
-            c2_expected
-        )
-        
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

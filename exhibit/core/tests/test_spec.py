@@ -1,6 +1,7 @@
 '''
 Unit and reference tests for the newSpec class & its functions
 '''
+
 # Standard library imports
 import unittest
 
@@ -10,7 +11,6 @@ import pandas as pd
 # Module under test
 from exhibit.core import specs as tm
 from exhibit.sample.sample import prescribing_data as ref_df
-
 
 class specsTests(unittest.TestCase):
     '''
@@ -22,6 +22,7 @@ class specsTests(unittest.TestCase):
         New Specification class instance should have
         own copy of the dataframe
         '''
+
         test_spec = tm.newSpec(ref_df, 140)
 
         self.assertIsInstance(test_spec.df, pd.DataFrame)
@@ -30,6 +31,7 @@ class specsTests(unittest.TestCase):
         '''
         Add tests looking at deeper structure
         '''
+
         test_spec = tm.newSpec(ref_df, 140)
 
         expected_keys = [
@@ -42,8 +44,7 @@ class specsTests(unittest.TestCase):
         self.assertListEqual(
             sorted(test_spec.output.keys()),
             sorted(expected_keys))
-
-
+            
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

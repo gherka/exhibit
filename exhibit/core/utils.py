@@ -9,6 +9,7 @@ from functools import reduce
 from operator import mul
 from io import StringIO
 import itertools as it
+from collections import deque, defaultdict, namedtuple
 
 import re
 import datetime
@@ -19,37 +20,67 @@ import pandas as pd
 import numpy as np
 from numpy import greater, greater_equal, less, less_equal, equal
 
-def path_checker(string):
+def path_checker(path_string):
     '''
-    Improves error message for user if wrong path entered.
-    Returns Path object.
+    Improves error message for user if wrong path entered
+
+    Parameters
+    ----------
+    path_string : string
+        raw user input
+    
+    Returns
+    -------
+    Path object
     '''
-    if not exists(string):
+
+    if not exists(path_string):
         msg = "Can't find specified file"
         raise FileNotFoundError(msg)
-    return Path(string)
+    return Path(path_string)
     
 def package_dir(*args):
     '''
-    Returns absolute path to package / package modules / files
-    given names relative to the package root directory
+    Given directory / file names, find their absolute path
 
-    __file__ attribute  is the pathname of the file from
+    __file__ attribute is the pathname of the file from
     which the module was loaded; each module using this
     function will take its own file path from the global
     namespace. Dot dot just moves it up one level which
     imposes certain constrains of the file structure of
     the project.
+
+    Parameters
+    ----------
+    args : list
+        list of directory / file names to the source
+
+    Returns
+    -------
+    Absolute path to package / package modules / files
+    given names relative to the package root directory
     '''
+    
     return abspath(join(dirname(__file__), "..", *args))
 
 def date_parser(row_tuple):
     '''
-    Assuming row_tuple has the form (column_name, row_value)
-    check if row_value has date separators and then
-    as a back-up run it through the dateutil parser
-    (as it can throw up a lot of false positives).
+    Parse a single column / value pair to see if it's a date
+
+    Check if row_value has 2 (for date) or 4 (for date + time) separators
+    and then as a back-up run it through the dateutil parser which can
+    throw up a lot of false positives if you rely solely on it.
+
+    Parameters
+    ----------
+    row_tuple : tuple
+        (column_name, row_value)
+    
+    Returns
+    -------
+    None or column name if the value can be usefully parsed as a date
     '''
+
     column_name, row_value = map(str, row_tuple)
 
     date_regex = r"([-:/])"
@@ -66,16 +97,30 @@ def date_parser(row_tuple):
 
 def read_with_date_parser(path, **kwargs):
     '''
-    Adapt the read_csv function of Pandas to
-    detect and parse datetime columns based on
-    values ONLY in the first row.
+    Adapt the read_csv function of Pandas to  detect and parse
+    datetime columns based on values ONLY in the first row.
 
-    We assume that the date columns come in dayfirst format
+    We assume that date columns come in dayfirst format
+
+    Parameters
+    ----------
+    path : str or Path object
+        path to .csv file for processing
+
+    skip_columns : list-like
+        it can be useful to skip certain columns as part of
+        spec generation, especially if they are not used in
+        final analysis / presentation of the data. Opposite
+        of Pandas' own usecols parameter.
+
+    Returns
+    -------
+    DataFrame
     '''
 
     if path.suffix in ['.csv',]:
 
-        skipped_cols = kwargs["skip_columns"]
+        skipped_cols = kwargs.get("skip_columns", [])
     
         df = pd.read_csv(path)
 
@@ -94,17 +139,27 @@ def guess_date_frequency(timeseries):
     '''
     Try to guess if the sorted timestamps have any pattern to them.
     
-    Pandas diff() on the sorted duplicate-less datafraeme computes
+    Pandas diff() on the sorted duplicate-less dataframe computes
     the difference between each element with its previous row which
-    gives as the time lapsed between discrete time stamps. 
+    gives us the time lapsed between discrete time stamps. 
 
     We then look at how many such differences exist and what their values
     are in days.
 
-    If the period between two unique timestamps is between 28 and 31 days
+    If the periods between two unique timestamps are between 28 and 31 days
     then we guess it's a monthly timerseries and so on.
 
     See description of time alises on Pandas website.
+
+    Parameters
+    ----------
+    timeseries : pd.Series
+        only columns identified as datetime by date_parser()
+        will get analysed by this function
+    
+    Returns
+    -------
+    Time alias string or None
     '''
     
     time_diff_counts = (timeseries
@@ -113,49 +168,53 @@ def guess_date_frequency(timeseries):
                         .diff()
                         .value_counts())
     
-    if len(time_diff_counts.index) == 1:
+    day_diff = (
+        max(time_diff_counts.index).days -
+        min(time_diff_counts.index).days
+    )
 
-        if time_diff_counts.index[0].days == 1:
-            return "D"        
-        elif time_diff_counts.index[0].days in range(28, 32):
-            return "MS"
-        elif time_diff_counts.index[0].days in range(90, 93):
-            return "QS"
-        elif time_diff_counts.index[0].days in range(365, 367):
-            return "YS"
-    
-    elif abs(
-        time_diff_counts.index[0].days - time_diff_counts.index[1].days
-        ) in range(0, 4):
-        
-        if time_diff_counts.index[0].days == 1:
-            return "D"
-        elif time_diff_counts.index[0].days in range(28, 32):
-            return "MS"
-        elif time_diff_counts.index[0].days in range(90, 93):
-            return "QS"
-        elif time_diff_counts.index[0].days in range(365, 367):
-            return "YS"
-        
-    else:
+    #the maximum difference between two timestamps in a single period is 3
+    #as in a monthly timeseries with February (28) and March (31). Business
+    #Years are a bit weird so we increase to 4 and have a wider interval for YS
+
+    if day_diff > 4:
         return None
+
+    aliases = {
+        range(0,2)      : "D",
+        range(28, 32)   : "MS",
+        range(90, 93)   : "QS",
+        range(364, 369) : "YS",
+    }
+
+    first_period = time_diff_counts.index[0].days
+
+    for period_range, period_alias in aliases.items():
+        if first_period in period_range:
+            return period_alias
 
 def get_attr_values(spec_dict, attr, col_names=False, types=None):
     '''
-    spec_dict should be YAML de-serialised into
-    dictionary.
+    Extract all values for a given attribute in the specification 
 
-    Assuming the spec was generated correctly,
-    go through all columns and capture given
-    attribute's value; None if attribute is 
-    missing.
-    
-    Returns a list with values
-    from columns in order of appearance in the
-    spec.
+    Parameters
+    ----------
+    spec_dict : dict
+        YAML spec de-serialised into a dictionary
+    attr : string
+        attribute of the spec to extract
+    col_names : Boolean
+        Optional. If True, adds column names to the output
+    types : list
+        Optional. Restricts the search for attribute to columns
+        of a given type.
 
-    Optional argument to return a col_name, attribute value
-    instead of just a list of attribute values
+    Returns
+    -------
+    A list with values from columns in order of appearance in the
+    spec. The length of the returned list will always equal the number
+    of relevant columns because if attribute is missing, we add a place
+    holder value of None in its place. 
     '''
     
     if types is None:
@@ -165,25 +224,23 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None):
         types = [types]
 
     attrs = []
+    attrTuple = namedtuple(attr, ["col_name", "attr_value"])
+
+    for col in spec_dict['columns']:
+
+        default_value = attrTuple(col, None)
+
+        if spec_dict["columns"][col]['type'] in types:
+            #append None as a placeholder; overwrite if attr exists
+            attrs.append(default_value)
+            for a in spec_dict['columns'][col]:
+                    if a == attr:
+                        attrs[-1] = attrTuple(col, spec_dict['columns'][col][attr])
 
     if col_names:
-
-        for col in spec_dict['columns']:
-        #append None as a placeholder; overwrite if attr exists
-            if spec_dict["columns"][col]['type'] in types:
-                attrs.append((col, None))
-                for a in spec_dict['columns'][col]:
-                    if a == attr:
-                        attrs[-1] = (col, spec_dict['columns'][col][attr])
-
-    else:
-        for col in spec_dict['columns']:
-            if spec_dict["columns"][col]['type'] in types:
-                attrs.append(None)
-                for a in spec_dict['columns'][col]:
-                    if a == attr:
-                        attrs[-1] = spec_dict['columns'][col][attr]
-    return attrs
+        return attrs
+    #drop the column names from the tuple and return a list of attr values
+    return [x.attr_value for x in attrs]
 
 def generate_table_id():
     '''
@@ -195,6 +252,8 @@ def generate_table_id():
 
 def exceeds_ct(spec_dict, col):
     '''
+    Tiny function to shorten the code
+
     Returns true if the number of unique values in a column
     exceeds category threshold parameter given at spec generation
     '''
@@ -205,21 +264,35 @@ def exceeds_ct(spec_dict, col):
 
     return result
 
-def _determine_scaling_factor(spec_dict):
+def determine_scaling_factor(spec_dict):
     '''
-    Currently, simply scales numerical columns to
-    account for time series columns that are not
-    part of the weights generation. Might change in the future.
+    Scaling factor to apply to each value in the continous columns
+    AFTER categorical weights have been applied
+
+    Parameters
+    ----------
+    spec_dict : dict
+        YAML specification de-serialised into dictionary
+
+    Returns
+    -------
+    Float
+    
+    Currently, datetime columns are not part of weights generation
+    so the scaling factor simply accounts for the max number of unique
+    dates in the specification.
     '''
     
     time_col_tuples = get_attr_values(
         spec_dict=spec_dict,
         attr='uniques',
         col_names=True,
-        types=['date']
+        types='date'
     )
 
-    base_col_uniques = max(time_col_tuples, key=lambda x: x[1])[1]
+    base_col_uniques = max(
+        time_col_tuples,
+        key=lambda x: x.attr_value).attr_value
 
     result = 1 / base_col_uniques
 
@@ -284,225 +357,3 @@ def whole_number_column(series):
     '''
 
     return all(series.fillna(0) * 10 % 10 == 0)
-
-def find_boolean_columns(df):
-    '''
-    Given a Pandas dataframe, find all numerical column pairs
-    that have a relationship that can be described using standard
-    comparison operators, e.g. values in A are always greater than
-    values in B.
-
-    Returns
-    -------
-    A list of strings that are interpretable by Pandas eval() method
-
-    Note that each column pair can be described by at most one "rule":
-    if > is identified, the inner loop exists rather than check for >=
-    Comparisons need to be made element-wise, which is why we import
-    operators from numpy and not from standard library.
-
-    Use tilde character (~) to enclose column names with spaces
-    '''
-
-    op_dict = {
-        "<": less,
-        ">": greater,
-        "<=": less_equal,
-        ">=": greater_equal,
-        "==": equal
-    }
-
-    num_cols = df.select_dtypes(include=np.number).columns
-    pairs = list(it.combinations(num_cols, 2))
-    output = []
-
-    for pair in pairs:
-        for op_name, op_func in op_dict.items():
-
-            col_A_name = pair[0]
-            col_B_name = pair[1]
-
-            #we need to find the intersection of non-null indices for two columns
-            non_null_idx = df[col_A_name].dropna().index.intersection(
-                df[col_B_name].dropna().index
-            )
-
-            col_A = df.loc[non_null_idx, col_A_name]
-            col_B = df.loc[non_null_idx, col_B_name]
-
-            if all(op_func(col_A, col_B)):
-                #escape whitespace
-                if " " in pair[0]:
-                    col_A_name = "~"+pair[0]+"~"
-                if " " in pair[1]:
-                    col_B_name = "~"+pair[1]+"~"
-                output.append(
-                    f"{col_A_name} {op_name} {col_B_name}"
-                )
-                break
-            
-    return output
-
-def _tokenise_constraint(constraint):
-    '''
-    Given a constraint string, split it into individual tokens
-    Orders of tokens matters.
-
-    Returns
-    -------
-    A tuple with tokens
-    
-    If the constraint is in a valid format, the returned tuple
-    is made up of Column A, Column B and Operator; the format is
-    checked as part of validation, earlier in the process
-    '''
-
-    pattern = r"~.+?~|\b[^\s]+?\b|[<>]=?|=="
-    token_list = re.findall(pattern, constraint)
-
-    result = tuple(x.replace("~", "") for x in token_list)
-
-    return result
-
-def _recursive_randint(new_x_min, new_x_max, y, op):
-    '''
-    Helper function to generate a random integer that conforms
-    to the given constraint.
-
-    Occasionally, you might get into a situation when determining
-    a noisy value is not straight-forward; fall-back at the end
-    of recursion depth is to go 1 up or down while still satisfying
-    the constraint operator.
-    '''
-
-    new_x = round(np.random.uniform(new_x_min, new_x_max))
-
-    try:
-        if op(new_x, y):
-            return new_x
-        return _recursive_randint(new_x_min, new_x_max, y, op)
-    
-    except RecursionError:
-
-        if op.__name__ == 'less':
-            return y - 1
-        if op.__name__ == 'greater':
-            return y + 1
-        return y
-
-def _generate_value_with_condition(x, y, op, pct_diff=None):
-    '''
-    Comparisons where one of the values in NaN are not possible
-    so we return NaN if one of the comparison values in NaN
-    '''
-
-    if pct_diff is None:
-        pct_diff = 0.5
-
-    if np.isnan(x):
-        return np.nan
-    
-    if np.isnan(y):
-        return x
-
-    abs_diff = max(1, abs(y-x))
-
-    new_x_min = max(0, x - abs_diff * (1 + pct_diff))
-    new_x_max = x + abs_diff * (1 + pct_diff)
-
-    return _recursive_randint(new_x_min, new_x_max, y, op)
-
-
-def adjust_nulls_to_reference_column(
-                                    row,
-                                    reference_col_name,
-                                    operator,
-                                    pct_diff=None):
-    '''
-    Reverse operator
-    '''
-    x = row[reference_col_name]
-
-    if np.isnan(x):
-        return x
-
-    reverse_op_dict = {
-        "<": greater,
-        ">": less,
-        "<=": greater_equal,
-        ">=": less_equal,
-        "==": equal
-    }
-    
-    if pct_diff is None:
-        pct_diff = 0.5
-
-    new_x_min = max(0, x - x * pct_diff)
-    new_x_max = x + x * pct_diff
-
-    return _recursive_randint(new_x_min, new_x_max, x, reverse_op_dict[operator])
-
-
-def adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
-    '''
-    Row-based function, supplied to apply()
-
-    Parameters
-    ----------
-    row : pd.Series object
-        automatically supplied by apply()
-    col_name_A : str
-        values in this column will be adjusted to fit the constraint
-    col_name_B : str
-        values in this column will NOT be changed; can also be a scalar
-    operator : str
-        has to be one of >,<.<=,>=,==
-    
-    Returns
-    -------
-    A single adjusted value
-    '''
-
-    op_dict = {
-        "<": less,
-        ">": greater,
-        "<=": less_equal,
-        ">=": greater_equal,
-        "==": equal
-    }
-
-    x = row[col_name_A]
-
-    if col_name_B.isdigit():
-        y = float(col_name_B)
-    else:
-        y = row[col_name_B]
-
-    return _generate_value_with_condition(x, y, op_dict[operator])
-
-def _constraint_clean_up_for_eval(rule_string):
-    '''
-    The default way to handle column names with whitespace in eval strings
-    is to enclose them in backticks. However, the default tokeniser will
-    occasionally tokenise elements of the column name that weren't separated by
-    whitespace originally, leading to errors when tokens are reassembled with
-    a safe character. For example, "Clinical Pathway 31Day" will be reassembled
-    as "Clinical_Pathway_31_Day".
-
-    The solution is to process the constraint first, before passing it to eval,
-    not forgetting to rename the dataframe columns with a _ instead of a whitespace
-    '''
-    
-    ops_re = r'[<>]=?|=='
-    split_str = rule_string.split("~")
-    clean_str = StringIO()
-    
-    for token in split_str:
-        if re.search(ops_re, token):
-            clean_str.write(token)
-        else:
-            clean_str.write(token.replace(" ", "_"))
-    
-    result = clean_str.getvalue()
-
-    return result

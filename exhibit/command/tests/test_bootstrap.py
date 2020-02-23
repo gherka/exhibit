@@ -22,7 +22,6 @@ class bootstrapTests(unittest.TestCase):
 
         Don't forget that you need to patch the class where
         it's being imported, not where it's created!
-
         '''
         
         with patch('exhibit.command.bootstrap.newExhibit') as mockExhibit:
@@ -49,7 +48,6 @@ class bootstrapTests(unittest.TestCase):
 
         Don't forget that you need to patch the class where
         it's being imported, not where it's created!
-
         '''
         
         with patch('exhibit.command.bootstrap.newExhibit') as mockExhibit:

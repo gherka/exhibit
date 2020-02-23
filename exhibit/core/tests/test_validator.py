@@ -4,7 +4,7 @@ Unit and reference tests for the Exhibit package
 
 # Standard library imports
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
 from copy import deepcopy
 from io import StringIO
 import textwrap
@@ -16,12 +16,35 @@ from exhibit.core.formatters import parse_original_values
 # Module under test
 from exhibit.core.validator import newValidator as tm
 
-
 class validatorTests(unittest.TestCase):
     '''
-    Doc string
+    Validator is checking for a few instances of where user edits of the
+    specification can break data generation or cause it to behave in 
+    unexpected ways
     '''
 
+    def test_running_of_the_validator(self):
+        '''
+        Validator should run all methods with "validate" in their name
+        and return False if any of them return False
+        '''
+
+        validatorMock = Mock()
+
+        validatorMock.validate_1 = Mock()
+        validatorMock.validate_1.return_value = True
+
+        validatorMock.validate_2 = Mock()
+        validatorMock.validate_2.return_value = False
+
+        validatorMock.not_run = Mock()
+
+        self.assertFalse(tm.run_validator(validatorMock))
+
+        validatorMock.validate_1.assert_called()
+        validatorMock.validate_2.assert_called()
+        validatorMock.not_run.assert_not_called()
+        
     def test_column_names_duplicates(self):
         '''
         There should be no duplicates!
@@ -49,7 +72,6 @@ class validatorTests(unittest.TestCase):
         }
 
         self.assertFalse(tm.validate_column_names(validatorMock, spec_dict=test_dict))
-
 
     def test_metadata_has_a_valid_number_of_rows(self):
         '''
@@ -113,6 +135,7 @@ class validatorTests(unittest.TestCase):
         If linked columns have different attributes for generation
         it will cause issues.
         '''
+
         validatorMock = Mock()
 
         test_dict = {
@@ -147,6 +170,7 @@ class validatorTests(unittest.TestCase):
         If paired columns have different attributes for generation
         it will cause confusion
         '''
+
         validatorMock = Mock()
 
         test_dict = {
@@ -177,7 +201,7 @@ class validatorTests(unittest.TestCase):
 
     def test_anonymising_set_names(self):
         '''
-        So far, only two are available: mountain ranges and random
+        So far, only three are available: mountain ranges, birds and random
         '''
 
         validatorMock = Mock()
@@ -248,6 +272,7 @@ class validatorTests(unittest.TestCase):
         '''
         Boolean constraints are only valid if they can be tokenised into 3 elements
         '''
+
         validatorMock = Mock()
 
         test_dict = {
@@ -261,3 +286,8 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(
             tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict)
             )
+
+if __name__ == "__main__" and __package__ is None:
+    #overwrite __package__ builtin as per PEP 366
+    __package__ = "exhibit"
+    unittest.main(warnings='ignore')
