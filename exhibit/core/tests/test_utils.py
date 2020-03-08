@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.sample.sample import prescribing_spec
+from exhibit.sample.sample import inpatients_spec
 
 # Module under test
 from exhibit.core import utils as tm
@@ -92,46 +92,28 @@ class utilsTests(unittest.TestCase):
         because of "magic" test numbers, like 5.
         '''
         
-        test_spec = prescribing_spec
+        test_spec = inpatients_spec
 
-        #there are 5 categorical columns in the prescribing spec
+        #there are 7 categorical columns in the inpatients spec
         test_list = tm.get_attr_values(test_spec, "uniques", types=['categorical'])
-        self.assertEqual(len(test_list), 5)
+        self.assertEqual(len(test_list), 7)
 
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")
         assert test_list.count(None) == len(test_list)
-
-    def test_scaling_factor(self):
-        '''
-        Current implementation only accounts for datetime columns
-        '''
-        
-        test_spec = prescribing_spec
-
-        #add another time column to the spec
-        test_spec['columns']['test_date'] = {
-            "type": "date",
-            "uniques": 10
-        }
-
-        expected = 0.1
-        result = tm.determine_scaling_factor(test_spec)
-
-        self.assertEqual(expected, result)
 
     def test_count_core_rows(self):
         '''
         Key function in determining the size of the anonymised dataframe
         '''
         
-        test_spec = prescribing_spec
+        test_spec = inpatients_spec
 
         #test setup
         test_spec['metadata']['number_of_rows'] = 1000
-        test_spec['columns']['PaidDateMonth']['uniques'] = 5
-        test_spec['columns']['HB2014Name']['uniques'] = 5
-        test_spec['columns']['HB2014Name']['allow_missing_values'] = False
+        test_spec['columns']['quarter_date']['uniques'] = 5
+        test_spec['columns']['hb_name']['uniques'] = 5
+        test_spec['columns']['hb_name']['allow_missing_values'] = False
 
         expected = 40
         result = tm.count_core_rows(test_spec)

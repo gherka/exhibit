@@ -18,21 +18,18 @@ import pandas as pd
 from .formatters import parse_original_values
 from .specs import newSpec
 from .validator import newValidator
-
+from .constraints import adjust_dataframe_to_fit_constraint
 from .utils import (
                     path_checker, read_with_date_parser,
-                    count_core_rows, determine_scaling_factor)
-
-from .constraints import adjust_dataframe_to_fit_constraint
+                    count_core_rows)
 
 from .generate.missing import add_missing_data_to_series
 from .generate.categorical import generate_categorical_data
-from .generate.continuous import generate_derived_column, generate_cont_val
 from .generate.yaml import generate_YAML_string
-from .generate.weights import (
-                    generate_weights,
-                    target_columns_for_weights_table,
-                    generate_weights_table)
+
+from .generate.continuous import (
+                    generate_continuous_column,
+                    generate_derived_column)
 
 class newExhibit:
     '''
@@ -123,8 +120,10 @@ class newExhibit:
 
     def read_data(self):
         '''
-        Attempt to read whatever filepath was given as source.
-        Only called on "fromdata" CLI command.
+        Attempt to read the .csv from source path.
+
+        As part of reference tests, we can short-circuit
+        the reading in of data and pass in a dataframe directly.
         '''
 
         if isinstance(self._args.source, pd.DataFrame):
@@ -222,47 +221,13 @@ class newExhibit:
         #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
         anon_df = generate_categorical_data(self.spec_dict, core_rows)
 
-        #3) ADD CONTINUOUS VARIABLES TO ANON DF
-        target_cols = target_columns_for_weights_table(self.spec_dict)
-        wt = generate_weights_table(self.spec_dict, target_cols)
-   
-        for num_col in self.spec_dict['metadata']['numerical_columns']:
-            
-            #skip derived columns as they require primary columns generated first
-            if num_col in self.spec_dict['derived_columns']:
-                continue
+        #3) HANDLE MISSING DATA IN CATEGORICAL COLUMNS
+        #add np.NaN to categorical columns (spec. for those pulled from DB)
 
-            #3a) Generate index for nulls based on spec
-            null_pct = self.spec_dict['columns'][num_col]['miss_probability']
-
-            null_idx = np.random.choice(
-                a=[True, False],
-                size=anon_df.shape[0],
-                p=[null_pct, 1-null_pct]
-            )
-
-            anon_df.loc[null_idx, num_col] = np.NaN
-
-            #3b) Generate real values in non-null cells by looking up values of 
-            #    categorical columns in the weights table and progressively reduce
-            #    the sum total of the column by the weight of each columns' value
-            anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
-            scaling_factor = determine_scaling_factor(self.spec_dict)
-
-            anon_df.loc[~null_idx, num_col] = anon_df.loc[~null_idx, target_cols].apply(
-                func=generate_cont_val,
-                axis=1,
-                weights_table=wt,
-                num_col=num_col,
-                num_col_sum=self.spec_dict['columns'][num_col]['sum'],
-                scaling_factor=scaling_factor,
-                dispersion_pct=self.spec_dict['columns'][num_col]['dispersion'])
-
-        #Missing data is a special value used in categorical columns as a placeholder
         anon_df.replace("Missing data", np.NaN, inplace=True)
 
-        #add missing data to categorical columns (spec. for those pulled from DB)
         rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
+        anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
 
         for col in anon_df_cat.columns:
             anon_df[col] = add_missing_data_to_series(
@@ -271,20 +236,36 @@ class newExhibit:
                 series=anon_df[col]
             )
 
-        #4) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
+        #Missing data is a special value used in categorical columns as a proxy for nan
+        anon_df.replace("Missing data", np.NaN, inplace=True)
+
+        #4) ADD CONTINUOUS VARIABLES TO ANON DF  
+        for num_col in self.spec_dict['metadata']['numerical_columns']:
+            
+            #skip derived columns as they require primary columns generated first
+            if num_col in self.spec_dict['derived_columns']:
+                continue
+
+            anon_df[num_col] = generate_continuous_column(
+                                                    spec_dict=self.spec_dict,
+                                                    anon_df=anon_df,
+                                                    col_name=num_col
+            )
+
+        #5) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
         for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
 
             adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
 
-        #5) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #6) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
             
-        #6) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #7) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
-    def write_data(self):
+    def write_data(self): # pragma: no cover
         '''
         Save the generated anonymised dataset to .csv
         '''

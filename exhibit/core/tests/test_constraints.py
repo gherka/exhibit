@@ -17,6 +17,26 @@ class constraintsTests(unittest.TestCase):
     Doc string
     '''
 
+    def test_recursive_randint_error_handling(self):
+        '''
+        Return a matching value given left side, right side and operator
+        '''
+        np.random.seed(0)
+
+        ops = [np.less, np.greater, np.equal]
+        target_vals = [2, 9999, 5000]
+
+        result = []
+        expected = [1, 10000, 5000]
+
+        for op, val in zip(ops, target_vals):
+        
+            result.append(
+                tm._recursive_randint(0, 10000, val, op)
+            )
+
+        self.assertCountEqual(result, expected)
+
     def test_boolean_columns_identified(self):
         '''
         When a relationship exists between two numerical columns,
@@ -25,10 +45,10 @@ class constraintsTests(unittest.TestCase):
  
         lt_df = pd.DataFrame(
             data={
-                "A":[1, 2, 3],
-                "B":[4, 5, 6],
-                "C":[0, 6, 2],
-                "D":list("ABC")
+                "A"  :[1, 2, 3],
+                "B B":[4, 5, 6],
+                "C"  :[0, 6, 2],
+                "D"  :list("ABC")
             }
         )
 
@@ -40,7 +60,7 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        lt_expected = ["A < B"]
+        lt_expected = ["A < ~B B~"]
         ge_expected = ["~A A~ > B", "~A A~ >= C"]
 
         lt_result = tm.find_boolean_columns(lt_df)

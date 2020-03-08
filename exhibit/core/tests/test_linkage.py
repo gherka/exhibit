@@ -60,9 +60,35 @@ class linkageTests(unittest.TestCase):
                 "C1", "C2", "C3", "C4", "C5"]
         )
 
-        assert tm.find_hierarchically_linked_columns(test_df) == [
-            ("C1", "C2"), ("C1", "C3")
-        ]
+        test_spec = {
+            "metadata":{
+                "categorical_columns":["C1", "C2", "C3", "C4", "C5"]
+            },
+            "columns":
+            {
+                "C1": {
+                    "original_values":"Dataframe"
+                },
+                "C2": {
+                    "original_values":"Dataframe"
+                },
+                "C3": {
+                    "original_values":"See paired column"
+                },
+                "C4": {
+                    "original_values":"Dataframe"
+                },
+                "C5": {
+                    "original_values":"Dataframe"
+                }
+                
+            }
+        }
+
+        self.assertEqual(
+            tm.find_hierarchically_linked_columns(test_df, test_spec),
+            [("C1", "C2")]
+        )
 
     def test_1_to_1_linked_columns(self):
         '''

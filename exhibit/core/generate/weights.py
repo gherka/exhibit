@@ -141,7 +141,7 @@ def generate_weights(df, cat_col, num_col):
     -------
     List of weights in ascending order of values rounded to 3 digits.
     '''
-    
+
     #min_count=1 ensures that [np.NaN, np.NaN] is summed to np.NaN and not zero
     weights = (
         df
@@ -230,3 +230,4 @@ def _weights_transform(x, weights):
         return np.NaN
     
     return max(0.001, round(x / weights.sum(), 3))
+    

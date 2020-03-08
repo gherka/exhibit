@@ -8,7 +8,6 @@ import unittest
 # External library imports
 import pandas as pd
 import numpy as np
-import yaml
 
 # Module under test
 from exhibit.core.generate import continuous as tm
@@ -53,6 +52,21 @@ class continuousTests(unittest.TestCase):
         self.assertTrue(expected_1)
         self.assertTrue(expected_2)
         self.assertTrue(expected_3)
+
+    def test_conditional_rounding(self):
+        '''
+        Check the basic scenario, and also the edge case of
+        when it's not possible to get to target_sum
+        '''
+
+        test_df = pd.DataFrame(data={
+            "A":np.random.random(20),
+            "B":np.random.random(20)
+            })
+        
+        result = tm._conditional_rounding(test_df['A'], 4)
+
+        self.assertEqual(sum(result), 4)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

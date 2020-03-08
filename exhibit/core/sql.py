@@ -40,6 +40,10 @@ def query_anon_database(table_name, column=None, size=None, db_uri=None):
 
     conn = sqlite3.connect(db_uri, uri=True)
 
+    #column can come in as a string or as an empty list or as ["string"]
+    if column and isinstance(column, list):
+        column = column[0]
+
     if size:
         sql = f"SELECT DISTINCT {str(column or '*')} FROM {table_name} LIMIT {size}"
     else:

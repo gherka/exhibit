@@ -146,7 +146,7 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
     ct = spec_dict['metadata']['category_threshold']
     uniques = spec_dict['columns'][col_name]['uniques']
 
-    if col_type != "categorical":
+    if col_type != "categorical": # pragma: no cover
         raise TypeError
     
     #values were stored in ; randomise based on uniform distribution
@@ -157,14 +157,14 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
 
         table_name = f"temp_{spec_dict['metadata']['id']}_{safe_col_name}"
 
-        if anon_set != "random": 
+        if anon_set != "random":
             table_name, *sql_column = anon_set.split(".")
             col_df = query_anon_database(table_name, sql_column, uniques)
 
             #we must make sure that the anonymising set is suitable for paired column
             #generation, meaning 1:1 and not 1:many or many:1 relationship
             
-            for col in col_df.columns:
+            for col in col_df.columns: # pragma: no cover
                 if col_df[col].nunique() != col_df.shape[0]:
                     raise TypeError("anonymising dataset contains duplicates")
 
@@ -307,7 +307,11 @@ def _generate_complete_series(spec_dict, col_name):
     we are always generating the full number of rows
     for this column as specified in the spec.
 
-    Function path depends on the column type.
+    Function path depends on the column type: date or categorical
+
+    Returns
+    -------
+    pd.Series for non-paired columns and pd.DataFrame for pairs
 
     For now, the function doesn't support columns where values are
     stored in the DB because the number of their uniques exceeds
@@ -324,8 +328,6 @@ def _generate_complete_series(spec_dict, col_name):
             freq=col_attrs['frequency'],            
         )
         return pd.Series(result, name=col_name)
-
-    # only other possibility is that the column is categorical:
     
     # if paired column, skip, and add pairs as part of parent column's processing
     if str(col_attrs['original_values']) == 'See paired column':

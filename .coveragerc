@@ -6,5 +6,6 @@ omit =
     *test_*
 [report]
 exclude_lines = 
+    pragma: no cover
     if __name__ == .__main__.:
     if spec_dict is None:

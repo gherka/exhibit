@@ -4,7 +4,7 @@ Unit and reference tests for the Exhibit package
 
 # Standard library imports
 import unittest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 from copy import deepcopy
 from io import StringIO
 import textwrap
@@ -81,11 +81,23 @@ class validatorTests(unittest.TestCase):
         missing values 
         '''
 
-        test_spec = sample.prescribing_spec
-        
         #check the user isn't under-shooting with the number of rows
-        test_spec['metadata']['number_of_rows'] = 4
-
+        test_spec = {
+            "metadata":{'number_of_rows':4},
+            "columns": {
+                "A": {
+                    "type":"categorical",
+                    "uniques":5,
+                    "allow_missing_values":False
+                },
+                "B": {
+                    "type":"categorical",
+                    "uniques":2,
+                    "allow_missing_values":False
+                }
+            }
+        }        
+        
         #mock up a validator class just to satisfy function parameters
         validatorMock = Mock()
 
@@ -101,14 +113,14 @@ class validatorTests(unittest.TestCase):
         have a dataframe in original_values.
         '''
 
-        test_spec = sample.prescribing_spec
+        test_spec = sample.inpatients_spec
         
         #modify list in place
-        orig_vals = test_spec['columns']['HB2014Name']['original_values']
+        orig_vals = test_spec['columns']['hb_name']['original_values']
         #set the first value of the probality vector to 1
-        orig_vals[-1] = "Scotland| Scotland | 1 | 0.016"
+        orig_vals[-2] = "Scotland | scot | 1 | 0.028 | 0.339 | 0.346"
         #parse the csv-like string into dataframe
-        test_spec['columns']['HB2014Name']['original_values'] = (
+        test_spec['columns']['hb_name']['original_values'] = (
             parse_original_values(orig_vals))
         
         validatorMock = Mock()
@@ -117,7 +129,7 @@ class validatorTests(unittest.TestCase):
         out = StringIO()
 
         expected = textwrap.dedent("""
-        VALIDATION WARNING: The probability vector of HB2014Name doesn't
+        VALIDATION WARNING: The probability vector of hb_name doesn't
         sum up to 1 and will be rescaled.
         """)
 

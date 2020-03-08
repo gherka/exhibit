@@ -133,12 +133,24 @@ class newSpec:
 
     def original_values_path_resolver(self, path, wt, col):
         '''
-        Doc string
+        Generate original_values attribute for a column
+
+        Parameters
+        ----------
+        path : str
+            taken from original_values_path function
+        wt   : dictionary
+            only used if path == normal
+        col  : str
+            column name for which the resolver is run
+
+        Returns
+        -------
+        String whose value depends on the path taken
         '''
         
         safe_col_name = col.replace(" ", "$")
         paired_cols = self.list_of_paired_cols(col)
-
         table_name = f"temp_{self.id}_{safe_col_name}"
 
         if path == "long":
@@ -185,6 +197,9 @@ class newSpec:
                 )
             
             return output
+        
+        #if path is something else, raise exception
+        raise ValueError("Incorrect %s" % path) # pragma: no cover
 
     def categorical_dict(self, col):
         '''
@@ -252,7 +267,7 @@ class newSpec:
         populating it with df-specific values.
         '''
 
-        #PART 1: COLUMN-SPECIFIC INFORMATION
+        # sort columns by their dtype
         sorted_col_names = sorted(
             self.df.columns.sort_values(),
             key=lambda x: str(self.df.dtypes.to_dict()[x]), reverse=True
@@ -267,54 +282,31 @@ class newSpec:
             else:
                 self.output['columns'][col] = self.categorical_dict(col)
 
-        #PART 2: DATASET-WIDE CONSTRAINTS
-
         # add numerical column pairs where all values can described by
-        # boolean logic, e.g. A > B
-
+        # boolean logic, e.g. A > B or A < 100
         bool_constraints = find_boolean_columns(self.df)
         self.output['constraints']['boolean_constraints'] = bool_constraints
 
-        # if we don't replace nans here, they don't get put into SQL
-        linked_temp_df = self.df[self.cat_cols].fillna("Missing data")
-
-        linked_cols = find_hierarchically_linked_columns(self.df)
+        # find and save linked columns
+        linked_cols = find_hierarchically_linked_columns(self.df, self.output)
         linked_tree = LinkedColumnsTree(linked_cols).tree
-
-        #Remove paired columns from linked groups
-        #[(0, [...]),(1, [...])]
-        for linked_group in linked_tree:
-            col_list = linked_group[1]
-            for col in col_list.copy():
-                if self.output['columns'][col]['original_values'] == 'See paired column':
-                    col_list.remove(col) #removes in-place, separate from the iterable
 
         self.output['constraints']['linked_columns'] = linked_tree
 
-        #Add linked column values to the temp tables in anon.db
-        #Remember that linked_tree is a list of tuples:
-        #(i, [column_names])
-        for linked_group_tuple in linked_tree:
-            #remove (in place) paired columns from the hierarchical link groups
-            #keeping the first column name (which should be the one with longer values)
-            for linked_col in linked_group_tuple[1]:
-                for pair_col_list in self.paired_cols:
-                    if (
-                        (linked_col in pair_col_list) and
-                        (linked_col != pair_col_list[0])):
-                        linked_group_tuple[1].remove(linked_col)
+        # Add linked column values to the temp tables in anon.db
+        # if we don't replace nans here, they don't get put into SQL
+        linked_temp_df = self.df[self.cat_cols].fillna("Missing data")
 
+        for linked_group_tuple in linked_tree:
+ 
             linked_data = list(
                 linked_temp_df.groupby(linked_group_tuple[1]).groups.keys()
             )
 
-            #PART 3: STORE LINKED GROUPS INFORMATION IN A SQLITE3 DB
-
-            #Column names can't have spaces; replace with $ and then back when
-            #reading the data from the SQLite DB at execution stage.
-
             table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
 
+            # Column names can't have spaces; replace with $ and then back when
+            # reading the data from the SQLite DB at execution stage.
             create_temp_table(
                 table_name=table_name,
                 col_names=[x.replace(" ", "$") for x in linked_group_tuple[1]],

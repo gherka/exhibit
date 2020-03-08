@@ -10,6 +10,7 @@ import argparse
 import json
 import tempfile
 from os.path import join
+from collections import namedtuple
 
 # External imports
 from pandas.testing import assert_frame_equal
@@ -20,7 +21,6 @@ import numpy as np
 from exhibit.core.utils import package_dir
 from exhibit.db import db_util
 from exhibit.sample.sample import (
-    prescribing_spec, prescribing_anon,
     inpatients_spec, inpatients_anon)
 
 # Module under test
@@ -41,7 +41,7 @@ def replace_nested_dict_values(d1, d2):
 class referenceTests(unittest.TestCase):
     '''
     Main test suite; command line arguments are mocked
-    via @patch decorator; internal intermediate functions
+    via patch context manager; internal intermediate functions
     are mocked inside each test.
     '''
 
@@ -54,39 +54,48 @@ class referenceTests(unittest.TestCase):
         cls._temp_tables = []
 
     @staticmethod
-    def temp_spec(
+    def temp_exhibit(
+        filename='inpatients.csv',
         fromdata_namespace=None,
         fromspec_namespace=None,
-        test_spec_dict=None):
+        test_spec_dict=None
+        ):
         '''
-        A helper method to generate and read a temporary spec
+        A helper method to generate and read custom specifications 
 
         Parameters
         ----------
+        filename : str
+            the .csv to use as the base for spec / df generation
         fromdata_namespace : dict
             dictionary with testing values for creating a spec
         fromspec_namespace : dict
             dictionary with testing values for running generation command
         test_spec_dict : dict
             dictionary with testing values for user spec
-        
+
         Returns
         -------
-        Dataframe with anonymised data        
+        A named tuples with spec dict and the generated dataframe     
         '''
 
+        returnTuple = namedtuple("TestRun", ["temp_spec", "temp_df"])
+
         temp_name = "_.yml"
+
         with tempfile.TemporaryDirectory() as td:
+
             f_name = join(td, temp_name)
 
-            default_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+            default_data_path = Path(package_dir('sample', '_data', filename))
 
             fromdata_defaults = {
                 "command"           : "fromdata",
                 "source"            : default_data_path,
-                "category_threshold": 50,
+                "category_threshold": 30,
                 "verbose"           : True,
                 "output"            : f_name,
+                "skip_columns"      : []
             }
 
             fromspec_defaults = {
@@ -94,12 +103,12 @@ class referenceTests(unittest.TestCase):
                 "source"            : Path(f_name),
                 "verbose"           : True,
             }
-
+            
+            #Update namespaces
             if fromdata_namespace:
                 fromdata_defaults.update(fromdata_namespace)
             if fromspec_namespace:
                 fromspec_defaults.update(fromspec_namespace)
-
 
             #Create and write a specification
             with patch('argparse.ArgumentParser.parse_args') as mock_args:
@@ -108,7 +117,8 @@ class referenceTests(unittest.TestCase):
                     source=fromdata_defaults["source"],
                     category_threshold=fromdata_defaults["category_threshold"],
                     verbose=fromdata_defaults["verbose"],
-                    output=fromdata_defaults["output"]
+                    output=fromdata_defaults["output"],
+                    skip_columns=fromdata_defaults['skip_columns']
                 )
                 
                 xA = tm.newExhibit()
@@ -133,10 +143,9 @@ class referenceTests(unittest.TestCase):
                 if xA.validate_spec():
                     xA.execute_spec()
 
-        return xA.anon_df
+        return returnTuple(xA.spec_dict, xA.anon_df)
 
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_inpatients_spec(self, mock_args):
+    def test_reference_inpatients_spec(self):
         '''
         The reference test mirrors the logic of the bootstrap.main()
 
@@ -146,17 +155,18 @@ class referenceTests(unittest.TestCase):
         should be identical.
         '''
 
-        mock_args.return_value = argparse.Namespace(
-            command="fromdata",
-            source=Path(package_dir('sample', '_data', 'inpatients.csv')),
-            category_threshold=30,
-            skip_columns=[],
-            verbose=True,
-        )
+        with patch('argparse.ArgumentParser.parse_args') as mock_args:
+            mock_args.return_value = argparse.Namespace(
+                command="fromdata",
+                source=Path(package_dir('sample', '_data', 'inpatients.csv')),
+                category_threshold=30,
+                skip_columns=[],
+                verbose=True,
+            )
 
-        xA = tm.newExhibit()
-        xA.read_data()
-        xA.generate_spec()
+            xA = tm.newExhibit()
+            xA.read_data()
+            xA.generate_spec()
 
         table_id = xA.spec_dict['metadata']['id']
 
@@ -167,26 +177,15 @@ class referenceTests(unittest.TestCase):
         self._temp_tables.append(table_id)
 
         assert json.dumps(inpatients_spec) == json.dumps(xA.spec_dict)
-
-    @unittest.skip("Major changes - expected failure")
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_prescribing_non_linked_anon_data(self, mock_args):
+    
+    def test_reference_prescribing_non_linked_anon_data(self):
         '''
         What this reference test is covering:
             - anonymisation using single DB column (peaks)
             - paired 1:1 anonymisation set (birds)
+            - designating paired columns as complete columns
             - unlinking of columns
-
-        Note that the resulting sum of NumberOfPaidItems is considerably smaller
-        because the columns HB and GPPractice are not longer linked and thus
-        each contribute to the reduction.
         '''
-
-        mock_args.return_value = argparse.Namespace(
-            command="fromspec",
-            source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
-            verbose=True,
-        )
 
         expected_df = pd.read_csv(
             package_dir(
@@ -194,49 +193,50 @@ class referenceTests(unittest.TestCase):
                 'prescribing_anon_non_linked.csv'),
             parse_dates=['PaidDateMonth']
             )
+        
+        test_dict = {
+            'metadata':{'number_of_rows':1500},
+            'columns':{
+                'HB2014':{
+                    'allow_missing_values': False
+                },
+                'HB2014Name':{
+                    'allow_missing_values': False
+                },
+                'BNFItemCode':{'anonymising_set':'birds'},
+                'BNFItemDescription':{'anonymising_set':'birds'},
+                'GPPracticeName':{'anonymising_set':'mountains.peak'}
+            },
+            'constraints':{'linked_columns':[]}
+        }
 
-        xA = tm.newExhibit()
-        xA.read_spec()
+        temp_spec, temp_df = self.temp_exhibit(
+            filename='prescribing.csv',
+            test_spec_dict=test_dict
+        )
 
-        #add modification to the spec:
-        xA.spec_dict['metadata']['number_of_rows'] = 1500
-        xA.spec_dict['columns']['HB2014']['anonymising_set'] = "mountains.peak"
-        xA.spec_dict['columns']['HB2014Name']['anonymising_set'] = "mountains.peak"
-        xA.spec_dict['columns']['BNFItemCode']['anonymising_set'] = "birds"
-        xA.spec_dict['columns']['BNFItemDescription']['anonymising_set'] = "birds"
-        xA.spec_dict['columns']['GPPracticeName']['anonymising_set'] = "mountains.peak"
-        xA.spec_dict['constraints']['linked_columns'] = []
-
-        if xA.validate_spec():
-            xA.execute_spec()
+        #save ID to tidy up temp columns created as part of testing
+        self._temp_tables.append(temp_spec['metadata']['id'])
 
         #sort column names to make sure they are the same
-        xA.anon_df.sort_index(axis=1, inplace=True)
+        temp_df.sort_index(axis=1, inplace=True)
         expected_df.sort_index(axis=1, inplace=True)
 
         assert_frame_equal(
             left=expected_df,
-            right=xA.anon_df,
+            right=temp_df,
             check_exact=False,
             check_less_precise=True,
         )
-
-    @unittest.skip("Major changes - expected failure")
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_prescribing_linked_mnt_anon_data(self, mock_args):
+    
+    def test_reference_prescribing_linked_mnt_anon_data(self):
         '''
         What this reference test is covering:
             - one of the linked columns is in the spec, another is in DB
             - anonymisation is done using "mountains" set
 
-        Note that prescribing datasets has duplicate categorical rows
+        Note that prescribing dataset has duplicate categorical rows
         '''
-
-        mock_args.return_value = argparse.Namespace(
-            command="fromspec",
-            source=Path(package_dir('sample', '_spec', 'prescribing.yml')),
-            verbose=True,
-        )
 
         expected_df = pd.read_csv(
             package_dir(
@@ -245,30 +245,34 @@ class referenceTests(unittest.TestCase):
             parse_dates=['PaidDateMonth']
             )
 
-        xA = tm.newExhibit()
-        xA.read_spec()
+        test_dict = {
+            'columns':{
+                'HB2014':{'anonymising_set':'mountains'},
+                'HB2014Name':{'anonymising_set':'mountains'},
+                'GPPracticeName':{'anonymising_set':'mountains'},
+            }
+        }
 
-        #add modification to the spec:
-        xA.spec_dict['columns']['HB2014']['anonymising_set'] = "mountains"
-        xA.spec_dict['columns']['HB2014Name']['anonymising_set'] = "mountains"
-        xA.spec_dict['columns']['GPPracticeName']['anonymising_set'] = "mountains"
+        temp_spec, temp_df = self.temp_exhibit(
+            filename='prescribing.csv',
+            test_spec_dict=test_dict
+        )
 
-        if xA.validate_spec():
-            xA.execute_spec()
+        #save ID to tidy up temp columns created as part of testing
+        self._temp_tables.append(temp_spec['metadata']['id'])
 
         #sort column names to make sure they are the same
-        xA.anon_df.sort_index(axis=1, inplace=True)
+        temp_df.sort_index(axis=1, inplace=True)
         expected_df.sort_index(axis=1, inplace=True)
 
         assert_frame_equal(
             left=expected_df,
-            right=xA.anon_df,
+            right=temp_df,
             check_exact=False,
             check_less_precise=True,
         )
-
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_reference_inpatient_anon_data(self, mock_args):
+    
+    def test_reference_inpatient_anon_data(self):
         '''
         What this reference test is covering:
             - manually change labels in Sex column (Female to A, Male to B)
@@ -278,24 +282,34 @@ class referenceTests(unittest.TestCase):
             - changed the totals for stays (100 000) and los (200 000)
             - changed boolean constraint to los >= stays
             - DB is not used at all so no need for ID
+
+        Note that when boolean constraints are added, generated totals can
+        be different from those set in the spec as target sum is enforced
+        BEFORE boolean constraints are adjusted.
         '''
 
-        mock_args.return_value = argparse.Namespace(
-            command="fromspec",
-            source=Path(package_dir('sample', '_spec', 'inpatients_edited.yml')),
-            verbose=True,
-            skip_columns=[]
-        )
+        with patch('argparse.ArgumentParser.parse_args') as mock_args:
 
-        xA = tm.newExhibit()
-        xA.read_spec()
-        if xA.validate_spec():
-            xA.execute_spec()
+            mock_args.return_value = argparse.Namespace(
+                command="fromspec",
+                source=Path(package_dir('sample', '_spec', 'inpatients_edited.yml')),
+                verbose=True,
+                skip_columns=[]
+            )
+
+            xA = tm.newExhibit()
+            xA.read_spec()
+            if xA.validate_spec():
+                xA.execute_spec()
 
         table_id = xA.spec_dict['metadata']['id']
         
         #save ID to tidy up temp columns created as part of testing
         self._temp_tables.append(table_id)
+
+        #sort column names to make sure they are the same
+        inpatients_anon.sort_index(axis=1, inplace=True)
+        xA.anon_df.sort_index(axis=1, inplace=True)
 
         assert_frame_equal(
             left=inpatients_anon,
@@ -304,7 +318,6 @@ class referenceTests(unittest.TestCase):
             check_less_precise=True,
         )
 
-    @unittest.skip("Major changes - expected failure")
     def test_reference_inpatient_ct10_random_data(self):
         '''
         What this reference test is covering:
@@ -325,11 +338,21 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        # Gives us 500/10225 ~ 5% chance of missing data
+        rand_idx = np.random.choice(
+            range(test_dataframe.shape[0]),
+            size=500,
+            replace=False)
+
         linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
-        rand_idx2 = np.random.randint(0, test_dataframe.shape[0], size=1000)
+        # Gives us ~10% chance of missing data
+        rand_idx2 = np.random.choice(
+            range(test_dataframe.shape[0]),
+            size=1000,
+            replace=False)
+
         na_cols = ['sex']
         test_dataframe.loc[rand_idx2, na_cols] = np.NaN
 
@@ -345,7 +368,7 @@ class referenceTests(unittest.TestCase):
             "columns" : {"sex": {"allow_missing_values" : False}}
         }
 
-        generated_df = self.temp_spec(
+        temp_spec, temp_df = self.temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -356,15 +379,18 @@ class referenceTests(unittest.TestCase):
                 'inpatients_anon_rnd_ct10.csv'),
                 parse_dates=['quarter_date']
             )
+
+        #save ID to tidy up temp columns created as part of testing
+        table_id = temp_spec['metadata']['id']
+        self._temp_tables.append(table_id)
             
         assert_frame_equal(
             left=inpatients_anon_ct10,
-            right=generated_df,
+            right=temp_df,
             check_exact=False,
             check_less_precise=True,
         )
-    
-    @unittest.skip("Major changes - expected failure")
+
     def test_reference_inpatient_ct50_random_data(self):
         '''
         What this reference test is covering:
@@ -385,7 +411,11 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        rand_idx = np.random.choice(
+            range(test_dataframe.shape[0]),
+            size=500,
+            replace=False)
+
         linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
@@ -403,7 +433,7 @@ class referenceTests(unittest.TestCase):
                 }
             }
 
-        generated_df = self.temp_spec(
+        temp_spec, temp_df = self.temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -414,15 +444,18 @@ class referenceTests(unittest.TestCase):
                 'inpatients_anon_rnd_ct50.csv'),
             parse_dates=['quarter_date']
             )
+
+        #save ID to tidy up temp columns created as part of testing
+        table_id = temp_spec['metadata']['id']
+        self._temp_tables.append(table_id)
             
         assert_frame_equal(
             left=inpatients_anon_ct50,
-            right=generated_df,
+            right=temp_df,
             check_exact=False,
             check_less_precise=True,
         )
 
-    @unittest.skip("Major changes - expected failure")
     def test_reference_inpatient_ct10_mountains_data(self):
         '''
         What this reference test is covering:
@@ -443,7 +476,11 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        rand_idx = np.random.choice(
+            range(test_dataframe.shape[0]),
+            size=500,
+            replace=False)
+
         linked_cols = ['loc_code', 'loc_name']
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN)
 
@@ -475,7 +512,7 @@ class referenceTests(unittest.TestCase):
                 },
         }
                  
-        generated_df = self.temp_spec(
+        temp_spec, temp_df = self.temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -486,15 +523,18 @@ class referenceTests(unittest.TestCase):
                 'inpatients_anon_mnt_ct10.csv'),
             parse_dates=['quarter_date']
             )
+
+        #save ID to tidy up temp columns created as part of testing
+        table_id = temp_spec['metadata']['id']
+        self._temp_tables.append(table_id)
             
         assert_frame_equal(
             left=inpatients_anon_mnt_ct10,
-            right=generated_df,
+            right=temp_df,
             check_exact=False,
             check_less_precise=True,
         )
 
-    @unittest.skip("Major changes - expected failure")
     def test_reference_inpatient_ct50_mountains_data(self):
         '''
         What this reference test is covering:
@@ -514,7 +554,11 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.randint(0, test_dataframe.shape[0], size=500)
+        rand_idx = np.random.choice(
+            range(test_dataframe.shape[0]),
+            size=500,
+            replace=False)
+
         linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
@@ -543,7 +587,7 @@ class referenceTests(unittest.TestCase):
                 },
         }
                  
-        generated_df = self.temp_spec(
+        temp_spec, temp_df = self.temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -554,10 +598,14 @@ class referenceTests(unittest.TestCase):
                 'inpatients_anon_mnt_ct50.csv'),
             parse_dates=['quarter_date']
             )
+
+        #save ID to tidy up temp columns created as part of testing
+        table_id = temp_spec['metadata']['id']
+        self._temp_tables.append(table_id)
             
         assert_frame_equal(
             left=inpatients_anon_mnt_ct50,
-            right=generated_df,
+            right=temp_df,
             check_exact=False,
             check_less_precise=True,
         )

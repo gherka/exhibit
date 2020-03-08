@@ -111,7 +111,7 @@ def generate_linked_anon_df(spec_dict, linked_group, num_rows):
 
     return linked_df
 
-def find_hierarchically_linked_columns(df):
+def find_hierarchically_linked_columns(df, spec):
     '''
     Given a dataframe df, return a list
     of tuples with column names where values in 
@@ -125,10 +125,18 @@ def find_hierarchically_linked_columns(df):
     #appear for multiple "parent" columns)
     df = df.select_dtypes(exclude=np.number).dropna()
     
-    #single value columns are ignored
-    cols = [col for col in df.select_dtypes(exclude=np.number).columns
-            if df[col].nunique() > 1]
-    
+    #single value and paired columns are ignored
+    cols = []
+
+    for col in spec['metadata']['categorical_columns']:
+        cond = (
+            (df[col].nunique() > 1) &
+            (spec['columns'][col]['original_values'] != "See paired column")
+        )
+
+        if cond:
+            cols.append(col)
+
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):
         
@@ -295,6 +303,8 @@ class _LinkedDataGenerator:
         '''
         Code path resolver for linked data generation.
 
+        Remember that all linked columns are stored in SQLite anon.db!
+
         Currently, there are three scenarios (each with two flavours: random & aliased)
           - values in all linked columns are drawn from uniform distribution
                 This happens when the number of unique values in each column
@@ -366,11 +376,11 @@ class _LinkedDataGenerator:
                 paired_cols = self.spec_dict['columns'][linked_col]['paired_columns']
 
                 if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
-
+                    #Missing data is breaking default sort order as it's always last
                     repl_dict = dict(
                         zip(
                             sorted(linked_df[linked_col].unique()),
-                            orig_vals[linked_col]
+                            sorted(orig_vals[linked_col])
                         )
                     )
 
@@ -382,7 +392,7 @@ class _LinkedDataGenerator:
                             repl_dict = dict(
                                     zip(
                                 sorted(linked_df[paired_col].unique()),
-                                orig_vals["paired_"+ paired_col]
+                                sorted(orig_vals["paired_"+ paired_col])
                                 )
                             )
 
@@ -413,7 +423,6 @@ class _LinkedDataGenerator:
         linked_df = pd.DataFrame(columns=self.linked_cols, data=anon_list)
 
         return linked_df
-
 
     def scenario_2(self):
         '''
@@ -513,17 +522,16 @@ class _LinkedDataGenerator:
             self.spec_dict['columns'][self.base_col]['original_values'] = orig_df
 
             #carry on with the programme
-            #again, iloc is to exclude Missing data row
             base_col_df = (
-                self.spec_dict['columns'][self.base_col]
-                ['original_values'].iloc[0:-1, :]
+                self.spec_dict['columns'][self.base_col]['original_values']
             )
 
             base_col_prob = np.array(base_col_df['probability_vector'])
 
             base_col_prob /= base_col_prob.sum()
             
-            idx = np.random.choice(self.base_col_unique_count, self.num_rows, p=base_col_prob)
+            #add +1 for Missing data which is part of original values, but not unique count
+            idx = np.random.choice(self.base_col_unique_count + 1, self.num_rows, p=base_col_prob)
             anon_list = [full_anon_df.iloc[x, :].values for x in idx]
 
             linked_df = pd.DataFrame(columns=self.linked_cols, data=anon_list)
@@ -532,7 +540,7 @@ class _LinkedDataGenerator:
         
         #random
         base_col_df = (
-            self.spec_dict['columns'][self.base_col]['original_values'].iloc[0:-1, :]
+            self.spec_dict['columns'][self.base_col]['original_values']
         )
 
         base_col_prob = np.array(base_col_df['probability_vector'])

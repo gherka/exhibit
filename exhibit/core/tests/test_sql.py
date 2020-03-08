@@ -40,9 +40,11 @@ class sqlTests(unittest.TestCase):
 
         output_1 = tm.query_anon_database('mountains', size=2)
         output_2 = tm.query_anon_database('mountains', column="range", size=2)
+        output_3 = tm.query_anon_database('mountains', column=["peak"], size=2)
 
         self.assertIsInstance(output_1, pd.DataFrame)
         self.assertIsInstance(output_2, pd.DataFrame)
+        self.assertIsInstance(output_3, pd.DataFrame)
 
     def test_temp_table_insertion(self):
         '''

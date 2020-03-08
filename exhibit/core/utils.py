@@ -7,9 +7,7 @@ from os.path import abspath, dirname, join, exists
 from pathlib import Path
 from functools import reduce
 from operator import mul
-from io import StringIO
-import itertools as it
-from collections import deque, defaultdict, namedtuple
+from collections import namedtuple
 
 import re
 import datetime
@@ -17,8 +15,6 @@ import dateutil
 
 # External library imports
 import pandas as pd
-import numpy as np
-from numpy import greater, greater_equal, less, less_equal, equal
 
 def path_checker(path_string):
     '''
@@ -91,7 +87,7 @@ def date_parser(row_tuple):
             dateutil.parser.parse(row_value)
             return column_name
 
-        except ValueError:
+        except ValueError: # pragma: no cover
             return None
     return None
 
@@ -177,11 +173,11 @@ def guess_date_frequency(timeseries):
     #as in a monthly timeseries with February (28) and March (31). Business
     #Years are a bit weird so we increase to 4 and have a wider interval for YS
 
-    if day_diff > 4:
+    if day_diff > 4: # pragma: no cover
         return None
 
     aliases = {
-        range(0,2)      : "D",
+        range(0, 2)     : "D",
         range(28, 32)   : "MS",
         range(90, 93)   : "QS",
         range(364, 369) : "YS",
@@ -192,6 +188,8 @@ def guess_date_frequency(timeseries):
     for period_range, period_alias in aliases.items():
         if first_period in period_range:
             return period_alias
+            
+    return None
 
 def get_attr_values(spec_dict, attr, col_names=False, types=None):
     '''
@@ -234,8 +232,8 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None):
             #append None as a placeholder; overwrite if attr exists
             attrs.append(default_value)
             for a in spec_dict['columns'][col]:
-                    if a == attr:
-                        attrs[-1] = attrTuple(col, spec_dict['columns'][col][attr])
+                if a == attr:
+                    attrs[-1] = attrTuple(col, spec_dict['columns'][col][attr])
 
     if col_names:
         return attrs
@@ -264,40 +262,6 @@ def exceeds_ct(spec_dict, col):
 
     return result
 
-def determine_scaling_factor(spec_dict):
-    '''
-    Scaling factor to apply to each value in the continous columns
-    AFTER categorical weights have been applied
-
-    Parameters
-    ----------
-    spec_dict : dict
-        YAML specification de-serialised into dictionary
-
-    Returns
-    -------
-    Float
-    
-    Currently, datetime columns are not part of weights generation
-    so the scaling factor simply accounts for the max number of unique
-    dates in the specification.
-    '''
-    
-    time_col_tuples = get_attr_values(
-        spec_dict=spec_dict,
-        attr='uniques',
-        col_names=True,
-        types='date'
-    )
-
-    base_col_uniques = max(
-        time_col_tuples,
-        key=lambda x: x.attr_value).attr_value
-
-    result = 1 / base_col_uniques
-
-    return result
-
 def count_core_rows(spec_dict):
     '''
     Calculate number of rows to generate probabilistically
@@ -317,30 +281,44 @@ def count_core_rows(spec_dict):
         for each other column value. Think of it as uninterrupted time series.
 
     The columns with non-skippable values in the specification are
-    those that have "allow_missing_values" as False.
+    those that have "allow_missing_values" as False. Paired columns are ignored
+    so that we don't double-count them.
 
     Knowing the number of "core" rows early is important when checking
     if the requested number of rows is achievable.
     '''
 
-    complete_cols = [c for c, v in get_attr_values(
+    complete_cols = {c for c, v in get_attr_values(
         spec_dict,
         "allow_missing_values",
         col_names=True, 
-        types=['categorical', 'date']) if not v]
+        types=['categorical', 'date']) if not v}
+
+    paired_cols = {c for c, v in get_attr_values(
+        spec_dict,
+        "original_values",
+        col_names=True, 
+        types=['categorical']) if str(v) == 'See paired column'}
+
+    target_cols = complete_cols - paired_cols
 
     complete_uniques = [
         v['uniques'] for c, v in spec_dict['columns'].items()
-        if c in complete_cols
+        if c in target_cols
         ]
     
     #reduce needs at least one value or it will error out
-    if not complete_uniques:
+    if not complete_uniques: # pragma: no cover
         complete_uniques.append(1)
 
     complete_count = reduce(mul, complete_uniques)
 
     core_rows = int(spec_dict['metadata']['number_of_rows'] / complete_count)
+
+    #print a warning if number of rows will be different from the spec.
+    #max difference either way is the size of complete count
+    if core_rows * complete_count != spec_dict['metadata']['number_of_rows']:
+        print("WARNING: Number of demo rows doesn't match the spec due to rounding")
 
     return core_rows
 

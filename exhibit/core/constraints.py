@@ -156,6 +156,8 @@ def _generate_value_with_condition(x, y, op, pct_diff=None):
     so we return NaN if one of the comparison values in NaN
     '''
 
+    np.random.seed(0)
+
     if pct_diff is None:
         pct_diff = 0.5
 
@@ -220,6 +222,7 @@ def _adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     -------
     A single adjusted value
     '''
+    np.random.seed(0)
 
     op_dict = {
         "<": less,

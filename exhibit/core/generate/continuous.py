@@ -7,10 +7,73 @@ import re
 
 # External library imports
 import numpy as np
+import pandas as pd
+
+# Exhibit imports
+from .weights import (target_columns_for_weights_table,
+                       generate_weights_table)
 
 # EXPORTABLE METHODS
 # ==================
-def generate_derived_column(anon_df, calculation):
+def generate_continuous_column(spec_dict, anon_df, col_name):
+    '''
+    Pulls together methods from this module to generate values
+    for the given continuous column, based on user spec.
+
+    Parameters
+    ----------
+    spec_dict : dict
+        User specification
+    anon_df : pd.DataFrame
+        Dataframe with anonymised categorical columns
+    col_name : str
+        column name to seek in user spec
+    '''
+
+    np.random.seed(0)
+    
+    anon_df = anon_df.copy()
+    target_cols = target_columns_for_weights_table(spec_dict)
+    wt = generate_weights_table(spec_dict, target_cols)
+    null_pct = spec_dict['columns'][col_name]['miss_probability']
+    dispersion_pct = spec_dict['columns'][col_name]['dispersion']
+
+    # Generate index for nulls based on spec & add nulls to anon_df
+    null_idx = np.random.choice(
+        a=[True, False],
+        size=anon_df.shape[0],
+        p=[null_pct, 1-null_pct]
+    )
+
+    anon_df.loc[null_idx, col_name] = np.NaN
+
+    # Generate real values in non-null cells by looking up values of 
+    # categorical columns in the weights table and progressively reduce
+    # the sum total of the column by the weight of each columns' value
+    anon_df.loc[~null_idx, col_name] = anon_df.loc[~null_idx, target_cols].apply(
+        func=_generate_cont_val,
+        axis=1,
+        weights_table=wt,
+        num_col=col_name)
+
+    # After the values were calculated, apply scaling factor to them
+    scaling_factor = _determine_scaling_factor(spec_dict, anon_df[col_name])
+
+    anon_df.loc[~null_idx, col_name] = (
+        anon_df.loc[~null_idx, col_name] * scaling_factor
+    )
+
+    # Apply dispersion to perturb the data
+    anon_df[col_name] = anon_df[col_name].apply(
+        _apply_dispersion, dispersion_pct=dispersion_pct)
+
+    # Coerce generated column to target sum using difference distribution & rounding
+    target_sum = spec_dict['columns'][col_name]['sum']
+    anon_df[col_name] = _conditional_rounding(anon_df[col_name], target_sum)
+
+    return anon_df[col_name]
+
+def generate_derived_column(anon_df, calculation, precision=2):
     '''
     Use Pandas eval() function to try to parse user calculations.
 
@@ -21,6 +84,8 @@ def generate_derived_column(anon_df, calculation):
         dataframe is nearly complete
     calculation : str
         user-defined calculation to create a new column
+    precision : int
+        output is rounded to the given precision
 
     Returns
     --------
@@ -38,16 +103,17 @@ def generate_derived_column(anon_df, calculation):
     output = (anon_df
         .rename(columns=lambda x: x.replace(" ", "_"))
         .eval(safe_calculation)
+        .round(precision)
     )
     return output  
 
-def generate_cont_val(
+# INNER MODULE METHODS
+# ====================
+def _generate_cont_val(
     row,
     weights_table,
-    num_col,
-    num_col_sum,
-    scaling_factor,
-    dispersion_pct):
+    num_col
+    ):
     '''
     Generate a continuous value, one dataframe row at a time
 
@@ -59,29 +125,63 @@ def generate_cont_val(
         dict of the form {(num_col, cat_col, cat_value)}:{weight: VALUE}
     num_col : str
         numerical column for which to generate values
-    num_col_sum : number
-        target sum of the numerical column; reduced by weights of each column in row
-    scaling_factor : number
-        each continuous variable is further reduced by this number
-    dispersion_pct : float
-        A measure of how much to perturb the data point
 
     Returns
     -------
     Rounded value
     '''
 
+    base_value = 1000
+
     for cat_col, val in row.iteritems():
 
-        weight = weights_table[(num_col, cat_col, val)]['weight']
-        num_col_sum = num_col_sum * weight
+        try:
 
-    result = round(num_col_sum * scaling_factor, 0)
+            weight = weights_table[(num_col, cat_col, val)]['weight']
+
+        except KeyError:
+
+            weight = 1
+
+        base_value = base_value * weight
     
-    return _apply_dispersion(result, dispersion_pct)
+    return base_value
 
-# INNER MODULE METHODS
-# ====================
+def _conditional_rounding(series, target_sum):
+    '''
+    Rounding the values up or down depending on whether the 
+    sum of the series with newly rounded values is greater than
+    or less than the target sum. Not vectorised.
+
+    Parameters
+    ----------
+    series : pd.Series
+        Numerical column to apply rounding to
+    target_sum : number
+        After rounding, the sum of the series must equal target_sum
+
+    Returns
+    -------
+    A series with rounded values that sum up to target_sum
+    '''
+
+    #determine the value by which each row differs from the target_sum
+    row_diff = (target_sum - series.dropna().sum()) / len(series.dropna())
+
+    #adjust values so that they sum up to target_sum
+    values = pd.Series(np.where(series + row_diff >= 0, series + row_diff, 0))
+
+    #lazily iterate over values and adjust in-place until their sum == target_sum
+    for i, elem in enumerate(values):
+        if sum(values) == target_sum:
+            return values
+        if sum(values) < target_sum:
+            values.iloc[i] = np.ceil(elem)
+        else:
+            values.iloc[i] = np.floor(elem)
+
+    return values
+
 def _apply_dispersion(value, dispersion_pct):
     '''
     Create an interval around value using dispersion_pct and return
@@ -103,7 +203,7 @@ def _apply_dispersion(value, dispersion_pct):
     to have negative values that you need to anonymise, we'll need to
     add a flag to the spec generation
     '''
-
+    
     if value == np.inf:
         value = 0
     
@@ -112,8 +212,11 @@ def _apply_dispersion(value, dispersion_pct):
     
     if np.isnan(value):
         return np.NaN
-
+    
+    #both have to ints otherwise random.randint misbehaves
+    value = int(value)
     d = int(value * dispersion_pct)
+
     #to avoid negative rmin, include max(0, n) check
     rmin, rmax = (max(0, (value - d)), (value + d))
 
@@ -131,3 +234,28 @@ def _apply_dispersion(value, dispersion_pct):
 
     #the upper limit of randint is exclusive, so we extend it by 1
     return np.random.randint(rmin, rmax + 1)
+
+def _determine_scaling_factor(spec_dict, source_series):
+    '''
+    Scaling factor to apply to each value in the continous columns
+    AFTER categorical weights have been applied
+
+    Parameters
+    ----------
+    spec_dict : dict
+        YAML specification de-serialised into dictionary
+    source_series : pd.Series
+        Numerical column for which to calculate the scaling factor.
+        This depends on the target_sum of the column.
+
+    Returns
+    -------
+    Float
+    '''
+    
+    #calculate how different the generated sum is from target
+    target_sum = spec_dict['columns'][source_series.name]['sum']
+
+    sum_factor = target_sum / source_series.dropna().sum()
+
+    return sum_factor
