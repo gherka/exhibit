@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/gherka/exhibit.svg?branch=master)](https://travis-ci.com/gherka/exhibit)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Build Status](https://travis-ci.com/gherka/exhibit.svg?branch=master)](https://travis-ci.com/gherka/exhibit) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/gherka/exhibit.svg)](https://lgtm.com/projects/g/gherka/exhibit/context:python)
 
 ---
 ## Exhibit: Command line tool for generating anonymised demonstrator data

@@ -153,7 +153,6 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
     if uniques > ct:
 
         safe_col_name = col_name.replace(" ", "$")
-        sql_column = None
 
         table_name = f"temp_{spec_dict['metadata']['id']}_{safe_col_name}"
 

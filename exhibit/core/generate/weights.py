@@ -151,7 +151,7 @@ def generate_weights(df, cat_col, num_col):
 
     weights['ws'] = weights.transform(_weights_transform, args=[weights])
     
-    temp_output = output = weights['ws'].sort_index(kind="mergesort")
+    temp_output = weights['ws'].sort_index(kind="mergesort")
 
     if "Missing data" not in temp_output:
         temp_output = temp_output.append(pd.Series(
