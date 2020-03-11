@@ -338,23 +338,23 @@ class _LinkedDataGenerator:
         '''
         if self.all_cols_uniform:
             linked_df = self.scenario_1()
-            linked_df = self.add_paired_columns(linked_df)
+            linked_df = self.alias_linked_column_values(linked_df)
+            result = self.add_paired_columns(linked_df)
 
-            result = self.alias_linked_column_values(linked_df)
             return result
 
         if self.base_col_pos != 0:
             linked_df = self.scenario_2()
-            linked_df = self.add_paired_columns(linked_df)
+            linked_df = self.alias_linked_column_values(linked_df)
+            result = self.add_paired_columns(linked_df)
 
-            result = self.alias_linked_column_values(linked_df)
             return result
 
         if self.base_col_pos == 0:
             linked_df = self.scenario_3()
-            linked_df = self.add_paired_columns(linked_df)
+            linked_df = self.alias_linked_column_values(linked_df)
+            result = self.add_paired_columns(linked_df)
 
-            result = self.alias_linked_column_values(linked_df)
             return result
 
 
@@ -365,6 +365,16 @@ class _LinkedDataGenerator:
         dataframe is still generated using original values, but if those are changed
         by the user, we will alias the originals to match.
 
+        Original_values are in sorted order (except for Missing data which is always
+        last), which means that we can sort the original linked values from anon.db
+        the same way and map the values in LINKED_DF (which might or might not have
+        ALL of original values due to probability vectors) to the user-edited ones
+        from the spec (and not from the DB as would be the case normally)
+
+        There is an edge case of when user deletes or adds a row in the spec which
+        would mean the number of "aliases" won't match the number of "originals" put
+        and then extracted from anon.db. 
+
         Make changes in-place
         '''
 
@@ -373,30 +383,35 @@ class _LinkedDataGenerator:
 
                 anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
                 orig_vals = self.spec_dict['columns'][linked_col]['original_values']
-                paired_cols = self.spec_dict['columns'][linked_col]['paired_columns']
-
+                
                 if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
-                    #Missing data is breaking default sort order as it's always last
+
+                    original_col_values = sorted(
+                        query_anon_database(
+                            table_name=self.table_name,
+                            column=linked_col.replace(" ", "$")
+                        )[linked_col])
+
+
+                    current_col_values = orig_vals[linked_col]
+                    # Missing data is always in orig_vals, but not always in anon.db
+                    if "Missing data" in original_col_values:
+                        original_col_values.append(
+                            original_col_values.pop(
+                                original_col_values.index("Missing data")
+                            )
+                        )
+                    else:
+                        original_col_values.append("Missing data")
+
                     repl_dict = dict(
                         zip(
-                            sorted(linked_df[linked_col].unique()),
-                            sorted(orig_vals[linked_col])
+                            original_col_values,
+                            current_col_values
                         )
                     )
 
                     linked_df[linked_col] = linked_df[linked_col].map(repl_dict)
-
-                    if paired_cols:
-                        for paired_col in paired_cols:
-
-                            repl_dict = dict(
-                                    zip(
-                                sorted(linked_df[paired_col].unique()),
-                                sorted(orig_vals["paired_"+ paired_col])
-                                )
-                            )
-
-                            linked_df[paired_col] = linked_df[paired_col].map(repl_dict)
 
         return linked_df
 
@@ -539,6 +554,15 @@ class _LinkedDataGenerator:
             return linked_df
         
         #random
+        # If the linked columns in the source dataframe don't have np.NaNs,
+        # then Missing data isn't added to the SQL table. However it is part
+        # of the original_values table, with its own probability_vector value
+        # so unless we add a dummy row, np.random.choice will complain
+
+        if self.spec_dict['columns'][self.base_col]['miss_probability'] == 0:
+            # add dummy Missing Data row to sql_rows
+            self.sql_rows.append(("Missing data",) * len(self.linked_cols))
+
         base_col_df = (
             self.spec_dict['columns'][self.base_col]['original_values']
         )
