@@ -222,9 +222,7 @@ class newExhibit:
         anon_df = generate_categorical_data(self.spec_dict, core_rows)
 
         #3) HANDLE MISSING DATA IN CATEGORICAL COLUMNS
-        #add np.NaN to categorical columns (spec. for those pulled from DB)
-
-        anon_df.replace("Missing data", np.NaN, inplace=True)
+        #add Missing data (proxy for np.NaN) to categorical columns
 
         rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
         anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
@@ -235,9 +233,6 @@ class newExhibit:
                 rands=rands,
                 series=anon_df[col]
             )
-
-        #Missing data is a special value used in categorical columns as a proxy for nan
-        anon_df.replace("Missing data", np.NaN, inplace=True)
 
         #4) ADD CONTINUOUS VARIABLES TO ANON DF  
         for num_col in self.spec_dict['metadata']['numerical_columns']:
@@ -251,6 +246,9 @@ class newExhibit:
                                                     anon_df=anon_df,
                                                     col_name=num_col
             )
+
+        #Missing data is a special value used in categorical columns as a proxy for nan
+        anon_df.replace("Missing data", np.NaN, inplace=True)
 
         #5) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
         for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:

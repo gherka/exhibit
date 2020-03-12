@@ -169,7 +169,13 @@ def _conditional_rounding(series, target_sum):
     row_diff = (target_sum - series.dropna().sum()) / len(series.dropna())
 
     #adjust values so that they sum up to target_sum
-    values = pd.Series(np.where(series + row_diff >= 0, series + row_diff, 0))
+    values = pd.Series(
+        np.where(
+            series + row_diff >= 0,
+            series + row_diff,
+            np.where(np.isnan(series), np.NaN, 0)
+            )
+    )
 
     #lazily iterate over values and adjust in-place until their sum == target_sum
     for i, elem in enumerate(values):
