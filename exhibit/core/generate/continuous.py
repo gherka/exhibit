@@ -99,8 +99,8 @@ def generate_derived_column(anon_df, calculation, precision=2):
     names in single quotes.
     '''
 
-    safe_calculation = re.sub(r'\b\s\b', r'_', calculation)
-    safe_df = anon_df.rename(columns=lambda x: x.replace(" ", "_"))
+    safe_calculation = re.sub(r'\b\s\b', r'__', calculation)
+    safe_df = anon_df.rename(columns=lambda x: x.replace(" ", "__"))
 
     if "groupby" in safe_calculation:
         #groupby requires pd.eval, not df.eval
@@ -110,11 +110,13 @@ def generate_derived_column(anon_df, calculation, precision=2):
                 )
 
         #expect multi-index in groupby DF
-        temp_anon_df = anon_df.set_index(temp_series.index.name)
+        temp_anon_df = safe_df.set_index(temp_series.index.names)
         #assign on index
         temp_anon_df[temp_series.name] = temp_series
         #reset index and return series
         groupby_output = temp_anon_df.reset_index()[temp_series.name]
+        #revert back to original column name
+        groupby_output.name = groupby_output.name.replace("__", " ")
 
         return groupby_output
 
@@ -122,7 +124,7 @@ def generate_derived_column(anon_df, calculation, precision=2):
                     .eval(safe_calculation, local_dict={"df":safe_df})
                     .round(precision)
                 )
-        
+
     return basic_output  
 
 # INNER MODULE METHODS
@@ -196,10 +198,10 @@ def _conditional_rounding(series, target_sum):
     )
 
     #lazily iterate over values and adjust in-place until their sum == target_sum
+    #and then floor the rest of the values. Very slow-running code!
     for i, elem in enumerate(values):
-        if sum(values) == target_sum:
-            return values
-        if sum(values) < target_sum:
+
+        if values.dropna().sum() < target_sum:
             values.iloc[i] = np.ceil(elem)
         else:
             values.iloc[i] = np.floor(elem)

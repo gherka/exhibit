@@ -155,14 +155,15 @@ class constraintsTests(unittest.TestCase):
 
     def test_constraint_clean_up_for_eval(self):
         '''
-        Re-assemble the given constraint in a safe way
+        Re-assemble the given constraint in a safe way, hoping that
+        no one uses double underscore in column names.
         '''
 
         c1 = "Spam Eggs > Spam" #invalid constraint - will be caught by validator
         c1_expected = "Spam Eggs > Spam"
 
         c2 = "~Spam Eggs~ > Spam"
-        c2_expected = "Spam_Eggs > Spam"
+        c2_expected = "Spam__Eggs > Spam"
 
         self.assertEqual(
             tm._clean_up_constraint(c1),

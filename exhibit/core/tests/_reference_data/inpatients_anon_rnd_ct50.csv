@@ -1,6 +1,6 @@
 hb_name,loc_name,hb_code,loc_code,age,measure,sex,quarter_date,avlos,los,stays
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-01-31,1.0,1.0,117.0
-NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-02-28,0.0,0.0,121.0
+NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-02-28,1.0,1.0,121.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-03-31,1.0,1.0,127.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-04-30,2.0,2.0,110.0
 Scotland,Scotland,scot,scot,40-49,All Daycases,Male,2018-01-31,0.0,57.0,20699.0
@@ -15,7 +15,7 @@ NHS Tayside,NHS Tayside,S08000030,S08000030,70-79,Emergency Inpatients,Female,20
 NHS Tayside,NHS Tayside,S08000030,S08000030,70-79,Emergency Inpatients,Female,2018-02-28,50.0,27934.0,3235.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,70-79,Emergency Inpatients,Female,2018-03-31,52.0,27113.0,3301.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,70-79,Emergency Inpatients,Female,2018-04-30,57.0,28917.0,2772.0
-NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,30-39,All Daycases,Male,2018-01-31,0.0,0.0,4231.0
+NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,30-39,All Daycases,Male,2018-01-31,,,4231.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,30-39,All Daycases,Male,2018-02-28,2.0,2.0,4566.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,30-39,All Daycases,Male,2018-03-31,0.0,0.0,4760.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,30-39,All Daycases,Male,2018-04-30,1.0,1.0,4505.0
@@ -33,8 +33,8 @@ NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,A
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,All Daycases,Male,2018-04-30,1.0,1.0,28.0
 ,,,,20-29,All Daycases,Male,2018-01-31,1.0,1.0,1352.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Male,2018-02-28,1.0,1.0,643.0
-NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Male,2018-03-31,0.0,0.0,601.0
-NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Male,2018-04-30,1.0,2.0,640.0
+NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Male,2018-03-31,,,601.0
+NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Male,2018-04-30,2.0,2.0,640.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,40-49,Emergency Inpatients,Male,2018-01-31,29.0,6071.0,1947.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,40-49,Emergency Inpatients,Male,2018-02-28,29.0,6110.0,1715.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,40-49,Emergency Inpatients,Male,2018-03-31,29.0,6800.0,1776.0
@@ -42,7 +42,7 @@ NHS Grampian,NHS Grampian,S08000020,S08000020,40-49,Emergency Inpatients,Male,20
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Female,2018-01-31,3.0,19.0,55.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Female,2018-02-28,5.0,13.0,57.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Female,2018-03-31,4.0,12.0,54.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Female,2018-04-30,9.0,16.0,54.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Female,2018-04-30,,,54.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-01-31,1.0,1.0,39.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-02-28,1.0,1.0,39.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-03-31,1.0,1.0,43.0
@@ -57,16 +57,16 @@ NHS Fife,Victoria Hospital,S08000029,F704H,60-69,Elective Inpatients,Male,2018-0
 ,,,,60-69,Elective Inpatients,Male,2018-04-30,26.0,2522.0,1498.0
 NHS Borders,Borders General Hospital,S08000016,B120H,60-69,All Daycases,Male,2018-01-31,1.0,1.0,724.0
 NHS Borders,Borders General Hospital,S08000016,B120H,60-69,All Daycases,Male,2018-02-28,0.0,0.0,734.0
-NHS Borders,Borders General Hospital,S08000016,B120H,60-69,All Daycases,Male,2018-03-31,1.0,2.0,688.0
+NHS Borders,Borders General Hospital,S08000016,B120H,60-69,All Daycases,Male,2018-03-31,2.0,2.0,688.0
 NHS Borders,Borders General Hospital,S08000016,B120H,60-69,All Daycases,Male,2018-04-30,0.0,0.0,713.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,70-79,Elective Inpatients,Female,2018-01-31,12.0,85.0,34.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,70-79,Elective Inpatients,Female,2018-02-28,14.0,86.0,37.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,70-79,Elective Inpatients,Female,2018-03-31,13.0,91.0,34.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,70-79,Elective Inpatients,Female,2018-04-30,12.0,89.0,35.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-01-31,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-02-28,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-03-31,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-04-30,0.0,0.0,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-01-31,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-02-28,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-03-31,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,20-29,Elective Inpatients,Male,2018-04-30,,,0.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,All Daycases,Male,2018-01-31,2.0,2.0,493.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,All Daycases,Male,2018-02-28,0.0,0.0,519.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,All Daycases,Male,2018-03-31,0.0,0.0,428.0
@@ -74,14 +74,14 @@ NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,All Daycases
 NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,Elective Inpatients,Female,2018-01-31,1.0,57.0,35.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,Elective Inpatients,Female,2018-02-28,3.0,57.0,31.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,Elective Inpatients,Female,2018-03-31,1.0,57.0,33.0
-NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,Elective Inpatients,Female,2018-04-30,41.0,43.0,35.0
+NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,Elective Inpatients,Female,2018-04-30,,,35.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Emergency Inpatients,Male,2018-01-31,50.0,11067.0,1173.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Emergency Inpatients,Male,2018-02-28,51.0,12779.0,1360.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Emergency Inpatients,Male,2018-03-31,50.0,11221.0,1345.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Emergency Inpatients,Male,2018-04-30,49.0,11100.0,1281.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-01-31,1.0,1.0,1843.0
-NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-02-28,1.0,2.0,1785.0
-NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-03-31,0.0,0.0,1744.0
+NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-02-28,2.0,2.0,1785.0
+NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-03-31,,,1744.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-04-30,0.0,0.0,1847.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,30-39,Elective Inpatients,Male,2018-01-31,7.0,120.0,149.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,30-39,Elective Inpatients,Male,2018-02-28,5.0,132.0,132.0
@@ -96,9 +96,9 @@ NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Emergency Inpatients,Male,
 NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Emergency Inpatients,Male,2018-03-31,7.0,959.0,134.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Emergency Inpatients,Male,2018-04-30,7.0,869.0,136.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,Emergency Inpatients,Male,2018-01-31,4.0,136.0,89.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,Emergency Inpatients,Male,2018-02-28,133.0,155.0,87.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,Emergency Inpatients,Male,2018-02-28,,,87.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,Emergency Inpatients,Male,2018-03-31,5.0,150.0,90.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,Emergency Inpatients,Male,2018-04-30,126.0,134.0,96.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,Emergency Inpatients,Male,2018-04-30,,,96.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,40-49,Emergency Inpatients,Male,2018-01-31,8.0,190.0,206.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,40-49,Emergency Inpatients,Male,2018-02-28,7.0,194.0,191.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,40-49,Emergency Inpatients,Male,2018-03-31,8.0,201.0,210.0
@@ -108,14 +108,14 @@ NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,Elective Inpa
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,Elective Inpatients,Female,2018-03-31,13.0,903.0,271.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,Elective Inpatients,Female,2018-04-30,11.0,767.0,287.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Male,2018-01-31,2.0,2.0,252.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Male,2018-02-28,1.0,2.0,278.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Male,2018-02-28,2.0,2.0,278.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Male,2018-03-31,1.0,1.0,260.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Male,2018-04-30,1.0,1.0,260.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,10-19,Emergency Inpatients,Female,2018-01-31,9.0,11.0,17.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,10-19,Emergency Inpatients,Female,2018-02-28,7.0,9.0,18.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,10-19,Emergency Inpatients,Female,2018-03-31,7.0,12.0,19.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,10-19,Emergency Inpatients,Female,2018-04-30,9.0,13.0,20.0
-NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-01-31,1.0,2.0,5525.0
+NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-01-31,2.0,2.0,5525.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-02-28,0.0,0.0,6208.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-03-31,1.0,1.0,5489.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-04-30,1.0,1.0,5998.0
@@ -125,7 +125,7 @@ NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-4
 ,,,,0-9,Elective Inpatients,Female,2018-04-30,3.0,61.0,125.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,All Daycases,Male,2018-01-31,2.0,2.0,40.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,All Daycases,Male,2018-02-28,2.0,2.0,42.0
-NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,All Daycases,Male,2018-03-31,0.0,0.0,44.0
+NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,All Daycases,Male,2018-03-31,,,44.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,All Daycases,Male,2018-04-30,1.0,1.0,37.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-01-31,31.0,17954.0,5259.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-02-28,33.0,17824.0,5370.0
@@ -143,10 +143,10 @@ NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,Elective Inpatients,Male,2018-02-28,5.0,143.0,100.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,Elective Inpatients,Male,2018-03-31,5.0,140.0,104.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,Elective Inpatients,Male,2018-04-30,7.0,138.0,104.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-01-31,1.0,2.0,2208.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-01-31,2.0,2.0,2208.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-02-28,0.0,0.0,2478.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-03-31,1.0,2.0,2388.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-04-30,1.0,2.0,2075.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-03-31,2.0,2.0,2388.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,50-59,All Daycases,Male,2018-04-30,2.0,2.0,2075.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,70-79,All Daycases,Male,2018-01-31,0.0,14.0,2802.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,70-79,All Daycases,Male,2018-02-28,0.0,17.0,3138.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,70-79,All Daycases,Male,2018-03-31,2.0,13.0,3197.0
@@ -161,28 +161,28 @@ NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,90+,Electiv
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,90+,Elective Inpatients,Female,2018-04-30,27.0,548.0,54.0
 NHS Fife,NHS Fife,S08000029,S08000029,0-9,All Daycases,Female,2018-01-31,1.0,1.0,182.0
 NHS Fife,NHS Fife,S08000029,S08000029,0-9,All Daycases,Female,2018-02-28,0.0,0.0,158.0
-NHS Fife,NHS Fife,S08000029,S08000029,0-9,All Daycases,Female,2018-03-31,1.0,2.0,171.0
-NHS Fife,NHS Fife,S08000029,S08000029,0-9,All Daycases,Female,2018-04-30,1.0,2.0,169.0
+NHS Fife,NHS Fife,S08000029,S08000029,0-9,All Daycases,Female,2018-03-31,2.0,2.0,171.0
+NHS Fife,NHS Fife,S08000029,S08000029,0-9,All Daycases,Female,2018-04-30,2.0,2.0,169.0
 NHS Highland,NHS Highland,S08000022,S08000022,60-69,All Daycases,Male,2018-01-31,2.0,2.0,1642.0
-NHS Highland,NHS Highland,S08000022,S08000022,60-69,All Daycases,Male,2018-02-28,1.0,2.0,1557.0
-NHS Highland,NHS Highland,S08000022,S08000022,60-69,All Daycases,Male,2018-03-31,0.0,0.0,1493.0
+NHS Highland,NHS Highland,S08000022,S08000022,60-69,All Daycases,Male,2018-02-28,2.0,2.0,1557.0
+NHS Highland,NHS Highland,S08000022,S08000022,60-69,All Daycases,Male,2018-03-31,,,1493.0
 NHS Highland,NHS Highland,S08000022,S08000022,60-69,All Daycases,Male,2018-04-30,0.0,0.0,1575.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,60-69,Elective Inpatients,Female,2018-01-31,19.0,2417.0,546.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,60-69,Elective Inpatients,Female,2018-02-28,21.0,2491.0,562.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,60-69,Elective Inpatients,Female,2018-03-31,19.0,2095.0,613.0
-NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,60-69,Elective Inpatients,Female,2018-04-30,2033.0,2340.0,527.0
+NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,60-69,Elective Inpatients,Female,2018-04-30,,,527.0
 NHS Borders,Borders General Hospital,S08000016,B120H,60-69,Emergency Inpatients,Female,2018-01-31,33.0,4417.0,879.0
-NHS Borders,Borders General Hospital,S08000016,B120H,60-69,Emergency Inpatients,Female,2018-02-28,2582.0,4325.0,821.0
+NHS Borders,Borders General Hospital,S08000016,B120H,60-69,Emergency Inpatients,Female,2018-02-28,,,821.0
 ,,,,60-69,Emergency Inpatients,Female,2018-03-31,72.0,26287.0,5705.0
 NHS Borders,Borders General Hospital,S08000016,B120H,60-69,Emergency Inpatients,Female,2018-04-30,36.0,4702.0,851.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-01-31,1.0,1.0,167.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-02-28,1.0,1.0,186.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-03-31,1.0,1.0,182.0
-NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-04-30,0.0,0.0,164.0
+NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-04-30,,,164.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,Elective Inpatients,Female,2018-01-31,1.0,1.0,28.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,Elective Inpatients,Female,2018-02-28,1.0,1.0,29.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,Elective Inpatients,Female,2018-03-31,1.0,1.0,29.0
-NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,Elective Inpatients,Female,2018-04-30,1.0,2.0,32.0
+NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,Elective Inpatients,Female,2018-04-30,2.0,2.0,32.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,70-79,Elective Inpatients,Male,2018-01-31,19.0,2621.0,619.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,70-79,Elective Inpatients,Male,2018-02-28,23.0,2759.0,713.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,70-79,Elective Inpatients,Male,2018-03-31,20.0,2542.0,748.0
@@ -197,13 +197,13 @@ NHS Borders,NHS Borders,S08000016,S08000016,50-59,Elective Inpatients,Female,201
 NHS Borders,NHS Borders,S08000016,S08000016,50-59,Elective Inpatients,Female,2018-04-30,12.0,309.0,162.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,30-39,Emergency Inpatients,Male,2018-01-31,19.0,2260.0,524.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,30-39,Emergency Inpatients,Male,2018-02-28,17.0,2155.0,566.0
-NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,30-39,Emergency Inpatients,Male,2018-03-31,1656.0,2115.0,597.0
+NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,30-39,Emergency Inpatients,Male,2018-03-31,,,597.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,30-39,Emergency Inpatients,Male,2018-04-30,18.0,2391.0,571.0
-NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,All Daycases,Male,2018-01-31,1.0,2.0,1034.0
+NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,All Daycases,Male,2018-01-31,2.0,2.0,1034.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,All Daycases,Male,2018-02-28,0.0,0.0,1122.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,All Daycases,Male,2018-03-31,0.0,0.0,1154.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,All Daycases,Male,2018-04-30,1.0,1.0,1191.0
-NHS Highland,NHS Highland,S08000022,S08000022,10-19,All Daycases,Male,2018-01-31,0.0,0.0,223.0
+NHS Highland,NHS Highland,S08000022,S08000022,10-19,All Daycases,Male,2018-01-31,,,223.0
 NHS Highland,NHS Highland,S08000022,S08000022,10-19,All Daycases,Male,2018-02-28,1.0,1.0,234.0
 NHS Highland,NHS Highland,S08000022,S08000022,10-19,All Daycases,Male,2018-03-31,0.0,0.0,231.0
 NHS Highland,NHS Highland,S08000022,S08000022,10-19,All Daycases,Male,2018-04-30,0.0,0.0,213.0
@@ -212,8 +212,8 @@ NHS Lothian,Western General Hospital,S08000024,S116H,40-49,Elective Inpatients,M
 NHS Lothian,Western General Hospital,S08000024,S116H,40-49,Elective Inpatients,Male,2018-03-31,13.0,365.0,289.0
 NHS Lothian,Western General Hospital,S08000024,S116H,40-49,Elective Inpatients,Male,2018-04-30,12.0,350.0,296.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,50-59,All Daycases,Female,2018-01-31,1.0,1.0,515.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,50-59,All Daycases,Female,2018-02-28,1.0,2.0,552.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,50-59,All Daycases,Female,2018-03-31,0.0,0.0,545.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,50-59,All Daycases,Female,2018-02-28,2.0,2.0,552.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,50-59,All Daycases,Female,2018-03-31,,,545.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,50-59,All Daycases,Female,2018-04-30,0.0,0.0,530.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,70-79,Emergency Inpatients,Female,2018-01-31,52.0,27329.0,3218.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,70-79,Emergency Inpatients,Female,2018-02-28,54.0,30403.0,3211.0
@@ -223,7 +223,7 @@ NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,10-19,All Da
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,10-19,All Daycases,Male,2018-02-28,1.0,1.0,14.0
 ,,,,10-19,All Daycases,Male,2018-03-31,1.0,1.0,632.0
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,10-19,All Daycases,Male,2018-04-30,2.0,2.0,12.0
-NHS Highland,Raigmore Hospital,S08000022,H202H,20-29,All Daycases,Female,2018-01-31,1.0,2.0,387.0
+NHS Highland,Raigmore Hospital,S08000022,H202H,20-29,All Daycases,Female,2018-01-31,2.0,2.0,387.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,20-29,All Daycases,Female,2018-02-28,2.0,2.0,397.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,20-29,All Daycases,Female,2018-03-31,2.0,2.0,406.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,20-29,All Daycases,Female,2018-04-30,2.0,2.0,357.0
@@ -232,7 +232,7 @@ NHS Highland,Raigmore Hospital,S08000022,H202H,20-29,All Daycases,Female,2018-04
 ,,,,40-49,Emergency Inpatients,Female,2018-03-31,49.0,10360.0,3154.0
 ,,,,40-49,Emergency Inpatients,Female,2018-04-30,45.0,9196.0,3014.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-01-31,30.0,17737.0,5373.0
-NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-02-28,11387.0,18023.0,5659.0
+NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-02-28,,,5659.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-03-31,31.0,17746.0,5382.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Male,2018-04-30,30.0,17804.0,5439.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,Elective Inpatients,Male,2018-01-31,20.0,92.0,19.0
@@ -243,10 +243,10 @@ NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,Emergency Inp
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,Emergency Inpatients,Male,2018-02-28,39.0,10543.0,1460.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,Emergency Inpatients,Male,2018-03-31,37.0,9785.0,1456.0
 ,,,,60-69,Emergency Inpatients,Male,2018-04-30,65.0,26648.0,5696.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-01-31,4.0,5.0,21.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-02-28,2.0,3.0,22.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-01-31,5.0,5.0,21.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-02-28,3.0,3.0,22.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-03-31,3.0,3.0,18.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-04-30,2.0,3.0,20.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,10-19,Elective Inpatients,Male,2018-04-30,3.0,3.0,20.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-01-31,1.0,1.0,164.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-02-28,1.0,1.0,162.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,90+,All Daycases,Female,2018-03-31,2.0,2.0,185.0
@@ -261,13 +261,13 @@ NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,50-59,Electi
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,50-59,Elective Inpatients,Male,2018-04-30,12.0,1219.0,511.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,All Daycases,Female,2018-01-31,1.0,1.0,166.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,All Daycases,Female,2018-02-28,0.0,0.0,176.0
-NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,All Daycases,Female,2018-03-31,0.0,0.0,163.0
+NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,All Daycases,Female,2018-03-31,,,163.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,All Daycases,Female,2018-04-30,1.0,1.0,164.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,50-59,All Daycases,Female,2018-01-31,0.0,0.0,1297.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,50-59,All Daycases,Female,2018-02-28,1.0,1.0,1361.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,50-59,All Daycases,Female,2018-03-31,1.0,1.0,1349.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,50-59,All Daycases,Female,2018-04-30,1.0,1.0,1348.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,90+,Emergency Inpatients,Female,2018-01-31,1462.0,1544.0,96.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,90+,Emergency Inpatients,Female,2018-01-31,,,96.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,90+,Emergency Inpatients,Female,2018-02-28,68.0,1608.0,92.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,90+,Emergency Inpatients,Female,2018-03-31,73.0,1596.0,101.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,90+,Emergency Inpatients,Female,2018-04-30,74.0,1595.0,87.0
@@ -282,7 +282,7 @@ NHS Grampian,Dr Gray's Hospital,S08000020,N411H,90+,All Daycases,Female,2018-04-
 NHS Lothian,Western General Hospital,S08000024,S116H,90+,All Daycases,Male,2018-01-31,2.0,2.0,292.0
 NHS Lothian,Western General Hospital,S08000024,S116H,90+,All Daycases,Male,2018-02-28,1.0,1.0,288.0
 NHS Lothian,Western General Hospital,S08000024,S116H,90+,All Daycases,Male,2018-03-31,2.0,2.0,289.0
-NHS Lothian,Western General Hospital,S08000024,S116H,90+,All Daycases,Male,2018-04-30,0.0,0.0,297.0
+NHS Lothian,Western General Hospital,S08000024,S116H,90+,All Daycases,Male,2018-04-30,,,297.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,0-9,Emergency Inpatients,Male,2018-01-31,5.0,627.0,467.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,0-9,Emergency Inpatients,Male,2018-02-28,4.0,573.0,487.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,0-9,Emergency Inpatients,Male,2018-03-31,4.0,610.0,425.0
@@ -306,9 +306,9 @@ NHS Orkney,Balfour Hospital,S08000025,R101H,30-39,All Daycases,Female,2018-04-30
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,20-29,All Daycases,Female,2018-01-31,0.0,0.0,811.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,20-29,All Daycases,Female,2018-02-28,2.0,2.0,922.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,20-29,All Daycases,Female,2018-03-31,0.0,0.0,874.0
-NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,20-29,All Daycases,Female,2018-04-30,0.0,0.0,772.0
+NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,20-29,All Daycases,Female,2018-04-30,,,772.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-01-31,55.0,8940.0,714.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-02-28,6073.0,9557.0,780.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-02-28,,,780.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-03-31,61.0,10438.0,719.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-04-30,61.0,9781.0,765.0
 NHS Borders,NHS Borders,S08000016,S08000016,40-49,Elective Inpatients,Male,2018-01-31,9.0,129.0,87.0
@@ -321,7 +321,7 @@ NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Elective Inpatients,Male,2018-04-30,29.0,352.0,36.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Elective Inpatients,Male,2018-01-31,5.0,69.0,86.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Elective Inpatients,Male,2018-02-28,5.0,83.0,88.0
-NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Elective Inpatients,Male,2018-03-31,63.0,79.0,92.0
+NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Elective Inpatients,Male,2018-03-31,,,92.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Elective Inpatients,Male,2018-04-30,6.0,75.0,84.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,60-69,Emergency Inpatients,Male,2018-01-31,44.0,60205.0,13274.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,60-69,Emergency Inpatients,Male,2018-02-28,44.0,58487.0,14162.0
@@ -331,7 +331,7 @@ NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,201
 NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-02-28,0.0,0.0,309.0
 NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-03-31,0.0,0.0,346.0
 NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-04-30,2.0,2.0,326.0
-NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Male,2018-01-31,919.0,987.0,301.0
+NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Male,2018-01-31,,,301.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Male,2018-02-28,16.0,1012.0,327.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Male,2018-03-31,15.0,949.0,305.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Male,2018-04-30,14.0,1069.0,328.0
@@ -342,15 +342,15 @@ NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Emergenc
 ,,,,20-29,Elective Inpatients,Male,2018-01-31,11.0,399.0,376.0
 ,,,,20-29,Elective Inpatients,Male,2018-02-28,10.0,379.0,429.0
 ,,,,20-29,Elective Inpatients,Male,2018-03-31,10.0,385.0,440.0
-,,,,20-29,Elective Inpatients,Male,2018-04-30,353.0,407.0,432.0
+,,,,20-29,Elective Inpatients,Male,2018-04-30,,,432.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,All Daycases,Male,2018-01-31,2.0,2.0,6.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,All Daycases,Male,2018-02-28,0.0,0.0,5.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,All Daycases,Male,2018-03-31,2.0,2.0,7.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,All Daycases,Male,2018-04-30,1.0,1.0,6.0
-NHS Highland,Caithness General Hospital,S08000022,H103H,0-9,Emergency Inpatients,Female,2018-01-31,3.0,4.0,10.0
+NHS Highland,Caithness General Hospital,S08000022,H103H,0-9,Emergency Inpatients,Female,2018-01-31,4.0,4.0,10.0
 ,,,,0-9,Emergency Inpatients,Female,2018-02-28,9.0,941.0,547.0
-NHS Highland,Caithness General Hospital,S08000022,H103H,0-9,Emergency Inpatients,Female,2018-03-31,3.0,4.0,11.0
-NHS Highland,Caithness General Hospital,S08000022,H103H,0-9,Emergency Inpatients,Female,2018-04-30,0.0,0.0,9.0
+NHS Highland,Caithness General Hospital,S08000022,H103H,0-9,Emergency Inpatients,Female,2018-03-31,4.0,4.0,11.0
+NHS Highland,Caithness General Hospital,S08000022,H103H,0-9,Emergency Inpatients,Female,2018-04-30,,,9.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-01-31,13.0,692.0,241.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-02-28,12.0,639.0,290.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-03-31,13.0,713.0,280.0
@@ -383,40 +383,40 @@ NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,90+,Emergency Inpatients,Male
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,90+,Emergency Inpatients,Male,2018-02-28,42.0,296.0,15.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,90+,Emergency Inpatients,Male,2018-03-31,36.0,332.0,17.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,90+,Emergency Inpatients,Male,2018-04-30,37.0,294.0,16.0
-NHS Tayside,Ninewells Hospital,S08000030,T101H,30-39,All Daycases,Female,2018-01-31,1.0,2.0,600.0
+NHS Tayside,Ninewells Hospital,S08000030,T101H,30-39,All Daycases,Female,2018-01-31,2.0,2.0,600.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,30-39,All Daycases,Female,2018-02-28,2.0,2.0,695.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,30-39,All Daycases,Female,2018-03-31,2.0,2.0,644.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,30-39,All Daycases,Female,2018-04-30,1.0,1.0,638.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-01-31,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-02-28,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-03-31,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-04-30,0.0,0.0,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-01-31,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-02-28,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-03-31,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,40-49,Emergency Inpatients,Male,2018-04-30,,,0.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,40-49,Elective Inpatients,Male,2018-01-31,6.0,248.0,189.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,40-49,Elective Inpatients,Male,2018-02-28,6.0,226.0,184.0
-NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,40-49,Elective Inpatients,Male,2018-03-31,183.0,213.0,177.0
+NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,40-49,Elective Inpatients,Male,2018-03-31,,,177.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,40-49,Elective Inpatients,Male,2018-04-30,7.0,201.0,194.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,90+,Elective Inpatients,Female,2018-01-31,29.0,1126.0,90.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,90+,Elective Inpatients,Female,2018-02-28,29.0,1116.0,87.0
-NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,90+,Elective Inpatients,Female,2018-03-31,662.0,986.0,99.0
+NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,90+,Elective Inpatients,Female,2018-03-31,,,99.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,90+,Elective Inpatients,Female,2018-04-30,34.0,1113.0,88.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,20-29,All Daycases,Male,2018-01-31,2.0,2.0,352.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,20-29,All Daycases,Male,2018-02-28,0.0,0.0,370.0
-NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,20-29,All Daycases,Male,2018-03-31,1.0,2.0,336.0
+NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,20-29,All Daycases,Male,2018-03-31,2.0,2.0,336.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,20-29,All Daycases,Male,2018-04-30,0.0,0.0,348.0
 ,,,,30-39,Emergency Inpatients,Female,2018-01-31,37.0,6500.0,2342.0
 ,,,,30-39,Emergency Inpatients,Female,2018-02-28,33.0,5817.0,2228.0
 ,,,,30-39,Emergency Inpatients,Female,2018-03-31,35.0,5743.0,2301.0
 ,,,,30-39,Emergency Inpatients,Female,2018-04-30,31.0,6114.0,2368.0
 Scotland,Scotland,scot,scot,60-69,All Daycases,Female,2018-01-31,1.0,258.0,41773.0
-Scotland,Scotland,scot,scot,60-69,All Daycases,Female,2018-02-28,164.0,234.0,37580.0
-Scotland,Scotland,scot,scot,60-69,All Daycases,Female,2018-03-31,117.0,226.0,41900.0
+Scotland,Scotland,scot,scot,60-69,All Daycases,Female,2018-02-28,,,37580.0
+Scotland,Scotland,scot,scot,60-69,All Daycases,Female,2018-03-31,,,41900.0
 Scotland,Scotland,scot,scot,60-69,All Daycases,Female,2018-04-30,0.0,243.0,41637.0
 NHS Lothian,Western General Hospital,S08000024,S116H,10-19,Emergency Inpatients,Male,2018-01-31,15.0,573.0,327.0
 NHS Lothian,Western General Hospital,S08000024,S116H,10-19,Emergency Inpatients,Male,2018-02-28,16.0,540.0,326.0
 NHS Lothian,Western General Hospital,S08000024,S116H,10-19,Emergency Inpatients,Male,2018-03-31,17.0,495.0,322.0
 NHS Lothian,Western General Hospital,S08000024,S116H,10-19,Emergency Inpatients,Male,2018-04-30,16.0,524.0,315.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,60-69,Emergency Inpatients,Male,2018-01-31,29.0,618.0,145.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,60-69,Emergency Inpatients,Male,2018-02-28,440.0,608.0,134.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,60-69,Emergency Inpatients,Male,2018-02-28,,,134.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,60-69,Emergency Inpatients,Male,2018-03-31,28.0,644.0,133.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,60-69,Emergency Inpatients,Male,2018-04-30,31.0,558.0,145.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,50-59,Emergency Inpatients,Female,2018-01-31,30.0,8728.0,1776.0
@@ -442,7 +442,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,40-49,Elective Inpatients,M
 NHS Highland,NHS Highland,S08000022,S08000022,40-49,All Daycases,Male,2018-01-31,0.0,0.0,816.0
 NHS Highland,NHS Highland,S08000022,S08000022,40-49,All Daycases,Male,2018-02-28,0.0,0.0,785.0
 NHS Highland,NHS Highland,S08000022,S08000022,40-49,All Daycases,Male,2018-03-31,0.0,0.0,743.0
-NHS Highland,NHS Highland,S08000022,S08000022,40-49,All Daycases,Male,2018-04-30,0.0,0.0,793.0
+NHS Highland,NHS Highland,S08000022,S08000022,40-49,All Daycases,Male,2018-04-30,,,793.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,Elective Inpatients,Female,2018-01-31,6.0,148.0,156.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,Elective Inpatients,Female,2018-02-28,6.0,131.0,150.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,30-39,Elective Inpatients,Female,2018-03-31,4.0,134.0,141.0
@@ -453,10 +453,10 @@ NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,90+,El
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,90+,Elective Inpatients,Female,2018-04-30,34.0,1261.0,67.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Female,2018-01-31,2.0,2.0,88.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Female,2018-02-28,0.0,0.0,85.0
-NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Female,2018-03-31,1.0,2.0,78.0
-NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Female,2018-04-30,1.0,2.0,89.0
+NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Female,2018-03-31,2.0,2.0,78.0
+NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Female,2018-04-30,2.0,2.0,89.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,10-19,Elective Inpatients,Male,2018-01-31,5.0,37.0,64.0
-NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,10-19,Elective Inpatients,Male,2018-02-28,27.0,36.0,63.0
+NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,10-19,Elective Inpatients,Male,2018-02-28,,,63.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,10-19,Elective Inpatients,Male,2018-03-31,3.0,25.0,52.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,10-19,Elective Inpatients,Male,2018-04-30,3.0,31.0,57.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,30-39,All Daycases,Male,2018-01-31,1.0,1.0,1262.0
@@ -506,14 +506,14 @@ NHS Tayside,Perth Royal Infirmary,S08000030,T202H,80-89,Emergency Inpatients,Mal
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-01-31,51.0,23285.0,3202.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-02-28,50.0,22360.0,3060.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-03-31,48.0,22363.0,3275.0
-NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-04-30,18151.0,20208.0,2702.0
+NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-04-30,,,2702.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,Elective Inpatients,Male,2018-01-31,16.0,615.0,165.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,Elective Inpatients,Male,2018-02-28,17.0,709.0,181.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,Elective Inpatients,Male,2018-03-31,16.0,603.0,161.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,Elective Inpatients,Male,2018-04-30,17.0,708.0,166.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,30-39,All Daycases,Male,2018-01-31,0.0,0.0,453.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,30-39,All Daycases,Male,2018-02-28,0.0,0.0,430.0
-NHS Highland,Raigmore Hospital,S08000022,H202H,30-39,All Daycases,Male,2018-03-31,1.0,2.0,498.0
+NHS Highland,Raigmore Hospital,S08000022,H202H,30-39,All Daycases,Male,2018-03-31,2.0,2.0,498.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,30-39,All Daycases,Male,2018-04-30,1.0,1.0,432.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Elective Inpatients,Male,2018-01-31,5.0,77.0,102.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Elective Inpatients,Male,2018-02-28,5.0,74.0,116.0
@@ -521,15 +521,15 @@ NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Elective Inp
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Elective Inpatients,Male,2018-04-30,4.0,68.0,100.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,All Daycases,Female,2018-01-31,2.0,2.0,398.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,All Daycases,Female,2018-02-28,0.0,0.0,387.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,All Daycases,Female,2018-03-31,0.0,0.0,407.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,All Daycases,Female,2018-04-30,1.0,2.0,418.0
-NHS Highland,NHS Highland,S08000022,S08000022,20-29,All Daycases,Male,2018-01-31,0.0,0.0,475.0
-NHS Highland,NHS Highland,S08000022,S08000022,20-29,All Daycases,Male,2018-02-28,1.0,2.0,447.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,All Daycases,Female,2018-03-31,,,407.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,10-19,All Daycases,Female,2018-04-30,2.0,2.0,418.0
+NHS Highland,NHS Highland,S08000022,S08000022,20-29,All Daycases,Male,2018-01-31,,,475.0
+NHS Highland,NHS Highland,S08000022,S08000022,20-29,All Daycases,Male,2018-02-28,2.0,2.0,447.0
 NHS Highland,NHS Highland,S08000022,S08000022,20-29,All Daycases,Male,2018-03-31,0.0,0.0,459.0
 NHS Highland,NHS Highland,S08000022,S08000022,20-29,All Daycases,Male,2018-04-30,2.0,2.0,442.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,40-49,Emergency Inpatients,Female,2018-01-31,26.0,2288.0,623.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,40-49,Emergency Inpatients,Female,2018-02-28,26.0,2134.0,618.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,40-49,Emergency Inpatients,Female,2018-03-31,1784.0,2197.0,553.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,40-49,Emergency Inpatients,Female,2018-03-31,,,553.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,40-49,Emergency Inpatients,Female,2018-04-30,25.0,2099.0,582.0
 NHS Borders,NHS Borders,S08000016,S08000016,50-59,All Daycases,Female,2018-01-31,2.0,2.0,512.0
 NHS Borders,NHS Borders,S08000016,S08000016,50-59,All Daycases,Female,2018-02-28,2.0,2.0,484.0
@@ -539,12 +539,12 @@ NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Elective
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Elective Inpatients,Female,2018-02-28,3.0,86.0,371.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Elective Inpatients,Female,2018-03-31,3.0,106.0,340.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Elective Inpatients,Female,2018-04-30,1.0,87.0,307.0
-NHS Tayside,Ninewells Hospital,S08000030,T101H,90+,All Daycases,Female,2018-01-31,0.0,0.0,229.0
-NHS Tayside,Ninewells Hospital,S08000030,T101H,90+,All Daycases,Female,2018-02-28,1.0,2.0,234.0
+NHS Tayside,Ninewells Hospital,S08000030,T101H,90+,All Daycases,Female,2018-01-31,,,229.0
+NHS Tayside,Ninewells Hospital,S08000030,T101H,90+,All Daycases,Female,2018-02-28,2.0,2.0,234.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,90+,All Daycases,Female,2018-03-31,1.0,1.0,213.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,90+,All Daycases,Female,2018-04-30,0.0,0.0,242.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-01-31,12.0,600.0,271.0
-NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-02-28,587.0,616.0,250.0
+NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-02-28,,,250.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-03-31,12.0,613.0,295.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,10-19,Emergency Inpatients,Male,2018-04-30,11.0,721.0,267.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,10-19,Emergency Inpatients,Female,2018-01-31,13.0,452.0,207.0
@@ -560,7 +560,7 @@ NHS Highland,NHS Highland,S08000022,S08000022,70-79,Emergency Inpatients,Male,20
 NHS Highland,NHS Highland,S08000022,S08000022,70-79,Emergency Inpatients,Male,2018-03-31,54.0,14638.0,2152.0
 ,,,,70-79,Emergency Inpatients,Male,2018-04-30,99.0,41264.0,5765.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,All Daycases,Female,2018-01-31,0.0,0.0,254.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,All Daycases,Female,2018-02-28,1.0,2.0,255.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,All Daycases,Female,2018-02-28,2.0,2.0,255.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,All Daycases,Female,2018-03-31,1.0,1.0,215.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,All Daycases,Female,2018-04-30,1.0,1.0,222.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,Elective Inpatients,Female,2018-01-31,28.0,701.0,54.0
@@ -570,7 +570,7 @@ NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,90+,Elective Inpatients,Fe
 NHS Highland,NHS Highland,S08000022,S08000022,90+,All Daycases,Male,2018-01-31,1.0,1.0,205.0
 NHS Highland,NHS Highland,S08000022,S08000022,90+,All Daycases,Male,2018-02-28,0.0,0.0,213.0
 NHS Highland,NHS Highland,S08000022,S08000022,90+,All Daycases,Male,2018-03-31,0.0,0.0,210.0
-NHS Highland,NHS Highland,S08000022,S08000022,90+,All Daycases,Male,2018-04-30,0.0,0.0,228.0
+NHS Highland,NHS Highland,S08000022,S08000022,90+,All Daycases,Male,2018-04-30,,,228.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,40-49,Emergency Inpatients,Female,2018-01-31,15.0,221.0,206.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,40-49,Emergency Inpatients,Female,2018-02-28,16.0,233.0,222.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,40-49,Emergency Inpatients,Female,2018-03-31,14.0,245.0,209.0
@@ -585,9 +585,9 @@ NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Elective Inpatients,Male,2018-04-30,6.0,90.0,71.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,60-69,All Daycases,Male,2018-01-31,1.0,1.0,548.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,60-69,All Daycases,Male,2018-02-28,1.0,1.0,608.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,60-69,All Daycases,Male,2018-03-31,0.0,0.0,559.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,60-69,All Daycases,Male,2018-04-30,0.0,0.0,604.0
-NHS Fife,Victoria Hospital,S08000029,F704H,60-69,Elective Inpatients,Female,2018-01-31,954.0,1391.0,549.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,60-69,All Daycases,Male,2018-03-31,,,559.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,60-69,All Daycases,Male,2018-04-30,,,604.0
+NHS Fife,Victoria Hospital,S08000029,F704H,60-69,Elective Inpatients,Female,2018-01-31,,,549.0
 NHS Fife,Victoria Hospital,S08000029,F704H,60-69,Elective Inpatients,Female,2018-02-28,16.0,1396.0,466.0
 NHS Fife,Victoria Hospital,S08000029,F704H,60-69,Elective Inpatients,Female,2018-03-31,16.0,1471.0,461.0
 NHS Fife,Victoria Hospital,S08000029,F704H,60-69,Elective Inpatients,Female,2018-04-30,16.0,1477.0,501.0
@@ -602,7 +602,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,10-19,Emergency Inpatients,
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,All Daycases,Female,2018-01-31,0.0,0.0,1013.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,All Daycases,Female,2018-02-28,1.0,1.0,1015.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,All Daycases,Female,2018-03-31,1.0,1.0,1005.0
-NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,All Daycases,Female,2018-04-30,0.0,0.0,991.0
+NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,50-59,All Daycases,Female,2018-04-30,,,991.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,60-69,Elective Inpatients,Female,2018-01-31,12.0,687.0,456.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,60-69,Elective Inpatients,Female,2018-02-28,11.0,673.0,504.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,60-69,Elective Inpatients,Female,2018-03-31,12.0,693.0,466.0
@@ -610,11 +610,11 @@ NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,60-69,Elective Inp
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,20-29,All Daycases,Female,2018-01-31,0.0,0.0,34.0
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,20-29,All Daycases,Female,2018-02-28,2.0,2.0,32.0
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,20-29,All Daycases,Female,2018-03-31,1.0,1.0,32.0
-NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,20-29,All Daycases,Female,2018-04-30,1.0,2.0,35.0
+NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,20-29,All Daycases,Female,2018-04-30,2.0,2.0,35.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,All Daycases,Male,2018-01-31,2.0,2.0,747.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,All Daycases,Male,2018-02-28,1.0,1.0,773.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,All Daycases,Male,2018-03-31,0.0,0.0,758.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,All Daycases,Male,2018-04-30,1.0,2.0,779.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,All Daycases,Male,2018-04-30,2.0,2.0,779.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-01-31,61.0,9535.0,815.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-02-28,63.0,9434.0,690.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,80-89,Emergency Inpatients,Male,2018-03-31,55.0,9811.0,754.0
@@ -629,7 +629,7 @@ NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,40-49,All Da
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,40-49,All Daycases,Male,2018-04-30,1.0,1.0,693.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,10-19,Emergency Inpatients,Female,2018-01-31,0.0,11.0,177.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,10-19,Emergency Inpatients,Female,2018-02-28,1.0,8.0,181.0
-NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,10-19,Emergency Inpatients,Female,2018-03-31,4.0,7.0,194.0
+NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,10-19,Emergency Inpatients,Female,2018-03-31,,,194.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,10-19,Emergency Inpatients,Female,2018-04-30,1.0,11.0,185.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-01-31,1.0,1.0,5511.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,40-49,All Daycases,Male,2018-02-28,1.0,1.0,6228.0
@@ -654,15 +654,15 @@ Scotland,Scotland,scot,scot,10-19,Elective Inpatients,Male,2018-04-30,5.0,1320.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,30-39,Emergency Inpatients,Female,2018-01-31,13.0,1315.0,756.0
 ,,,,30-39,Emergency Inpatients,Female,2018-02-28,37.0,5687.0,2262.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,30-39,Emergency Inpatients,Female,2018-03-31,13.0,1366.0,791.0
-NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,30-39,Emergency Inpatients,Female,2018-04-30,1207.0,1347.0,753.0
+NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,30-39,Emergency Inpatients,Female,2018-04-30,,,753.0
 NHS Lothian,Western General Hospital,S08000024,S116H,40-49,All Daycases,Male,2018-01-31,2.0,2.0,1085.0
-NHS Lothian,Western General Hospital,S08000024,S116H,40-49,All Daycases,Male,2018-02-28,1.0,2.0,999.0
-NHS Lothian,Western General Hospital,S08000024,S116H,40-49,All Daycases,Male,2018-03-31,1.0,2.0,917.0
+NHS Lothian,Western General Hospital,S08000024,S116H,40-49,All Daycases,Male,2018-02-28,2.0,2.0,999.0
+NHS Lothian,Western General Hospital,S08000024,S116H,40-49,All Daycases,Male,2018-03-31,2.0,2.0,917.0
 NHS Lothian,Western General Hospital,S08000024,S116H,40-49,All Daycases,Male,2018-04-30,2.0,2.0,1050.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,All Daycases,Female,2018-01-31,0.0,0.0,815.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,All Daycases,Female,2018-02-28,1.0,1.0,762.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,All Daycases,Female,2018-03-31,2.0,2.0,830.0
-NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,All Daycases,Female,2018-04-30,1.0,2.0,831.0
+NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,All Daycases,Female,2018-04-30,2.0,2.0,831.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,60-69,Elective Inpatients,Female,2018-01-31,18.0,1933.0,662.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,60-69,Elective Inpatients,Female,2018-02-28,17.0,1827.0,694.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,60-69,Elective Inpatients,Female,2018-03-31,19.0,1697.0,784.0
@@ -681,22 +681,22 @@ NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,60-69,Emerge
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,60-69,Emergency Inpatients,Female,2018-04-30,1.0,755.0,147.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,40-49,All Daycases,Male,2018-01-31,2.0,2.0,53.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,40-49,All Daycases,Male,2018-02-28,2.0,2.0,49.0
-NHS Shetland,NHS Shetland,S08000026,S08000026,40-49,All Daycases,Male,2018-03-31,0.0,0.0,51.0
+NHS Shetland,NHS Shetland,S08000026,S08000026,40-49,All Daycases,Male,2018-03-31,,,51.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,40-49,All Daycases,Male,2018-04-30,1.0,1.0,57.0
-NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-01-31,4.0,6.0,14.0
-NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-02-28,4.0,6.0,12.0
-NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-03-31,5.0,9.0,15.0
-NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-04-30,6.0,8.0,13.0
+NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-01-31,6.0,6.0,14.0
+NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-02-28,6.0,6.0,12.0
+NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-03-31,8.0,9.0,15.0
+NHS Highland,Belford Hospital,S08000022,H212H,40-49,Elective Inpatients,Male,2018-04-30,7.0,8.0,13.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,60-69,Elective Inpatients,Female,2018-01-31,18.0,2150.0,689.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,60-69,Elective Inpatients,Female,2018-02-28,19.0,1937.0,617.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,60-69,Elective Inpatients,Female,2018-03-31,18.0,2202.0,688.0
-NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,60-69,Elective Inpatients,Female,2018-04-30,1037.0,1839.0,666.0
+NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,60-69,Elective Inpatients,Female,2018-04-30,,,666.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,10-19,Elective Inpatients,Female,2018-01-31,6.0,67.0,90.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,10-19,Elective Inpatients,Female,2018-02-28,5.0,78.0,99.0
 ,,,,10-19,Elective Inpatients,Female,2018-03-31,8.0,141.0,222.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,10-19,Elective Inpatients,Female,2018-04-30,6.0,86.0,102.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,Emergency Inpatients,Male,2018-01-31,48.0,11533.0,923.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,Emergency Inpatients,Male,2018-02-28,10527.0,10681.0,920.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,Emergency Inpatients,Male,2018-02-28,,,920.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,Emergency Inpatients,Male,2018-03-31,52.0,10172.0,1123.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,Emergency Inpatients,Male,2018-04-30,49.0,10216.0,1086.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,60-69,Emergency Inpatients,Male,2018-01-31,37.0,4017.0,1021.0
@@ -715,13 +715,13 @@ NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Female,2018-02-28,16.0,1046.0,325.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Female,2018-03-31,16.0,1184.0,318.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,10-19,Emergency Inpatients,Female,2018-04-30,16.0,1196.0,345.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,40-49,All Daycases,Female,2018-01-31,1.0,2.0,52.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,40-49,All Daycases,Female,2018-01-31,2.0,2.0,52.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,40-49,All Daycases,Female,2018-02-28,2.0,2.0,54.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,40-49,All Daycases,Female,2018-03-31,0.0,0.0,55.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,40-49,All Daycases,Female,2018-04-30,0.0,0.0,60.0
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,40-49,Emergency Inpatients,Male,2018-01-31,1.0,209.0,63.0
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,40-49,Emergency Inpatients,Male,2018-02-28,1.0,192.0,63.0
-NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,40-49,Emergency Inpatients,Male,2018-03-31,151.0,191.0,72.0
+NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,40-49,Emergency Inpatients,Male,2018-03-31,,,72.0
 NHS Dumfries & Galloway,Galloway Community Hospital,S08000017,Y144H,40-49,Emergency Inpatients,Male,2018-04-30,2.0,197.0,68.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Male,2018-01-31,21.0,5414.0,1179.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Male,2018-02-28,22.0,5638.0,1289.0
@@ -738,10 +738,10 @@ NHS Highland,Lorn & Islands Hospital,S08000022,C121H,70-79,Elective Inpatients,F
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,10-19,All Daycases,Female,2018-01-31,1.0,1.0,259.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,10-19,All Daycases,Female,2018-02-28,2.0,2.0,256.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,10-19,All Daycases,Female,2018-03-31,0.0,0.0,256.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,10-19,All Daycases,Female,2018-04-30,1.0,2.0,305.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,60-69,Elective Inpatients,Female,2018-01-31,2910.0,3435.0,908.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,10-19,All Daycases,Female,2018-04-30,2.0,2.0,305.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,60-69,Elective Inpatients,Female,2018-01-31,,,908.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,60-69,Elective Inpatients,Female,2018-02-28,22.0,3122.0,933.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,60-69,Elective Inpatients,Female,2018-03-31,1979.0,3053.0,923.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,60-69,Elective Inpatients,Female,2018-03-31,,,923.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,60-69,Elective Inpatients,Female,2018-04-30,21.0,3142.0,849.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,70-79,Emergency Inpatients,Female,2018-01-31,50.0,27121.0,3110.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,70-79,Emergency Inpatients,Female,2018-02-28,53.0,28399.0,2797.0
@@ -756,7 +756,7 @@ Scotland,Scotland,scot,scot,90+,Emergency Inpatients,Male,2018-02-28,81.0,120801
 Scotland,Scotland,scot,scot,90+,Emergency Inpatients,Male,2018-03-31,76.0,111008.0,6746.0
 Scotland,Scotland,scot,scot,90+,Emergency Inpatients,Male,2018-04-30,75.0,127736.0,6369.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,Emergency Inpatients,Male,2018-01-31,11.0,166.0,103.0
-NHS Borders,NHS Borders,S08000016,S08000016,10-19,Emergency Inpatients,Male,2018-02-28,176.0,180.0,94.0
+NHS Borders,NHS Borders,S08000016,S08000016,10-19,Emergency Inpatients,Male,2018-02-28,,,94.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,Emergency Inpatients,Male,2018-03-31,10.0,175.0,87.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,Emergency Inpatients,Male,2018-04-30,11.0,199.0,101.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Emergency Inpatients,Male,2018-01-31,68.0,32104.0,2591.0
@@ -789,7 +789,7 @@ NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,20-29,Emer
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,20-29,Emergency Inpatients,Female,2018-04-30,14.0,662.0,319.0
 ,,,,0-9,All Daycases,Male,2018-01-31,1.0,1.0,373.0
 ,,,,0-9,All Daycases,Male,2018-02-28,1.0,1.0,444.0
-,,,,0-9,All Daycases,Male,2018-03-31,1.0,2.0,371.0
+,,,,0-9,All Daycases,Male,2018-03-31,2.0,2.0,371.0
 ,,,,0-9,All Daycases,Male,2018-04-30,0.0,0.0,383.0
 NHS Highland,Belford Hospital,S08000022,H212H,50-59,All Daycases,Female,2018-01-31,0.0,0.0,100.0
 NHS Highland,Belford Hospital,S08000022,H212H,50-59,All Daycases,Female,2018-02-28,1.0,1.0,99.0
@@ -799,9 +799,9 @@ NHS Highland,NHS Highland,S08000022,S08000022,80-89,Elective Inpatients,Male,201
 NHS Highland,NHS Highland,S08000022,S08000022,80-89,Elective Inpatients,Male,2018-02-28,28.0,1738.0,338.0
 NHS Highland,NHS Highland,S08000022,S08000022,80-89,Elective Inpatients,Male,2018-03-31,30.0,1952.0,340.0
 NHS Highland,NHS Highland,S08000022,S08000022,80-89,Elective Inpatients,Male,2018-04-30,26.0,1978.0,298.0
-NHS Borders,NHS Borders,S08000016,S08000016,40-49,All Daycases,Male,2018-01-31,0.0,0.0,280.0
+NHS Borders,NHS Borders,S08000016,S08000016,40-49,All Daycases,Male,2018-01-31,,,280.0
 NHS Borders,NHS Borders,S08000016,S08000016,40-49,All Daycases,Male,2018-02-28,2.0,2.0,262.0
-,,,,40-49,All Daycases,Male,2018-03-31,1.0,2.0,2310.0
+,,,,40-49,All Daycases,Male,2018-03-31,2.0,2.0,2310.0
 NHS Borders,NHS Borders,S08000016,S08000016,40-49,All Daycases,Male,2018-04-30,2.0,2.0,304.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,20-29,Emergency Inpatients,Male,2018-01-31,21.0,2598.0,699.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,20-29,Emergency Inpatients,Male,2018-02-28,21.0,2648.0,620.0
@@ -815,14 +815,14 @@ NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Emergency Inpatients,Fe
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Emergency Inpatients,Female,2018-02-28,6.0,8.0,17.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Emergency Inpatients,Female,2018-03-31,6.0,11.0,16.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Emergency Inpatients,Female,2018-04-30,6.0,13.0,19.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-01-31,3.0,4.0,8.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-02-28,3.0,4.0,7.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-03-31,2.0,3.0,9.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-04-30,2.0,4.0,9.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-01-31,4.0,4.0,8.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-02-28,4.0,4.0,7.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-03-31,3.0,3.0,9.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-04-30,4.0,4.0,9.0
 NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-01-31,1.0,1.0,92.0
-NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-02-28,0.0,0.0,98.0
-NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-03-31,1.0,2.0,101.0
-NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-04-30,0.0,0.0,91.0
+NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-02-28,,,98.0
+NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-03-31,2.0,2.0,101.0
+NHS Borders,Borders General Hospital,S08000016,B120H,10-19,All Daycases,Male,2018-04-30,,,91.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,30-39,Elective Inpatients,Female,2018-01-31,7.0,199.0,153.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,30-39,Elective Inpatients,Female,2018-02-28,6.0,186.0,139.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,30-39,Elective Inpatients,Female,2018-03-31,6.0,223.0,153.0
@@ -832,14 +832,14 @@ NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,10-19,Emergency Inpatients,F
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,10-19,Emergency Inpatients,Female,2018-03-31,9.0,1256.0,788.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,10-19,Emergency Inpatients,Female,2018-04-30,10.0,1297.0,687.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,10-19,All Daycases,Female,2018-01-31,1.0,1.0,339.0
-NHS Tayside,NHS Tayside,S08000030,S08000030,10-19,All Daycases,Female,2018-02-28,1.0,2.0,327.0
+NHS Tayside,NHS Tayside,S08000030,S08000030,10-19,All Daycases,Female,2018-02-28,2.0,2.0,327.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,10-19,All Daycases,Female,2018-03-31,0.0,0.0,330.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,10-19,All Daycases,Female,2018-04-30,1.0,1.0,334.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-01-31,38.0,976.0,250.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-02-28,834.0,1083.0,277.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-02-28,,,277.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-03-31,38.0,1093.0,300.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-04-30,33.0,996.0,297.0
-NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-01-31,1.0,2.0,647.0
+NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-01-31,2.0,2.0,647.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-02-28,1.0,1.0,602.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-03-31,2.0,2.0,697.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-04-30,0.0,0.0,595.0
@@ -851,15 +851,15 @@ NHS Highland,Raigmore Hospital,S08000022,H202H,70-79,Emergency Inpatients,Female
 NHS Highland,Raigmore Hospital,S08000022,H202H,70-79,Emergency Inpatients,Female,2018-02-28,63.0,11686.0,1898.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,70-79,Emergency Inpatients,Female,2018-03-31,66.0,11767.0,1604.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,70-79,Emergency Inpatients,Female,2018-04-30,58.0,11781.0,1694.0
-,,,,40-49,All Daycases,Male,2018-01-31,0.0,0.0,2478.0
+,,,,40-49,All Daycases,Male,2018-01-31,,,2478.0
 ,,,,40-49,All Daycases,Male,2018-02-28,1.0,1.0,2605.0
 ,,,,40-49,All Daycases,Male,2018-03-31,1.0,1.0,2419.0
-,,,,40-49,All Daycases,Male,2018-04-30,1.0,1.0,2558.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-01-31,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-02-28,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-03-31,0.0,0.0,0.0
-NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-04-30,0.0,0.0,0.0
-NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Female,2018-01-31,1.0,2.0,59.0
+,,,,40-49,All Daycases,Male,2018-04-30,2.0,2.0,2558.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-01-31,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-02-28,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-03-31,,,0.0
+NHS Ayrshire & Arran,Arran War Memorial Hospital,S08000015,A101H,10-19,Elective Inpatients,Female,2018-04-30,,,0.0
+NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Female,2018-01-31,2.0,2.0,59.0
 NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Female,2018-02-28,2.0,2.0,63.0
 NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Female,2018-03-31,2.0,2.0,60.0
 NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Female,2018-04-30,0.0,0.0,66.0
@@ -892,7 +892,7 @@ NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,0-9,Emergency Inpa
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,0-9,Emergency Inpatients,Female,2018-03-31,4.0,491.0,333.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,0-9,Emergency Inpatients,Female,2018-04-30,6.0,478.0,307.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,All Daycases,Female,2018-01-31,0.0,0.0,875.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,All Daycases,Female,2018-02-28,1.0,2.0,870.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,All Daycases,Female,2018-02-28,2.0,2.0,870.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,All Daycases,Female,2018-03-31,1.0,1.0,941.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,80-89,All Daycases,Female,2018-04-30,0.0,0.0,953.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,40-49,Emergency Inpatients,Male,2018-01-31,14.0,186.0,62.0
@@ -900,9 +900,9 @@ NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,40-49,Emergency Inpatients,Ma
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,40-49,Emergency Inpatients,Male,2018-03-31,13.0,213.0,69.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,40-49,Emergency Inpatients,Male,2018-04-30,15.0,202.0,62.0
 NHS Lothian,Western General Hospital,S08000024,S116H,80-89,All Daycases,Female,2018-01-31,0.0,0.0,1399.0
-NHS Lothian,Western General Hospital,S08000024,S116H,80-89,All Daycases,Female,2018-02-28,1.0,2.0,1447.0
+NHS Lothian,Western General Hospital,S08000024,S116H,80-89,All Daycases,Female,2018-02-28,2.0,2.0,1447.0
 NHS Lothian,Western General Hospital,S08000024,S116H,80-89,All Daycases,Female,2018-03-31,1.0,1.0,1516.0
-NHS Lothian,Western General Hospital,S08000024,S116H,80-89,All Daycases,Female,2018-04-30,0.0,0.0,1300.0
+NHS Lothian,Western General Hospital,S08000024,S116H,80-89,All Daycases,Female,2018-04-30,,,1300.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,Elective Inpatients,Female,2018-01-31,20.0,1532.0,422.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,Elective Inpatients,Female,2018-02-28,19.0,1666.0,400.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,Elective Inpatients,Female,2018-03-31,19.0,1536.0,443.0
@@ -910,7 +910,7 @@ NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,Elect
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-01-31,61.0,2741.0,122.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-02-28,62.0,3039.0,136.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-03-31,61.0,2956.0,130.0
-NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-04-30,1629.0,3043.0,126.0
+NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-04-30,,,126.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,70-79,All Daycases,Female,2018-01-31,1.0,1.0,2402.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,70-79,All Daycases,Female,2018-02-28,1.0,1.0,1996.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,70-79,All Daycases,Female,2018-03-31,1.0,1.0,2367.0
@@ -922,19 +922,19 @@ Scotland,Scotland,scot,scot,30-39,Elective Inpatients,Female,2018-04-30,10.0,605
 ,,,,50-59,All Daycases,Female,2018-01-31,1.0,1.0,3881.0
 ,,,,50-59,All Daycases,Female,2018-02-28,1.0,1.0,4302.0
 ,,,,50-59,All Daycases,Female,2018-03-31,2.0,2.0,4636.0
-,,,,50-59,All Daycases,Female,2018-04-30,1.0,2.0,4222.0
+,,,,50-59,All Daycases,Female,2018-04-30,2.0,2.0,4222.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Female,2018-01-31,1.0,1.0,429.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Female,2018-02-28,2.0,2.0,427.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Female,2018-03-31,1.0,1.0,416.0
-NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Female,2018-04-30,0.0,0.0,406.0
+NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Female,2018-04-30,,,406.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-01-31,0.0,0.0,45.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-02-28,1.0,1.0,41.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-03-31,1.0,1.0,46.0
-NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-04-30,0.0,0.0,43.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-01-31,3.0,4.0,6.0
+NHS Shetland,NHS Shetland,S08000026,S08000026,30-39,All Daycases,Female,2018-04-30,,,43.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-01-31,4.0,4.0,6.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-02-28,3.0,3.0,8.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-03-31,3.0,4.0,9.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-04-30,3.0,4.0,7.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-03-31,4.0,4.0,9.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,20-29,Elective Inpatients,Female,2018-04-30,4.0,4.0,7.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,50-59,All Daycases,Female,2018-01-31,1.0,1.0,1938.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,50-59,All Daycases,Female,2018-02-28,0.0,0.0,1942.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,50-59,All Daycases,Female,2018-03-31,0.0,0.0,2121.0
@@ -958,7 +958,7 @@ NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,All Daycases
 NHS Tayside,Ninewells Hospital,S08000030,T101H,20-29,All Daycases,Female,2018-01-31,0.0,0.0,484.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,20-29,All Daycases,Female,2018-02-28,0.0,0.0,452.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,20-29,All Daycases,Female,2018-03-31,2.0,2.0,523.0
-NHS Tayside,Ninewells Hospital,S08000030,T101H,20-29,All Daycases,Female,2018-04-30,1.0,2.0,486.0
+NHS Tayside,Ninewells Hospital,S08000030,T101H,20-29,All Daycases,Female,2018-04-30,2.0,2.0,486.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,0-9,All Daycases,Male,2018-01-31,1.0,1.0,125.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,0-9,All Daycases,Male,2018-02-28,0.0,0.0,127.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,0-9,All Daycases,Male,2018-03-31,1.0,1.0,125.0
@@ -968,13 +968,13 @@ NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,All Daycases,Male,2018-03-31,1.0,1.0,119.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,All Daycases,Male,2018-04-30,0.0,0.0,122.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,Emergency Inpatients,Female,2018-01-31,2.0,2.0,11.0
-NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,Emergency Inpatients,Female,2018-02-28,2.0,3.0,11.0
-NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,Emergency Inpatients,Female,2018-03-31,3.0,4.0,10.0
+NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,Emergency Inpatients,Female,2018-02-28,3.0,3.0,11.0
+NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,Emergency Inpatients,Female,2018-03-31,4.0,4.0,10.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,0-9,Emergency Inpatients,Female,2018-04-30,2.0,2.0,9.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,All Daycases,Male,2018-01-31,1.0,2.0,251.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,All Daycases,Male,2018-01-31,2.0,2.0,251.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,All Daycases,Male,2018-02-28,1.0,1.0,283.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,All Daycases,Male,2018-03-31,2.0,2.0,281.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,All Daycases,Male,2018-04-30,1.0,2.0,287.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,All Daycases,Male,2018-04-30,2.0,2.0,287.0
 Scotland,Scotland,scot,scot,60-69,Emergency Inpatients,Male,2018-01-31,41.0,223452.0,51979.0
 Scotland,Scotland,scot,scot,60-69,Emergency Inpatients,Male,2018-02-28,48.0,191401.0,50420.0
 Scotland,Scotland,scot,scot,60-69,Emergency Inpatients,Male,2018-03-31,43.0,219713.0,46591.0
@@ -989,7 +989,7 @@ NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,80-89,Elective
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,80-89,Elective Inpatients,Female,2018-04-30,3.0,101.0,210.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,70-79,Elective Inpatients,Female,2018-01-31,12.0,85.0,37.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,70-79,Elective Inpatients,Female,2018-02-28,12.0,106.0,33.0
-NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,70-79,Elective Inpatients,Female,2018-03-31,97.0,102.0,37.0
+NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,70-79,Elective Inpatients,Female,2018-03-31,,,37.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,70-79,Elective Inpatients,Female,2018-04-30,13.0,90.0,36.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,90+,Emergency Inpatients,Female,2018-01-31,71.0,6304.0,204.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,90+,Emergency Inpatients,Female,2018-02-28,65.0,6086.0,188.0
@@ -1000,30 +1000,30 @@ NHS Lothian,NHS Lothian,S08000024,S08000024,50-59,Elective Inpatients,Female,201
 NHS Lothian,NHS Lothian,S08000024,S08000024,50-59,Elective Inpatients,Female,2018-03-31,17.0,3064.0,1302.0
 NHS Lothian,NHS Lothian,S08000024,S08000024,50-59,Elective Inpatients,Female,2018-04-30,16.0,3036.0,1469.0
 NHS Fife,NHS Fife,S08000029,S08000029,30-39,Emergency Inpatients,Male,2018-01-31,15.0,2183.0,925.0
-NHS Fife,NHS Fife,S08000029,S08000029,30-39,Emergency Inpatients,Male,2018-02-28,1850.0,2238.0,863.0
+NHS Fife,NHS Fife,S08000029,S08000029,30-39,Emergency Inpatients,Male,2018-02-28,,,863.0
 NHS Fife,NHS Fife,S08000029,S08000029,30-39,Emergency Inpatients,Male,2018-03-31,15.0,2360.0,876.0
 NHS Fife,NHS Fife,S08000029,S08000029,30-39,Emergency Inpatients,Male,2018-04-30,14.0,2163.0,854.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,50-59,Elective Inpatients,Female,2018-01-31,108.0,147.0,464.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,50-59,Elective Inpatients,Female,2018-01-31,,,464.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,50-59,Elective Inpatients,Female,2018-02-28,11.0,122.0,513.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,50-59,Elective Inpatients,Female,2018-03-31,12.0,138.0,542.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,50-59,Elective Inpatients,Female,2018-04-30,71.0,134.0,543.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,50-59,Elective Inpatients,Female,2018-04-30,,,543.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,90+,Elective Inpatients,Male,2018-01-31,2.0,10.0,3.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,90+,Elective Inpatients,Male,2018-02-28,4.0,10.0,2.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,90+,Elective Inpatients,Male,2018-03-31,4.0,7.0,1.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,90+,Elective Inpatients,Male,2018-04-30,2.0,9.0,2.0
 NHS Lothian,St John's Hospital,S08000024,S308H,50-59,Emergency Inpatients,Female,2018-01-31,28.0,3401.0,1096.0
 NHS Lothian,St John's Hospital,S08000024,S308H,50-59,Emergency Inpatients,Female,2018-02-28,26.0,3333.0,1115.0
-NHS Lothian,St John's Hospital,S08000024,S308H,50-59,Emergency Inpatients,Female,2018-03-31,1551.0,3008.0,1030.0
+NHS Lothian,St John's Hospital,S08000024,S308H,50-59,Emergency Inpatients,Female,2018-03-31,,,1030.0
 NHS Lothian,St John's Hospital,S08000024,S308H,50-59,Emergency Inpatients,Female,2018-04-30,29.0,3346.0,1149.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-01-31,5.0,5.0,37.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-02-28,2.0,3.0,34.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-03-31,4.0,5.0,39.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-04-30,2.0,3.0,35.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-02-28,3.0,3.0,34.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-03-31,5.0,5.0,39.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-04-30,3.0,3.0,35.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Female,2018-01-31,1.0,1.0,74.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Female,2018-02-28,1.0,1.0,85.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Female,2018-03-31,0.0,0.0,71.0
-NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Female,2018-04-30,1.0,2.0,71.0
-NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Elective Inpatients,Male,2018-01-31,1.0,2.0,141.0
+NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Female,2018-04-30,2.0,2.0,71.0
+NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Elective Inpatients,Male,2018-01-31,2.0,2.0,141.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Elective Inpatients,Male,2018-02-28,0.0,0.0,143.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Elective Inpatients,Male,2018-03-31,2.0,2.0,140.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Elective Inpatients,Male,2018-04-30,2.0,2.0,158.0
@@ -1039,18 +1039,18 @@ NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,30-39,Emergency In
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,30-39,Emergency Inpatients,Male,2018-02-28,16.0,3377.0,1355.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,30-39,Emergency Inpatients,Male,2018-03-31,16.0,3198.0,1336.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,30-39,Emergency Inpatients,Male,2018-04-30,16.0,2946.0,1290.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,All Daycases,Female,2018-01-31,1.0,2.0,83.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,All Daycases,Female,2018-01-31,2.0,2.0,83.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,All Daycases,Female,2018-02-28,2.0,2.0,81.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,All Daycases,Female,2018-03-31,2.0,2.0,82.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,All Daycases,Female,2018-04-30,1.0,2.0,85.0
-NHS Grampian,Dr Gray's Hospital,S08000020,N411H,40-49,Emergency Inpatients,Male,2018-01-31,690.0,875.0,335.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,All Daycases,Female,2018-04-30,2.0,2.0,85.0
+NHS Grampian,Dr Gray's Hospital,S08000020,N411H,40-49,Emergency Inpatients,Male,2018-01-31,,,335.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,40-49,Emergency Inpatients,Male,2018-02-28,25.0,826.0,372.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,40-49,Emergency Inpatients,Male,2018-03-31,21.0,880.0,314.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,40-49,Emergency Inpatients,Male,2018-04-30,22.0,817.0,329.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,40-49,Elective Inpatients,Female,2018-01-31,10.0,660.0,328.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,40-49,Elective Inpatients,Female,2018-02-28,10.0,619.0,360.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,40-49,Elective Inpatients,Female,2018-03-31,11.0,632.0,325.0
-NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,40-49,Elective Inpatients,Female,2018-04-30,497.0,670.0,379.0
+NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,40-49,Elective Inpatients,Female,2018-04-30,,,379.0
 NHS Fife,Victoria Hospital,S08000029,F704H,30-39,Elective Inpatients,Male,2018-01-31,5.0,209.0,187.0
 NHS Fife,Victoria Hospital,S08000029,F704H,30-39,Elective Inpatients,Male,2018-02-28,6.0,249.0,189.0
 NHS Fife,Victoria Hospital,S08000029,F704H,30-39,Elective Inpatients,Male,2018-03-31,6.0,246.0,182.0
@@ -1061,15 +1061,15 @@ NHS Highland,Raigmore Hospital,S08000022,H202H,80-89,Emergency Inpatients,Female
 NHS Highland,Raigmore Hospital,S08000022,H202H,80-89,Emergency Inpatients,Female,2018-04-30,74.0,14671.0,1014.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,90+,Emergency Inpatients,Male,2018-01-31,53.0,3420.0,198.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,90+,Emergency Inpatients,Male,2018-02-28,59.0,3231.0,221.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,90+,Emergency Inpatients,Male,2018-03-31,2722.0,3648.0,217.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,90+,Emergency Inpatients,Male,2018-04-30,3586.0,3881.0,210.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,90+,Emergency Inpatients,Male,2018-03-31,,,217.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,90+,Emergency Inpatients,Male,2018-04-30,,,210.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,90+,Emergency Inpatients,Male,2018-01-31,71.0,9042.0,480.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,90+,Emergency Inpatients,Male,2018-02-28,71.0,8772.0,437.0
-NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,90+,Emergency Inpatients,Male,2018-03-31,7373.0,9368.0,401.0
+NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,90+,Emergency Inpatients,Male,2018-03-31,,,401.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,90+,Emergency Inpatients,Male,2018-04-30,70.0,8133.0,481.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,40-49,Elective Inpatients,Male,2018-01-31,9.0,418.0,238.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,40-49,Elective Inpatients,Male,2018-02-28,10.0,478.0,241.0
-NHS Tayside,Ninewells Hospital,S08000030,T101H,40-49,Elective Inpatients,Male,2018-03-31,417.0,456.0,211.0
+NHS Tayside,Ninewells Hospital,S08000030,T101H,40-49,Elective Inpatients,Male,2018-03-31,,,211.0
 NHS Tayside,Ninewells Hospital,S08000030,T101H,40-49,Elective Inpatients,Male,2018-04-30,9.0,495.0,241.0
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,Emergency Inpatients,Male,2018-01-31,54.0,2068.0,109.0
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,Emergency Inpatients,Male,2018-02-28,62.0,2173.0,99.0
@@ -1085,7 +1085,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,60-69,Elective Inpatients,M
 NHS Lothian,Western General Hospital,S08000024,S116H,60-69,Elective Inpatients,Male,2018-04-30,19.0,1183.0,639.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,20-29,All Daycases,Male,2018-01-31,0.0,0.0,488.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,20-29,All Daycases,Male,2018-02-28,0.0,0.0,464.0
-NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,20-29,All Daycases,Male,2018-03-31,0.0,0.0,460.0
+NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,20-29,All Daycases,Male,2018-03-31,,,460.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,20-29,All Daycases,Male,2018-04-30,0.0,0.0,435.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Emergency Inpatients,Female,2018-01-31,15.0,974.0,382.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Emergency Inpatients,Female,2018-02-28,16.0,1083.0,379.0
@@ -1095,7 +1095,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,20-29,Elective Inpatients,M
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,Elective Inpatients,Male,2018-02-28,7.0,129.0,173.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,Elective Inpatients,Male,2018-03-31,7.0,147.0,193.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,Elective Inpatients,Male,2018-04-30,9.0,157.0,174.0
-NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-01-31,1596.0,2923.0,143.0
+NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-01-31,,,143.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-02-28,68.0,2538.0,129.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-03-31,64.0,2729.0,126.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,90+,Emergency Inpatients,Female,2018-04-30,64.0,2983.0,136.0
@@ -1107,7 +1107,7 @@ NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,40-49,Emergency Inpatie
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,40-49,Emergency Inpatients,Female,2018-02-28,22.0,783.0,1123.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,40-49,Emergency Inpatients,Female,2018-03-31,24.0,811.0,1301.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,40-49,Emergency Inpatients,Female,2018-04-30,23.0,702.0,1352.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,All Daycases,Female,2018-01-31,1.0,2.0,1185.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,All Daycases,Female,2018-01-31,2.0,2.0,1185.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,All Daycases,Female,2018-02-28,2.0,2.0,1182.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,All Daycases,Female,2018-03-31,1.0,1.0,1141.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,All Daycases,Female,2018-04-30,1.0,1.0,1037.0
@@ -1116,7 +1116,7 @@ NHS Fife,Queen Margaret Hospital,S08000029,F805H,70-79,Emergency Inpatients,Fema
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,70-79,Emergency Inpatients,Female,2018-03-31,17.0,1119.0,432.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,70-79,Emergency Inpatients,Female,2018-04-30,16.0,1008.0,451.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Elective Inpatients,Male,2018-01-31,24.0,1429.0,309.0
-NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Elective Inpatients,Male,2018-02-28,1040.0,1305.0,330.0
+NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Elective Inpatients,Male,2018-02-28,,,330.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Elective Inpatients,Male,2018-03-31,20.0,1308.0,337.0
 NHS Lanarkshire,University Hospital Wishaw,S08000023,L308H,80-89,Elective Inpatients,Male,2018-04-30,20.0,1367.0,296.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Elective Inpatients,Male,2018-01-31,4.0,61.0,108.0
@@ -1129,7 +1129,7 @@ NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,Emergency In
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,40-49,Emergency Inpatients,Male,2018-04-30,18.0,1989.0,816.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,80-89,All Daycases,Male,2018-01-31,1.0,23.0,1829.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,80-89,All Daycases,Male,2018-02-28,0.0,24.0,1880.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,80-89,All Daycases,Male,2018-03-31,15.0,20.0,1959.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,80-89,All Daycases,Male,2018-03-31,,,1959.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,80-89,All Daycases,Male,2018-04-30,0.0,23.0,1913.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-01-31,1.0,4.0,1654.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-02-28,1.0,1.0,1619.0
@@ -1149,7 +1149,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Female,2
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Female,2018-04-30,1.0,1.0,779.0
 NHS Lothian,NHS Lothian,S08000024,S08000024,10-19,All Daycases,Female,2018-01-31,0.0,0.0,817.0
 NHS Lothian,NHS Lothian,S08000024,S08000024,10-19,All Daycases,Female,2018-02-28,0.0,0.0,867.0
-NHS Lothian,NHS Lothian,S08000024,S08000024,10-19,All Daycases,Female,2018-03-31,0.0,0.0,735.0
+NHS Lothian,NHS Lothian,S08000024,S08000024,10-19,All Daycases,Female,2018-03-31,,,735.0
 NHS Lothian,NHS Lothian,S08000024,S08000024,10-19,All Daycases,Female,2018-04-30,0.0,0.0,795.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,40-49,All Daycases,Male,2018-01-31,0.0,0.0,55.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,40-49,All Daycases,Male,2018-02-28,2.0,2.0,59.0
@@ -1157,14 +1157,14 @@ NHS Orkney,NHS Orkney,S08000025,S08000025,40-49,All Daycases,Male,2018-03-31,0.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,40-49,All Daycases,Male,2018-04-30,0.0,0.0,59.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-01-31,1.0,1.0,49.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-02-28,1.0,1.0,49.0
-NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-03-31,1.0,2.0,42.0
+NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-03-31,2.0,2.0,42.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-04-30,0.0,0.0,45.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,50-59,All Daycases,Male,2018-01-31,1.0,1.0,1158.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,50-59,All Daycases,Male,2018-02-28,0.0,0.0,1119.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,50-59,All Daycases,Male,2018-03-31,0.0,0.0,1129.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,50-59,All Daycases,Male,2018-04-30,0.0,0.0,1018.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,Emergency Inpatients,Male,2018-01-31,15.0,845.0,300.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,Emergency Inpatients,Male,2018-02-28,627.0,779.0,337.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,Emergency Inpatients,Male,2018-02-28,,,337.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,Emergency Inpatients,Male,2018-03-31,15.0,800.0,336.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,20-29,Emergency Inpatients,Male,2018-04-30,14.0,812.0,322.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,60-69,Emergency Inpatients,Female,2018-01-31,44.0,11522.0,2000.0
@@ -1172,7 +1172,7 @@ NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,60-69,Emerge
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,60-69,Emergency Inpatients,Female,2018-03-31,39.0,11077.0,2125.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,60-69,Emergency Inpatients,Female,2018-04-30,39.0,10991.0,2112.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Elective Inpatients,Male,2018-01-31,1.0,1.0,2.0
-NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Elective Inpatients,Male,2018-02-28,2.0,3.0,3.0
+NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Elective Inpatients,Male,2018-02-28,3.0,3.0,3.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Elective Inpatients,Male,2018-03-31,1.0,1.0,1.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,10-19,Elective Inpatients,Male,2018-04-30,3.0,3.0,3.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,90+,All Daycases,Male,2018-01-31,1.0,1.0,12.0
@@ -1197,11 +1197,11 @@ NHS Lothian,Western General Hospital,S08000024,S116H,20-29,Emergency Inpatients,
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,Emergency Inpatients,Male,2018-04-30,24.0,1475.0,741.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Female,2018-01-31,1.0,1.0,1975.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Female,2018-02-28,1.0,1.0,1963.0
-NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Female,2018-03-31,0.0,0.0,1890.0
+NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Female,2018-03-31,,,1890.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Female,2018-04-30,1.0,1.0,1746.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,Emergency Inpatients,Male,2018-01-31,4.0,4.0,32.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,Emergency Inpatients,Male,2018-02-28,2.0,2.0,34.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,Emergency Inpatients,Male,2018-03-31,2.0,3.0,32.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,Emergency Inpatients,Male,2018-03-31,3.0,3.0,32.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,0-9,Emergency Inpatients,Male,2018-04-30,2.0,2.0,36.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,All Daycases,Female,2018-01-31,2.0,2.0,112.0
 ,,,,60-69,All Daycases,Female,2018-02-28,1.0,3.0,5484.0
@@ -1209,10 +1209,10 @@ NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,All Daycases,Female,2018-0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,60-69,All Daycases,Female,2018-04-30,1.0,1.0,118.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,40-49,Elective Inpatients,Male,2018-01-31,9.0,218.0,149.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,40-49,Elective Inpatients,Male,2018-02-28,10.0,220.0,158.0
-NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,40-49,Elective Inpatients,Male,2018-03-31,215.0,225.0,138.0
+NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,40-49,Elective Inpatients,Male,2018-03-31,,,138.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,40-49,Elective Inpatients,Male,2018-04-30,10.0,225.0,146.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,40-49,Emergency Inpatients,Female,2018-01-31,17.0,235.0,75.0
-NHS Highland,Caithness General Hospital,S08000022,H103H,40-49,Emergency Inpatients,Female,2018-02-28,225.0,250.0,69.0
+NHS Highland,Caithness General Hospital,S08000022,H103H,40-49,Emergency Inpatients,Female,2018-02-28,,,69.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,40-49,Emergency Inpatients,Female,2018-03-31,15.0,201.0,74.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,40-49,Emergency Inpatients,Female,2018-04-30,15.0,212.0,71.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,80-89,Emergency Inpatients,Female,2018-01-31,79.0,115688.0,10494.0
@@ -1233,23 +1233,23 @@ NHS Highland,Belford Hospital,S08000022,H212H,30-39,All Daycases,Female,2018-03-
 NHS Highland,Belford Hospital,S08000022,H212H,30-39,All Daycases,Female,2018-04-30,1.0,1.0,42.0
 Scotland,Scotland,scot,scot,80-89,Emergency Inpatients,Male,2018-01-31,67.0,403181.0,28848.0
 Scotland,Scotland,scot,scot,80-89,Emergency Inpatients,Male,2018-02-28,70.0,398840.0,34184.0
-Scotland,Scotland,scot,scot,80-89,Emergency Inpatients,Male,2018-03-31,293230.0,351802.0,34096.0
+Scotland,Scotland,scot,scot,80-89,Emergency Inpatients,Male,2018-03-31,,,34096.0
 Scotland,Scotland,scot,scot,80-89,Emergency Inpatients,Male,2018-04-30,74.0,333860.0,29062.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-01-31,56.0,21563.0,3157.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-02-28,51.0,23515.0,3036.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-03-31,55.0,23389.0,2780.0
-NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-04-30,12574.0,22916.0,2791.0
+NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,70-79,Emergency Inpatients,Male,2018-04-30,,,2791.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,Emergency Inpatients,Male,2018-01-31,3.0,92.0,46.0
 ,,,,30-39,Emergency Inpatients,Male,2018-02-28,35.0,5259.0,2322.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,Emergency Inpatients,Male,2018-03-31,3.0,96.0,49.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,30-39,Emergency Inpatients,Male,2018-04-30,2.0,99.0,52.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,All Daycases,Male,2018-01-31,1.0,1.0,1117.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,All Daycases,Male,2018-02-28,2.0,2.0,1075.0
-NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,All Daycases,Male,2018-03-31,1.0,2.0,1237.0
+NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,All Daycases,Male,2018-03-31,2.0,2.0,1237.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,60-69,All Daycases,Male,2018-04-30,2.0,2.0,1063.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,30-39,Elective Inpatients,Male,2018-01-31,4.0,4.0,10.0
 ,,,,30-39,Elective Inpatients,Male,2018-02-28,13.0,631.0,556.0
-NHS Highland,Caithness General Hospital,S08000022,H103H,30-39,Elective Inpatients,Male,2018-03-31,4.0,5.0,10.0
+NHS Highland,Caithness General Hospital,S08000022,H103H,30-39,Elective Inpatients,Male,2018-03-31,5.0,5.0,10.0
 ,,,,30-39,Elective Inpatients,Male,2018-04-30,13.0,586.0,481.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Male,2018-01-31,1.0,1.0,73.0
 NHS Highland,Caithness General Hospital,S08000022,H103H,80-89,All Daycases,Male,2018-02-28,2.0,2.0,74.0
@@ -1270,7 +1270,7 @@ NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,20-2
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Emergency Inpatients,Female,2018-01-31,4.0,220.0,607.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Emergency Inpatients,Female,2018-02-28,2.0,225.0,673.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Emergency Inpatients,Female,2018-03-31,2.0,239.0,693.0
-NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Emergency Inpatients,Female,2018-04-30,179.0,229.0,600.0
+NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,40-49,Emergency Inpatients,Female,2018-04-30,,,600.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,70-79,Emergency Inpatients,Male,2018-01-31,36.0,8145.0,1990.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,70-79,Emergency Inpatients,Male,2018-02-28,37.0,9399.0,2044.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,70-79,Emergency Inpatients,Male,2018-03-31,34.0,9601.0,1787.0
@@ -1281,19 +1281,19 @@ Scotland,Scotland,scot,scot,50-59,Emergency Inpatients,Male,2018-03-31,35.0,1482
 Scotland,Scotland,scot,scot,50-59,Emergency Inpatients,Male,2018-04-30,36.0,132298.0,37313.0
 ,,,,50-59,Elective Inpatients,Male,2018-01-31,22.0,1690.0,1297.0
 ,,,,50-59,Elective Inpatients,Male,2018-02-28,24.0,1775.0,1157.0
-,,,,50-59,Elective Inpatients,Male,2018-03-31,984.0,1855.0,1259.0
+,,,,50-59,Elective Inpatients,Male,2018-03-31,,,1259.0
 ,,,,50-59,Elective Inpatients,Male,2018-04-30,22.0,1919.0,1120.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,All Daycases,Female,2018-01-31,2.0,2.0,73.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,All Daycases,Female,2018-02-28,1.0,2.0,80.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,All Daycases,Female,2018-02-28,2.0,2.0,80.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,All Daycases,Female,2018-03-31,2.0,2.0,86.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,0-9,All Daycases,Female,2018-04-30,2.0,2.0,78.0
-NHS Highland,Belford Hospital,S08000022,H212H,40-49,All Daycases,Female,2018-01-31,0.0,0.0,56.0
+NHS Highland,Belford Hospital,S08000022,H212H,40-49,All Daycases,Female,2018-01-31,,,56.0
 NHS Highland,Belford Hospital,S08000022,H212H,40-49,All Daycases,Female,2018-02-28,0.0,0.0,62.0
-NHS Highland,Belford Hospital,S08000022,H212H,40-49,All Daycases,Female,2018-03-31,1.0,2.0,52.0
+NHS Highland,Belford Hospital,S08000022,H212H,40-49,All Daycases,Female,2018-03-31,2.0,2.0,52.0
 ,,,,40-49,All Daycases,Female,2018-04-30,2.0,2.0,2688.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Male,2018-01-31,1.0,1.0,74.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Male,2018-02-28,2.0,2.0,76.0
-NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Male,2018-03-31,0.0,0.0,77.0
+NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Male,2018-03-31,,,77.0
 NHS Borders,NHS Borders,S08000016,S08000016,10-19,All Daycases,Male,2018-04-30,2.0,2.0,70.0
 ,,,,20-29,Emergency Inpatients,Male,2018-01-31,28.0,3432.0,1593.0
 ,,,,20-29,Emergency Inpatients,Male,2018-02-28,27.0,3950.0,1826.0
@@ -1310,7 +1310,7 @@ NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,20-29,Emerg
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,All Daycases,Male,2018-01-31,0.0,4.0,1201.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,All Daycases,Male,2018-02-28,2.0,4.0,1310.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,All Daycases,Male,2018-03-31,1.0,5.0,1203.0
-NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,All Daycases,Male,2018-04-30,4.0,5.0,1273.0
+NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,All Daycases,Male,2018-04-30,,,1273.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,80-89,All Daycases,Female,2018-01-31,1.0,5.0,1791.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,80-89,All Daycases,Female,2018-02-28,0.0,5.0,1833.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,80-89,All Daycases,Female,2018-03-31,1.0,2.0,2065.0
@@ -1320,14 +1320,14 @@ NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,20-29,Emergency Inpatients
 ,,,,20-29,Emergency Inpatients,Female,2018-03-31,31.0,4621.0,1973.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,20-29,Emergency Inpatients,Female,2018-04-30,16.0,1833.0,473.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,60-69,All Daycases,Female,2018-01-31,0.0,0.0,112.0
-NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,60-69,All Daycases,Female,2018-02-28,0.0,0.0,126.0
-NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,60-69,All Daycases,Female,2018-03-31,0.0,0.0,109.0
+NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,60-69,All Daycases,Female,2018-02-28,,,126.0
+NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,60-69,All Daycases,Female,2018-03-31,,,109.0
 NHS Shetland,Gilbert Bain Hospital,S08000026,Z102H,60-69,All Daycases,Female,2018-04-30,1.0,1.0,127.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Male,2018-01-31,4.0,11.0,48.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Male,2018-02-28,3.0,14.0,52.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Male,2018-03-31,4.0,11.0,45.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,10-19,Elective Inpatients,Male,2018-04-30,4.0,12.0,44.0
-NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Female,2018-01-31,586.0,1166.0,164.0
+NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Female,2018-01-31,,,164.0
 NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Female,2018-02-28,40.0,1153.0,154.0
 NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Female,2018-03-31,35.0,986.0,156.0
 NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Female,2018-04-30,34.0,1052.0,165.0
@@ -1361,7 +1361,7 @@ NHS Tayside,Ninewells Hospital,S08000030,T101H,30-39,All Daycases,Male,2018-04-3
 ,,,,70-79,All Daycases,Female,2018-04-30,1.0,15.0,5430.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,40-49,All Daycases,Male,2018-01-31,1.0,1.0,645.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,40-49,All Daycases,Male,2018-02-28,1.0,1.0,611.0
-NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,40-49,All Daycases,Male,2018-03-31,1.0,2.0,657.0
+NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,40-49,All Daycases,Male,2018-03-31,2.0,2.0,657.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,40-49,All Daycases,Male,2018-04-30,2.0,2.0,681.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,20-29,Elective Inpatients,Male,2018-01-31,6.0,246.0,189.0
 NHS Greater Glasgow & Clyde,Glasgow Royal Infirmary,S08000021,G107H,20-29,Elective Inpatients,Male,2018-02-28,6.0,253.0,188.0
@@ -1372,7 +1372,7 @@ NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,10-19,Emergency Inpatients,F
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,10-19,Emergency Inpatients,Female,2018-03-31,9.0,1282.0,701.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,10-19,Emergency Inpatients,Female,2018-04-30,11.0,1311.0,745.0
 NHS Highland,Belford Hospital,S08000022,H212H,80-89,Emergency Inpatients,Female,2018-01-31,46.0,1296.0,100.0
-NHS Highland,Belford Hospital,S08000022,H212H,80-89,Emergency Inpatients,Female,2018-02-28,1088.0,1305.0,92.0
+NHS Highland,Belford Hospital,S08000022,H212H,80-89,Emergency Inpatients,Female,2018-02-28,,,92.0
 NHS Highland,Belford Hospital,S08000022,H212H,80-89,Emergency Inpatients,Female,2018-03-31,42.0,1313.0,90.0
 NHS Highland,Belford Hospital,S08000022,H212H,80-89,Emergency Inpatients,Female,2018-04-30,45.0,1103.0,102.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,Emergency Inpatients,Male,2018-01-31,23.0,4040.0,1286.0
@@ -1380,7 +1380,7 @@ NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,Emergency Inp
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,Emergency Inpatients,Male,2018-03-31,27.0,4180.0,1384.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,50-59,Emergency Inpatients,Male,2018-04-30,27.0,4543.0,1335.0
 NHS Borders,Borders General Hospital,S08000016,B120H,80-89,Emergency Inpatients,Male,2018-01-31,51.0,7210.0,542.0
-NHS Borders,Borders General Hospital,S08000016,B120H,80-89,Emergency Inpatients,Male,2018-02-28,3594.0,6017.0,521.0
+NHS Borders,Borders General Hospital,S08000016,B120H,80-89,Emergency Inpatients,Male,2018-02-28,,,521.0
 NHS Borders,Borders General Hospital,S08000016,B120H,80-89,Emergency Inpatients,Male,2018-03-31,48.0,7173.0,534.0
 NHS Borders,Borders General Hospital,S08000016,B120H,80-89,Emergency Inpatients,Male,2018-04-30,50.0,6633.0,510.0
 NHS Shetland,NHS Shetland,S08000026,S08000026,70-79,All Daycases,Female,2018-01-31,0.0,0.0,126.0
@@ -1400,13 +1400,13 @@ NHS Lothian,Western General Hospital,S08000024,S116H,50-59,Emergency Inpatients,
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,Emergency Inpatients,Female,2018-03-31,47.0,7000.0,2141.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,Emergency Inpatients,Female,2018-04-30,48.0,7290.0,2431.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,80-89,All Daycases,Female,2018-01-31,2.0,2.0,258.0
-NHS Fife,Queen Margaret Hospital,S08000029,F805H,80-89,All Daycases,Female,2018-02-28,1.0,2.0,234.0
+NHS Fife,Queen Margaret Hospital,S08000029,F805H,80-89,All Daycases,Female,2018-02-28,2.0,2.0,234.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,80-89,All Daycases,Female,2018-03-31,0.0,0.0,221.0
-NHS Fife,Queen Margaret Hospital,S08000029,F805H,80-89,All Daycases,Female,2018-04-30,1.0,2.0,260.0
+NHS Fife,Queen Margaret Hospital,S08000029,F805H,80-89,All Daycases,Female,2018-04-30,2.0,2.0,260.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,70-79,All Daycases,Female,2018-01-31,2.0,2.0,137.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,70-79,All Daycases,Female,2018-02-28,2.0,2.0,133.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,70-79,All Daycases,Female,2018-03-31,1.0,1.0,119.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,70-79,All Daycases,Female,2018-04-30,0.0,0.0,121.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,70-79,All Daycases,Female,2018-04-30,,,121.0
 NHS Highland,NHS Highland,S08000022,S08000022,0-9,Elective Inpatients,Female,2018-01-31,3.0,9.0,41.0
 NHS Highland,NHS Highland,S08000022,S08000022,0-9,Elective Inpatients,Female,2018-02-28,2.0,6.0,42.0
 NHS Highland,NHS Highland,S08000022,S08000022,0-9,Elective Inpatients,Female,2018-03-31,1.0,10.0,38.0
@@ -1414,12 +1414,12 @@ NHS Highland,NHS Highland,S08000022,S08000022,0-9,Elective Inpatients,Female,201
 NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,Emergency Inpatients,Female,2018-01-31,33.0,1006.0,141.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,Emergency Inpatients,Female,2018-02-28,32.0,1185.0,142.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,Emergency Inpatients,Female,2018-03-31,32.0,1037.0,160.0
-NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,Emergency Inpatients,Female,2018-04-30,718.0,1134.0,150.0
+NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,Emergency Inpatients,Female,2018-04-30,,,150.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,90+,Elective Inpatients,Male,2018-01-31,26.0,973.0,75.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,90+,Elective Inpatients,Male,2018-02-28,26.0,1091.0,90.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,90+,Elective Inpatients,Male,2018-03-31,28.0,892.0,84.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,90+,Elective Inpatients,Male,2018-04-30,30.0,906.0,90.0
-NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,All Daycases,Female,2018-01-31,0.0,0.0,1312.0
+NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,All Daycases,Female,2018-01-31,,,1312.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,All Daycases,Female,2018-02-28,1.0,1.0,1525.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,All Daycases,Female,2018-03-31,0.0,0.0,1500.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,70-79,All Daycases,Female,2018-04-30,2.0,2.0,1476.0
@@ -1448,7 +1448,7 @@ NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,90+,E
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,90+,Emergency Inpatients,Female,2018-03-31,45.0,358.0,62.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,90+,Emergency Inpatients,Female,2018-04-30,40.0,385.0,59.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,30-39,All Daycases,Female,2018-01-31,0.0,0.0,937.0
-,,,,30-39,All Daycases,Female,2018-02-28,1.0,2.0,1846.0
+,,,,30-39,All Daycases,Female,2018-02-28,2.0,2.0,1846.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,30-39,All Daycases,Female,2018-03-31,1.0,1.0,806.0
 NHS Tayside,NHS Tayside,S08000030,S08000030,30-39,All Daycases,Female,2018-04-30,0.0,0.0,863.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,30-39,Elective Inpatients,Female,2018-01-31,6.0,492.0,476.0
@@ -1469,7 +1469,7 @@ Scotland,Scotland,scot,scot,10-19,Emergency Inpatients,Female,2018-03-31,13.0,14
 Scotland,Scotland,scot,scot,10-19,Emergency Inpatients,Female,2018-04-30,14.0,12819.0,6494.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,20-29,All Daycases,Male,2018-01-31,2.0,2.0,873.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,20-29,All Daycases,Male,2018-02-28,1.0,1.0,830.0
-NHS Grampian,NHS Grampian,S08000020,S08000020,20-29,All Daycases,Male,2018-03-31,0.0,0.0,943.0
+NHS Grampian,NHS Grampian,S08000020,S08000020,20-29,All Daycases,Male,2018-03-31,,,943.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,20-29,All Daycases,Male,2018-04-30,0.0,0.0,833.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-01-31,33.0,959.0,275.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Male,2018-02-28,39.0,1152.0,273.0
@@ -1479,9 +1479,9 @@ NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,50-59,Elect
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,50-59,Elective Inpatients,Male,2018-02-28,11.0,534.0,323.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,50-59,Elective Inpatients,Male,2018-03-31,10.0,558.0,312.0
 ,,,,50-59,Elective Inpatients,Male,2018-04-30,24.0,1714.0,1202.0
-NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,Elective Inpatients,Male,2018-01-31,2272.0,3440.0,378.0
+NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,Elective Inpatients,Male,2018-01-31,,,378.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,Elective Inpatients,Male,2018-02-28,28.0,3414.0,377.0
-NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,Elective Inpatients,Male,2018-03-31,3580.0,3783.0,340.0
+NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,Elective Inpatients,Male,2018-03-31,,,340.0
 NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,80-89,Elective Inpatients,Male,2018-04-30,32.0,3417.0,385.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Emergency Inpatients,Male,2018-01-31,15.0,860.0,394.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,20-29,Emergency Inpatients,Male,2018-02-28,17.0,985.0,344.0
@@ -1494,10 +1494,10 @@ NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,50-59,Emergency In
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,30-39,All Daycases,Female,2018-01-31,0.0,0.0,136.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,30-39,All Daycases,Female,2018-02-28,1.0,1.0,126.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,30-39,All Daycases,Female,2018-03-31,0.0,0.0,133.0
-NHS Fife,Queen Margaret Hospital,S08000029,F805H,30-39,All Daycases,Female,2018-04-30,0.0,0.0,130.0
+NHS Fife,Queen Margaret Hospital,S08000029,F805H,30-39,All Daycases,Female,2018-04-30,,,130.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,All Daycases,Female,2018-01-31,1.0,1.0,46.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,All Daycases,Female,2018-02-28,2.0,2.0,42.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,All Daycases,Female,2018-03-31,0.0,0.0,45.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,All Daycases,Female,2018-03-31,,,45.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,All Daycases,Female,2018-04-30,0.0,0.0,46.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,40-49,Emergency Inpatients,Male,2018-01-31,25.0,3260.0,644.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,40-49,Emergency Inpatients,Male,2018-02-28,23.0,3722.0,636.0
@@ -1505,11 +1505,11 @@ NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,40-49,Emergency Inp
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,40-49,Emergency Inpatients,Male,2018-04-30,21.0,3456.0,752.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,40-49,All Daycases,Female,2018-01-31,1.0,1.0,648.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,40-49,All Daycases,Female,2018-02-28,0.0,0.0,641.0
-NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,40-49,All Daycases,Female,2018-03-31,1.0,2.0,718.0
+NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,40-49,All Daycases,Female,2018-03-31,2.0,2.0,718.0
 NHS Ayrshire & Arran,University Hospital Ayr,S08000015,A210H,40-49,All Daycases,Female,2018-04-30,1.0,1.0,716.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Elective Inpatients,Female,2018-01-31,9.0,253.0,230.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Elective Inpatients,Female,2018-02-28,10.0,273.0,252.0
-NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Elective Inpatients,Female,2018-03-31,129.0,231.0,222.0
+NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Elective Inpatients,Female,2018-03-31,,,222.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Elective Inpatients,Female,2018-04-30,10.0,271.0,264.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,90+,All Daycases,Male,2018-01-31,1.0,1.0,575.0
 ,,,,90+,All Daycases,Male,2018-02-28,1.0,1.0,678.0
@@ -1540,28 +1540,28 @@ NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Electi
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Elective Inpatients,Male,2018-03-31,21.0,1516.0,492.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Elective Inpatients,Male,2018-04-30,21.0,1669.0,485.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-01-31,4.0,4.0,38.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-02-28,4.0,5.0,37.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-03-31,2.0,3.0,37.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-04-30,2.0,3.0,39.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-02-28,5.0,5.0,37.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-03-31,3.0,3.0,37.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,30-39,Elective Inpatients,Female,2018-04-30,3.0,3.0,39.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Elective Inpatients,Female,2018-01-31,23.0,1853.0,474.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Elective Inpatients,Female,2018-02-28,22.0,2075.0,470.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Elective Inpatients,Female,2018-03-31,20.0,1875.0,453.0
 NHS Ayrshire & Arran,University Hospital Crosshouse,S08000015,A111H,70-79,Elective Inpatients,Female,2018-04-30,20.0,2080.0,491.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Male,2018-01-31,2.0,2.0,1294.0
-NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Male,2018-02-28,1.0,2.0,1310.0
+NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Male,2018-02-28,2.0,2.0,1310.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Male,2018-03-31,0.0,0.0,1195.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Male,2018-04-30,1.0,1.0,1173.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-01-31,1.0,1.0,48.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-02-28,1.0,1.0,45.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-03-31,1.0,1.0,42.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,10-19,All Daycases,Female,2018-04-30,0.0,0.0,47.0
-NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,All Daycases,Male,2018-01-31,4.0,4.0,1870.0
+NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,All Daycases,Male,2018-01-31,,,1870.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,All Daycases,Male,2018-02-28,1.0,1.0,1875.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,All Daycases,Male,2018-03-31,1.0,2.0,1920.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,All Daycases,Male,2018-04-30,0.0,3.0,1915.0
 NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-01-31,0.0,0.0,368.0
 NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-02-28,2.0,2.0,343.0
-NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-03-31,0.0,0.0,303.0
+NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-03-31,,,303.0
 NHS Borders,Borders General Hospital,S08000016,B120H,40-49,All Daycases,Male,2018-04-30,0.0,0.0,341.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Elective Inpatients,Male,2018-01-31,15.0,4055.0,2975.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Elective Inpatients,Male,2018-02-28,13.0,4451.0,3169.0
@@ -1570,11 +1570,11 @@ NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-5
 ,,,,40-49,All Daycases,Male,2018-01-31,1.0,1.0,2434.0
 ,,,,40-49,All Daycases,Male,2018-02-28,0.0,0.0,2336.0
 ,,,,40-49,All Daycases,Male,2018-03-31,1.0,1.0,2197.0
-,,,,40-49,All Daycases,Male,2018-04-30,1.0,2.0,2249.0
+,,,,40-49,All Daycases,Male,2018-04-30,2.0,2.0,2249.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Male,2018-01-31,25.0,3408.0,1675.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Male,2018-02-28,23.0,3413.0,1489.0
-NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Male,2018-03-31,2369.0,3970.0,1550.0
-NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Male,2018-04-30,2912.0,3453.0,1398.0
+NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Male,2018-03-31,,,1550.0
+NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Male,2018-04-30,,,1398.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,60-69,Emergency Inpatients,Female,2018-01-31,29.0,685.0,144.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,60-69,Emergency Inpatients,Female,2018-02-28,29.0,747.0,151.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,60-69,Emergency Inpatients,Female,2018-03-31,29.0,683.0,139.0
@@ -1586,7 +1586,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,50-59,Elective Inpatients,M
 NHS Fife,NHS Fife,S08000029,S08000029,80-89,Elective Inpatients,Male,2018-01-31,24.0,2036.0,377.0
 NHS Fife,NHS Fife,S08000029,S08000029,80-89,Elective Inpatients,Male,2018-02-28,24.0,2058.0,376.0
 NHS Fife,NHS Fife,S08000029,S08000029,80-89,Elective Inpatients,Male,2018-03-31,22.0,2085.0,347.0
-NHS Fife,NHS Fife,S08000029,S08000029,80-89,Elective Inpatients,Male,2018-04-30,1783.0,1987.0,384.0
+NHS Fife,NHS Fife,S08000029,S08000029,80-89,Elective Inpatients,Male,2018-04-30,,,384.0
 NHS Fife,NHS Fife,S08000029,S08000029,60-69,Emergency Inpatients,Male,2018-01-31,34.0,9660.0,2552.0
 NHS Fife,NHS Fife,S08000029,S08000029,60-69,Emergency Inpatients,Male,2018-02-28,36.0,10737.0,2289.0
 NHS Fife,NHS Fife,S08000029,S08000029,60-69,Emergency Inpatients,Male,2018-03-31,34.0,10402.0,2355.0
@@ -1614,9 +1614,9 @@ NHS Grampian,Dr Gray's Hospital,S08000020,N411H,20-29,All Daycases,Male,2018-04-
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,0-9,Elective Inpatients,Female,2018-01-31,1.0,1.0,45.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,0-9,Elective Inpatients,Female,2018-02-28,2.0,2.0,53.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,0-9,Elective Inpatients,Female,2018-03-31,3.0,3.0,46.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,0-9,Elective Inpatients,Female,2018-04-30,1.0,2.0,51.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,0-9,Elective Inpatients,Female,2018-04-30,2.0,2.0,51.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,80-89,Emergency Inpatients,Male,2018-01-31,43.0,9125.0,1130.0
-NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,80-89,Emergency Inpatients,Male,2018-02-28,6006.0,10674.0,1292.0
+NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,80-89,Emergency Inpatients,Male,2018-02-28,,,1292.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,80-89,Emergency Inpatients,Male,2018-03-31,47.0,8911.0,1315.0
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,80-89,Emergency Inpatients,Male,2018-04-30,48.0,10293.0,1312.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,90+,Emergency Inpatients,Male,2018-01-31,58.0,9996.0,633.0
@@ -1629,20 +1629,20 @@ NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,10-19,All Da
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,10-19,All Daycases,Male,2018-04-30,1.0,1.0,125.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,30-39,All Daycases,Male,2018-01-31,0.0,0.0,301.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,30-39,All Daycases,Male,2018-02-28,1.0,1.0,300.0
-,,,,30-39,All Daycases,Male,2018-03-31,1.0,2.0,1885.0
-NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,30-39,All Daycases,Male,2018-04-30,1.0,2.0,310.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,Emergency Inpatients,Male,2018-01-31,3586.0,3985.0,1050.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,Emergency Inpatients,Male,2018-02-28,3727.0,4234.0,982.0
+,,,,30-39,All Daycases,Male,2018-03-31,2.0,2.0,1885.0
+NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,30-39,All Daycases,Male,2018-04-30,2.0,2.0,310.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,Emergency Inpatients,Male,2018-01-31,,,1050.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,Emergency Inpatients,Male,2018-02-28,,,982.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,Emergency Inpatients,Male,2018-03-31,19.0,3679.0,961.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,20-29,Emergency Inpatients,Male,2018-04-30,18.0,3777.0,940.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,10-19,Elective Inpatients,Male,2018-01-31,2.0,3.0,1.0
-NHS Orkney,Balfour Hospital,S08000025,R101H,10-19,Elective Inpatients,Male,2018-02-28,2.0,4.0,0.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,10-19,Elective Inpatients,Male,2018-01-31,3.0,3.0,1.0
+NHS Orkney,Balfour Hospital,S08000025,R101H,10-19,Elective Inpatients,Male,2018-02-28,4.0,4.0,0.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,10-19,Elective Inpatients,Male,2018-03-31,3.0,3.0,2.0
 NHS Orkney,Balfour Hospital,S08000025,R101H,10-19,Elective Inpatients,Male,2018-04-30,3.0,3.0,1.0
-NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-01-31,1.0,2.0,1632.0
+NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-01-31,2.0,2.0,1632.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-02-28,2.0,3.0,1538.0
 NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-03-31,2.0,2.0,1756.0
-NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-04-30,1.0,2.0,1533.0
+NHS Grampian,Aberdeen Royal Infirmary,S08000020,N101H,80-89,All Daycases,Female,2018-04-30,2.0,2.0,1533.0
 NHS Highland,NHS Highland,S08000022,S08000022,0-9,Emergency Inpatients,Male,2018-01-31,4.0,251.0,185.0
 NHS Highland,NHS Highland,S08000022,S08000022,0-9,Emergency Inpatients,Male,2018-02-28,5.0,255.0,179.0
 NHS Highland,NHS Highland,S08000022,S08000022,0-9,Emergency Inpatients,Male,2018-03-31,6.0,296.0,185.0
@@ -1651,15 +1651,15 @@ NHS Borders,Borders General Hospital,S08000016,B120H,90+,Elective Inpatients,Fem
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,Elective Inpatients,Female,2018-02-28,24.0,252.0,27.0
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,Elective Inpatients,Female,2018-03-31,22.0,229.0,25.0
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,Elective Inpatients,Female,2018-04-30,22.0,254.0,27.0
-,,,,10-19,All Daycases,Female,2018-01-31,1.0,2.0,761.0
+,,,,10-19,All Daycases,Female,2018-01-31,2.0,2.0,761.0
 ,,,,10-19,All Daycases,Female,2018-02-28,2.0,2.0,648.0
-,,,,10-19,All Daycases,Female,2018-03-31,1.0,2.0,650.0
+,,,,10-19,All Daycases,Female,2018-03-31,2.0,2.0,650.0
 ,,,,10-19,All Daycases,Female,2018-04-30,1.0,1.0,712.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,80-89,All Daycases,Female,2018-01-31,2.0,2.0,578.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,80-89,All Daycases,Female,2018-02-28,0.0,0.0,524.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,80-89,All Daycases,Female,2018-03-31,0.0,0.0,562.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,80-89,All Daycases,Female,2018-04-30,0.0,0.0,511.0
-,,,,50-59,All Daycases,Female,2018-01-31,1.0,2.0,4558.0
+,,,,50-59,All Daycases,Female,2018-01-31,2.0,2.0,4558.0
 ,,,,50-59,All Daycases,Female,2018-02-28,2.0,2.0,4025.0
 ,,,,50-59,All Daycases,Female,2018-03-31,0.0,0.0,3881.0
 ,,,,50-59,All Daycases,Female,2018-04-30,1.0,1.0,4421.0
@@ -1677,13 +1677,13 @@ NHS Grampian,Dr Gray's Hospital,S08000020,N411H,70-79,All Daycases,Female,2018-0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,70-79,All Daycases,Female,2018-04-30,0.0,0.0,639.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Female,2018-01-31,22.0,6428.0,1372.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Female,2018-02-28,22.0,6751.0,1345.0
-NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Female,2018-03-31,3884.0,6814.0,1427.0
+NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Female,2018-03-31,,,1427.0
 NHS Greater Glasgow & Clyde,Queen Elizabeth University Hospital,S08000021,G405H,30-39,Emergency Inpatients,Female,2018-04-30,24.0,6805.0,1265.0
 NHS Lothian,Western General Hospital,S08000024,S116H,60-69,All Daycases,Female,2018-01-31,2.0,2.0,2334.0
 NHS Lothian,Western General Hospital,S08000024,S116H,60-69,All Daycases,Female,2018-02-28,0.0,0.0,2322.0
 NHS Lothian,Western General Hospital,S08000024,S116H,60-69,All Daycases,Female,2018-03-31,2.0,2.0,2136.0
-NHS Lothian,Western General Hospital,S08000024,S116H,60-69,All Daycases,Female,2018-04-30,0.0,0.0,2296.0
-NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-01-31,1.0,2.0,1744.0
+NHS Lothian,Western General Hospital,S08000024,S116H,60-69,All Daycases,Female,2018-04-30,,,2296.0
+NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-01-31,2.0,2.0,1744.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-02-28,0.0,0.0,1772.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-03-31,0.0,0.0,1854.0
 NHS Lothian,Western General Hospital,S08000024,S116H,50-59,All Daycases,Male,2018-04-30,2.0,2.0,1569.0
@@ -1702,8 +1702,8 @@ NHS Fife,Queen Margaret Hospital,S08000029,F805H,50-59,All Daycases,Male,2018-04
 NHS Lothian,NHS Lothian,S08000024,S08000024,80-89,All Daycases,Male,2018-01-31,2.0,30.0,3708.0
 NHS Lothian,NHS Lothian,S08000024,S08000024,80-89,All Daycases,Male,2018-02-28,0.0,30.0,3950.0
 NHS Lothian,NHS Lothian,S08000024,S08000024,80-89,All Daycases,Male,2018-03-31,1.0,35.0,3370.0
-NHS Lothian,NHS Lothian,S08000024,S08000024,80-89,All Daycases,Male,2018-04-30,22.0,37.0,3624.0
-NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Emergency Inpatients,Female,2018-01-31,65.0,18453.0,2779.0
+NHS Lothian,NHS Lothian,S08000024,S08000024,80-89,All Daycases,Male,2018-04-30,,,3624.0
+NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Emergency Inpatients,Female,2018-01-31,66.0,18453.0,2779.0
 NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Emergency Inpatients,Female,2018-02-28,74.0,18442.0,2824.0
 NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Emergency Inpatients,Female,2018-03-31,77.0,16207.0,2789.0
 NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Emergency Inpatients,Female,2018-04-30,68.0,18927.0,2958.0
@@ -1711,7 +1711,7 @@ NHS Borders,Borders General Hospital,S08000016,B120H,0-9,Emergency Inpatients,Ma
 NHS Borders,Borders General Hospital,S08000016,B120H,0-9,Emergency Inpatients,Male,2018-02-28,4.0,97.0,66.0
 NHS Borders,Borders General Hospital,S08000016,B120H,0-9,Emergency Inpatients,Male,2018-03-31,5.0,91.0,76.0
 NHS Borders,Borders General Hospital,S08000016,B120H,0-9,Emergency Inpatients,Male,2018-04-30,3.0,93.0,74.0
-NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Elective Inpatients,Male,2018-01-31,44.0,83.0,33.0
+NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Elective Inpatients,Male,2018-01-31,,,33.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Elective Inpatients,Male,2018-02-28,3.0,76.0,30.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Elective Inpatients,Male,2018-03-31,1.0,81.0,34.0
 NHS Tayside,Stracathro Hospital,S08000030,T312H,70-79,Elective Inpatients,Male,2018-04-30,1.0,78.0,32.0
@@ -1729,10 +1729,10 @@ NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,All Daycases,Female,2018-03-3
 NHS Highland,Raigmore Hospital,S08000022,H202H,0-9,All Daycases,Female,2018-04-30,0.0,0.0,118.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Female,2018-01-31,6.0,6.0,11.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Female,2018-02-28,7.0,8.0,11.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Female,2018-03-31,4.0,6.0,11.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Female,2018-04-30,3.0,5.0,10.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Female,2018-03-31,6.0,6.0,11.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Female,2018-04-30,5.0,5.0,10.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,10-19,All Daycases,Male,2018-01-31,2.0,2.0,181.0
-NHS Highland,Raigmore Hospital,S08000022,H202H,10-19,All Daycases,Male,2018-02-28,0.0,0.0,180.0
+NHS Highland,Raigmore Hospital,S08000022,H202H,10-19,All Daycases,Male,2018-02-28,,,180.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,10-19,All Daycases,Male,2018-03-31,1.0,1.0,186.0
 NHS Highland,Raigmore Hospital,S08000022,H202H,10-19,All Daycases,Male,2018-04-30,1.0,1.0,164.0
 ,,,,50-59,Elective Inpatients,Female,2018-01-31,26.0,2130.0,1259.0
@@ -1746,7 +1746,7 @@ NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,80-8
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-01-31,0.0,0.0,110.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-02-28,0.0,0.0,125.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-03-31,1.0,1.0,121.0
-NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-04-30,0.0,0.0,114.0
+NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,30-39,Elective Inpatients,Female,2018-04-30,,,114.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Emergency Inpatients,Female,2018-01-31,13.0,861.0,494.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Emergency Inpatients,Female,2018-02-28,13.0,991.0,504.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,10-19,Emergency Inpatients,Female,2018-03-31,13.0,908.0,466.0
@@ -1763,7 +1763,7 @@ NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,10-19,Elective Inpatients,
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,10-19,Elective Inpatients,Male,2018-02-28,5.0,43.0,45.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,10-19,Elective Inpatients,Male,2018-03-31,6.0,45.0,54.0
 NHS Forth Valley,NHS Forth Valley,S08000019,S08000019,10-19,Elective Inpatients,Male,2018-04-30,5.0,39.0,54.0
-NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,20-29,All Daycases,Male,2018-01-31,1.0,2.0,377.0
+NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,20-29,All Daycases,Male,2018-01-31,2.0,2.0,377.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,20-29,All Daycases,Male,2018-02-28,1.0,1.0,358.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,20-29,All Daycases,Male,2018-03-31,0.0,0.0,383.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,20-29,All Daycases,Male,2018-04-30,1.0,1.0,364.0
@@ -1777,7 +1777,7 @@ NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Male,20
 NHS Highland,Belford Hospital,S08000022,H212H,70-79,Emergency Inpatients,Male,2018-04-30,37.0,1032.0,137.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Male,2018-01-31,1.0,1.0,381.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Male,2018-02-28,0.0,0.0,392.0
-NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Male,2018-03-31,1.0,2.0,399.0
+NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Male,2018-03-31,2.0,2.0,399.0
 NHS Greater Glasgow & Clyde,Inverclyde Royal Hospital,S08000021,C313H,40-49,All Daycases,Male,2018-04-30,1.0,1.0,377.0
 NHS Fife,NHS Fife,S08000029,S08000029,30-39,All Daycases,Female,2018-01-31,0.0,0.0,706.0
 NHS Fife,NHS Fife,S08000029,S08000029,30-39,All Daycases,Female,2018-02-28,1.0,1.0,832.0
@@ -1791,7 +1791,7 @@ NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,Female,2018-02-28,24.0,2241.0,1094.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,Female,2018-03-31,28.0,2591.0,1058.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,Female,2018-04-30,27.0,2394.0,1006.0
-NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Elective Inpatients,Male,2018-01-31,1755.0,1835.0,685.0
+NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Elective Inpatients,Male,2018-01-31,,,685.0
 NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Elective Inpatients,Male,2018-02-28,29.0,1631.0,634.0
 NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Elective Inpatients,Male,2018-03-31,29.0,1712.0,679.0
 NHS Lothian,Western General Hospital,S08000024,S116H,70-79,Elective Inpatients,Male,2018-04-30,25.0,1611.0,593.0
@@ -1803,10 +1803,10 @@ NHS Borders,NHS Borders,S08000016,S08000016,20-29,Emergency Inpatients,Male,2018
 NHS Borders,NHS Borders,S08000016,S08000016,20-29,Emergency Inpatients,Male,2018-02-28,12.0,495.0,219.0
 NHS Borders,NHS Borders,S08000016,S08000016,20-29,Emergency Inpatients,Male,2018-03-31,12.0,537.0,185.0
 NHS Borders,NHS Borders,S08000016,S08000016,20-29,Emergency Inpatients,Male,2018-04-30,12.0,527.0,202.0
-NHS Lothian,Western General Hospital,S08000024,S116H,90+,Elective Inpatients,Male,2018-01-31,369.0,564.0,81.0
+NHS Lothian,Western General Hospital,S08000024,S116H,90+,Elective Inpatients,Male,2018-01-31,,,81.0
 NHS Lothian,Western General Hospital,S08000024,S116H,90+,Elective Inpatients,Male,2018-02-28,39.0,660.0,86.0
 NHS Lothian,Western General Hospital,S08000024,S116H,90+,Elective Inpatients,Male,2018-03-31,35.0,604.0,79.0
-NHS Lothian,Western General Hospital,S08000024,S116H,90+,Elective Inpatients,Male,2018-04-30,399.0,571.0,86.0
+NHS Lothian,Western General Hospital,S08000024,S116H,90+,Elective Inpatients,Male,2018-04-30,,,86.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,Emergency Inpatients,Female,2018-01-31,13.0,77.0,39.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,Emergency Inpatients,Female,2018-02-28,12.0,81.0,43.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,Emergency Inpatients,Female,2018-03-31,12.0,77.0,41.0
@@ -1816,13 +1816,13 @@ NHS Grampian,Dr Gray's Hospital,S08000020,N411H,30-39,Emergency Inpatients,Male,
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,30-39,Emergency Inpatients,Male,2018-03-31,16.0,534.0,257.0
 NHS Grampian,Dr Gray's Hospital,S08000020,N411H,30-39,Emergency Inpatients,Male,2018-04-30,17.0,545.0,272.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-01-31,2.0,2.0,588.0
-NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-02-28,0.0,0.0,602.0
+NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-02-28,,,602.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-03-31,0.0,0.0,578.0
 NHS Lothian,Western General Hospital,S08000024,S116H,20-29,All Daycases,Female,2018-04-30,0.0,0.0,597.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-01-31,4.0,5.0,11.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-02-28,3.0,6.0,10.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-03-31,5.0,6.0,11.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-04-30,5.0,6.0,11.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-01-31,5.0,5.0,11.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-02-28,6.0,6.0,10.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-03-31,6.0,6.0,11.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,30-39,Elective Inpatients,Male,2018-04-30,6.0,6.0,11.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,50-59,Elective Inpatients,Male,2018-01-31,12.0,580.0,309.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,50-59,Elective Inpatients,Male,2018-02-28,11.0,567.0,282.0
 NHS Greater Glasgow & Clyde,Royal Alexandra Hospital,S08000021,C418H,50-59,Elective Inpatients,Male,2018-03-31,11.0,656.0,279.0
@@ -1869,23 +1869,23 @@ NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Female,20
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Female,2018-04-30,1.0,1.0,3821.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,All Daycases,Female,2018-01-31,1.0,1.0,680.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,All Daycases,Female,2018-02-28,1.0,1.0,638.0
-NHS Borders,NHS Borders,S08000016,S08000016,70-79,All Daycases,Female,2018-03-31,1.0,2.0,675.0
+NHS Borders,NHS Borders,S08000016,S08000016,70-79,All Daycases,Female,2018-03-31,2.0,2.0,675.0
 NHS Borders,NHS Borders,S08000016,S08000016,70-79,All Daycases,Female,2018-04-30,1.0,1.0,594.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,10-19,Emergency Inpatients,Male,2018-01-31,10.0,304.0,195.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,10-19,Emergency Inpatients,Male,2018-02-28,9.0,321.0,213.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,10-19,Emergency Inpatients,Male,2018-03-31,8.0,333.0,217.0
 NHS Lanarkshire,University Hospital Hairmyres,S08000023,L302H,10-19,Emergency Inpatients,Male,2018-04-30,10.0,295.0,218.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,Emergency Inpatients,Female,2018-01-31,712.0,1302.0,89.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,Emergency Inpatients,Female,2018-01-31,,,89.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,Emergency Inpatients,Female,2018-02-28,57.0,1155.0,98.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,Emergency Inpatients,Female,2018-03-31,56.0,1340.0,101.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,80-89,Emergency Inpatients,Female,2018-04-30,56.0,1106.0,94.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,All Daycases,Male,2018-01-31,1.0,1.0,124.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,All Daycases,Male,2018-02-28,1.0,1.0,114.0
-NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,All Daycases,Male,2018-03-31,1.0,2.0,116.0
+NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,All Daycases,Male,2018-03-31,2.0,2.0,116.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,70-79,All Daycases,Male,2018-04-30,1.0,1.0,118.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,20-29,Elective Inpatients,Female,2018-01-31,4.0,7.0,186.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,20-29,Elective Inpatients,Female,2018-01-31,7.0,7.0,186.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,20-29,Elective Inpatients,Female,2018-02-28,7.0,8.0,179.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,20-29,Elective Inpatients,Female,2018-03-31,8.0,8.0,164.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,20-29,Elective Inpatients,Female,2018-03-31,7.0,8.0,164.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,20-29,Elective Inpatients,Female,2018-04-30,5.0,8.0,162.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,90+,Elective Inpatients,Female,2018-01-31,8.0,19.0,11.0
 NHS Fife,Queen Margaret Hospital,S08000029,F805H,90+,Elective Inpatients,Female,2018-02-28,9.0,13.0,11.0
@@ -1897,7 +1897,7 @@ NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency In
 NHS Lanarkshire,University Hospital Monklands,S08000023,L106H,50-59,Emergency Inpatients,Female,2018-04-30,25.0,4102.0,1596.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Female,2018-01-31,0.0,0.0,286.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Female,2018-02-28,2.0,2.0,296.0
-NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Female,2018-03-31,0.0,0.0,269.0
+NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Female,2018-03-31,,,269.0
 NHS Greater Glasgow & Clyde,West Glasgow,S08000021,G516H,90+,All Daycases,Female,2018-04-30,0.0,0.0,281.0
 NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Male,2018-01-31,0.0,0.0,54.0
 NHS Greater Glasgow & Clyde,Stobhill Hospital,S08000021,G207H,20-29,Elective Inpatients,Male,2018-02-28,1.0,1.0,59.0
@@ -1910,7 +1910,7 @@ NHS Lothian,Royal Infirmary of Edinburgh at Little France,S08000024,S314H,50-59,
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Male,2018-01-31,0.0,0.0,712.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Male,2018-02-28,1.0,1.0,813.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Male,2018-03-31,2.0,2.0,771.0
-NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Male,2018-04-30,1.0,2.0,775.0
+NHS Lothian,Western General Hospital,S08000024,S116H,30-39,All Daycases,Male,2018-04-30,2.0,2.0,775.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,Male,2018-01-31,25.0,2024.0,906.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,Male,2018-02-28,26.0,2152.0,966.0
 NHS Lothian,Western General Hospital,S08000024,S116H,30-39,Emergency Inpatients,Male,2018-03-31,22.0,1997.0,1020.0
@@ -1919,34 +1919,34 @@ NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,F
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Female,2018-02-28,37.0,21220.0,5518.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Female,2018-03-31,35.0,22034.0,5886.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,60-69,Emergency Inpatients,Female,2018-04-30,36.0,20252.0,5063.0
-NHS Borders,Borders General Hospital,S08000016,B120H,90+,All Daycases,Male,2018-01-31,0.0,0.0,80.0
+NHS Borders,Borders General Hospital,S08000016,B120H,90+,All Daycases,Male,2018-01-31,,,80.0
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,All Daycases,Male,2018-02-28,2.0,2.0,93.0
 NHS Borders,Borders General Hospital,S08000016,B120H,90+,All Daycases,Male,2018-03-31,0.0,0.0,97.0
-NHS Borders,Borders General Hospital,S08000016,B120H,90+,All Daycases,Male,2018-04-30,0.0,0.0,81.0
+NHS Borders,Borders General Hospital,S08000016,B120H,90+,All Daycases,Male,2018-04-30,,,81.0
 ,,,,80-89,All Daycases,Male,2018-01-31,2.0,14.0,3456.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,80-89,All Daycases,Male,2018-02-28,0.0,0.0,1947.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,80-89,All Daycases,Male,2018-03-31,0.0,0.0,1732.0
 NHS Ayrshire & Arran,NHS Ayrshire & Arran,S08000015,S08000015,80-89,All Daycases,Male,2018-04-30,0.0,0.0,1736.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Female,2018-01-31,0.0,0.0,1165.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Female,2018-02-28,2.0,2.0,1277.0
-NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Female,2018-03-31,0.0,0.0,1183.0
+NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Female,2018-03-31,,,1183.0
 NHS Forth Valley,Forth Valley Royal Hospital,S08000019,V217H,70-79,All Daycases,Female,2018-04-30,1.0,1.0,1261.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-01-31,34.0,38762.0,11154.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-02-28,38.0,36535.0,13069.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-03-31,37.0,34312.0,11620.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-04-30,32.0,34220.0,12312.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Emergency Inpatients,Male,2018-01-31,2987.0,3407.0,151.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Emergency Inpatients,Male,2018-01-31,,,151.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Emergency Inpatients,Male,2018-02-28,65.0,3012.0,155.0
 NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Emergency Inpatients,Male,2018-03-31,68.0,3083.0,160.0
-NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Emergency Inpatients,Male,2018-04-30,2160.0,2900.0,138.0
+NHS Dumfries & Galloway,Dumfries & Galloway Royal Infirmary,S08000017,Y146H,90+,Emergency Inpatients,Male,2018-04-30,,,138.0
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,50-59,Emergency Inpatients,Female,2018-01-31,25.0,2589.0,385.0
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,50-59,Emergency Inpatients,Female,2018-02-28,26.0,2368.0,372.0
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,50-59,Emergency Inpatients,Female,2018-03-31,23.0,2137.0,346.0
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,50-59,Emergency Inpatients,Female,2018-04-30,25.0,2297.0,379.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Elective Inpatients,Female,2018-01-31,31.0,4227.0,626.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Elective Inpatients,Female,2018-02-28,29.0,4088.0,576.0
-NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Elective Inpatients,Female,2018-03-31,2782.0,3883.0,672.0
-NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Elective Inpatients,Female,2018-04-30,2693.0,4043.0,687.0
+NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Elective Inpatients,Female,2018-03-31,,,672.0
+NHS Grampian,NHS Grampian,S08000020,S08000020,80-89,Elective Inpatients,Female,2018-04-30,,,687.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Female,2018-01-31,38.0,1335.0,281.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Female,2018-02-28,35.0,1305.0,308.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,80-89,Emergency Inpatients,Female,2018-03-31,40.0,1300.0,289.0
@@ -1967,35 +1967,35 @@ NHS Tayside,Perth Royal Infirmary,S08000030,T202H,30-39,Elective Inpatients,Male
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,30-39,Elective Inpatients,Male,2018-02-28,4.0,41.0,36.0
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,30-39,Elective Inpatients,Male,2018-03-31,5.0,54.0,37.0
 NHS Tayside,Perth Royal Infirmary,S08000030,T202H,30-39,Elective Inpatients,Male,2018-04-30,5.0,42.0,32.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,20-29,Elective Inpatients,Female,2018-01-31,3.0,4.0,32.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,20-29,Elective Inpatients,Female,2018-01-31,4.0,4.0,32.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,20-29,Elective Inpatients,Female,2018-02-28,4.0,4.0,32.0
 NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,20-29,Elective Inpatients,Female,2018-03-31,3.0,3.0,28.0
-NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,20-29,Elective Inpatients,Female,2018-04-30,3.0,4.0,31.0
+NHS Greater Glasgow & Clyde,Vale of Leven General Hospital,S08000021,C206H,20-29,Elective Inpatients,Female,2018-04-30,4.0,4.0,31.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-01-31,37.0,37167.0,11714.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-02-28,33.0,38221.0,12593.0
-NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-03-31,33554.0,36200.0,12158.0
+NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-03-31,,,12158.0
 NHS Greater Glasgow & Clyde,NHS Greater Glasgow & Clyde,S08000021,S08000021,50-59,Emergency Inpatients,Male,2018-04-30,35.0,36839.0,12877.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Emergency Inpatients,Female,2018-01-31,7.0,1131.0,1564.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Emergency Inpatients,Female,2018-02-28,5.0,1112.0,1337.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Emergency Inpatients,Female,2018-03-31,6.0,981.0,1292.0
 NHS Greater Glasgow & Clyde,New Victoria Hospital,S08000021,G306H,70-79,Emergency Inpatients,Female,2018-04-30,5.0,1094.0,1558.0
 ,,,,10-19,All Daycases,Male,2018-01-31,1.0,1.0,653.0
-,,,,10-19,All Daycases,Male,2018-02-28,1.0,2.0,682.0
-,,,,10-19,All Daycases,Male,2018-03-31,1.0,2.0,654.0
+,,,,10-19,All Daycases,Male,2018-02-28,2.0,2.0,682.0
+,,,,10-19,All Daycases,Male,2018-03-31,2.0,2.0,654.0
 ,,,,10-19,All Daycases,Male,2018-04-30,0.0,0.0,674.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Male,2018-01-31,1.0,1.0,3563.0
-NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Male,2018-02-28,1.0,2.0,3418.0
+NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Male,2018-02-28,2.0,2.0,3418.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Male,2018-03-31,1.0,1.0,3777.0
 NHS Lanarkshire,NHS Lanarkshire,S08000023,S08000023,50-59,All Daycases,Male,2018-04-30,1.0,1.0,3221.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,90+,All Daycases,Female,2018-01-31,2.0,2.0,396.0
-NHS Grampian,NHS Grampian,S08000020,S08000020,90+,All Daycases,Female,2018-02-28,1.0,2.0,437.0
+NHS Grampian,NHS Grampian,S08000020,S08000020,90+,All Daycases,Female,2018-02-28,2.0,2.0,437.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,90+,All Daycases,Female,2018-03-31,2.0,2.0,392.0
 NHS Grampian,NHS Grampian,S08000020,S08000020,90+,All Daycases,Female,2018-04-30,0.0,0.0,420.0
-NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,All Daycases,Male,2018-01-31,0.0,0.0,29.0
+NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,All Daycases,Male,2018-01-31,,,29.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,All Daycases,Male,2018-02-28,0.0,0.0,28.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,All Daycases,Male,2018-03-31,0.0,0.0,32.0
 NHS Highland,Lorn & Islands Hospital,S08000022,C121H,20-29,All Daycases,Male,2018-04-30,0.0,0.0,28.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,60-69,All Daycases,Male,2018-01-31,2.0,2.0,116.0
-NHS Orkney,NHS Orkney,S08000025,S08000025,60-69,All Daycases,Male,2018-02-28,1.0,2.0,111.0
+NHS Orkney,NHS Orkney,S08000025,S08000025,60-69,All Daycases,Male,2018-02-28,2.0,2.0,111.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,60-69,All Daycases,Male,2018-03-31,2.0,2.0,113.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,60-69,All Daycases,Male,2018-04-30,1.0,1.0,114.0

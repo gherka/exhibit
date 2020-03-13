@@ -77,7 +77,7 @@ def adjust_dataframe_to_fit_constraint(anon_df, bool_constraint):
 
     clean_rule = _clean_up_constraint(bool_constraint)
     mask = (anon_df
-                .rename(lambda x: x.replace(" ", "_"), axis="columns")
+                .rename(lambda x: x.replace(" ", "__"), axis="columns")
                 .eval(clean_rule)
     )
 
@@ -90,16 +90,6 @@ def adjust_dataframe_to_fit_constraint(anon_df, bool_constraint):
             args=(col_A_name, col_B_name, op)
         )
     )
-
-    #propagate nulls / adjust values from column A to column B if it exists
-    if col_B_name in anon_df.columns:
-        anon_df.loc[~mask, col_B_name] = (
-            anon_df[~mask].apply(
-                _adjust_nulls_to_reference_column,
-                axis=1,
-                args=(col_A_name, op)
-            )
-        )
 
 def tokenise_constraint(constraint):
     '''
@@ -165,7 +155,7 @@ def _generate_value_with_condition(x, y, op, pct_diff=None):
         return np.nan
     
     if np.isnan(y):
-        return x
+        return np.NaN
 
     abs_diff = max(1, abs(y-x))
 
@@ -173,35 +163,6 @@ def _generate_value_with_condition(x, y, op, pct_diff=None):
     new_x_max = x + abs_diff * (1 + pct_diff)
 
     return _recursive_randint(new_x_min, new_x_max, y, op)
-
-def _adjust_nulls_to_reference_column(
-                                    row,
-                                    reference_col_name,
-                                    operator,
-                                    pct_diff=None):
-    '''
-    Reverse operator
-    '''
-    x = row[reference_col_name]
-
-    if np.isnan(x):
-        return x
-
-    reverse_op_dict = {
-        "<": greater,
-        ">": less,
-        "<=": greater_equal,
-        ">=": less_equal,
-        "==": equal
-    }
-    
-    if pct_diff is None:
-        pct_diff = 0.5
-
-    new_x_min = max(0, x - x * pct_diff)
-    new_x_max = x + x * pct_diff
-
-    return _recursive_randint(new_x_min, new_x_max, x, reverse_op_dict[operator])
 
 def _adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     '''
@@ -251,7 +212,7 @@ def _clean_up_constraint(rule_string):
     as "Clinical_Pathway_31_Day".
 
     The solution is to process the constraint first, before passing it to eval,
-    not forgetting to rename the dataframe columns with a _ instead of a whitespace
+    not forgetting to rename the dataframe columns with a __ instead of a whitespace
     '''
     
     ops_re = r'[<>]=?|=='
@@ -262,7 +223,7 @@ def _clean_up_constraint(rule_string):
         if re.search(ops_re, token):
             clean_str.write(token)
         else:
-            clean_str.write(token.replace(" ", "_"))
+            clean_str.write(token.replace(" ", "__"))
     
     result = clean_str.getvalue()
 
