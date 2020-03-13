@@ -91,21 +91,39 @@ def generate_derived_column(anon_df, calculation, precision=2):
     --------
     pd.Series
     
-
     Columns passed in calculation might have spaces which will trip up
     eval() so we take an extra step to replace whitespace with _ in
-    both the calculation and the anon_df
-
+    both the calculation and the anon_df. Users can also use groupby to
+    create aggregated calculations, but extra care needs to be taken when
+    specifying the calculation: start with df.groupby and enclose column
+    names in single quotes.
     '''
 
     safe_calculation = re.sub(r'\b\s\b', r'_', calculation)
+    safe_df = anon_df.rename(columns=lambda x: x.replace(" ", "_"))
 
-    output = (anon_df
-        .rename(columns=lambda x: x.replace(" ", "_"))
-        .eval(safe_calculation)
-        .round(precision)
-    )
-    return output  
+    if "groupby" in safe_calculation:
+        #groupby requires pd.eval, not df.eval
+        temp_series = (pd
+                    .eval(safe_calculation, local_dict={"df":safe_df})
+                    .round(precision)
+                )
+
+        #expect multi-index in groupby DF
+        temp_anon_df = anon_df.set_index(temp_series.index.name)
+        #assign on index
+        temp_anon_df[temp_series.name] = temp_series
+        #reset index and return series
+        groupby_output = temp_anon_df.reset_index()[temp_series.name]
+
+        return groupby_output
+
+    basic_output = (safe_df
+                    .eval(safe_calculation, local_dict={"df":safe_df})
+                    .round(precision)
+                )
+        
+    return basic_output  
 
 # INNER MODULE METHODS
 # ====================

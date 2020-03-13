@@ -8,6 +8,7 @@ import unittest
 # External library imports
 import pandas as pd
 import numpy as np
+from pandas.testing import assert_series_equal
 
 # Module under test
 from exhibit.core.generate import continuous as tm
@@ -17,7 +18,7 @@ class continuousTests(unittest.TestCase):
     Doc string
     '''
 
-    def test_generate_derived_column(self):
+    def test_generate_derived_column_basic(self):
         '''
         All of the work is done by pandas.eval() method;
         we're just testing column names with whitespace are OK
@@ -30,6 +31,28 @@ class continuousTests(unittest.TestCase):
         calc = "Hello World + A"
 
         self.assertEqual(tm.generate_derived_column(test_df, calc).sum(), 10)
+
+    def test_generate_derived_column_groupby(self):
+        '''
+        We want to allow users to create aggregated columns, like peer values.
+        Make sure that column names are enclosed in single spaces.
+        '''
+
+        test_df = pd.DataFrame(
+            data={
+                "C1":["A", "A", "B", "B", "C", "C"], #locations
+                "C2":["spam", "eggs"] * 3, #groupby dimension(s)
+                "C3":[1, 10] * 3 #aggregation column
+            }
+        )
+
+        calc = "df.groupby('C2')['C3'].sum()"
+
+        expected = pd.Series([3, 30, 3, 30, 3, 30], name="C3")
+
+        assert_series_equal(
+            left=tm.generate_derived_column(test_df, calc),
+            right=expected)
 
     def test_apply_dispersion(self):
         '''
@@ -60,8 +83,8 @@ class continuousTests(unittest.TestCase):
         '''
 
         test_df = pd.DataFrame(data={
-            "A":np.random.random(20),
-            "B":np.random.random(20)
+            "A":np.random.random(20), # pylint: disable=no-member
+            "B":np.random.random(20)  # pylint: disable=no-member
             })
         
         result = tm._conditional_rounding(test_df['A'], 4)
