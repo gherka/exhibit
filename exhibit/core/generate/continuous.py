@@ -171,7 +171,7 @@ def _conditional_rounding(series, target_sum):
     '''
     Rounding the values up or down depending on whether the 
     sum of the series with newly rounded values is greater than
-    or less than the target sum. Not vectorised.
+    or less than the target sum.
 
     Parameters
     ----------
@@ -187,8 +187,9 @@ def _conditional_rounding(series, target_sum):
 
     #determine the value by which each row differs from the target_sum
     row_diff = (target_sum - series.dropna().sum()) / len(series.dropna())
-
-    #adjust values so that they sum up to target_sum
+        
+    #adjust values so that they sum up to target_sum; if column's type is float,
+    #return at this point, if it's whole number carry on - TO DO
     values = pd.Series(
         np.where(
             series + row_diff >= 0,
@@ -196,16 +197,19 @@ def _conditional_rounding(series, target_sum):
             np.where(np.isnan(series), np.NaN, 0)
             )
     )
-
-    #lazily iterate over values and adjust in-place until their sum == target_sum
-    #and then floor the rest of the values. Very slow-running code!
-    for i, elem in enumerate(values):
-
-        if values.dropna().sum() < target_sum:
-            values.iloc[i] = np.ceil(elem)
-        else:
-            values.iloc[i] = np.floor(elem)
-
+    
+    #how many rows will need to be rounded up to get to target
+    boundary = int(target_sum - np.floor(values).sum())
+    
+    #because values are limited at the lower end at zero, sometimes it's not possible
+    #to adjust them to a lower target_sum; we floor them and return
+    if boundary < 0:
+        print("Target sum too low for the number of rows.")
+        return pd.Series(np.floor(values))
+    
+    values.iloc[0:boundary] = np.ceil(values.iloc[0:boundary])
+    values.iloc[boundary:] = np.floor(values.iloc[boundary:])
+    
     return values
 
 def _apply_dispersion(value, dispersion_pct):

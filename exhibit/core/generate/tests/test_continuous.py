@@ -81,15 +81,22 @@ class continuousTests(unittest.TestCase):
         Check the basic scenario, and also the edge case of
         when it's not possible to get to target_sum
         '''
-
-        test_df = pd.DataFrame(data={
-            "A":np.random.random(20), # pylint: disable=no-member
-            "B":np.random.random(20)  # pylint: disable=no-member
-            })
         
-        result = tm._conditional_rounding(test_df['A'], 4)
+        #series sums up to 75.06
+        test_series = pd.Series([1.15, 20.9, 2.22, 4.31, 15.01, 1.02, 30.45])
+        
+        t1 = tm._conditional_rounding(test_series, 70).sum()
+        e1 = 70
 
-        self.assertEqual(sum(result), 4)
+        t2 = tm._conditional_rounding(test_series, 500).sum()
+        e2 = 500
+
+        t3 = tm._conditional_rounding(test_series, 10).sum()
+        e3 = 37
+
+        self.assertEqual(t1, e1)
+        self.assertEqual(t2, e2)
+        self.assertEqual(t3, e3)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
