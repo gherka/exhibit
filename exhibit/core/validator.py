@@ -90,8 +90,8 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
         
-        miss = get_attr_values(spec_dict, 'allow_missing_values')
-        uniques = get_attr_values(spec_dict, 'uniques')
+        miss = get_attr_values(spec_dict, 'allow_missing_values', include_paired=False)
+        uniques = get_attr_values(spec_dict, 'uniques', include_paired=False)
 
         nums = [1]
 

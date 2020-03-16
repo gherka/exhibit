@@ -171,17 +171,17 @@ NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Electi
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,Female,2018-07-01,11.0,2624.0,455.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,Female,2018-10-01,11.0,2698.0,472.0
 NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,Female,2019-01-01,,,436.0
-NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,Male,2018-04-01,9.0,2208.0,464.0
+NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,Male,2018-04-01,10.0,2208.0,464.0
 ,,,,70-79,Elective Inpatients,,2018-07-01,,,3808.0
-NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,,2018-10-01,2.0,554.0,85.0
-NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,,2019-01-01,1.0,547.0,96.0
-NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Female,2018-04-01,41.0,8071.0,229.0
-NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Female,2018-07-01,41.0,8002.0,257.0
-NHS Lothian,St John's Hospital,,,90+,Emergency Inpatients,,2018-10-01,7.0,1638.0,47.0
+NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,,2018-10-01,3.0,554.0,85.0
+NHS Dumfries & Galloway,NHS Dumfries & Galloway,S08000017,S08000017,70-79,Elective Inpatients,,2019-01-01,2.0,547.0,96.0
+NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Female,2018-04-01,42.0,8071.0,229.0
+NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Female,2018-07-01,42.0,8002.0,257.0
+NHS Lothian,St John's Hospital,,,90+,Emergency Inpatients,,2018-10-01,8.0,1638.0,47.0
 NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Female,2019-01-01,,,257.0
-NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2018-04-01,39.0,6982.0,239.0
-NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2018-07-01,34.0,6909.0,232.0
-NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2018-10-01,34.0,6044.0,228.0
+NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2018-04-01,40.0,6982.0,239.0
+NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2018-07-01,35.0,6909.0,232.0
+NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2018-10-01,35.0,6044.0,228.0
 NHS Lothian,St John's Hospital,S08000024,S308H,90+,Emergency Inpatients,Male,2019-01-01,36.0,6338.0,238.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,30-39,Emergency Inpatients,Female,2018-04-01,9.0,3263.0,686.0
 NHS Orkney,NHS Orkney,S08000025,S08000025,30-39,Emergency Inpatients,Female,2018-07-01,10.0,2860.0,630.0

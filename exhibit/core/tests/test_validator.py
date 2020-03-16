@@ -87,11 +87,13 @@ class validatorTests(unittest.TestCase):
             "columns": {
                 "A": {
                     "type":"categorical",
+                    "original_values": "dataframe",
                     "uniques":5,
                     "allow_missing_values":False
                 },
                 "B": {
                     "type":"categorical",
+                    "original_values": "dataframe",
                     "uniques":2,
                     "allow_missing_values":False
                 }

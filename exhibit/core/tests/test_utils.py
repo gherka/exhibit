@@ -7,6 +7,7 @@ environment variable so that imports work correctly
 # Standard library imports
 import unittest
 import os
+from copy import deepcopy
 from pathlib import Path
 
 # External library imports
@@ -89,7 +90,7 @@ class utilsTests(unittest.TestCase):
     def test_get_attr_values(self):
         '''
         This test might fail as the test_spec is updated
-        because of "magic" test numbers, like 5.
+        because of "magic" test numbers, like 7.
         '''
         
         test_spec = inpatients_spec
@@ -100,14 +101,20 @@ class utilsTests(unittest.TestCase):
 
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")
-        assert test_list.count(None) == len(test_list)
+        self.assertEqual(test_list.count(None), len(test_list))
+
+        #paired columns can be ignored
+        test_list = tm.get_attr_values(
+            test_spec, "uniques", include_paired=False, types=['categorical'])
+        expected = [10, 14, 48, 3, 2] #two paired columns skipped
+        self.assertEqual(test_list, expected)
 
     def test_count_core_rows(self):
         '''
         Key function in determining the size of the anonymised dataframe
         '''
         
-        test_spec = inpatients_spec
+        test_spec = deepcopy(inpatients_spec)
 
         #test setup
         test_spec['metadata']['number_of_rows'] = 1000

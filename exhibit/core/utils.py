@@ -191,7 +191,7 @@ def guess_date_frequency(timeseries):
             
     return None
 
-def get_attr_values(spec_dict, attr, col_names=False, types=None):
+def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired=True):
     '''
     Extract all values for a given attribute in the specification 
 
@@ -206,6 +206,9 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None):
     types : list
         Optional. Restricts the search for attribute to columns
         of a given type.
+    include_paired : Boolean
+        Optional. Flag to say whether to include paired columns
+        in attribute extraction
 
     Returns
     -------
@@ -228,7 +231,12 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None):
 
         default_value = attrTuple(col, None)
 
-        if spec_dict["columns"][col]['type'] in types:
+        mask = (
+                (spec_dict["columns"][col]['type'] in types) and
+                (True if include_paired else not is_paired(spec_dict, col))
+            )
+
+        if mask:
             #append None as a placeholder; overwrite if attr exists
             attrs.append(default_value)
             for a in spec_dict['columns'][col]:
@@ -335,3 +343,18 @@ def whole_number_column(series):
     '''
 
     return all(series.fillna(0) * 10 % 10 == 0)
+
+def is_paired(spec_dict, col_name):
+    '''
+    Tiny function to check if given column is a paired one
+    Only categorical columns can be paired
+    '''
+    
+    if spec_dict['columns'][col_name]['type'] != "categorical":
+        return False
+
+    orig_vals = spec_dict['columns'][col_name]['original_values']
+    
+    if isinstance(orig_vals, str) and orig_vals == 'See paired column':
+        return True
+    return False

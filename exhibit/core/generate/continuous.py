@@ -207,8 +207,12 @@ def _conditional_rounding(series, target_sum):
         print("Target sum too low for the number of rows.")
         return pd.Series(np.floor(values))
     
-    values.iloc[0:boundary] = np.ceil(values.iloc[0:boundary])
-    values.iloc[boundary:] = np.floor(values.iloc[boundary:])
+    #if series has NAs, then the calcualtion will be off
+    clean_values = values.dropna() #keep original index
+
+    #np.ceil and floor return Series so index is preserved
+    values.update(np.ceil(clean_values.iloc[0:boundary]))
+    values.update(np.floor(clean_values.iloc[boundary:]))
     
     return values
 
