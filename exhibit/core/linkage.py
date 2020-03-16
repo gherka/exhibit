@@ -102,7 +102,20 @@ class LinkedColumnsTree:
 
 def generate_linked_anon_df(spec_dict, linked_group, num_rows):
     '''
-    Doc string
+    Create a dataframe for a SINGLE linked group
+
+    Parameters
+    ----------
+        spec_dict : dict
+            YAML specification de-serialised into a dictionary
+        linked_group : tuple
+            tuple consisting of linked group number and a list of linked columns
+        num_rows : number
+            how many rows to generate
+    
+    Returns
+    -------
+    Linked dataframe
     '''  
 
     gen = _LinkedDataGenerator(spec_dict, linked_group, num_rows)
@@ -239,9 +252,11 @@ class _LinkedDataGenerator:
     def __init__(self, spec_dict, linked_group, num_rows):
 
         self.spec_dict = spec_dict
-        self.linked_cols = spec_dict['constraints']['linked_columns'][linked_group][1]
+        self.linked_group = linked_group
+        self.linked_cols = linked_group[1]
         self.anon_set = spec_dict['columns'][self.linked_cols[0]]['anonymising_set']
 
+        self.id = self.spec_dict['metadata']['id']
         self.num_rows = num_rows
         self.base_col = None
         self.base_col_pos = None
@@ -282,7 +297,7 @@ class _LinkedDataGenerator:
             #sanitise the column name in case it has spaces in it
             base_col_sql = self.base_col.replace(" ", "$")
             
-            self.table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group}"
+            self.table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group[0]}"
 
             #get the linked data out for lookup purposes later
             db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
@@ -338,7 +353,6 @@ class _LinkedDataGenerator:
         '''
         if self.all_cols_uniform:
             linked_df = self.scenario_1()
-            linked_df = self.alias_linked_column_values(linked_df)
             result = self.add_paired_columns(linked_df)
 
             return result
@@ -377,41 +391,42 @@ class _LinkedDataGenerator:
 
         Make changes in-place
         '''
+            
+        linked_table_name = f"temp_{self.id}_{self.linked_group[0]}"
 
-        for linked_group in self.spec_dict['constraints']['linked_columns']:
-            for linked_col in linked_group[1]:
+        for linked_col in self.linked_group[1]:
 
-                anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
-                orig_vals = self.spec_dict['columns'][linked_col]['original_values']
-                
-                if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
+            anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
+            orig_vals = self.spec_dict['columns'][linked_col]['original_values']
+            
+            if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
 
-                    original_col_values = sorted(
-                        query_anon_database(
-                            table_name=self.table_name,
-                            column=linked_col.replace(" ", "$")
-                        )[linked_col])
+                original_col_values = sorted(
+                    query_anon_database(
+                        table_name=linked_table_name,
+                        column=linked_col.replace(" ", "$")
+                    )[linked_col])
 
 
-                    current_col_values = orig_vals[linked_col]
-                    # Missing data is always in orig_vals, but not always in anon.db
-                    if "Missing data" in original_col_values:
-                        original_col_values.append(
-                            original_col_values.pop(
-                                original_col_values.index("Missing data")
-                            )
-                        )
-                    else:
-                        original_col_values.append("Missing data")
-
-                    repl_dict = dict(
-                        zip(
-                            original_col_values,
-                            current_col_values
+                current_col_values = orig_vals[linked_col]
+                # Missing data is always in orig_vals, but not always in anon.db
+                if "Missing data" in original_col_values:
+                    original_col_values.append(
+                        original_col_values.pop(
+                            original_col_values.index("Missing data")
                         )
                     )
+                else:
+                    original_col_values.append("Missing data")
 
-                    linked_df[linked_col] = linked_df[linked_col].map(repl_dict)
+                repl_dict = dict(
+                    zip(
+                        original_col_values,
+                        current_col_values
+                    )
+                )
+
+                linked_df[linked_col] = linked_df[linked_col].map(repl_dict)
 
         return linked_df
 

@@ -170,9 +170,8 @@ class linkageTests(unittest.TestCase):
                     "paired_columns" : []
                 },
                 
-            },
-            'constraints':
-                {'linked_columns' : [(0, ["C1", "C2"])]}
+            }
+
         }
 
         create_temp_table(
@@ -195,6 +194,8 @@ class linkageTests(unittest.TestCase):
 
         setattr(test_LDG, "spec_dict", test_dict)
         setattr(test_LDG, "table_name", "temp_1234_0")
+        setattr(test_LDG, "id", "1234")
+        setattr(test_LDG, "linked_group", (0, ["C1", "C2"]))
 
         assert_frame_equal(
             left=test_LDG.alias_linked_column_values(test_linked_df),

@@ -38,7 +38,7 @@ def generate_categorical_data(spec_dict, core_rows):
 
     #2) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
     for linked_group in spec_dict['constraints']['linked_columns']:
-        linked_df = generate_linked_anon_df(spec_dict, linked_group[0], core_rows)
+        linked_df = generate_linked_anon_df(spec_dict, linked_group, core_rows)
         generated_dfs.append(linked_df)
 
     #3) DEFINE COLUMNS TO SKIP
