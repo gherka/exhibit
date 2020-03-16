@@ -191,6 +191,7 @@ columns:
 #always smaller / larger than a scalar value.
 #----------------------------------------------------------
 constraints:
+  allow_duplicates: false
   boolean_constraints:
   - los >= avlos
   linked_columns:

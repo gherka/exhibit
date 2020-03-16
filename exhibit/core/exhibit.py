@@ -234,7 +234,14 @@ class newExhibit:
                 series=anon_df[col]
             )
 
-        #4) ADD CONTINUOUS VARIABLES TO ANON DF  
+        #4) CHECK IF DUPLICATES ARE OK
+        if not self.spec_dict['constraints']['allow_duplicates']:
+            duplicated_idx = anon_df.duplicated()
+            number_dropped = sum(duplicated_idx)
+            print(f"WARNING: Deleted {number_dropped} duplicates.")
+            anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
+
+        #5) ADD CONTINUOUS VARIABLES TO ANON DF  
         for num_col in self.spec_dict['metadata']['numerical_columns']:
             
             #skip derived columns as they require primary columns generated first
@@ -250,17 +257,17 @@ class newExhibit:
         #Missing data is a special value used in categorical columns as a proxy for nan
         anon_df.replace("Missing data", np.NaN, inplace=True)
 
-        #5) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
+        #6) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
         for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
 
             adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
 
-        #6) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
             
-        #7) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #8) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self): # pragma: no cover

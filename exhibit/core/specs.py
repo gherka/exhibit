@@ -281,6 +281,10 @@ class newSpec:
                 self.output['columns'][col] = self.continuous_dict(col)
             else:
                 self.output['columns'][col] = self.categorical_dict(col)
+        
+        #see if categorical columns in the original dataset have duplicates
+        self.output['constraints']['allow_duplicates'] = any(
+            self.df.select_dtypes(exclude=np.number).duplicated())
 
         # add numerical column pairs where all values can described by
         # boolean logic, e.g. A > B or A < 100

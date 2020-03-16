@@ -275,6 +275,7 @@ class referenceTests(unittest.TestCase):
     def test_reference_inpatient_anon_data(self):
         '''
         What this reference test is covering:
+            - duplicates are removed
             - manually change labels in Sex column (Female to A, Male to B)
             - manually added derived column (avlos)
             - removed linked columns from spec
