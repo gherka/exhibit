@@ -1,6 +1,7 @@
 '''
 Module isolating methods and classes to find, process and generate linked columns
 '''
+
 # Standard library imports
 from itertools import chain, combinations
 import sqlite3
@@ -27,7 +28,6 @@ class LinkedColumnsTree:
 
     Think of a good test to make sure this class
     is working as intended.
-    
     '''
 
     def __init__(self, connections):
@@ -131,6 +131,7 @@ def find_hierarchically_linked_columns(df, spec):
     the second column are always paired with the 
     same value in the first column (many:1 relationship)
     '''
+
     linked = []
 
     #drop NAs because replacing them with Missing data means
@@ -188,6 +189,7 @@ def find_pair_linked_columns(df):
     the length of its values; codes and other identifiers
     tend to have shorter values.
     '''
+
     linked = []
     
     #single value & numeric columns are ignored
@@ -233,6 +235,7 @@ class _CustomDict(defaultdict):
     Key-value pairs look like {"A": [n, "A"]} where n is the "A"s position
     in the pecking order of columns.  
     '''
+    
     def __init__(self, f_of_x):
         super().__init__(None) # base class doesn't get a factory
         self.f_of_x = f_of_x # save f(x)
@@ -351,6 +354,7 @@ class _LinkedDataGenerator:
         it's cleaner to add paired columns in this portion of
         the code.
         '''
+
         if self.all_cols_uniform:
             linked_df = self.scenario_1()
             result = self.add_paired_columns(linked_df)
@@ -370,7 +374,6 @@ class _LinkedDataGenerator:
             result = self.add_paired_columns(linked_df)
 
             return result
-
 
     def alias_linked_column_values(self, linked_df):
         '''
@@ -430,7 +433,6 @@ class _LinkedDataGenerator:
 
         return linked_df
 
-
     def scenario_1(self):
         '''
         Values in all linked columns are drawn from a uniform distribution
@@ -457,7 +459,8 @@ class _LinkedDataGenerator:
     def scenario_2(self):
         '''
         There ARE user-defined probabilities for ONE of the linked columns,
-        but it's not the most granular column in the group.
+        but it's not the most granular column in the group, assuming there
+        are only two columns in a group.
         '''
 
         if self.anon_set != "random":
@@ -493,13 +496,21 @@ class _LinkedDataGenerator:
             name=self.base_col   
         )
 
+        #at this point we have correct probabilities for base_column from user spec
+        #and need to draw "child" values from the same anonymising set. The number of
+        #values to draw depends on user probabilities and the "pool" of "child" values
+        #is restricted by the number of unique values (or close to it)
+        base_uniques = self.spec_dict['columns'][self.base_col]['uniques']
+        granular_uniques = self.spec_dict['columns'][self.linked_cols[1]]['uniques']
+        children_per_parent = int(np.ceil(granular_uniques / base_uniques))
+
         uniform_series = (
             base_col_series
                 .groupby(base_col_series)
                 .transform(
                     lambda x: np.random.choice(
                         a=(full_anon_df[full_anon_df[self.base_col] == min(x)]
-                            .iloc[:, -1]),
+                            .iloc[0:children_per_parent, -1]),
                         size=len(x)
                     )
                 ) 
@@ -532,7 +543,6 @@ class _LinkedDataGenerator:
                 )
 
         return linked_df
-
 
     def scenario_3(self):
         '''
@@ -648,6 +658,7 @@ def _merge_common_member_tuples(paired_tuples):
     Given [("A","B"), ("B","C"), ("D","E")] we want
     [["A", "B", "C"], ["D", "E"]]
     '''
+
     original_sort_order = _CustomDict(lambda x: [None, x])
     for a, b in paired_tuples:
 
@@ -701,6 +712,7 @@ def _create_paired_columns_lookup(spec_dict, base_column):
     the $ replacement for joining downstream into the final
     anonymised dataframe
     '''
+
     #get a list of paired columns:
     pairs = spec_dict['columns'][base_column]['paired_columns']
     #sanitse base_columns name for SQL

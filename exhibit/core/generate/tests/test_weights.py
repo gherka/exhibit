@@ -16,22 +16,30 @@ class weightsTests(unittest.TestCase):
     def test_target_columns_for_weights_table(self):
         '''
         Test component function of the generate_weights_table;
-        pick only the most granular column from each linked columns
-        group
 
-        This function now also drops paired columns
+        This function drops paired and time columns
         '''
         
         test_spec = {"metadata": {}, "columns":{}, "constraints": {}}
-        test_spec['metadata']['categorical_columns'] = list("ABCDE")
-        test_spec['columns']['A'] = {'original_values':[]}
-        test_spec['columns']['B'] = {'original_values':"See paired column"}
-        test_spec['columns']['C'] = {'original_values':[]}
-        test_spec['columns']['D'] = {'original_values':[]}
-        test_spec['columns']['E'] = {'original_values':[]}
-        test_spec['constraints']['linked_columns'] = [[0, ["A", "C"]], [1, ["D", "E"]]]
+        test_spec['metadata']['categorical_columns'] = list("ABC")
 
-        expected = set("CE")
+        test_spec['columns']['A'] = {
+            'type'           :'categorical',
+            'original_values':[]}
+
+        test_spec['columns']['B'] = {
+            'type'           :'categorical',
+            'original_values':"See paired column"}
+
+        test_spec['columns']['C'] = {
+            'type'           :'categorical',
+            'original_values':[]}
+
+        test_spec['columns']['D'] = {
+            'type'           :'time',
+            'original_values':[]}
+  
+        expected = set("AC")
         result = tm.target_columns_for_weights_table(test_spec)
 
         self.assertEqual(expected, result)

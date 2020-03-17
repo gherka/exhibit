@@ -2,26 +2,23 @@
 Mini module for generating the weights table & related outputs
 '''
 
-# Standard library imports
-from itertools import chain
-
 # External library imports
 import pandas as pd
 import numpy as np
 
 # Exhibit import
-from ..utils import exceeds_ct
+from ..utils import exceeds_ct, is_paired
 from ..sql import query_anon_database
 
 # EXPORTABLE METHODS
 # ==================
-def generate_weights_table(spec, target_cols):
+def generate_weights_table(spec_dict, target_cols):
     '''
     Lookup table for weights
 
     Parameters
     ----------
-    spec : dict
+    spec_dict : dict
         original user spec
     target_cols:
         a subset of columns meant for the weights_table
@@ -32,69 +29,95 @@ def generate_weights_table(spec, target_cols):
     the weight column is the lookup value
 
     Weights and probabilities should be at least 0.001;
-    even if the original, non-anonymised data is 100% 
-    zeroes.
+    even if the original, non-anonymised data has a smaller
+    probability.
     '''
     
     tuple_list = []
     
     num_cols = (
-        set(spec['metadata']['numerical_columns']) -
-        set(spec['derived_columns'])
+        set(spec_dict['metadata']['numerical_columns']) -
+        set(spec_dict['derived_columns'])
     )
+
+    table_id = spec_dict['metadata']['id']
+    linked_groups = spec_dict['constraints']['linked_columns']
        
     for cat_col in target_cols:
-        
-        orig_vals = spec['columns'][cat_col]['original_values']
-        anon_set = spec['columns'][cat_col]['anonymising_set']
-        val_count = spec['columns'][cat_col]['uniques']
-        table_name, *sql_column = anon_set.split(".")
+
+        anon_set = spec_dict['columns'][cat_col]['anonymising_set']
+        val_count = spec_dict['columns'][cat_col]['uniques']
         full_anon_flag = False
 
-        if anon_set != "random":
+        #if column is put into anon.db, weights are always uniform
+        if exceeds_ct(spec_dict, cat_col):
+            
+            #determine the source of the data (table_name and sql_column)
+            if anon_set != "random":
+                
+                table_name, *sql_column = anon_set.split(".")
 
-            if exceeds_ct(spec, cat_col):
-                #take the last, most granular column of the anon_set
-                #because values were picked randomly from the entire set,
-                #they will NOT be in the same order or might be missing!
-                #so we pick EVERYTHING and adjust the EQUAL weights to
-                #be based on the ACTUAL number of values
-                ws_df = pd.DataFrame(
-                    data=query_anon_database(table_name, sql_column).iloc[:, -1]
-                )
-   
-                #think of a better way to rename the column coming in from anon.db.
-                ws_df.columns = [cat_col]
+                #if column is part of linked group and set is multi-column
+                #table_name will still be equal to anon_set, but sql_column
+                #will have to depend on column's position in linked group
+                if not sql_column:
 
-                #generate equal weights among unlisted category values
-                for num_col in num_cols:
-                    ws_df[num_col] = 1 / val_count
-                full_anon_flag = True
+                    for linked_group in linked_groups:
+                        for i, col in enumerate(linked_group[1]):
+                            if col == cat_col:
+                                col_pos = i
 
+                    ws_df = pd.DataFrame(
+                        data=(
+                            query_anon_database(table_name)
+                                .iloc[:, col_pos]
+                                .drop_duplicates()
+                        )
+                    )
+                    
+                    #rename columns to match the source
+                    ws_df.columns = [cat_col]
+
+                else:
+                    ws_df = pd.DataFrame(
+                        data=query_anon_database(table_name, sql_column)
+                    )
+                    #rename columns to match the source
+                    ws_df.columns = [cat_col]
+                
             else:
-                #meaning, there are original_values, including weights.
-                #by this point, original_values had been replaced with anon_set.
-                #review - maybe more intuitive to also have "aliased column"
-                ws_df = orig_vals
+                #two options:
+                #either column is part if a linked group which means
+                #the table_name is for the linked group, not column
+                #or column is saved into db under its own name
+
+                for linked_group in linked_groups:
+
+                    if cat_col in linked_group[1]:
+
+                        table_name = f"temp_{table_id}_{linked_group[0]}"
+                        sql_column = cat_col.replace(" ", "$")
+                        
+                        ws_df = pd.DataFrame(
+                            data=query_anon_database(table_name, sql_column)
+                        )
+                        break
+
+                else:
+
+                    table_name = f"temp_{table_id}_{cat_col.replace(' ', '$')}"
+                    ws_df = pd.DataFrame(
+                        data=query_anon_database(table_name)
+                    )
+            
+            #Finally, generate equal weights for the column and put into weights_df
+            for num_col in num_cols:
+                ws_df[num_col] = 1 / val_count
+            full_anon_flag = True
 
         else:
-
-            if exceeds_ct(spec, cat_col):
-                #get values from DB
-                safe_col_name = cat_col.replace(" ", "$")
-
-                table_name = f"temp_{spec['metadata']['id']}_{safe_col_name}"
-
-                ws_df = query_anon_database(table_name)
-
-                #generate equal weights among unlisted, random category values
-                for num_col in num_cols:
-                    ws_df[num_col] = 1 / ws_df.shape[0]
-
-            else:
-                #meaning, there are original_values, including weights
-                ws_df = spec['columns'][cat_col]['original_values']
-
+            #meaning, there are original_values, including weights
+            ws_df = spec_dict['columns'][cat_col]['original_values']
 
         #get weights and values, from whatever WS was created
         for num_col in num_cols:
@@ -115,6 +138,7 @@ def generate_weights_table(spec, target_cols):
                              columns=['num_col', 'cat_col', 'cat_value', 'weight'])
 
     #move the indexed dataframe to dict for perfomance
+
     result = (
         output_df
             .set_index(['num_col', 'cat_col', 'cat_value'])
@@ -176,14 +200,11 @@ def target_columns_for_weights_table(spec_dict):
     '''
     Helper function to determine which columns should be used
     in the weights table.
-
-    We want to include columns whose values we'll be looking up
-    when determining how much they contribute to the total of
-    each numerical column (weights). This means we need to remove
-    "parent" linked columns and only use the "youngest" child.
-
-    Also, time columns are excluded as we assume they are always
-    "complete" so have no weights (CHANGE?).
+    
+    Time columns and paired columns are excluded because they
+    don't in themselves contribute a different weight depending
+    on their value (time values are equal and paired columns have
+    the same weight as their parent columns).
 
     Parameters
     ----------
@@ -200,18 +221,10 @@ def target_columns_for_weights_table(spec_dict):
 
     #drop paired columns
     for cat_col in cat_cols:
-        orig_vals = spec_dict['columns'][cat_col]['original_values']
-        if isinstance(orig_vals, str) and orig_vals == 'See paired column':
+        if is_paired(spec_dict, cat_col):
             cat_cols_set.remove(cat_col)
 
-    linked_cols = spec_dict['constraints']['linked_columns']
-    
-    all_linked_cols = set(chain.from_iterable([x[1] for x in linked_cols]))
-    last_linked_cols = {x[1][-1] for x in linked_cols}
-    
-    target_cols = cat_cols_set - all_linked_cols | last_linked_cols
-
-    return target_cols
+    return cat_cols_set
 
 # INNER MODULE METHODS
 # ====================

@@ -211,7 +211,7 @@ def _conditional_rounding(series, target_sum):
     clean_values = values.dropna() #keep original index
 
     #np.ceil and floor return Series so index is preserved
-    values.update(np.ceil(clean_values.iloc[0:boundary]))
+    values.update(np.maximum(np.ceil(clean_values.iloc[0:boundary]), 1))
     values.update(np.floor(clean_values.iloc[boundary:]))
     
     return values
