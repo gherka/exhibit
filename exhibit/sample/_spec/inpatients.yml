@@ -24,7 +24,7 @@ metadata:
   - quarter_date
   category_threshold: 30
   random_seed: 0
-  id: b0e9b
+  id: ca30f
 #----------------------------------------------------------
 #COLUMN DETAILS
 #==============
@@ -150,19 +150,34 @@ columns:
     anonymising_set: random
   los:
     type: continuous
+    fit: sum
     miss_probability: 0.0
     sum: 12441120.0
     dispersion: 0.1
+    min: 0.0
+    max: 176849.0
+    mean: 1216.74
+    std: 6263.69
   stays:
     type: continuous
+    fit: sum
     miss_probability: 0.0
     sum: 3034766.0
     dispersion: 0.1
+    min: 0.0
+    max: 12888.0
+    mean: 296.8
+    std: 941.18
   avlos:
     type: continuous
+    fit: sum
     miss_probability: 0.065
     sum: 28258.352214630533
     dispersion: 0.1
+    min: 0.0
+    max: 74.8
+    mean: 2.96
+    std: 4.1
   quarter_date:
     type: date
     allow_missing_values: false

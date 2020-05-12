@@ -248,12 +248,21 @@ class newSpec:
         Dispersion is used to add noise to the distribution
         of values. This is particularly important for columns
         that are dominated by low-count values.
+
+        Fit can be sum or distribution. When fitting to target sum
+        min, max, mean and std parameters are ignored. When fit is
+        set to distribution, target sum and dispersion are ignored.
         '''
         cont_d = {
             'type': 'continuous',
+            'fit': 'sum',
             'miss_probability': self.missing_data_chance(col),
             'sum': float(self.df[col].sum()),
-            'dispersion': 0.1
+            'dispersion': 0.1,
+            'min': float(self.df[col].min()),
+            'max': float(self.df[col].max()),
+            'mean': float(round(self.df[col].mean(), 2)),
+            'std' : float(round(self.df[col].std(), 2))
         }
 
         return cont_d

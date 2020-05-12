@@ -1,6 +1,8 @@
 '''
 Mini module for generating the weights table & related outputs
 '''
+# Standard library imports
+from collections import namedtuple
 
 # External library imports
 import pandas as pd
@@ -26,7 +28,7 @@ def generate_weights_table(spec_dict, target_cols):
     Returns
     -------
     dictionary where index levels are keys and
-    the weight column is the lookup value
+    the weight column is the lookup value (as namedtuple)
 
     Weights and probabilities should be at least 0.001;
     even if the original, non-anonymised data has a smaller
@@ -34,6 +36,10 @@ def generate_weights_table(spec_dict, target_cols):
     '''
     
     tuple_list = []
+
+    #second element in the tuple is difference of a given weight from
+    #the column's equal weight - in case we're fitting a distribution
+    Weights = namedtuple("Weights", ["weight", "eq_diff"])
     
     num_cols = (
         set(spec_dict['metadata']['numerical_columns']) -
@@ -47,6 +53,7 @@ def generate_weights_table(spec_dict, target_cols):
 
         anon_set = spec_dict['columns'][cat_col]['anonymising_set']
         val_count = spec_dict['columns'][cat_col]['uniques']
+        equal_weight = 1 / val_count
         full_anon_flag = False
 
         #if column is put into anon.db, weights are always uniform
@@ -131,11 +138,13 @@ def generate_weights_table(spec_dict, target_cols):
 
             for val, weight in zip(ws_vals, ws):
             
-                tuple_list.append((num_col, cat_col, val, weight))
+                tuple_list.append(
+                    (num_col, cat_col, val, Weights(weight, weight - equal_weight))
+                )
 
     #collect everything into output_df
     output_df = pd.DataFrame(tuple_list,
-                             columns=['num_col', 'cat_col', 'cat_value', 'weight'])
+                             columns=['num_col', 'cat_col', 'cat_value', 'weights'])
 
     #move the indexed dataframe to dict for perfomance
 

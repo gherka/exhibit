@@ -8,6 +8,7 @@ import re
 # External library imports
 import numpy as np
 import pandas as pd
+from scipy.stats import truncnorm
 
 # Exhibit imports
 from .weights import (target_columns_for_weights_table,
@@ -35,6 +36,7 @@ def generate_continuous_column(spec_dict, anon_df, col_name):
     anon_df = anon_df.copy()
     target_cols = target_columns_for_weights_table(spec_dict)
     wt = generate_weights_table(spec_dict, target_cols)
+    fit = spec_dict['columns'][col_name]['fit']
     null_pct = spec_dict['columns'][col_name]['miss_probability']
     dispersion_pct = spec_dict['columns'][col_name]['dispersion']
 
@@ -47,6 +49,20 @@ def generate_continuous_column(spec_dict, anon_df, col_name):
 
     anon_df.loc[null_idx, col_name] = np.NaN
 
+    # Create a fit tuple
+    if fit == "sum":
+        fit_arg = ("sum", {})
+    if fit == "distribution":
+        fit_arg = (
+            "distribution",
+            {
+                "min" : spec_dict['columns'][col_name]["min"],
+                "max" : spec_dict['columns'][col_name]["max"],
+                "mean": spec_dict['columns'][col_name]["mean"],
+                "std" : spec_dict['columns'][col_name]["std"],
+            }
+        )
+
     # Generate real values in non-null cells by looking up values of 
     # categorical columns in the weights table and progressively reduce
     # the sum total of the column by the weight of each columns' value
@@ -54,22 +70,24 @@ def generate_continuous_column(spec_dict, anon_df, col_name):
         func=_generate_cont_val,
         axis=1,
         weights_table=wt,
-        num_col=col_name)
+        num_col=col_name,
+        fit=fit_arg)
 
-    # After the values were calculated, apply scaling factor to them
-    scaling_factor = _determine_scaling_factor(spec_dict, anon_df[col_name])
+    if fit == "sum":
+        # After the values were calculated, apply scaling factor to them
+        scaling_factor = _determine_scaling_factor(spec_dict, anon_df[col_name])
 
-    anon_df.loc[~null_idx, col_name] = (
-        anon_df.loc[~null_idx, col_name] * scaling_factor
-    )
+        anon_df.loc[~null_idx, col_name] = (
+            anon_df.loc[~null_idx, col_name] * scaling_factor
+        )
 
-    # Apply dispersion to perturb the data
-    anon_df[col_name] = anon_df[col_name].apply(
-        _apply_dispersion, dispersion_pct=dispersion_pct)
+        # Apply dispersion to perturb the data
+        anon_df[col_name] = anon_df[col_name].apply(
+            _apply_dispersion, dispersion_pct=dispersion_pct)
 
-    # Coerce generated column to target sum using difference distribution & rounding
-    target_sum = spec_dict['columns'][col_name]['sum']
-    anon_df[col_name] = _conditional_rounding(anon_df[col_name], target_sum)
+        # Coerce generated column to target sum using difference distribution & rounding
+        target_sum = spec_dict['columns'][col_name]['sum']
+        anon_df[col_name] = _conditional_rounding(anon_df[col_name], target_sum)
 
     return anon_df[col_name]
 
@@ -132,7 +150,8 @@ def generate_derived_column(anon_df, calculation, precision=2):
 def _generate_cont_val(
     row,
     weights_table,
-    num_col
+    num_col,
+    fit
     ):
     '''
     Generate a continuous value, one dataframe row at a time
@@ -142,28 +161,63 @@ def _generate_cont_val(
     row : dataframe row passed from df.apply(axis=1)
         currently function isn't vectorised so rows are processed one at a time
     weights_table : dict
-        dict of the form {(num_col, cat_col, cat_value)}:{weight: VALUE}
+        dict of the form
+        {(num_col, cat_col, cat_value)}:{weights: NamedTuple(weight, eq_diff)}
     num_col : str
         numerical column for which to generate values
+    fit : tuple
+        first element is always fit description, followed by a dict with extra arguments
 
     Returns
     -------
     Rounded value
     '''
 
-    base_value = 1000
+    if fit[0] == "sum":
 
-    for cat_col, val in row.iteritems():
+        base_value = 1000
 
-        try:
+        for cat_col, val in row.iteritems():
 
-            weight = weights_table[(num_col, cat_col, val)]['weight']
+            try:
 
-        except KeyError:
+                weight = weights_table[(num_col, cat_col, val)]['weights'].weight
 
-            weight = 1
+            except KeyError:
 
-        base_value = base_value * weight
+                weight = 1
+
+            base_value = base_value * weight
+
+    else:
+
+        base_diff = 0
+
+        min_range = fit[1]["min"]
+        max_range = fit[1]["max"]
+        mean = fit[1]["mean"]
+        std = fit[1]["std"]
+
+        a, b = (min_range - mean) / std, (max_range - mean) / std
+
+        for cat_col, val in row.iteritems():
+
+            try:
+
+                eq_diff = weights_table[(num_col, cat_col, val)]['weights'].eq_diff
+
+            except KeyError:
+
+                eq_diff = 0
+
+            base_diff = base_diff + eq_diff
+
+        #magic number 2 for scaling
+        new_mean = mean + (base_diff * mean * 2)
+
+        base_value = int(truncnorm.rvs(
+            a, b, loc=new_mean, scale=std, size=1
+        )[0])
     
     return base_value
 
