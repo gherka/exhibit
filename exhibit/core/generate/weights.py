@@ -37,9 +37,9 @@ def generate_weights_table(spec_dict, target_cols):
     
     tuple_list = []
 
-    #second element in the tuple is difference of a given weight from
-    #the column's equal weight - in case we're fitting a distribution
-    Weights = namedtuple("Weights", ["weight", "eq_diff"])
+    #second element in the tuple is the column's equal weight
+    #in case we're fitting a distribution
+    Weights = namedtuple("Weights", ["weight", "equal_weight"])
     
     num_cols = (
         set(spec_dict['metadata']['numerical_columns']) -
@@ -139,7 +139,7 @@ def generate_weights_table(spec_dict, target_cols):
             for val, weight in zip(ws_vals, ws):
             
                 tuple_list.append(
-                    (num_col, cat_col, val, Weights(weight, weight - equal_weight))
+                    (num_col, cat_col, val, Weights(weight, equal_weight))
                 )
 
     #collect everything into output_df

@@ -4,10 +4,12 @@ Test the generation of continuous columns & values
 
 # Standard library imports
 import unittest
+from collections import namedtuple
 
 # External library imports
 import pandas as pd
 import numpy as np
+from scipy.stats import norm
 from pandas.testing import assert_series_equal
 
 # Module under test
@@ -97,6 +99,77 @@ class continuousTests(unittest.TestCase):
         self.assertEqual(t1, e1)
         self.assertEqual(t2, e2)
         self.assertEqual(t3, e3)
+
+    def test_equal_distribution_generation(self):
+        '''
+        Distribution generation works by shifting the mean
+        of the normal distribution probability function depending
+        on the weights of each value in each of the columns 
+        present in any given row of the anonymised dataset.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        test_min = 0
+        test_max = 100
+        test_mean = 50
+        test_std = 10
+
+        test_spec_dict = {
+            "metadata" : {
+                "random_seed" : 0
+            },
+            "columns" : {
+                "Nums" : {
+                    "fit" : "distribution",
+                    "miss_probability" : 0,
+                    "min": test_min,
+                    "max": test_max,
+                    "mean": test_mean,
+                    "std": test_std
+                }
+            }
+        }
+
+        test_anon_df = pd.DataFrame(
+            data={
+                "C1": ["A", "A", "B", "B"],
+                "C2": ["C", "C", "D", "D"]
+            }
+        )
+
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "C") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "D") : {"weights": Weights(0.5, 0.5)},
+
+        }
+
+        result = tm.generate_continuous_column(
+            test_spec_dict,
+            test_anon_df,
+            test_col,
+            target_cols=target_cols,
+            wt=wt
+        )
+
+        np.random.seed(0)
+
+        test_X = np.array(
+            [int(norm.rvs(loc=50, scale=10, size=1)) for x in range(4)]
+        )
+
+        new_test_X = (
+            (test_X - test_X.min()) / (test_X.max() - test_X.min()) *
+            (test_max - test_min) + test_min
+        )
+
+        assert np.allclose(result.values, new_test_X)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

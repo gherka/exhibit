@@ -8,7 +8,7 @@ import re
 # External library imports
 import numpy as np
 import pandas as pd
-from scipy.stats import truncnorm
+from scipy.stats import norm
 
 # Exhibit imports
 from .weights import (target_columns_for_weights_table,
@@ -16,10 +16,10 @@ from .weights import (target_columns_for_weights_table,
 
 # EXPORTABLE METHODS
 # ==================
-def generate_continuous_column(spec_dict, anon_df, col_name):
+def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     '''
     Pulls together methods from this module to generate values
-    for the given continuous column, based on user spec.
+    for a given continuous column, based on the user spec.
 
     Parameters
     ----------
@@ -29,18 +29,29 @@ def generate_continuous_column(spec_dict, anon_df, col_name):
         Dataframe with anonymised categorical columns
     col_name : str
         column name to seek in user spec
+    
+    Function also accepts a number of keyword arguments that 
+    simplify testing by cutting out function calls generating
+    local variables.
     '''
 
-    np.random.seed(0)
-    
     anon_df = anon_df.copy()
-    target_cols = target_columns_for_weights_table(spec_dict)
-    wt = generate_weights_table(spec_dict, target_cols)
+
+    target_cols = (
+        kwargs.get("target_cols") or #or short-circuits on first True
+        target_columns_for_weights_table(spec_dict))
+    
+    wt = (
+        kwargs.get("wt") or 
+        generate_weights_table(spec_dict, target_cols))
+
+    # Extract relevant variables from the user spec
     fit = spec_dict['columns'][col_name]['fit']
     null_pct = spec_dict['columns'][col_name]['miss_probability']
-    dispersion_pct = spec_dict['columns'][col_name]['dispersion']
 
     # Generate index for nulls based on spec & add nulls to anon_df
+    np.random.seed(spec_dict["metadata"]["random_seed"])
+
     null_idx = np.random.choice(
         a=[True, False],
         size=anon_df.shape[0],
@@ -66,6 +77,12 @@ def generate_continuous_column(spec_dict, anon_df, col_name):
     # Generate real values in non-null cells by looking up values of 
     # categorical columns in the weights table and progressively reduce
     # the sum total of the column by the weight of each columns' value
+    # of if fit is set to distribution, draw from a normal distribution
+    # taking into account values' weights and column mean & standard deviation
+
+    # re-set the seed (for testing purposes as target array skips generation of NAs)
+    np.random.seed(spec_dict["metadata"]["random_seed"])
+
     anon_df.loc[~null_idx, col_name] = anon_df.loc[~null_idx, target_cols].apply(
         func=_generate_cont_val,
         axis=1,
@@ -73,7 +90,18 @@ def generate_continuous_column(spec_dict, anon_df, col_name):
         num_col=col_name,
         fit=fit_arg)
 
+    if fit == "distribution":
+        # Normalise and scale to min max range
+        X = anon_df[col_name]
+        col_min = spec_dict['columns'][col_name]["min"]
+        col_max = spec_dict['columns'][col_name]["max"]
+        new_X = (X - X.min()) / (X.max() - X.min()) * (col_max - col_min) + col_min
+        anon_df[col_name] = new_X
+
     if fit == "sum":
+
+        dispersion_pct = spec_dict['columns'][col_name]['dispersion']
+
         # After the values were calculated, apply scaling factor to them
         scaling_factor = _determine_scaling_factor(spec_dict, anon_df[col_name])
 
@@ -190,33 +218,32 @@ def _generate_cont_val(
             base_value = base_value * weight
 
     else:
-
-        base_diff = 0
-
-        min_range = fit[1]["min"]
-        max_range = fit[1]["max"]
+        
+        #start with 1
+        row_diff_sum = 1
+ 
         mean = fit[1]["mean"]
         std = fit[1]["std"]
-
-        a, b = (min_range - mean) / std, (max_range - mean) / std
 
         for cat_col, val in row.iteritems():
 
             try:
 
-                eq_diff = weights_table[(num_col, cat_col, val)]['weights'].eq_diff
-
+                w, ew = weights_table[(num_col, cat_col, val)]['weights']
+                
             except KeyError:
 
-                eq_diff = 0
+                w, ew = (0, 0)
 
-            base_diff = base_diff + eq_diff
+            #don't make any changes if no difference from equal weight
+            row_diff = 0 if (w - ew) == 0 else (w / ew) - 1
 
-        #magic number 2 for scaling
-        new_mean = mean + (base_diff * mean * 2)
+            row_diff_sum = row_diff_sum + row_diff
 
-        base_value = int(truncnorm.rvs(
-            a, b, loc=new_mean, scale=std, size=1
+        new_mean = mean * row_diff_sum
+       
+        base_value = int(norm.rvs(
+            loc=new_mean, scale=std, size=1
         )[0])
     
     return base_value
