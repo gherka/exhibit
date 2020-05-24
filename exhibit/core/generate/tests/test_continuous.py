@@ -8,9 +8,8 @@ from collections import namedtuple
 
 # External library imports
 import pandas as pd
-import numpy as np
-from scipy.stats import norm
 from pandas.testing import assert_series_equal
+import numpy as np
 
 # Module under test
 from exhibit.core.generate import continuous as tm
@@ -133,8 +132,8 @@ class continuousTests(unittest.TestCase):
 
         test_anon_df = pd.DataFrame(
             data={
-                "C1": ["A", "A", "B", "B"],
-                "C2": ["C", "C", "D", "D"]
+                "C1": ["A", "A", "B", "B"]*1000,
+                "C2": ["C", "C", "D", "D"]*1000
             }
         )
 
@@ -158,18 +157,78 @@ class continuousTests(unittest.TestCase):
             wt=wt
         )
 
-        np.random.seed(0)
+        self.assertEqual(result.values.min(), test_min)
+        self.assertEqual(result.values.max(), test_max)
+        #Allowing for a slight random variation around the mean
+        assert 45 <= result.values.mean() <= 55
 
-        test_X = np.array(
-            [int(norm.rvs(loc=50, scale=10, size=1)) for x in range(4)]
+
+    def test_skewed_distribution_generation(self):
+        '''
+        Distribution generation works by shifting the mean
+        of the normal distribution probability function depending
+        on the weights of each value in each of the columns 
+        present in any given row of the anonymised dataset.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        test_min = 0
+        test_max = 100
+        test_mean = 50
+        test_std = 10
+
+        test_spec_dict = {
+            "metadata" : {
+                "random_seed" : 0
+            },
+            "columns" : {
+                "Nums" : {
+                    "fit" : "distribution",
+                    "miss_probability" : 0,
+                    "min": test_min,
+                    "max": test_max,
+                    "mean": test_mean,
+                    "std": test_std
+                }
+            }
+        }
+
+        test_df = pd.DataFrame(
+            data={
+                "C1": ["A", "B", "A", "B"]*1000,
+                "C2": ["C", "C", "D", "D"]*1000
+            }
         )
 
-        new_test_X = (
-            (test_X - test_X.min()) / (test_X.max() - test_X.min()) *
-            (test_max - test_min) + test_min
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.1, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.9, 0.5)},
+            ("Nums", "C2", "C") : {"weights": Weights(0.1, 0.5)},
+            ("Nums", "C2", "D") : {"weights": Weights(0.9, 0.5)},
+
+        }
+
+        result = tm.generate_continuous_column(
+            test_spec_dict,
+            test_df,
+            test_col,
+            target_cols=target_cols,
+            wt=wt
         )
 
-        assert np.allclose(result.values, new_test_X)
+        #we don't expect any AC rows to be greater than the mean
+        #and any BD rows to be rows to be less than the mean
+        test_df["Nums"] = result
+        right_skew_rows = (test_df["C1"] == "A") & (test_df["C2"] == "C")
+        left_skew_rows = (test_df["C1"] == "B") & (test_df["C2"] == "D")
+
+        self.assertFalse((test_df[right_skew_rows]["Nums"] > test_mean).any())
+        self.assertFalse((test_df[left_skew_rows]["Nums"] < test_mean).any())
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

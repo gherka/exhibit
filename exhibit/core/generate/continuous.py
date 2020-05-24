@@ -35,6 +35,8 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     local variables.
     '''
 
+    np.random.seed(spec_dict["metadata"]["random_seed"])
+
     anon_df = anon_df.copy()
 
     target_cols = (
@@ -79,9 +81,6 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     # the sum total of the column by the weight of each columns' value
     # of if fit is set to distribution, draw from a normal distribution
     # taking into account values' weights and column mean & standard deviation
-
-    # re-set the seed (for testing purposes as target array skips generation of NAs)
-    np.random.seed(spec_dict["metadata"]["random_seed"])
 
     anon_df.loc[~null_idx, col_name] = anon_df.loc[~null_idx, target_cols].apply(
         func=_generate_cont_val,
