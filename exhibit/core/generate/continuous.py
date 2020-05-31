@@ -35,8 +35,6 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     local variables.
     '''
 
-    np.random.seed(spec_dict["metadata"]["random_seed"])
-
     anon_df = anon_df.copy()
 
     target_cols = (
@@ -112,9 +110,13 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         anon_df[col_name] = anon_df[col_name].apply(
             _apply_dispersion, dispersion_pct=dispersion_pct)
 
-        # Coerce generated column to target sum using difference distribution & rounding
-        target_sum = spec_dict['columns'][col_name]['sum']
-        anon_df[col_name] = _conditional_rounding(anon_df[col_name], target_sum)
+        precision = spec_dict["columns"][col_name].get("precision", None)
+
+        if precision == "integer":
+
+            # Coerce generated column to target sum while keeping int precision
+            target_sum = spec_dict['columns'][col_name]['sum']
+            anon_df[col_name] = _conditional_rounding(anon_df[col_name], target_sum)
 
     return anon_df[col_name]
 
@@ -251,7 +253,9 @@ def _conditional_rounding(series, target_sum):
     '''
     Rounding the values up or down depending on whether the 
     sum of the series with newly rounded values is greater than
-    or less than the target sum.
+    or less than the target sum. This operation will affect the
+    respective weights to a small degree. Generate floats to 
+    preserve the precise weights.
 
     Parameters
     ----------

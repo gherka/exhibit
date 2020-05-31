@@ -127,18 +127,18 @@ class utilsTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
-    def test_whole_number_column(self):
+    def test_float_or_int(self):
         '''
-        If any value has a decimal point, flag up as false
+        If any value has a decimal point, return "float", else "integer"
         '''
 
         test_series_1 = pd.Series([1, 2, 3, 4, 5, 0.0])
         test_series_2 = pd.Series([1, np.nan, 2, 3])
         test_series_3 = pd.Series([0.1, 0.2, 3, 4])
 
-        self.assertTrue(tm.whole_number_column(test_series_1))
-        self.assertTrue(tm.whole_number_column(test_series_2))
-        self.assertFalse(tm.whole_number_column(test_series_3))
+        self.assertTrue(tm.float_or_int(test_series_1), "integer")
+        self.assertEqual(tm.float_or_int(test_series_2), "integer")
+        self.assertEqual(tm.float_or_int(test_series_3), "float")
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

@@ -330,7 +330,7 @@ def count_core_rows(spec_dict):
 
     return core_rows
 
-def whole_number_column(series):
+def float_or_int(series):
     '''
     Given a Pandas series determine whether it always has
     whole numbers or includes fractions. Relying on dtypes
@@ -338,11 +338,13 @@ def whole_number_column(series):
     its dtype is automatically made into float (at least in
     older versions of Pandas)
 
-    Return True if series is whole numbers, False if fractions
+    Return "integer" if series is whole numbers, "float" if fractions
 
     '''
 
-    return all(series.fillna(0) * 10 % 10 == 0)
+    if all(series.fillna(0) * 10 % 10 == 0):
+        return "integer"
+    return "float"
 
 def is_paired(spec_dict, col_name):
     '''

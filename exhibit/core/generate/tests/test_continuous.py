@@ -162,7 +162,6 @@ class continuousTests(unittest.TestCase):
         #Allowing for a slight random variation around the mean
         assert 45 <= result.values.mean() <= 55
 
-
     def test_skewed_distribution_generation(self):
         '''
         Distribution generation works by shifting the mean
@@ -229,6 +228,71 @@ class continuousTests(unittest.TestCase):
 
         self.assertFalse((test_df[right_skew_rows]["Nums"] > test_mean).any())
         self.assertFalse((test_df[left_skew_rows]["Nums"] < test_mean).any())
+
+    def test_no_rounding_floats(self):
+        '''
+        If dispersion is set to zero, the weights should stay
+        the same after rounding and scaling is applied.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        test_sums = [132, 2000, 10520342]
+
+        def generate_test_dict(test_sum):
+
+            test_spec_dict = {
+                "metadata" : {
+                    "random_seed" : 0
+                },
+                "columns" : {
+                    "Nums" : {
+                        "fit" : "sum",
+                        "precision" : float,
+                        "miss_probability" : 0,
+                        "dispersion" : 0,
+                        "sum": test_sum
+                    }
+                }
+            }
+
+            return test_spec_dict
+
+        test_df = pd.DataFrame(
+            data={
+                "C1": ["A", "B", "A", "B"]*100,
+                "C2": ["C", "C", "D", "D"]*100
+            }
+        )
+
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.2, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.8, 0.5)},
+            ("Nums", "C2", "C") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "D") : {"weights": Weights(0.5, 0.5)},
+
+        }
+
+        for test_sum in test_sums:
+
+            result = tm.generate_continuous_column(
+                generate_test_dict(test_sum),
+                test_df,
+                test_col,
+                target_cols=target_cols,
+                wt=wt
+            )
+
+            test_df["Nums"] = result
+
+            self.assertEqual(
+                (test_df[test_df["C1"] == "A"]["Nums"].sum() /
+                test_df[test_df["C1"] == "B"]["Nums"].sum()), 0.25
+            )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

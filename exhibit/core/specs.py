@@ -7,7 +7,7 @@ import numpy as np
 
 # Exhibit imports
 from .constraints import find_boolean_columns
-from .utils import guess_date_frequency, generate_table_id
+from .utils import guess_date_frequency, generate_table_id, float_or_int
 from .formatters import build_table_from_lists
 from .sql import create_temp_table
 from .generate.weights import generate_weights
@@ -255,6 +255,7 @@ class newSpec:
         '''
         cont_d = {
             'type': 'continuous',
+            'precision': float_or_int(self.df[col]),
             'fit': 'sum',
             'miss_probability': self.missing_data_chance(col),
             'sum': float(self.df[col].sum()),

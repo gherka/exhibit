@@ -150,6 +150,7 @@ columns:
     anonymising_set: random
   los:
     type: continuous
+    precision: integer
     fit: sum
     miss_probability: 0.0
     sum: 12441120.0
@@ -160,6 +161,7 @@ columns:
     std: 6263.69
   stays:
     type: continuous
+    precision: integer
     fit: sum
     miss_probability: 0.0
     sum: 3034766.0
@@ -170,6 +172,7 @@ columns:
     std: 941.18
   avlos:
     type: continuous
+    precision: float
     fit: sum
     miss_probability: 0.065
     sum: 28258.352214630533

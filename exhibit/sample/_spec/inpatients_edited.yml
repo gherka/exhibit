@@ -129,12 +129,14 @@ columns:
     anonymising_set: random
   los:
     type: continuous
+    precision: integer
     fit: sum
     miss_probability: 0.0
     sum: 200000
     dispersion: 0.1
   stays:
     type: continuous
+    precision: integer
     fit: sum
     miss_probability: 0.0
     sum: 100000
