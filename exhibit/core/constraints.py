@@ -11,6 +11,181 @@ import re
 import numpy as np
 from numpy import greater, greater_equal, less, less_equal, equal
 
+class ConstraintHandler:
+    '''
+    Keep all internal constraint-handling methods in one place
+    with the added bonus of a shared spec_dict object
+    '''
+
+    def __init__(self, spec_dict):
+        '''
+        Doc string
+        '''
+
+        self.spec_dict = spec_dict
+        self.seed = spec_dict["metadata"]["random_seed"]
+        self.dependent_column = None
+        self.independent_expression = None
+
+    def adjust_dataframe_to_fit_constraint(self, anon_df, bool_constraint):
+        '''
+        Modifies anon_df in place at each function call!
+        '''
+
+        clean_rule = self.clean_up_constraint(bool_constraint)
+        mask = (anon_df
+                    .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                    .eval(clean_rule)
+        )
+
+        (self.dependent_column,
+        op,
+        self.independent_expression) = tokenise_constraint(bool_constraint)
+                
+        anon_df.loc[~mask, self.dependent_column] = (
+            anon_df[~mask].apply(
+                self.adjust_value_to_constraint,
+                axis=1,
+                args=(
+                    self.dependent_column,
+                    self.independent_expression,
+                    op)
+            )
+        )
+
+    @staticmethod
+    def clean_up_constraint(rule_string):
+        '''
+        The default way to handle column names with whitespace in eval strings
+        is to enclose them in backticks. However, the default tokeniser will
+        occasionally tokenise elements of the column name that weren't separated by
+        whitespace originally, leading to errors when tokens are reassembled with
+        a safe character. For example, "Clinical Pathway 31Day" will be reassembled
+        as "Clinical_Pathway_31_Day".
+
+        The solution is to process the constraint first, before passing it to eval,
+        not forgetting to rename the dataframe columns with a __ instead of a whitespace
+        '''
+        
+        ops_re = r'[<>]=?|=='
+        split_str = rule_string.split("~")
+        clean_str = StringIO()
+        
+        for token in split_str:
+            if re.search(ops_re, token):
+                clean_str.write(token)
+            else:
+                clean_str.write(token.replace(" ", "__"))
+        
+        result = clean_str.getvalue()
+
+        return result
+
+    def adjust_value_to_constraint(
+                                self,
+                                row,
+                                dependent_column_name,
+                                indepdendent_expression,
+                                operator):
+        '''
+        Row-based function, supplied to apply()
+
+        Parameters
+        ----------
+        row : pd.Series object
+            automatically supplied by apply()
+        dependent_column_name : str
+            values in this column will be adjusted to fit the constraint
+        independent_value: str
+            depdendent_column will be adjusted to match the value of the independent
+            expression after it's evaluated by Pandas' eval() when compared against
+            the given operator
+        operator : str
+            has to be one of >,<.<=,>=,==
+        
+        Returns
+        -------
+        A single adjusted value
+        '''
+        np.random.seed(self.seed)
+
+        op_dict = {
+            "<": less,
+            ">": greater,
+            "<=": less_equal,
+            ">=": greater_equal,
+            "==": equal
+        }
+
+        x = row[dependent_column_name]
+
+        if indepdendent_expression.isdigit():
+            y = float(indepdendent_expression)
+        else:
+            #not ideal = converting series to dataframe to run eval
+            #refactor after adding more tests!
+            y = row.to_frame().T.eval(indepdendent_expression).iloc[0]
+
+        return self.generate_value_with_condition(x, y, op_dict[operator])
+
+    def generate_value_with_condition(self, x, y, op):
+        '''
+        Comparisons where one of the values in NaN are not possible
+        so we return NaN if one of the comparison values in NaN
+        '''
+
+        np.random.seed(self.seed)
+
+        dispersion = self.spec_dict["columns"][self.dependent_column]["dispersion"]
+
+        if np.isnan(x):
+            return np.nan
+        
+        if np.isnan(y):
+            return np.NaN
+
+        # if there is no dispersion, pick the next valid value
+        if dispersion == 0:
+
+            if op.__name__ == 'less':
+                return max(0, y - 1)
+            if op.__name__ == 'greater':
+                return y + 1
+            return y
+
+        # new x value is drawn from the dispersion-based interval around y
+        new_x_min = max(0, y - y * dispersion)
+        new_x_max = y + y * dispersion
+
+        return self.recursive_randint(new_x_min, new_x_max, y, op)
+
+    def recursive_randint(self, new_x_min, new_x_max, y, op):
+        '''
+        Helper function to generate a random integer that conforms
+        to the given constraint.
+
+        Occasionally, you might get into a situation when determining
+        a noisy value is not straight-forward; fall-back at the end
+        of recursion depth is to go 1 up or down while still satisfying
+        the constraint operator.
+        '''
+
+        new_x = round(np.random.uniform(new_x_min, new_x_max))
+
+        try:
+            if op(new_x, y):
+                return new_x
+            return self.recursive_randint(new_x_min, new_x_max, y, op)
+        
+        except RecursionError:
+
+            if op.__name__ == 'less':
+                return max(0, y - 1)
+            if op.__name__ == 'greater':
+                return y + 1
+            return y
+
+
 # EXPORTABLE METHODS
 # ==================
 def find_boolean_columns(df):
@@ -72,27 +247,6 @@ def find_boolean_columns(df):
             
     return output
 
-def adjust_dataframe_to_fit_constraint(anon_df, bool_constraint):
-    '''
-    Modifies anon_df in place at each function call!
-    '''
-
-    clean_rule = _clean_up_constraint(bool_constraint)
-    mask = (anon_df
-                .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                .eval(clean_rule)
-    )
-
-    x, op, y = tokenise_constraint(bool_constraint)
-            
-    anon_df.loc[~mask, x] = (
-        anon_df[~mask].apply(
-            _adjust_value_to_constraint,
-            axis=1,
-            args=(x, y, op)
-        )
-    )
-
 def tokenise_constraint(constraint):
     '''
     Given a constraint string, split it into individual tokens:
@@ -116,130 +270,5 @@ def tokenise_constraint(constraint):
     token_list = re.split(pattern, constraint)
 
     result = Constraint(*[x.replace("~", "").strip() for x in token_list])
-
-    return result
-
-# INNER MODULE METHODS
-# ====================
-def _recursive_randint(new_x_min, new_x_max, y, op):
-    '''
-    Helper function to generate a random integer that conforms
-    to the given constraint.
-
-    Occasionally, you might get into a situation when determining
-    a noisy value is not straight-forward; fall-back at the end
-    of recursion depth is to go 1 up or down while still satisfying
-    the constraint operator.
-    '''
-
-    new_x = round(np.random.uniform(new_x_min, new_x_max))
-
-    try:
-        if op(new_x, y):
-            return new_x
-        return _recursive_randint(new_x_min, new_x_max, y, op)
-    
-    except RecursionError:
-
-        if op.__name__ == 'less':
-            return y - 1
-        if op.__name__ == 'greater':
-            return y + 1
-        return y
-
-def _generate_value_with_condition(x, y, op, pct_diff=None):
-    '''
-    Comparisons where one of the values in NaN are not possible
-    so we return NaN if one of the comparison values in NaN
-    '''
-
-    np.random.seed(0)
-
-    if pct_diff is None:
-        pct_diff = 0.5
-
-    if np.isnan(x):
-        return np.nan
-    
-    if np.isnan(y):
-        return np.NaN
-
-    abs_diff = max(1, abs(y-x))
-
-    new_x_min = max(0, x - abs_diff * (1 + pct_diff))
-    new_x_max = x + abs_diff * (1 + pct_diff)
-
-    return _recursive_randint(new_x_min, new_x_max, y, op)
-
-def _adjust_value_to_constraint(
-                            row,
-                            dependent_column_name,
-                            indepdendent_expression,
-                            operator):
-    '''
-    Row-based function, supplied to apply()
-
-    Parameters
-    ----------
-    row : pd.Series object
-        automatically supplied by apply()
-    dependent_column_name : str
-        values in this column will be adjusted to fit the constraint
-    independent_value: str
-        depdendent_column will be adjusted to match the value of the independent
-        expression after it's evaluated by Pandas' eval() when compared against
-        the given operator
-    operator : str
-        has to be one of >,<.<=,>=,==
-    
-    Returns
-    -------
-    A single adjusted value
-    '''
-    np.random.seed(0) #consider putting the seed into global environment
-
-    op_dict = {
-        "<": less,
-        ">": greater,
-        "<=": less_equal,
-        ">=": greater_equal,
-        "==": equal
-    }
-
-    x = row[dependent_column_name]
-
-    if indepdendent_expression.isdigit():
-        y = float(indepdendent_expression)
-    else:
-        #not ideal = converting series to dataframe to run eval
-        #refactor after adding more tests!
-        y = row.to_frame().T.eval(indepdendent_expression).iloc[0]
-
-    return _generate_value_with_condition(x, y, op_dict[operator])
-
-def _clean_up_constraint(rule_string):
-    '''
-    The default way to handle column names with whitespace in eval strings
-    is to enclose them in backticks. However, the default tokeniser will
-    occasionally tokenise elements of the column name that weren't separated by
-    whitespace originally, leading to errors when tokens are reassembled with
-    a safe character. For example, "Clinical Pathway 31Day" will be reassembled
-    as "Clinical_Pathway_31_Day".
-
-    The solution is to process the constraint first, before passing it to eval,
-    not forgetting to rename the dataframe columns with a __ instead of a whitespace
-    '''
-    
-    ops_re = r'[<>]=?|=='
-    split_str = rule_string.split("~")
-    clean_str = StringIO()
-    
-    for token in split_str:
-        if re.search(ops_re, token):
-            clean_str.write(token)
-        else:
-            clean_str.write(token.replace(" ", "__"))
-    
-    result = clean_str.getvalue()
 
     return result

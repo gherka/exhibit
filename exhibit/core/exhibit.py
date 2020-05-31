@@ -18,7 +18,7 @@ import pandas as pd
 from .formatters import parse_original_values
 from .specs import newSpec
 from .validator import newValidator
-from .constraints import adjust_dataframe_to_fit_constraint
+from .constraints import ConstraintHandler
 from .utils import (
                     path_checker, read_with_date_parser,
                     count_core_rows)
@@ -258,9 +258,11 @@ class newExhibit:
         anon_df.replace("Missing data", np.NaN, inplace=True)
 
         #6) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
+        ch = ConstraintHandler(self.spec_dict)
+        
         for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
 
-            adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
+            ch.adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
 
         #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():

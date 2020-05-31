@@ -16,11 +16,18 @@ class constraintsTests(unittest.TestCase):
     '''
     Doc string
     '''
+    def setUp(self):
+        '''
+        Make ConstraintHandler class available to all test methods
+        '''
+        
+        self.ch = tm.ConstraintHandler({"metadata":{"random_seed":0}})
 
     def test_recursive_randint_error_handling(self):
         '''
         Return a matching value given left side, right side and operator
         '''
+        
         np.random.seed(0)
 
         ops = [np.less, np.greater, np.equal]
@@ -32,7 +39,7 @@ class constraintsTests(unittest.TestCase):
         for op, val in zip(ops, target_vals):
         
             result.append(
-                tm._recursive_randint(0, 10000, val, op)
+                self.ch.recursive_randint(0, 10000, val, op)
             )
 
         self.assertCountEqual(result, expected)
@@ -118,6 +125,13 @@ class constraintsTests(unittest.TestCase):
         an operator OR a column name, try to parse it as a scalar
         '''
 
+        self.ch.spec_dict["columns"] = {
+            "A": {"dispersion":0},
+            "B": {"dispersion":0}
+            }
+
+        self.ch.dependent_column = "A"
+
         test_df = pd.DataFrame(
             data={
                 "A":[1, 0, 20, 2, 50],
@@ -129,7 +143,7 @@ class constraintsTests(unittest.TestCase):
         mask = test_df.eval(constraint)
 
         test_df.loc[~mask, "A"] = test_df[~mask].apply(
-            tm._adjust_value_to_constraint, axis=1,
+            self.ch.adjust_value_to_constraint, axis=1,
             args=('A', 'B', '>=')
         )
 
@@ -140,6 +154,13 @@ class constraintsTests(unittest.TestCase):
         Inner functions not yet tested; if tokenised value is not
         an operator OR a column name, try to parse it as a scalar
         '''
+
+        self.ch.spec_dict["columns"] = {
+            "A": {"dispersion":0},
+            "B": {"dispersion":0}
+            }
+
+        self.ch.dependent_column = "A"
 
         test_df = pd.DataFrame(
             data={
@@ -152,7 +173,7 @@ class constraintsTests(unittest.TestCase):
         mask = test_df.eval(constraint)
 
         test_df.loc[~mask, "A"] = test_df[~mask].apply(
-            tm._adjust_value_to_constraint, axis=1,
+            self.ch.adjust_value_to_constraint, axis=1,
             args=('A', '30', '>=')
         )
 
@@ -166,6 +187,15 @@ class constraintsTests(unittest.TestCase):
         Currently, adjust_dataframe_to_fit_constraint function
         modifies the passed-in dataframe in-place.
         '''
+
+        self.ch.spec_dict["columns"] = {
+            "A": {"dispersion":0},
+            "B": {"dispersion":0},
+            "C": {"dispersion":0}
+            }
+
+        self.ch.dependent_column = "C"
+
         test_df = pd.DataFrame(
             data={
                 "A":[1, 0, 20, 2, 50],
@@ -178,7 +208,7 @@ class constraintsTests(unittest.TestCase):
 
         constraint = "C < A + B"
 
-        tm.adjust_dataframe_to_fit_constraint(result_df, constraint)
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
 
         self.assertTrue(all(result_df["C"] < (result_df["A"] + result_df["B"])))
 
@@ -195,12 +225,12 @@ class constraintsTests(unittest.TestCase):
         c2_expected = "Spam__Eggs > Spam"
 
         self.assertEqual(
-            tm._clean_up_constraint(c1),
+            self.ch.clean_up_constraint(c1),
             c1_expected
         )
 
         self.assertEqual(
-            tm._clean_up_constraint(c2),
+            self.ch.clean_up_constraint(c2),
             c2_expected
         )
 
