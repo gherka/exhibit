@@ -289,16 +289,42 @@ class validatorTests(unittest.TestCase):
 
         validatorMock = Mock()
 
-        test_dict = {
+        test_dict_1 = {
+            "metadata": {
+                "numerical_columns" : [
+                    "Spam Eggs",
+                    "Spam",
+                    "Eggs"
+                ]
+            },
             "constraints": {
                 "boolean_constraints": [
-                    "Spam Eggs > Spam" #invalid
+                    "Spam Eggs > Spam",
+                    ] 
+            }
+        }
+
+        test_dict_2 = {
+            "metadata": {
+                "numerical_columns" : [
+                    "Spam Eggs",
+                    "Spam",
+                    "Eggs"
+                ]
+            },
+            "constraints": {
+                "boolean_constraints": [
+                    "Bacon > Spam",
                     ] 
             }
         }
 
         self.assertFalse(
-            tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict)
+            tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict_1)
+            )
+
+        self.assertFalse(
+            tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict_2)
             )
 
 if __name__ == "__main__" and __package__ is None:

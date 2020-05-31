@@ -93,7 +93,10 @@ def generate_YAML_string(spec_dict):
     #
     #If a column name has spaces, make sure to surround it with
     #the tilde character ~. You can also force a column to be
-    #always smaller / larger than a scalar value.
+    #always smaller / larger than a scalar value. Note that adding
+    #a boolean contraint between two columns will affect the 
+    #distribution of weights and also the target sum as these are
+    #designed to work with a single, discrete column.
     #----------------------------------------------------------
     """)
 

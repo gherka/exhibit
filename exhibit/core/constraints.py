@@ -3,6 +3,7 @@ Module for various derived and user-set constraints
 '''
 # Standard library imports
 from io import StringIO
+from collections import namedtuple
 import itertools as it
 import re
 
@@ -24,13 +25,14 @@ def find_boolean_columns(df):
     A list of strings that are interpretable by Pandas eval() method
 
     Note that each column pair can be described by at most one "rule":
-    if > is identified, the inner loop exists rather than check for >=
+    if > is identified, the inner loop exits rather than check for >=
     Comparisons need to be made element-wise, which is why we import
     operators from numpy and not from standard library.
 
     Use tilde character (~) to enclose column names with spaces
     '''
 
+    # newer versions of Python preserve dict order (important)
     op_dict = {
         "<": less,
         ">": greater,
@@ -81,34 +83,39 @@ def adjust_dataframe_to_fit_constraint(anon_df, bool_constraint):
                 .eval(clean_rule)
     )
 
-    col_A_name, op, col_B_name = tokenise_constraint(bool_constraint)
+    x, op, y = tokenise_constraint(bool_constraint)
             
-    anon_df.loc[~mask, col_A_name] = (
+    anon_df.loc[~mask, x] = (
         anon_df[~mask].apply(
             _adjust_value_to_constraint,
             axis=1,
-            args=(col_A_name, col_B_name, op)
+            args=(x, y, op)
         )
     )
 
 def tokenise_constraint(constraint):
     '''
-    Given a constraint string, split it into individual tokens
-    Orders of tokens matters.
+    Given a constraint string, split it into individual tokens:
+    x:  dependent column name that will be adjusted,
+    op: operator to test x against y
+    y:  indepdendent condition which can either be a combination of
+        columns or a scalar value 
 
     Returns
     -------
-    A tuple with tokens
+    A mamed tuple with tokens
     
-    If the constraint is in a valid format, the returned tuple
-    is made up of Column A, Column B and Operator; the format is
-    checked as part of validation, earlier in the process
+    The format of the constraint is checked as part of validation,
+    earlier in the process.
     '''
 
-    pattern = r"~.+?~|\b[^\s]+?\b|[<>]=?|=="
-    token_list = re.findall(pattern, constraint)
+    Constraint = namedtuple("Tokenised_contraint", ["x", "op", "y"])
 
-    result = tuple(x.replace("~", "") for x in token_list)
+    #split into left (x) and right (y) parts on operator
+    pattern = r"(\s[<>]\s|\s>=\s|\s<=\s|\s==\s)"
+    token_list = re.split(pattern, constraint)
+
+    result = Constraint(*[x.replace("~", "").strip() for x in token_list])
 
     return result
 
@@ -164,7 +171,11 @@ def _generate_value_with_condition(x, y, op, pct_diff=None):
 
     return _recursive_randint(new_x_min, new_x_max, y, op)
 
-def _adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
+def _adjust_value_to_constraint(
+                            row,
+                            dependent_column_name,
+                            indepdendent_expression,
+                            operator):
     '''
     Row-based function, supplied to apply()
 
@@ -172,10 +183,12 @@ def _adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     ----------
     row : pd.Series object
         automatically supplied by apply()
-    col_name_A : str
+    dependent_column_name : str
         values in this column will be adjusted to fit the constraint
-    col_name_B : str
-        values in this column will NOT be changed; can also be a scalar
+    independent_value: str
+        depdendent_column will be adjusted to match the value of the independent
+        expression after it's evaluated by Pandas' eval() when compared against
+        the given operator
     operator : str
         has to be one of >,<.<=,>=,==
     
@@ -183,7 +196,7 @@ def _adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
     -------
     A single adjusted value
     '''
-    np.random.seed(0)
+    np.random.seed(0) #consider putting the seed into global environment
 
     op_dict = {
         "<": less,
@@ -193,12 +206,14 @@ def _adjust_value_to_constraint(row, col_name_A, col_name_B, operator):
         "==": equal
     }
 
-    x = row[col_name_A]
+    x = row[dependent_column_name]
 
-    if col_name_B.isdigit():
-        y = float(col_name_B)
+    if indepdendent_expression.isdigit():
+        y = float(indepdendent_expression)
     else:
-        y = row[col_name_B]
+        #not ideal = converting series to dataframe to run eval
+        #refactor after adding more tests!
+        y = row.to_frame().T.eval(indepdendent_expression).iloc[0]
 
     return _generate_value_with_condition(x, y, op_dict[operator])
 

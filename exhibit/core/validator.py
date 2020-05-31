@@ -331,7 +331,21 @@ class newValidator:
         if spec_dict['constraints']['boolean_constraints']:
 
             for constraint in spec_dict['constraints']['boolean_constraints']:
-                if len(tokenise_constraint(constraint)) != 3:
+
+                tcon = tokenise_constraint(constraint)
+
+                # all constraints should dissembe into 3 parts
+                # spaces must be enclosed by tilda
+                # dependent column name (x) must exist in the dataset
+
+                fail_conds = (
+                    (len(tcon) != 3) | 
+                    ((" " in tcon.x) & ("~" not in tcon.x)) |
+                    ((" " in tcon.y) & ("~" not in tcon.y)) |
+                    (tcon.x not in spec_dict["metadata"]["numerical_columns"])
+                )
+
+                if fail_conds:
                     print(fail_msg % constraint)
                     return False
         return True

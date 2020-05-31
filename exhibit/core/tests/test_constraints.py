@@ -92,20 +92,25 @@ class constraintsTests(unittest.TestCase):
 
     def test_tokenise_constraint(self):
         '''
-        Separate the constraint string into 3-element tuple
+        Separate the constraint string into a 3-element tuple:
+        dependent_column, operator and indepedent_condition
         '''
 
         c1 = "~A A~ > B"
         c2 = "A == B"
+        c3 = "A < ~B B~ + C"
 
         c1_expected = ("A A", ">", "B")
         c2_expected = ("A", "==", "B")
+        c3_expected = ("A", "<", "B B + C")
 
         c1_result = tm.tokenise_constraint(c1)
         c2_result = tm.tokenise_constraint(c2)
+        c3_result = tm.tokenise_constraint(c3)
 
         self.assertEqual(c1_expected, c1_result)
         self.assertEqual(c2_expected, c2_result)
+        self.assertEqual(c3_expected, c3_result)
 
     def test_adjust_value_to_constraint_column(self):
         '''
@@ -153,6 +158,30 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(test_df.eval(constraint)))
 
+    def test_adjust_value_to_constraint_expression(self):
+        '''
+        Constraint depdendent column values to an expression
+        involving multiple independent columns.
+
+        Currently, adjust_dataframe_to_fit_constraint function
+        modifies the passed-in dataframe in-place.
+        '''
+        test_df = pd.DataFrame(
+            data={
+                "A":[1, 0, 20, 2, 50],
+                "B":[2, 3, 4, 5, 6],
+                "C":[50, 50, 50, 50, 50]
+            }
+        )
+
+        result_df = test_df.copy()
+
+        constraint = "C < A + B"
+
+        tm.adjust_dataframe_to_fit_constraint(result_df, constraint)
+
+        self.assertTrue(all(result_df["C"] < (result_df["A"] + result_df["B"])))
+
     def test_constraint_clean_up_for_eval(self):
         '''
         Re-assemble the given constraint in a safe way, hoping that
@@ -174,7 +203,7 @@ class constraintsTests(unittest.TestCase):
             tm._clean_up_constraint(c2),
             c2_expected
         )
-        
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
