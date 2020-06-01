@@ -331,7 +331,8 @@ class newValidator:
         if spec_dict['constraints']['boolean_constraints']:
 
             for constraint in spec_dict['constraints']['boolean_constraints']:
-
+                
+                # tokenise without cleaning up - as user has entered them
                 tcon = tokenise_constraint(constraint)
 
                 # all constraints should dissembe into 3 parts
@@ -342,7 +343,8 @@ class newValidator:
                     (len(tcon) != 3) | 
                     ((" " in tcon.x) & ("~" not in tcon.x)) |
                     ((" " in tcon.y) & ("~" not in tcon.y)) |
-                    (tcon.x not in spec_dict["metadata"]["numerical_columns"])
+                    (tcon.x.replace("~", "") not in
+                         spec_dict["metadata"]["numerical_columns"])
                 )
 
                 if fail_conds:

@@ -101,15 +101,17 @@ class constraintsTests(unittest.TestCase):
         '''
         Separate the constraint string into a 3-element tuple:
         dependent_column, operator and indepedent_condition
+
+        The input to tokeniser needs to be cleaned up.
         '''
 
-        c1 = "~A A~ > B"
+        c1 = "A__A > B"
         c2 = "A == B"
-        c3 = "A < ~B B~ + C"
+        c3 = "A < B__B + C"
 
-        c1_expected = ("A A", ">", "B")
+        c1_expected = ("A__A", ">", "B")
         c2_expected = ("A", "==", "B")
-        c3_expected = ("A", "<", "B B + C")
+        c3_expected = ("A", "<", "B__B + C")
 
         c1_result = tm.tokenise_constraint(c1)
         c2_result = tm.tokenise_constraint(c2)
@@ -224,6 +226,9 @@ class constraintsTests(unittest.TestCase):
         c2 = "~Spam Eggs~ > Spam"
         c2_expected = "Spam__Eggs > Spam"
 
+        c3 = "Spam == ~Spam Spam Eggs~ - ~Spam Eggs~"
+        c3_expected = "Spam == Spam__Spam__Eggs - Spam__Eggs"
+
         self.assertEqual(
             self.ch.clean_up_constraint(c1),
             c1_expected
@@ -232,6 +237,11 @@ class constraintsTests(unittest.TestCase):
         self.assertEqual(
             self.ch.clean_up_constraint(c2),
             c2_expected
+        )
+
+        self.assertEqual(
+            self.ch.clean_up_constraint(c3),
+            c3_expected
         )
 
 if __name__ == "__main__" and __package__ is None:

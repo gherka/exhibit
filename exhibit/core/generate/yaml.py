@@ -57,9 +57,10 @@ def generate_YAML_string(spec_dict):
     #note their format. Values starting with a number must be
     #enclosed in quotes as per YAML rules.
     #
-    #The default anonymising method is "random", but you can
-    #add your own custom sets, including linked, by creating a 
-    #suitable table in the anon.db SQLite3 database.
+    #The default anonymising method for categorical columns is
+    #"random", but you can add your own custom sets, including
+    #linked, by creating a suitable table in the anon.db SQLite3
+    #database.
     #
     #The tool comes with a linked set of mountain ranges (15) &
     #and their top 10 peaks. Only linked sets can be used for
@@ -69,6 +70,12 @@ def generate_YAML_string(spec_dict):
     #
     #To use just one column from a table, add a dot separator
     #like so mountains.range
+    #
+    #For Continuous columns you can either generate them by 
+    #progressively reducing the target_sum based on the weights 
+    #or sample from a normal distribution whose mean is shifted
+    #depending on the weights. Switch between two methods by
+    #setting the fit parameter to either "sum" or "distriubtion"
     #----------------------------------------------------------
     """)
 

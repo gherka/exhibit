@@ -2,7 +2,6 @@
 Module for various derived and user-set constraints
 '''
 # Standard library imports
-from io import StringIO
 from collections import namedtuple
 import itertools as it
 import re
@@ -33,23 +32,30 @@ class ConstraintHandler:
         '''
 
         clean_rule = self.clean_up_constraint(bool_constraint)
+        
+        #only apply the adjustments to rows that DON'T already meet the constraint
         mask = (anon_df
                     .rename(lambda x: x.replace(" ", "__"), axis="columns")
                     .eval(clean_rule)
         )
 
+        #at this point, the tokeniser produces "safe" column names, with __
         (self.dependent_column,
         op,
-        self.independent_expression) = tokenise_constraint(bool_constraint)
-                
-        anon_df.loc[~mask, self.dependent_column] = (
-            anon_df[~mask].apply(
-                self.adjust_value_to_constraint,
-                axis=1,
-                args=(
-                    self.dependent_column,
-                    self.independent_expression,
-                    op)
+        self.independent_expression) = tokenise_constraint(clean_rule)
+        
+        #apply the adjusing function to an in-memory dataframe with __ in columns
+        #without touching the main anon_df which still has columns with spaces
+        anon_df.loc[~mask, self.dependent_column.replace("__", " ")] = (
+            anon_df[~mask]
+                .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                .apply(
+                    self.adjust_value_to_constraint,
+                    axis=1,
+                    args=(
+                        self.dependent_column,
+                        self.independent_expression,
+                        op)
             )
         )
 
@@ -67,25 +73,26 @@ class ConstraintHandler:
         not forgetting to rename the dataframe columns with a __ instead of a whitespace
         '''
         
-        ops_re = r'[<>]=?|=='
-        split_str = rule_string.split("~")
-        clean_str = StringIO()
-        
-        for token in split_str:
-            if re.search(ops_re, token):
-                clean_str.write(token)
-            else:
-                clean_str.write(token.replace(" ", "__"))
-        
-        result = clean_str.getvalue()
+        column_names = re.findall(r"~.*?~", rule_string)
+        repl_dict = {"~": "", " ": "__"}
+        clean_rule = rule_string
 
-        return result
+        for col_name in column_names:
+            
+            clean_col_name = re.sub(
+                '|'.join(repl_dict.keys()),
+                lambda x: repl_dict[x.group()],
+                col_name)
 
+            clean_rule = clean_rule.replace(col_name, clean_col_name)
+
+        return clean_rule
+            
     def adjust_value_to_constraint(
                                 self,
                                 row,
                                 dependent_column_name,
-                                indepdendent_expression,
+                                independent_expression,
                                 operator):
         '''
         Row-based function, supplied to apply()
@@ -119,12 +126,12 @@ class ConstraintHandler:
 
         x = row[dependent_column_name]
 
-        if indepdendent_expression.isdigit():
-            y = float(indepdendent_expression)
+        if independent_expression.isdigit():
+            y = float(independent_expression)
         else:
             #not ideal = converting series to dataframe to run eval
             #refactor after adding more tests!
-            y = row.to_frame().T.eval(indepdendent_expression).iloc[0]
+            y = row.to_frame().T.eval(independent_expression).iloc[0]
 
         return self.generate_value_with_condition(x, y, op_dict[operator])
 
@@ -136,7 +143,9 @@ class ConstraintHandler:
 
         np.random.seed(self.seed)
 
-        dispersion = self.spec_dict["columns"][self.dependent_column]["dispersion"]
+        dependent_column = self.dependent_column.replace("__", " ")
+
+        dispersion = self.spec_dict["columns"][dependent_column]["dispersion"]
 
         if np.isnan(x):
             return np.nan
@@ -252,7 +261,7 @@ def tokenise_constraint(constraint):
     Given a constraint string, split it into individual tokens:
     x:  dependent column name that will be adjusted,
     op: operator to test x against y
-    y:  indepdendent condition which can either be a combination of
+    y:  independent condition which can either be a combination of
         columns or a scalar value 
 
     Returns
@@ -269,6 +278,6 @@ def tokenise_constraint(constraint):
     pattern = r"(\s[<>]\s|\s>=\s|\s<=\s|\s==\s)"
     token_list = re.split(pattern, constraint)
 
-    result = Constraint(*[x.replace("~", "").strip() for x in token_list])
+    result = Constraint(*[x.strip() for x in token_list])
 
     return result
