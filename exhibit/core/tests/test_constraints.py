@@ -129,7 +129,7 @@ class constraintsTests(unittest.TestCase):
 
         self.ch.spec_dict["columns"] = {
             "A": {"dispersion":0},
-            "B": {"dispersion":0}
+            "B B": {"dispersion":0}
             }
 
         self.ch.dependent_column = "A"
@@ -137,19 +137,17 @@ class constraintsTests(unittest.TestCase):
         test_df = pd.DataFrame(
             data={
                 "A":[1, 0, 20, 2, 50],
-                "B":[1, 5, 21, 1, 1000]
+                "B B":[1, 5, 21, 1, 1000]
             }
         )
 
-        constraint = "A >= B"
-        mask = test_df.eval(constraint)
+        result_df = test_df.copy()
 
-        test_df.loc[~mask, "A"] = test_df[~mask].apply(
-            self.ch.adjust_value_to_constraint, axis=1,
-            args=('A', 'B', '>=')
-        )
+        constraint = "A >= ~B B~"
 
-        self.assertTrue(all(test_df.eval(constraint)))
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+
+        self.assertTrue(all(result_df["A"] >= result_df["B B"]))
 
     def test_adjust_value_to_constraint_scalar(self):
         '''
@@ -158,7 +156,7 @@ class constraintsTests(unittest.TestCase):
         '''
 
         self.ch.spec_dict["columns"] = {
-            "A": {"dispersion":0},
+            "A A": {"dispersion":0},
             "B": {"dispersion":0}
             }
 
@@ -166,20 +164,18 @@ class constraintsTests(unittest.TestCase):
 
         test_df = pd.DataFrame(
             data={
-                "A":[1, 0, 20, 2, 50],
+                "A A":[1, 0, 20, 2, 50],
                 "B":[1, 5, 21, 1, 1000]
             }
         )
 
-        constraint = "A >= 30"
-        mask = test_df.eval(constraint)
+        result_df = test_df.copy()
 
-        test_df.loc[~mask, "A"] = test_df[~mask].apply(
-            self.ch.adjust_value_to_constraint, axis=1,
-            args=('A', '30', '>=')
-        )
+        constraint = "~A A~ >= 30"
 
-        self.assertTrue(all(test_df.eval(constraint)))
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+
+        self.assertTrue(all(result_df["A A"] >= 30))
 
     def test_adjust_value_to_constraint_expression(self):
         '''

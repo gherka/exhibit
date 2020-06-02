@@ -44,8 +44,15 @@ class ConstraintHandler:
         op,
         self.independent_expression) = tokenise_constraint(clean_rule)
         
-        #apply the adjusing function to an in-memory dataframe with __ in columns
-        #without touching the main anon_df which still has columns with spaces
+        #add the expression we're adjusting TO to the dataframe so that it is
+        #available in all apply calls.
+        if self.independent_expression.isdigit():
+            anon_df["test_expression"] = float(self.independent_expression)
+        else:
+            anon_df["test_expression"] = (anon_df
+                                .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                                .eval(self.independent_expression))
+
         anon_df.loc[~mask, self.dependent_column.replace("__", " ")] = (
             anon_df[~mask]
                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
@@ -54,10 +61,12 @@ class ConstraintHandler:
                     axis=1,
                     args=(
                         self.dependent_column,
-                        self.independent_expression,
                         op)
             )
         )
+
+        #drop the test_expression column
+        del anon_df["test_expression"]
 
     @staticmethod
     def clean_up_constraint(rule_string):
@@ -92,7 +101,6 @@ class ConstraintHandler:
                                 self,
                                 row,
                                 dependent_column_name,
-                                independent_expression,
                                 operator):
         '''
         Row-based function, supplied to apply()
@@ -103,10 +111,6 @@ class ConstraintHandler:
             automatically supplied by apply()
         dependent_column_name : str
             values in this column will be adjusted to fit the constraint
-        independent_value: str
-            depdendent_column will be adjusted to match the value of the independent
-            expression after it's evaluated by Pandas' eval() when compared against
-            the given operator
         operator : str
             has to be one of >,<.<=,>=,==
         
@@ -124,14 +128,9 @@ class ConstraintHandler:
             "==": equal
         }
 
+        #test_expression is a temporary column created by an earlier function
         x = row[dependent_column_name]
-
-        if independent_expression.isdigit():
-            y = float(independent_expression)
-        else:
-            #not ideal = converting series to dataframe to run eval
-            #refactor after adding more tests!
-            y = row.to_frame().T.eval(independent_expression).iloc[0]
+        y = row["test_expression"]
 
         return self.generate_value_with_condition(x, y, op_dict[operator])
 
