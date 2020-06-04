@@ -103,7 +103,9 @@ def generate_YAML_string(spec_dict):
     #always smaller / larger than a scalar value. Note that adding
     #a boolean contraint between two columns will affect the 
     #distribution of weights and also the target sum as these are
-    #designed to work with a single, discrete column.
+    #designed to work with a single, discrete column. When comapring
+    #a date column against a fixed date, make sure it's in an ISO
+    #format and is enclosed in single quites like so: '2018-12-01'.
     #----------------------------------------------------------
     """)
 

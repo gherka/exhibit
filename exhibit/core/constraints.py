@@ -3,12 +3,13 @@ Module for various derived and user-set constraints
 '''
 # Standard library imports
 from collections import namedtuple
+from datetime import datetime
 import itertools as it
 import re
 
 # External library imports
 import numpy as np
-from numpy import greater, greater_equal, less, less_equal, equal
+import pandas as pd
 
 class ConstraintHandler:
     '''
@@ -45,10 +46,22 @@ class ConstraintHandler:
         self.independent_expression) = tokenise_constraint(clean_rule)
         
         #add the expression we're adjusting TO to the dataframe so that it is
-        #available in all apply calls.
+        #available in all apply calls. Maybe move to its own function
         if self.independent_expression.isdigit():
+
             anon_df["test_expression"] = float(self.independent_expression)
+
+        elif self.is_independent_expression_an_iso_date(self.independent_expression):
+
+            iso_date = datetime.strptime(self.independent_expression, "'%Y-%m-%d'")
+            anon_df["test_expression"] = pd.datetime(
+                year=iso_date.year,
+                month=iso_date.month,
+                day=iso_date.day
+            )
+
         else:
+
             anon_df["test_expression"] = (anon_df
                                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
                                 .eval(self.independent_expression))
@@ -67,6 +80,20 @@ class ConstraintHandler:
 
         #drop the test_expression column
         del anon_df["test_expression"]
+
+    @staticmethod
+    def is_independent_expression_an_iso_date(expr):
+        '''
+        Only ISO format (y-m-d) with - separator is supported.
+        Also, because Pandas eval() requires dates to be enclosed
+        in single quotes, these are added to the parsing format.
+        '''
+
+        try:
+            datetime.strptime(expr, "'%Y-%m-%d'")
+            return True
+        except ValueError:
+            return False
 
     @staticmethod
     def clean_up_constraint(rule_string):
@@ -121,11 +148,11 @@ class ConstraintHandler:
         np.random.seed(self.seed)
 
         op_dict = {
-            "<": less,
-            ">": greater,
-            "<=": less_equal,
-            ">=": greater_equal,
-            "==": equal
+            "<" : np.less,
+            ">" : np.greater,
+            "<=": np.less_equal,
+            ">=": np.greater_equal,
+            "==": np.equal
         }
 
         #test_expression is a temporary column created by an earlier function
@@ -140,19 +167,31 @@ class ConstraintHandler:
         so we return NaN if one of the comparison values in NaN
         '''
 
+        if pd.isnull(x):
+            return np.nan
+        
+        if pd.isnull(y):
+            return np.nan
+
         np.random.seed(self.seed)
 
         dependent_column = self.dependent_column.replace("__", " ")
 
-        dispersion = self.spec_dict["columns"][dependent_column]["dispersion"]
+        dispersion = self.spec_dict["columns"][dependent_column].get("dispersion", None)
 
-        if np.isnan(x):
-            return np.nan
-        
-        if np.isnan(y):
-            return np.NaN
+        # date columns don't have dispersion
+        if dispersion is None:
 
-        # if there is no dispersion, pick the next valid value
+            offset = pd.tseries.frequencies.get_offset(
+                self.spec_dict["columns"][dependent_column]["frequency"])
+
+            if op.__name__ == 'less':
+                return y - 1 * offset
+            if op.__name__ == 'greater':
+                return y + 1 * offset
+            return y
+
+        # if dispersion is zero, pick the next valid value
         if dispersion == 0:
 
             if op.__name__ == 'less':
@@ -217,11 +256,11 @@ def find_boolean_columns(df):
 
     # newer versions of Python preserve dict order (important)
     op_dict = {
-        "<": less,
-        ">": greater,
-        "<=": less_equal,
-        ">=": greater_equal,
-        "==": equal
+        "<" : np.less,
+        ">" : np.greater,
+        "<=": np.less_equal,
+        ">=": np.greater_equal,
+        "==": np.equal
     }
 
     num_cols = df.select_dtypes(include=np.number).columns

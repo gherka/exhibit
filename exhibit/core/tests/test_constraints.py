@@ -21,7 +21,11 @@ class constraintsTests(unittest.TestCase):
         Make ConstraintHandler class available to all test methods
         '''
         
-        self.ch = tm.ConstraintHandler({"metadata":{"random_seed":0}})
+        self.ch = tm.ConstraintHandler(
+            {
+                "metadata":{"random_seed":0},
+            }
+        )
 
     def test_recursive_randint_error_handling(self):
         '''
@@ -209,6 +213,81 @@ class constraintsTests(unittest.TestCase):
         self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
 
         self.assertTrue(all(result_df["C"] < (result_df["A"] + result_df["B"])))
+
+
+    def test_adjust_time_column_to_another_time_column(self):
+        '''
+        Constraint dependent column values to an expression
+        involving timeseries column.
+        '''
+
+        self.ch.spec_dict["columns"] = {
+            "arrival date": {
+                "type": "date",
+                "frequency": "D"
+            },
+            "departure_date": {
+                "type": "date",
+                "frequency": "D"
+            }
+        }
+
+        self.ch.dependent_column = "arrival date"
+
+        test_df = pd.DataFrame(
+            data={
+                "arrival date": reversed(pd.date_range(
+                    start="2018/01/01",
+                    periods=10,
+                    freq="D",            
+                )),
+                "departure_date": pd.date_range(
+                    start="2018/01/05",
+                    periods=10,
+                    freq="D",            
+                ),
+            }
+        )
+
+        result_df = test_df.copy()
+
+        constraint = "~arrival date~ < departure_date"
+
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+
+        self.assertTrue(all(result_df["arrival date"] < (result_df["departure_date"])))
+
+    def test_adjust_time_column_to_datetime(self):
+        '''
+        Constraint dependent column values to a date string
+        '''
+
+        self.ch.spec_dict["columns"] = {
+            "arrival_date": {
+                "type": "date",
+                "frequency": "D"
+            }
+        }
+
+        self.ch.dependent_column = "arrival_date"
+
+        test_df = pd.DataFrame(
+            data={
+                "arrival_date": pd.date_range(
+                    start="2018/01/01",
+                    periods=10,
+                    freq="D",            
+                ),
+            }
+        )
+
+        result_df = test_df.copy()
+
+        constraint = "arrival_date < '2018-01-05'"
+
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+
+        self.assertTrue(all(result_df["arrival_date"] < pd.datetime(2018, 1, 5)))
 
     def test_constraint_clean_up_for_eval(self):
         '''

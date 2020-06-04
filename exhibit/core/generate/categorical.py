@@ -60,7 +60,7 @@ def generate_categorical_data(spec_dict, core_rows):
         spec_dict,
         'original_values',
         col_names=True,
-        types='categorical')
+        types=['categorical', "date"])
 
     paired = [k for k, v in list_of_orig_val_tuples if str(v) == "See paired column"]
 
@@ -141,13 +141,24 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
     '''
 
     col_type = spec_dict['columns'][col_name]['type']
+    uniques = spec_dict['columns'][col_name]['uniques']
+    
+    if col_type == "date":
+
+        all_pos_dates = pd.date_range(
+            start=spec_dict['columns'][col_name]['from'],
+            periods=spec_dict['columns'][col_name]['uniques'],
+            freq=spec_dict['columns'][col_name]['frequency'],            
+        )
+
+        random_dates = np.random.choice(all_pos_dates, num_rows)
+
+        return pd.Series(random_dates, name=col_name)        
+
+    #capture categorical-only information
     anon_set = spec_dict['columns'][col_name]['anonymising_set']
     paired_cols = spec_dict['columns'][col_name]['paired_columns']
     ct = spec_dict['metadata']['category_threshold']
-    uniques = spec_dict['columns'][col_name]['uniques']
-
-    if col_type != "categorical": # pragma: no cover
-        raise TypeError
     
     #values were stored in ; randomise based on uniform distribution
     if uniques > ct:
