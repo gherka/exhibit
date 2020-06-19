@@ -18,7 +18,7 @@ metadata:
   - avlos
   - los
   - stays
-  time_columns:
+  date_columns:
   - quarter_date
   category_threshold: 150
   random_seed: 0
@@ -66,7 +66,7 @@ columns:
     - 80-89        | 0.108              | 0.191 | 0.274 | 0.130
     - 90+          | 0.095              | 0.212 | 0.089 | 0.026
     - Missing data | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   hb_code:
@@ -75,7 +75,7 @@ columns:
     - hb_name
     uniques: 14
     original_values: See paired column
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   hb_name:
@@ -99,7 +99,7 @@ columns:
     - NHS Shetland                | S08000026      | 0.042              | 0.031 | 0.002 | 0.003
     - NHS Tayside                 | S08000030      | 0.083              | 0.075 | 0.052 | 0.039
     - Missing data                | Missing data   | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   measure:
@@ -112,7 +112,7 @@ columns:
     - Elective Inpatients  | 0.318              | 0.289 | 0.103 | 0.117
     - Emergency Inpatients | 0.333              | 0.711 | 0.897 | 0.487
     - Missing data         | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   sex:
@@ -124,26 +124,34 @@ columns:
     - A            | 0.500              | 0.514 | 0.533 | 0.514
     - B            | 0.500              | 0.486 | 0.467 | 0.486
     - Missing data | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   los:
     type: continuous
     precision: integer
-    fit: sum
+    distribution: weighted_uniform_with_dispersion
+    distribution_parameters:
+      uniform_base_value: 1000
+      dispersion: 0.1
+    scaling: target_sum
+    scaling_parameters:
+      target_sum: 200000
     miss_probability: 0.0
-    sum: 200000
-    dispersion: 0.1
   stays:
     type: continuous
     precision: integer
-    fit: sum
+    distribution: weighted_uniform_with_dispersion
+    distribution_parameters:
+      uniform_base_value: 1000
+      dispersion: 0.1
+    scaling: target_sum
+    scaling_parameters:
+      target_sum: 100000
     miss_probability: 0.0
-    sum: 100000
-    dispersion: 0.1
   quarter_date:
     type: date
-    allow_missing_values: false
+    cross_join_all_unique_values: true
     miss_probability: 0.0
     from: '2018-03-31'
     uniques: 4

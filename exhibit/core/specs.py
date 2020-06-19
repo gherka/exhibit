@@ -48,7 +48,7 @@ class newSpec:
         columns that fit np.number specification
     cat_cols : list
         all other columns
-    time_cols : list
+    date_cols : list
         columns that fit pandas' is_datetime64_dtype specification
     paird_cols : list
         list of lists where each inner list is a group of columns that
@@ -65,11 +65,11 @@ class newSpec:
         self.id = generate_table_id()
         self.numerical_cols = set(
             self.df.select_dtypes(include=np.number).columns.values)
-        self.time_cols = {col for col in self.df.columns.values
+        self.date_cols = {col for col in self.df.columns.values
                          if is_datetime64_dtype(self.df.dtypes[col])}
         self.cat_cols = (
             set(self.df.select_dtypes(exclude=np.number).columns.values) -
-            self.time_cols)
+            self.date_cols)
         self.paired_cols = find_pair_linked_columns(self.df)
 
         self.output = {
@@ -77,7 +77,7 @@ class newSpec:
                 "number_of_rows": self.df.shape[0],
                 "categorical_columns": sorted(list(self.cat_cols)),
                 "numerical_columns": sorted(list(self.numerical_cols)),
-                "time_columns": sorted(list(self.time_cols)),
+                "date_columns": sorted(list(self.date_cols)),
                 "category_threshold": self.ct,
                 "random_seed": self.random_seed,
                 "id": self.id
@@ -206,6 +206,7 @@ class newSpec:
         Create a dictionary with information summarising
         the categorical column "col"
         '''
+
         weights = {}
         path = self.original_values_path(col)
 
@@ -218,7 +219,7 @@ class newSpec:
             'paired_columns': self.list_of_paired_cols(col),
             'uniques': self.df[col].nunique(),
             'original_values' : self.original_values_path_resolver(path, weights, col),
-            'allow_missing_values': True,
+            'cross_join_all_unique_values': False,
             'miss_probability': self.missing_data_chance(col),
             'anonymising_set':'random',
         }
@@ -234,7 +235,7 @@ class newSpec:
 
         time_d = {
             'type': 'date',
-            'allow_missing_values': False,
+            'cross_join_all_unique_values': True,
             'miss_probability': self.missing_data_chance(col),
             'from': self.df[col].min().date().isoformat(),
             'uniques': int(self.df[col].nunique()),
@@ -245,25 +246,41 @@ class newSpec:
 
     def continuous_dict(self, col):
         '''
-        Dispersion is used to add noise to the distribution
-        of values. This is particularly important for columns
-        that are dominated by low-count values.
+        Default values for describing a numerical column:
 
-        Fit can be sum or distribution. When fitting to target sum
-        min, max, mean and std parameters are ignored. When fit is
-        set to distribution, target sum and dispersion are ignored.
+            precision : [float, integer]
+            distribution : [weighted_uniform_with_dispersion, normal, poisson]
+            scaling: [target_sum, range, none]
+
+        Distribution and scaling options require certain parameters. By default
+        all possible parameters are derived from the source data, but only the
+        relevant ones, like target_sum for target_sum scaling are used. Others
+        are ignored.
+
+        All distribution options take into the account the relative weights of
+        categorical values vis-a-vis the numerical column. This is normally 
+        achieved by shifting the mean proportionally to the difference of any
+        given combination of weights from the equal weights.
         '''
+
         cont_d = {
             'type': 'continuous',
             'precision': float_or_int(self.df[col]),
-            'fit': 'sum',
+            'distribution': "weighted_uniform_with_dispersion",
+            'distribution_parameters': {
+                "uniform_base_value": 1000,
+                "dispersion": 0.1,
+                "mean": float(round(self.df[col].mean(), 2)),
+                "std": float(round(self.df[col].std(), 2))
+            },
+            'scaling': "target_sum",
+            "scaling_parameters": {
+                "target_sum" : float(self.df[col].sum()),
+                "target_min": float(self.df[col].min()),
+                "target_max": float(self.df[col].max()),
+                "preserve_weights": True
+            },
             'miss_probability': self.missing_data_chance(col),
-            'sum': float(self.df[col].sum()),
-            'dispersion': 0.1,
-            'min': float(self.df[col].min()),
-            'max': float(self.df[col].max()),
-            'mean': float(round(self.df[col].mean(), 2)),
-            'std' : float(round(self.df[col].std(), 2))
         }
 
         return cont_d

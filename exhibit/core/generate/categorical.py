@@ -52,9 +52,9 @@ def generate_categorical_data(spec_dict, core_rows):
 
     complete_cols = [c for c, v in get_attr_values(
         spec_dict,
-        "allow_missing_values",
+        "cross_join_all_unique_values",
         col_names=True, 
-        types=['categorical', 'date']) if not v]
+        types=['categorical', 'date']) if v]
 
     list_of_orig_val_tuples = get_attr_values(
         spec_dict,

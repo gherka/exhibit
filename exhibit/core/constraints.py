@@ -54,7 +54,7 @@ class ConstraintHandler:
         elif self.is_independent_expression_an_iso_date(self.independent_expression):
 
             iso_date = datetime.strptime(self.independent_expression, "'%Y-%m-%d'")
-            anon_df["test_expression"] = pd.datetime(
+            anon_df["test_expression"] = datetime(
                 year=iso_date.year,
                 month=iso_date.month,
                 day=iso_date.day
@@ -176,14 +176,12 @@ class ConstraintHandler:
         np.random.seed(self.seed)
 
         dependent_column = self.dependent_column.replace("__", " ")
+        root = self.spec_dict["columns"][dependent_column]
 
-        dispersion = self.spec_dict["columns"][dependent_column].get("dispersion", None)
+        # date columns are handled in a special way
+        if root["type"] == "date":
 
-        # date columns don't have dispersion
-        if dispersion is None:
-
-            offset = pd.tseries.frequencies.get_offset(
-                self.spec_dict["columns"][dependent_column]["frequency"])
+            offset = pd.tseries.frequencies.to_offset(root["frequency"])
 
             if op.__name__ == 'less':
                 return y - 1 * offset
@@ -191,8 +189,24 @@ class ConstraintHandler:
                 return y + 1 * offset
             return y
 
+        # all other columns have distrubution + parameters to guide us
+        dist = root["distribution"]
+
+        # depending on the original distribution type, adjust the range        
+        if dist == "weighted_uniform_with_dispersion":
+            
+            adj_factor = y * root["distribution_parameters"]["dispersion"]
+        
+        elif dist == "normal":
+
+            adj_factor = root["distribution_parameters"]["std"]
+        
+        else:
+
+            adj_factor = 0
+
         # if dispersion is zero, pick the next valid value
-        if dispersion == 0:
+        if adj_factor == 0:
 
             if op.__name__ == 'less':
                 return max(0, y - 1)
@@ -201,8 +215,8 @@ class ConstraintHandler:
             return y
 
         # new x value is drawn from the dispersion-based interval around y
-        new_x_min = max(0, y - y * dispersion)
-        new_x_max = y + y * dispersion
+        new_x_min = max(0, y - adj_factor)
+        new_x_max = y + adj_factor
 
         return self.recursive_randint(new_x_min, new_x_max, y, op)
 

@@ -55,12 +55,12 @@ class validatorTests(unittest.TestCase):
         test_dict = {
             "columns": {
                 "Board Code": {
-                    "allow_missing_values": True,
+                    "cross_join_all_unique_values": False,
                     "anonymise": True,
                     "anonymising_set": "random"
                 },
                 "Board":  {
-                    "allow_missing_values": True,
+                    "cross_join_all_unique_values": False,
                     "anonymise": True,
                     "anonymising_set": "random"
                 },
@@ -89,13 +89,13 @@ class validatorTests(unittest.TestCase):
                     "type":"categorical",
                     "original_values": "dataframe",
                     "uniques":5,
-                    "allow_missing_values":False
+                    "cross_join_all_unique_values": True
                 },
                 "B": {
                     "type":"categorical",
                     "original_values": "dataframe",
                     "uniques":2,
-                    "allow_missing_values":False
+                    "cross_join_all_unique_values": True
                 }
             }
         }        
@@ -155,11 +155,11 @@ class validatorTests(unittest.TestCase):
         test_dict = {
             "columns": {
                 "Board Code": {
-                    "allow_missing_values": True,
+                    "cross_join_all_unique_values": False,
                     "anonymising_set": "random"
                 },
                 "Board":  {
-                    "allow_missing_values": True,
+                    "cross_join_all_unique_values": False,
                     "anonymising_set": "random"
                 },
             },
@@ -170,7 +170,7 @@ class validatorTests(unittest.TestCase):
         }
 
         test_dict1 = deepcopy(test_dict)
-        test_dict1['columns']['Board']['allow_missing_values'] = False
+        test_dict1['columns']['Board']['cross_join_all_unique_values'] = True
 
         test_dict2 = deepcopy(test_dict)
         test_dict2['columns']['Board']['anonymising_set'] = "fish"
@@ -191,13 +191,13 @@ class validatorTests(unittest.TestCase):
             "columns": {
                 "Board Code": {
                     "type": "categorical",
-                    "allow_missing_values": True,
+                    "cross_join_all_unique_values": False,
                     "paired_columns": ['Board'],
                     "anonymising_set": "random"
                 },
                 "Board":  {
                     "type": "categorical",
-                    "allow_missing_values": True,
+                    "cross_join_all_unique_values": False,
                     "paired_columns": ['Board Code'],
                     "anonymising_set": "random"
                 },
@@ -205,7 +205,7 @@ class validatorTests(unittest.TestCase):
         }
 
         test_dict1 = deepcopy(test_dict)
-        test_dict1['columns']['Board']['allow_missing_values'] = False
+        test_dict1['columns']['Board']['cross_join_all_unique_values'] = True
 
         test_dict2 = deepcopy(test_dict)
         test_dict2['columns']['Board']['anonymising_set'] = "fish"
@@ -326,6 +326,110 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(
             tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict_2)
             )
+
+    def test_distribution_parameters(self):
+        '''
+        Make sure user adds all parameters required for each
+        distribution.
+        '''
+
+        validatorMock = Mock()
+
+        test_dict_uniform = {
+            "metadata": {
+                "numerical_columns" : [
+                    "Spam"
+                ]
+            },
+            "columns": {
+                "Spam" : {
+                    "distribution" : "weighted_uniform_with_dispersion",
+                    "distribution_parameters": {
+                        "uniform_base_value": 1000,
+                        "dispersion": 0.1
+                    }
+                }
+            }
+        }
+
+        test_dict_normal = {
+            "metadata": {
+                "numerical_columns" : [
+                    "Spam"
+                ]
+            },
+            "columns": {
+                "Spam" : {
+                    "distribution" : "normal",
+                    "distribution_parameters": {
+                        "mean": 10,
+                        "std": 5
+                    }
+                }
+            }
+        }
+
+        self.assertTrue(
+            tm.validate_distribution_parameters(
+                validatorMock, spec_dict=test_dict_uniform)
+            )
+
+        self.assertTrue(
+            tm.validate_distribution_parameters(
+                validatorMock, spec_dict=test_dict_normal)
+            )
+
+    def test_scaling_parameters(self):
+        '''
+        Make sure user adds all parameters required for each
+        scaling mode.
+        '''
+
+        validatorMock = Mock()
+
+        test_dict_target_sum = {
+            "metadata": {
+                "numerical_columns" : [
+                    "Spam"
+                ]
+            },
+            "columns": {
+                "Spam" : {
+                    "scaling" : "target_sum",
+                    "scaling_parameters": {
+                        "target_sum": 1000,
+                    }
+                }
+            }
+        }
+
+        test_dict_range = {
+            "metadata": {
+                "numerical_columns" : [
+                    "Spam"
+                ]
+            },
+            "columns": {
+                "Spam" : {
+                    "scaling" : "range",
+                    "scaling_parameters": {
+                        "target_min": 5,
+                        "target_max": 10
+                    }
+                }
+            }
+        }
+
+        self.assertTrue(
+            tm.validate_scaling_parameters(
+                validatorMock, spec_dict=test_dict_target_sum)
+            )
+
+        self.assertTrue(
+            tm.validate_scaling_parameters(
+                validatorMock, spec_dict=test_dict_range)
+            )
+
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

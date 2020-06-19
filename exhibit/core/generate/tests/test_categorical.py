@@ -27,7 +27,7 @@ class categoricalTests(unittest.TestCase):
             "columns": {
                 "test_Time": {
                     "type": "date",
-                    "allow_missing_values" : True,
+                    "cross_join_all_unique_values" : False,
                     "from": '2018-03-31',
                     "uniques": 4,
                     "frequency": "D"

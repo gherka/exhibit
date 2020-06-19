@@ -198,10 +198,10 @@ class referenceTests(unittest.TestCase):
             'metadata':{'number_of_rows':1500},
             'columns':{
                 'HB2014':{
-                    'allow_missing_values': False
+                    'cross_join_all_unique_values': True
                 },
                 'HB2014Name':{
-                    'allow_missing_values': False
+                    'cross_join_all_unique_values': True
                 },
                 'BNFItemCode':{'anonymising_set':'birds'},
                 'BNFItemDescription':{'anonymising_set':'birds'},
@@ -234,6 +234,7 @@ class referenceTests(unittest.TestCase):
         What this reference test is covering:
             - one of the linked columns is in the spec, another is in DB
             - anonymisation is done using "mountains" set
+            - NumberOfPaidItems is generated from a shifted normal distribution
 
         Note that prescribing dataset has duplicate categorical rows
         '''
@@ -250,6 +251,7 @@ class referenceTests(unittest.TestCase):
                 'HB2014':{'anonymising_set':'mountains'},
                 'HB2014Name':{'anonymising_set':'mountains'},
                 'GPPracticeName':{'anonymising_set':'mountains'},
+                'NumberOfPaidItems':{"distribution":'normal'}
             }
         }
 
@@ -366,7 +368,7 @@ class referenceTests(unittest.TestCase):
         # modify spec
         test_spec_dict = {
             "metadata": {"number_of_rows": 2000},
-            "columns" : {"sex": {"allow_missing_values" : False}}
+            "columns" : {"sex": {"cross_join_all_unique_values" : True}}
         }
 
         temp_spec, temp_df = self.temp_exhibit(
@@ -497,7 +499,7 @@ class referenceTests(unittest.TestCase):
                 {"number_of_rows": 2000},
             "columns": {
                 "sex" : 
-                    {"allow_missing_values": False}
+                    {"cross_join_all_unique_values": True}
                 ,
                 "hb_code": 
                     {"anonymising_set":"mountains"}

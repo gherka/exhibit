@@ -35,8 +35,6 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     local variables.
     '''
 
-    anon_df = anon_df.copy()
-
     target_cols = (
         kwargs.get("target_cols") or #or short-circuits on first True
         target_columns_for_weights_table(spec_dict))
@@ -46,8 +44,13 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         generate_weights_table(spec_dict, target_cols))
 
     # Extract relevant variables from the user spec
-    fit = spec_dict['columns'][col_name]['fit']
+    dist = spec_dict['columns'][col_name]['distribution']
+    dist_params = spec_dict['columns'][col_name]['distribution_parameters']
+    scaling = spec_dict['columns'][col_name].get('scaling', None)
+    scaling_params = spec_dict['columns'][col_name].get('scaling_parameters', None)
+
     null_pct = spec_dict['columns'][col_name]['miss_probability']
+    precision = spec_dict['columns'][col_name]['precision']
 
     # Generate index for nulls based on spec & add nulls to anon_df
     np.random.seed(spec_dict["metadata"]["random_seed"])
@@ -58,21 +61,8 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         p=[null_pct, 1-null_pct]
     )
 
-    anon_df.loc[null_idx, col_name] = np.NaN
-
-    # Create a fit tuple
-    if fit == "sum":
-        fit_arg = ("sum", {})
-    if fit == "distribution":
-        fit_arg = (
-            "distribution",
-            {
-                "min" : spec_dict['columns'][col_name]["min"],
-                "max" : spec_dict['columns'][col_name]["max"],
-                "mean": spec_dict['columns'][col_name]["mean"],
-                "std" : spec_dict['columns'][col_name]["std"],
-            }
-        )
+    #new_series filled with NAs
+    new_series = pd.Series(index=anon_df.index, name=col_name, dtype=float)
 
     # Generate real values in non-null cells by looking up values of 
     # categorical columns in the weights table and progressively reduce
@@ -80,45 +70,24 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     # of if fit is set to distribution, draw from a normal distribution
     # taking into account values' weights and column mean & standard deviation
 
-    anon_df.loc[~null_idx, col_name] = anon_df.loc[~null_idx, target_cols].apply(
+    new_series.loc[~null_idx] = anon_df.loc[~null_idx, target_cols].apply(
         func=_generate_cont_val,
         axis=1,
         weights_table=wt,
         num_col=col_name,
-        fit=fit_arg)
+        dist=dist,
+        dist_params=dist_params)
 
-    if fit == "distribution":
-        # Normalise and scale to min max range
-        X = anon_df[col_name]
-        col_min = spec_dict['columns'][col_name]["min"]
-        col_max = spec_dict['columns'][col_name]["max"]
-        new_X = (X - X.min()) / (X.max() - X.min()) * (col_max - col_min) + col_min
-        anon_df[col_name] = new_X
+    # Scale the generated series
+    if scaling == "target_sum":
 
-    if fit == "sum":
+        return _scale_to_target_sum(new_series, precision, **scaling_params)
 
-        dispersion_pct = spec_dict['columns'][col_name]['dispersion']
+    if scaling == "range":
 
-        # After the values were calculated, apply scaling factor to them
-        scaling_factor = _determine_scaling_factor(spec_dict, anon_df[col_name])
+        return _scale_to_range(new_series, **scaling_params)
 
-        anon_df.loc[~null_idx, col_name] = (
-            anon_df.loc[~null_idx, col_name] * scaling_factor
-        )
-
-        # Apply dispersion to perturb the data
-        anon_df[col_name] = anon_df[col_name].apply(
-            _apply_dispersion, dispersion_pct=dispersion_pct)
-
-        precision = spec_dict["columns"][col_name].get("precision", None)
-
-        if precision == "integer":
-
-            # Coerce generated column to target sum while keeping int precision
-            target_sum = spec_dict['columns'][col_name]['sum']
-            anon_df[col_name] = _conditional_rounding(anon_df[col_name], target_sum)
-
-    return anon_df[col_name]
+    return new_series
 
 def generate_derived_column(anon_df, calculation, precision=2):
     '''
@@ -176,14 +145,17 @@ def generate_derived_column(anon_df, calculation, precision=2):
 
 # INNER MODULE METHODS
 # ====================
+
 def _generate_cont_val(
     row,
     weights_table,
     num_col,
-    fit
+    dist,
+    dist_params
     ):
     '''
-    Generate a continuous value, one dataframe row at a time
+    Dispatch function to route generation of values to inner functions
+    specific to the distribution type: normal, uniform, etc.
 
     Parameters
     ----------
@@ -194,60 +166,118 @@ def _generate_cont_val(
         {(num_col, cat_col, cat_value)}:{weights: NamedTuple(weight, eq_diff)}
     num_col : str
         numerical column for which to generate values
-    fit : tuple
-        first element is always fit description, followed by a dict with extra arguments
+    dist : string
+        any one of [weighted_uniform_with_dispersion, normal]
+    dist_params : dict
+        dictionary containing all supporting parameters, like mean, dispersion, etc.
 
     Returns
     -------
-    Rounded value
+    Single value
     '''
 
-    if fit[0] == "sum":
-
-        base_value = 1000
-
-        for cat_col, val in row.iteritems():
-
-            try:
-
-                weight = weights_table[(num_col, cat_col, val)]['weights'].weight
-
-            except KeyError:
-
-                weight = 1
-
-            base_value = base_value * weight
-
-    else:
+    if dist == "weighted_uniform_with_dispersion":
         
-        #start with 1
-        row_diff_sum = 1
- 
-        mean = fit[1]["mean"]
-        std = fit[1]["std"]
+        return _draw_from_uniform_distribution(
+            row, weights_table, num_col, **dist_params)
 
-        for cat_col, val in row.iteritems():
+    if dist == "normal":
 
-            try:
+        return _draw_from_normal_distribution(
+            row, weights_table, num_col, **dist_params)
 
-                w, ew = weights_table[(num_col, cat_col, val)]['weights']
-                
-            except KeyError:
+    return None
 
-                w, ew = (0, 0)
+def _draw_from_normal_distribution(row, wt, num_col, mean, std, **_kwargs):
+    '''
+    Draw a single value from a normal distribution with a weighted mean.
+    '''
 
-            #don't make any changes if no difference from equal weight
-            row_diff = 0 if (w - ew) == 0 else (w / ew) - 1
+    row_diff_sum = 1
 
-            row_diff_sum = row_diff_sum + row_diff
+    for cat_col, val in row.iteritems():
 
-        new_mean = mean * row_diff_sum
-       
-        base_value = int(norm.rvs(
-            loc=new_mean, scale=std, size=1
-        )[0])
+        try:
+
+            w, ew = wt[(num_col, cat_col, val)]['weights']
+            
+        except KeyError:
+
+            w, ew = (0, 0)
+
+        #don't make any changes if no difference from equal weight
+        row_diff = 0 if (w - ew) == 0 else (w / ew) - 1
+
+        row_diff_sum = row_diff_sum + row_diff
+
+    weighted_mean = mean * row_diff_sum
     
-    return base_value
+    #rvs returns an array, even for size=1
+    result = norm.rvs(loc=weighted_mean, scale=std, size=1)[0]
+
+    return result
+
+def _draw_from_uniform_distribution(
+    row, wt, num_col, uniform_base_value, dispersion, **_kwargs):
+    '''
+    Generate a single value by progressively reducing a base value
+    based on categorical values in the row and apply dispersion to
+    add a random element to the result.
+    '''
+
+    base_value = uniform_base_value
+
+    for cat_col, val in row.iteritems():
+
+        try:
+
+            weight = wt[(num_col, cat_col, val)]['weights'].weight
+
+        except KeyError:
+
+            weight = 1
+
+        base_value = base_value * weight
+
+    return _apply_dispersion(base_value, dispersion)
+
+def _scale_to_range(series, target_min, target_max, preserve_weights, **_kwargs):
+    '''
+    Scale based on target range.
+
+    By default weights are preserved, which means that rather than use linear scaling
+    we base the scaling on the "old" ratios between values, making a special case
+    for the target minimum. This can be changed back to linear scaling between 
+    target_min and target_max by setting preserve_weights to False in the spec.
+
+    When preserve_weights is True and the target_min doesn't fit in with the rest of
+    the weights, validator will issue a warning (TO DO)
+    '''
+
+    X = series
+
+    if preserve_weights:
+
+        return np.where(X == X.min(), target_min, X / X.max() * target_max)
+
+    return (X - X.min()) / (X.max() - X.min()) * (target_max - target_min) + target_min
+
+def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
+    '''
+    Scale series to target_sum. If precision is integer, try to round 
+    the values up in such a way that preserve the target_sum
+    '''
+
+    scaling_factor = target_sum / series.dropna().sum()
+
+    scaled_series = series * scaling_factor
+
+    if precision == "integer":
+
+        rounded_scaled_series = _conditional_rounding(scaled_series, target_sum)
+        return rounded_scaled_series
+    
+    return scaled_series
 
 def _conditional_rounding(series, target_sum):
     '''
@@ -331,49 +361,10 @@ def _apply_dispersion(value, dispersion_pct):
     if np.isnan(value):
         return np.NaN
     
-    #both have to ints otherwise random.randint misbehaves
-    value = int(value)
-    d = int(value * dispersion_pct)
+    value = value
+    d = value * dispersion_pct
 
     #to avoid negative rmin, include max(0, n) check
     rmin, rmax = (max(0, (value - d)), (value + d))
 
-    #if after applying dispersion, the values are still close, make
-    #further adjustments: the minimum range is at least 2, preferably
-    #on each side of the range, but if it results in a negative rmin,
-    #just extend rmax by 2.
-    if (rmax - rmin) < 2:
-
-        if (rmin - 1) < 0:
-            rmax = rmax + 2
-        else:
-            rmin = rmin - 1
-            rmax = rmax + 1
-
-    #the upper limit of randint is exclusive, so we extend it by 1
-    return np.random.randint(rmin, rmax + 1)
-
-def _determine_scaling_factor(spec_dict, source_series):
-    '''
-    Scaling factor to apply to each value in the continous columns
-    AFTER categorical weights have been applied
-
-    Parameters
-    ----------
-    spec_dict : dict
-        YAML specification de-serialised into dictionary
-    source_series : pd.Series
-        Numerical column for which to calculate the scaling factor.
-        This depends on the target_sum of the column.
-
-    Returns
-    -------
-    Float
-    '''
-    
-    #calculate how different the generated sum is from target
-    target_sum = spec_dict['columns'][source_series.name]['sum']
-
-    sum_factor = target_sum / source_series.dropna().sum()
-
-    return sum_factor
+    return np.random.uniform(rmin, rmax)

@@ -90,13 +90,14 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
         
-        miss = get_attr_values(spec_dict, 'allow_missing_values', include_paired=False)
+        cross_join = get_attr_values(
+            spec_dict, "cross_join_all_unique_values", include_paired=False)
         uniques = get_attr_values(spec_dict, 'uniques', include_paired=False)
 
         nums = [1]
 
-        for miss_flag, value in zip(miss, uniques):
-            if (miss_flag == False) & (value is not None):
+        for xjoin_flag, value in zip(cross_join, uniques):
+            if (xjoin_flag == True) & (value is not None):
                 nums.append(value)
 
         min_combi = reduce(mul, nums)
@@ -151,7 +152,7 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set']
+        LINKED_ATTRS = ['cross_join_all_unique_values', 'anonymising_set']
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
@@ -184,7 +185,7 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['allow_missing_values', 'anonymising_set']
+        LINKED_ATTRS = ['cross_join_all_unique_values', 'anonymising_set']
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: Paired columns must have matching attributes (%(err_attr)s)
@@ -351,3 +352,77 @@ class newValidator:
                     print(fail_msg % constraint)
                     return False
         return True
+
+    def validate_distribution_parameters(self, spec_dict=None):
+        '''
+        User can specify how to generate numerical values - either
+        from a uniform distribution with dispersion or from a normal
+        distribution. Both options require certain parameters to function.
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        uniform_params = {"uniform_base_value", "dispersion"}
+        normal_params = {"mean", "std"}
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: Distribution parameters are incorrect for column %s
+        """)
+
+        for num_col in spec_dict['metadata']['numerical_columns']:
+
+            col = spec_dict["columns"].get(num_col, None)
+            #columns in derived section don't have any parameters
+            if not col:
+                continue
+
+            if col["distribution"] == "normal":
+
+                if not normal_params.issubset(col["distribution_parameters"].keys()):
+                    print(fail_msg % num_col)
+                    return False
+
+            if col["distribution"] == "weighted_uniform_with_dispersion":
+
+                if not uniform_params.issubset(col["distribution_parameters"].keys()):
+                    print(fail_msg % num_col)
+                    return False
+        return True
+
+    def validate_scaling_parameters(self, spec_dict=None):
+        '''
+        Currently, there are two ways we can scale generated values:
+        to a target sum or to a range.
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        target_sum_params = {"target_sum"}
+        range_params = {"target_min", "target_max"}
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: Scaling parameters are incorrect for column %s
+        """)
+
+        for num_col in spec_dict['metadata']['numerical_columns']:
+
+            col = spec_dict["columns"].get(num_col, None)
+            #columns in derived section don't have any parameters
+            if not col:
+                continue
+
+            if col["scaling"] == "target_sum":
+
+                if not target_sum_params.issubset(col["scaling_parameters"].keys()):
+                    print(fail_msg % num_col)
+                    return False
+
+            if col["scaling"] == "range":
+
+                if not range_params.issubset(col["scaling_parameters"].keys()):
+                    print(fail_msg % num_col)
+                    return False
+        return True
+        

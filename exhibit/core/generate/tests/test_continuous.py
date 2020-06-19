@@ -10,6 +10,7 @@ from collections import namedtuple
 import pandas as pd
 from pandas.testing import assert_series_equal
 import numpy as np
+import scipy.stats as stats
 
 # Module under test
 from exhibit.core.generate import continuous as tm
@@ -99,18 +100,18 @@ class continuousTests(unittest.TestCase):
         self.assertEqual(t2, e2)
         self.assertEqual(t3, e3)
 
-    def test_equal_distribution_generation(self):
+    def test_normal_distribution_generation(self):
         '''
         Distribution generation works by shifting the mean
         of the normal distribution probability function depending
         on the weights of each value in each of the columns 
         present in any given row of the anonymised dataset.
+
+        No scaling is applied.
         '''
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
 
-        test_min = 0
-        test_max = 100
         test_mean = 50
         test_std = 10
 
@@ -120,12 +121,13 @@ class continuousTests(unittest.TestCase):
             },
             "columns" : {
                 "Nums" : {
-                    "fit" : "distribution",
+                    "precision" : "float",
+                    "distribution" : "normal",
+                    "distribution_parameters": {
+                        "mean": test_mean,
+                        "std": test_std,
+                    },
                     "miss_probability" : 0,
-                    "min": test_min,
-                    "max": test_max,
-                    "mean": test_mean,
-                    "std": test_std
                 }
             }
         }
@@ -157,12 +159,10 @@ class continuousTests(unittest.TestCase):
             wt=wt
         )
 
-        self.assertEqual(result.values.min(), test_min)
-        self.assertEqual(result.values.max(), test_max)
         #Allowing for a slight random variation around the mean
         assert 45 <= result.values.mean() <= 55
 
-    def test_skewed_distribution_generation(self):
+    def test_skewed_normal_distribution_generation(self):
         '''
         Distribution generation works by shifting the mean
         of the normal distribution probability function depending
@@ -172,8 +172,6 @@ class continuousTests(unittest.TestCase):
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
 
-        test_min = 0
-        test_max = 100
         test_mean = 50
         test_std = 10
 
@@ -183,12 +181,13 @@ class continuousTests(unittest.TestCase):
             },
             "columns" : {
                 "Nums" : {
-                    "fit" : "distribution",
+                    "precision" : "float",
+                    "distribution" : "normal",
+                    "distribution_parameters" : {
+                        "mean": test_mean,
+                        "std": test_std
+                    },
                     "miss_probability" : 0,
-                    "min": test_min,
-                    "max": test_max,
-                    "mean": test_mean,
-                    "std": test_std
                 }
             }
         }
@@ -229,10 +228,10 @@ class continuousTests(unittest.TestCase):
         self.assertFalse((test_df[right_skew_rows]["Nums"] > test_mean).any())
         self.assertFalse((test_df[left_skew_rows]["Nums"] < test_mean).any())
 
-    def test_no_rounding_floats(self):
+    def test_weights_are_preserved_after_target_scaling(self):
         '''
         If dispersion is set to zero, the weights should stay
-        the same after rounding and scaling is applied.
+        the same after scaling is applied.
         '''
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
@@ -247,11 +246,17 @@ class continuousTests(unittest.TestCase):
                 },
                 "columns" : {
                     "Nums" : {
-                        "fit" : "sum",
                         "precision" : float,
+                        "distribution" : "weighted_uniform_with_dispersion",
+                        "distribution_parameters" : {
+                            "uniform_base_value" : 1000,
+                            "dispersion" : 0
+                        },
+                        "scaling" : "target_sum",
+                        "scaling_parameters" : {
+                            "target_sum" : test_sum
+                        },
                         "miss_probability" : 0,
-                        "dispersion" : 0,
-                        "sum": test_sum
                     }
                 }
             }
@@ -293,6 +298,112 @@ class continuousTests(unittest.TestCase):
                 (test_df[test_df["C1"] == "A"]["Nums"].sum() /
                 test_df[test_df["C1"] == "B"]["Nums"].sum()), 0.25
             )
+
+            self.assertAlmostEqual(test_df["Nums"].sum(), test_sum)
+
+    def test_range_scaling_with_preserving_weights(self):
+        '''
+        If dispersion is set to zero, the weights should stay
+        the same after scaling is applied, except for the lower end
+        which should trigger a validator Warning.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        test_min = 10
+        test_max = 150
+
+        test_dict = {
+            "metadata" : {
+                "random_seed" : 0
+            },
+            "columns" : {
+                "Nums" : {
+                    "precision" : float,
+                    "distribution" : "weighted_uniform_with_dispersion",
+                    "distribution_parameters" : {
+                        "uniform_base_value" : 1000,
+                        "dispersion" : 0
+                    },
+                    "scaling" : "range",
+                    "scaling_parameters" : {
+                        "target_min" : test_min,
+                        "target_max" : test_max,
+                        "preserve_weights": True
+                    },
+                    "miss_probability" : 0,
+                }
+            }
+        }
+
+        test_df = pd.DataFrame(
+            data={
+                "C1": ["A", "B", "C", "D"]*100,
+                "C2": ["E", "E", "E", "E"]*100
+            }
+        )
+
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.05, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.15, 0.5)},
+            ("Nums", "C1", "C") : {"weights": Weights(0.3, 0.5)},
+            ("Nums", "C1", "D") : {"weights": Weights(0.4, 0.5)},
+            ("Nums", "C2", "E") : {"weights": Weights(0.5, 0.5)},
+        }
+
+        result = tm.generate_continuous_column(
+            test_dict,
+            test_df,
+            test_col,
+            target_cols=target_cols,
+            wt=wt
+        )
+
+        test_df["Nums"] = result
+
+        new_weight_B = (
+            test_df[test_df["C1"] == "B"]["Nums"].sum() /
+            test_df["Nums"].sum()
+        )
+
+        new_weight_C = (
+            test_df[test_df["C1"] == "C"]["Nums"].sum() /
+            test_df["Nums"].sum()
+        )
+
+        self.assertEqual(new_weight_B / new_weight_C, 0.15 / 0.3)
+        self.assertEqual(test_df["Nums"].min(), test_min)
+        self.assertEqual(test_df["Nums"].max(), test_max)
+
+    def test_range_scaling_without_preserving_weights(self):
+        '''
+        For linear scaling, the weights will change depending on the range
+        of target_min and target_max, but the general shape of the distribution
+        should still be close to the original data.
+        '''
+
+        test_series = pd.Series(
+            [1, 2, 4, 8, 16, 4, 1]
+        )
+            
+        test_min = 10
+        test_max = 100
+
+        scaled_series = tm._scale_to_range(test_series, test_min, test_max, False)
+
+        rescaled_series = scaled_series / float(sum(scaled_series)) * sum(test_series)
+
+        self.assertGreaterEqual(
+            stats.chisquare(f_obs=test_series, f_exp=rescaled_series)[1],
+            0.95
+        )
+
+        self.assertEqual(scaled_series.min(), test_min)
+        self.assertEqual(scaled_series.max(), test_max)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

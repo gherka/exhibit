@@ -20,11 +20,11 @@ metadata:
   - avlos
   - los
   - stays
-  time_columns:
+  date_columns:
   - quarter_date
   category_threshold: 30
   random_seed: 0
-  id: ca30f
+  id: 1f5c1
 #----------------------------------------------------------
 #COLUMN DETAILS
 #==============
@@ -37,9 +37,10 @@ metadata:
 #note their format. Values starting with a number must be
 #enclosed in quotes as per YAML rules.
 #
-#The default anonymising method is "random", but you can
-#add your own custom sets, including linked, by creating a 
-#suitable table in the anon.db SQLite3 database.
+#The default anonymising method for categorical columns is
+#"random", but you can add your own custom sets, including
+#linked, by creating a suitable table in the anon.db SQLite3
+#database.
 #
 #The tool comes with a linked set of mountain ranges (15) &
 #and their top 10 peaks. Only linked sets can be used for
@@ -49,6 +50,12 @@ metadata:
 #
 #To use just one column from a table, add a dot separator
 #like so mountains.range
+#
+#For Continuous columns you can either generate them by 
+#progressively reducing the target_sum based on the weights 
+#or sample from a normal distribution whose mean is shifted
+#depending on the weights. Switch between two methods by
+#setting the fit parameter to either "sum" or "distriubtion"
 #----------------------------------------------------------
 columns:
   age:
@@ -68,7 +75,7 @@ columns:
     - 80-89        | 0.108              | 0.191 | 0.274 | 0.130
     - 90+          | 0.095              | 0.212 | 0.089 | 0.026
     - Missing data | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   hb_code:
@@ -77,7 +84,7 @@ columns:
     - hb_name
     uniques: 14
     original_values: See paired column
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   hb_name:
@@ -102,7 +109,7 @@ columns:
     - NHS Tayside                 | S08000030      | 0.083              | 0.075 | 0.052 | 0.039
     - Scotland                    | scot           | 0.023              | 0.028 | 0.339 | 0.346
     - Missing data                | Missing data   | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   loc_code:
@@ -111,7 +118,7 @@ columns:
     - loc_name
     uniques: 48
     original_values: See paired column
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   loc_name:
@@ -120,7 +127,7 @@ columns:
     - loc_code
     uniques: 48
     original_values: Number of unique values is above category threshold
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   measure:
@@ -133,7 +140,7 @@ columns:
     - Elective Inpatients  | 0.318              | 0.289 | 0.103 | 0.117
     - Emergency Inpatients | 0.333              | 0.711 | 0.897 | 0.487
     - Missing data         | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   sex:
@@ -145,45 +152,60 @@ columns:
     - Female       | 0.500              | 0.514 | 0.533 | 0.514
     - Male         | 0.500              | 0.486 | 0.467 | 0.486
     - Missing data | 0.000              | 0.000 | 0.000 | 0.000
-    allow_missing_values: true
+    cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
   los:
     type: continuous
     precision: integer
-    fit: sum
+    distribution: weighted_uniform_with_dispersion
+    distribution_parameters:
+      uniform_base_value: 1000
+      dispersion: 0.1
+      mean: 1216.74
+      std: 6263.69
+    scaling: target_sum
+    scaling_parameters:
+      target_sum: 12441120.0
+      target_min: 0.0
+      target_max: 176849.0
+      preserve_weights: true
     miss_probability: 0.0
-    sum: 12441120.0
-    dispersion: 0.1
-    min: 0.0
-    max: 176849.0
-    mean: 1216.74
-    std: 6263.69
   stays:
     type: continuous
     precision: integer
-    fit: sum
+    distribution: weighted_uniform_with_dispersion
+    distribution_parameters:
+      uniform_base_value: 1000
+      dispersion: 0.1
+      mean: 296.8
+      std: 941.18
+    scaling: target_sum
+    scaling_parameters:
+      target_sum: 3034766.0
+      target_min: 0.0
+      target_max: 12888.0
+      preserve_weights: true
     miss_probability: 0.0
-    sum: 3034766.0
-    dispersion: 0.1
-    min: 0.0
-    max: 12888.0
-    mean: 296.8
-    std: 941.18
   avlos:
     type: continuous
     precision: float
-    fit: sum
+    distribution: weighted_uniform_with_dispersion
+    distribution_parameters:
+      uniform_base_value: 1000
+      dispersion: 0.1
+      mean: 2.96
+      std: 4.1
+    scaling: target_sum
+    scaling_parameters:
+      target_sum: 28258.352214630533
+      target_min: 0.0
+      target_max: 74.8
+      preserve_weights: true
     miss_probability: 0.065
-    sum: 28258.352214630533
-    dispersion: 0.1
-    min: 0.0
-    max: 74.8
-    mean: 2.96
-    std: 4.1
   quarter_date:
     type: date
-    allow_missing_values: false
+    cross_join_all_unique_values: true
     miss_probability: 0.0
     from: '2018-03-31'
     uniques: 4
@@ -206,7 +228,12 @@ columns:
 #
 #If a column name has spaces, make sure to surround it with
 #the tilde character ~. You can also force a column to be
-#always smaller / larger than a scalar value.
+#always smaller / larger than a scalar value. Note that adding
+#a boolean contraint between two columns will affect the 
+#distribution of weights and also the target sum as these are
+#designed to work with a single, discrete column. When comapring
+#a date column against a fixed date, make sure it's in an ISO
+#format and is enclosed in single quites like so: '2018-12-01'.
 #----------------------------------------------------------
 constraints:
   allow_duplicates: false

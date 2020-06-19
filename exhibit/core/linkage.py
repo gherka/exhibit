@@ -4,6 +4,7 @@ Module isolating methods and classes to find, process and generate linked column
 
 # Standard library imports
 from itertools import chain, combinations
+from typing import Tuple, List
 import sqlite3
 from contextlib import closing
 from collections import deque, defaultdict
@@ -100,7 +101,7 @@ class LinkedColumnsTree:
             else:
                 self._tree[di][dj-1].append([node1])
 
-def generate_linked_anon_df(spec_dict, linked_group, num_rows):
+def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_rows):
     '''
     Create a dataframe for a SINGLE linked group
 
@@ -252,7 +253,7 @@ class _LinkedDataGenerator:
     pattern.
     '''
 
-    def __init__(self, spec_dict, linked_group, num_rows):
+    def __init__(self, spec_dict, linked_group: Tuple[int, List[str]], num_rows):
 
         self.spec_dict = spec_dict
         self.linked_group = linked_group

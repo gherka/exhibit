@@ -1,4 +1,5 @@
 old
 __pycache__
 .vscode
+.pylintrc
 exhibit.egg-info

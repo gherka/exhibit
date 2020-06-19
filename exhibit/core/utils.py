@@ -123,9 +123,9 @@ def read_with_date_parser(path, **kwargs):
         df = df[[x for x in df.columns if x not in skipped_cols]]
 
         for x in df.loc[0, :].iteritems():
-            time_col = date_parser(x)
-            if not time_col is None:
-                df[time_col] = pd.to_datetime(df[time_col], dayfirst=True)
+            date_col = date_parser(x)
+            if not date_col is None:
+                df[date_col] = pd.to_datetime(df[date_col], dayfirst=True)
 
         return df
     
@@ -289,7 +289,7 @@ def count_core_rows(spec_dict):
         for each other column value. Think of it as uninterrupted time series.
 
     The columns with non-skippable values in the specification are
-    those that have "allow_missing_values" as False. Paired columns are ignored
+    those that have "cross_join_all_unique_values" as True. Paired columns are ignored
     so that we don't double-count them.
 
     Knowing the number of "core" rows early is important when checking
@@ -298,9 +298,9 @@ def count_core_rows(spec_dict):
 
     complete_cols = {c for c, v in get_attr_values(
         spec_dict,
-        "allow_missing_values",
+        "cross_join_all_unique_values",
         col_names=True, 
-        types=['categorical', 'date']) if not v}
+        types=['categorical', 'date']) if v}
 
     paired_cols = {c for c, v in get_attr_values(
         spec_dict,

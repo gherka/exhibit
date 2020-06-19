@@ -120,7 +120,7 @@ class utilsTests(unittest.TestCase):
         test_spec['metadata']['number_of_rows'] = 1000
         test_spec['columns']['quarter_date']['uniques'] = 5
         test_spec['columns']['hb_name']['uniques'] = 5
-        test_spec['columns']['hb_name']['allow_missing_values'] = False
+        test_spec['columns']['hb_name']['cross_join_all_unique_values'] = True
 
         expected = 40
         result = tm.count_core_rows(test_spec)

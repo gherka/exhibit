@@ -4,6 +4,7 @@ Test the code for parsing and enforcing boolean constraints
 
 # Standard library imports
 import unittest
+from datetime import datetime
 
 # External library imports
 import pandas as pd
@@ -132,9 +133,21 @@ class constraintsTests(unittest.TestCase):
         '''
 
         self.ch.spec_dict["columns"] = {
-            "A": {"dispersion":0},
-            "B B": {"dispersion":0}
-            }
+            "A": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
+            "B B": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
+        }
 
         self.ch.dependent_column = "A"
 
@@ -160,8 +173,20 @@ class constraintsTests(unittest.TestCase):
         '''
 
         self.ch.spec_dict["columns"] = {
-            "A A": {"dispersion":0},
-            "B": {"dispersion":0}
+            "A A": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
+            "B": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
             }
 
         self.ch.dependent_column = "A"
@@ -191,9 +216,27 @@ class constraintsTests(unittest.TestCase):
         '''
 
         self.ch.spec_dict["columns"] = {
-            "A": {"dispersion":0},
-            "B": {"dispersion":0},
-            "C": {"dispersion":0}
+            "A": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
+            "B": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
+            "C": {
+                "type": "continuous",
+                "distribution": "weighted_uniform_with_dispersion",
+                "distribution_parameters": {
+                    "dispersion": 0
+                }
+            },
             }
 
         self.ch.dependent_column = "C"
@@ -215,7 +258,7 @@ class constraintsTests(unittest.TestCase):
         self.assertTrue(all(result_df["C"] < (result_df["A"] + result_df["B"])))
 
 
-    def test_adjust_time_column_to_another_time_column(self):
+    def test_adjust_date_column_to_another_date_column(self):
         '''
         Constraint dependent column values to an expression
         involving timeseries column.
@@ -257,7 +300,7 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result_df["arrival date"] < (result_df["departure_date"])))
 
-    def test_adjust_time_column_to_datetime(self):
+    def test_adjust_date_column_to_datetime(self):
         '''
         Constraint dependent column values to a date string
         '''
@@ -287,7 +330,7 @@ class constraintsTests(unittest.TestCase):
 
         self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
 
-        self.assertTrue(all(result_df["arrival_date"] < pd.datetime(2018, 1, 5)))
+        self.assertTrue(all(result_df["arrival_date"] < datetime(2018, 1, 5)))
 
     def test_constraint_clean_up_for_eval(self):
         '''
