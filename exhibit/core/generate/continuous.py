@@ -353,15 +353,14 @@ def _apply_dispersion(value, dispersion_pct):
     '''
     
     if value == np.inf:
-        value = 0
+        return 0
     
     if dispersion_pct == 0:
         return value
     
     if np.isnan(value):
         return np.NaN
-    
-    value = value
+
     d = value * dispersion_pct
 
     #to avoid negative rmin, include max(0, n) check
