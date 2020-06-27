@@ -5,8 +5,6 @@ Module isolating methods and classes to find, process and generate linked column
 # Standard library imports
 from itertools import chain, combinations
 from typing import Tuple, List
-import sqlite3
-from contextlib import closing
 from collections import deque, defaultdict
 
 # External library imports
@@ -14,7 +12,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit import
-from .utils import package_dir, exceeds_ct
+from .utils import exceeds_ct
 from .sql import query_anon_database
 
 # EXPORTABLE METHODS & CLASSES
@@ -264,10 +262,10 @@ class _LinkedDataGenerator:
         self.num_rows = num_rows
         self.base_col = None
         self.base_col_pos = None
-        self.all_cols_uniform = False
+        self.scenario = None
         self.base_col_unique_count = None
         self.table_name = None
-        self.sql_rows = None
+        self.sql_df = None
         self.linked_df = None
 
         #find the FIRST "base_col" with weights, starting from the end of the list
@@ -277,46 +275,34 @@ class _LinkedDataGenerator:
         for i, col_name in enumerate(reversed(self.linked_cols)):
             if spec_dict['columns'][col_name]['uniques'] <= ct:
                 self.base_col = col_name
-                self.base_col_pos = i
+                self.base_col_pos = len(self.linked_cols) - (i + 1)
                 self.base_col_unique_count = spec_dict['columns'][col_name]['uniques']
                 break
     
         #if ALL columns in the linked group have more unique values than allowed,
         #generate uniform distribution from the most granular and do upstream lookup
         if not self.base_col:
-            self.base_col = list(reversed(self.linked_cols))[0]
-            self.base_col_pos = 0
-            self.all_cols_uniform = True
+            self.base_col = self.linked_cols[-1]
+            self.base_col_pos = -1
             self.base_col_unique_count = spec_dict['columns'][self.base_col]['uniques']
-        
+            self.scenario = 1
+
+        elif self.base_col == self.linked_cols[-1]:
+            self.scenario = 3
+        else:
+            self.scenario = 2
+            
         #Generator can have two flavours: random (using existing values) and aliased
+        #which influences the semantics of the anon.db table name where the data is kept 
         if self.anon_set != "random":
             self.table_name = self.anon_set
-            #OK to limit the size of base col uniques because it's the most granular
-            self.anon_df = query_anon_database(self.table_name, size=self.base_col_unique_count)
-            #rename the first column of the anon_set df to be same as original
-            self.anon_df.rename(columns={self.anon_df.columns[0]:self.base_col}, inplace=True)
-
+            self.sql_df = query_anon_database(self.table_name)
+            #rename SQL columns to linked_group cols
+            self.sql_df.columns = self.linked_cols
         else:
-            #sanitise the column name in case it has spaces in it
-            base_col_sql = self.base_col.replace(" ", "$")
-            
+            #column names match the spec
             self.table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group[0]}"
-
-            #get the linked data out for lookup purposes later
-            db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
-            conn = sqlite3.connect(db_uri, uri=True)
-
-            sql = f"""
-            SELECT *
-            FROM {self.table_name}
-            ORDER BY {base_col_sql}
-            """
-
-            with closing(conn):
-                c = conn.cursor()
-                c.execute(sql)
-                self.sql_rows = c.fetchall()
+            self.sql_df = query_anon_database(self.table_name)
 
     def pick_scenario(self):
         '''
@@ -356,25 +342,27 @@ class _LinkedDataGenerator:
         the code.
         '''
 
-        if self.all_cols_uniform:
+        if self.scenario == 1:
             linked_df = self.scenario_1()
             result = self.add_paired_columns(linked_df)
 
             return result
 
-        if self.base_col_pos != 0:
+        if self.scenario == 2:
             linked_df = self.scenario_2()
             linked_df = self.alias_linked_column_values(linked_df)
             result = self.add_paired_columns(linked_df)
 
             return result
 
-        if self.base_col_pos == 0:
+        if self.scenario == 3:
             linked_df = self.scenario_3()
             linked_df = self.alias_linked_column_values(linked_df)
             result = self.add_paired_columns(linked_df)
 
             return result
+        
+        return None # pragma: no cover
 
     def alias_linked_column_values(self, linked_df):
         '''
@@ -395,10 +383,11 @@ class _LinkedDataGenerator:
 
         Make changes in-place
         '''
-            
+        # we need original values to act as reference and self.sql_df can be mountains
+        # or other aliased dataset.        
         linked_table_name = f"temp_{self.id}_{self.linked_group[0]}"
 
-        for linked_col in self.linked_group[1]:
+        for linked_col in self.linked_cols:
 
             anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
             orig_vals = self.spec_dict['columns'][linked_col]['original_values']
@@ -410,10 +399,10 @@ class _LinkedDataGenerator:
                         table_name=linked_table_name,
                         column=linked_col.replace(" ", "$")
                     )[linked_col])
-
-
+                
+                #potentially, user-edited
                 current_col_values = orig_vals[linked_col]
-                # Missing data is always in orig_vals, but not always in anon.db
+                # Missing data is always last in orig_vals, but not always in anon.db
                 if "Missing data" in original_col_values:
                     original_col_values.append(
                         original_col_values.pop(
@@ -439,20 +428,10 @@ class _LinkedDataGenerator:
         Values in all linked columns are drawn from a uniform distribution
         '''
 
-        if self.anon_set != "random":
+        idx = np.random.choice(len(self.sql_df), self.num_rows)
 
-            idx = np.random.choice(len(self.anon_df), self.num_rows)
+        anon_list = [self.sql_df.iloc[x, :].values for x in idx]
 
-            anon_list = [
-                list(self.anon_df.itertuples(index=False, name=None))[x] for x in idx
-                ]
-
-            linked_df = pd.DataFrame(columns=self.linked_cols, data=anon_list)
-
-            return linked_df
-
-        idx = np.random.choice(len(self.sql_rows), self.num_rows)
-        anon_list = [self.sql_rows[x] for x in idx]
         linked_df = pd.DataFrame(columns=self.linked_cols, data=anon_list)
 
         return linked_df
@@ -460,88 +439,95 @@ class _LinkedDataGenerator:
     def scenario_2(self):
         '''
         There ARE user-defined probabilities for ONE of the linked columns,
-        but it's not the most granular column in the group, assuming there
-        are only two columns in a group.
+        but it's not the most granular column in the group. Remember, that
+        this column will be the first FROM THE END of the linked columns group.
+
+        Currently, there isn't an anonymising set that has more than 2 columns
+        so we don't need to worry about replacing original_values for any "left-side"
+        columns in the linked group - only base column.
         '''
 
         if self.anon_set != "random":
-
-            #grab the full anonymising dataset
-            full_anon_df = query_anon_database(self.table_name)
-            full_anon_df.rename(
-                columns={full_anon_df.columns[0]:self.base_col}, inplace=True)
-
             #replace original_values with anonymised aliases for weights_table
             #except for the Missing data which is a special value and is always last
+            #we only do it for the column with actual probabilities / weights, not
+            #the child columns which won't have continuous column weights.
+
             orig_df = self.spec_dict['columns'][self.base_col]['original_values']
-            orig_df.iloc[0:-1, 0] = (full_anon_df
-                                    .iloc[:, 0].unique()[0:self.base_col_unique_count])
-            self.spec_dict['columns'][self.base_col]['original_values'] = orig_df
+            repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
+            aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
+            self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
 
-        else:
-            #sql df
-            full_anon_df = pd.DataFrame(columns=self.linked_cols, data=self.sql_rows)
-
-
+        #process the first (base) parent column
         base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
-
         base_col_prob = np.array(base_col_df['probability_vector'])
-
         base_col_prob /= base_col_prob.sum()
 
         base_col_series = pd.Series(
             data=np.random.choice(
-                a=base_col_df.iloc[:, 0].unique(),
+                a=base_col_df[self.base_col].unique(),
                 size=self.num_rows,
                 p=base_col_prob),
             name=self.base_col   
         )
 
         #at this point we have correct probabilities for base_column from user spec
-        #and need to draw "child" values from the same anonymising set. The number of
-        #values to draw depends on user probabilities and the "pool" of "child" values
-        #is restricted by the number of unique values (or close to it)
-        base_uniques = self.spec_dict['columns'][self.base_col]['uniques']
-        granular_uniques = self.spec_dict['columns'][self.linked_cols[1]]['uniques']
-        children_per_parent = int(np.ceil(granular_uniques / base_uniques))
+        #and need to draw "child" values from the same anonymising DF.        
+        def _child_series_generator(parent_series, all_child_series=None):
+            '''
+            Recursive generator of child series.
 
-        uniform_series = (
-            base_col_series
-                .groupby(base_col_series)
-                .transform(
-                    lambda x: np.random.choice(
-                        a=(full_anon_df[full_anon_df[self.base_col] == min(x)]
-                            .iloc[0:children_per_parent, -1]),
-                        size=len(x)
-                    )
-                ) 
-            )
-        
-        uniform_series.name = self.linked_cols[-1]
+            Moving from parent_column down the linked_cols order, generate
+            uniform values for linked column based on the parent column.
+            '''
 
-        linked_df = pd.concat([base_col_series, uniform_series], axis=1)
+            if all_child_series is None:
+                all_child_series = []
+            
+            parent_col = parent_series.name
+            parent_col_pos = self.linked_cols.index(parent_col)
 
-        if self.anon_set != "random":
+            child_col_pos = parent_col_pos + 1
+            child_col = self.linked_cols[child_col_pos]
 
-            #create a "hidden", internal key entry: "aliases" for anonymised values
-            #and use them to populate the weights table instead of default values
-
-            uniform_table = pd.DataFrame(pd.Series(
-                uniform_series.unique(),
-                name=uniform_series.name
-            ))
-
-            self.spec_dict['columns'][uniform_series.name]['aliases'] = uniform_table
-        
-        else:
-            #join the remaining columns, if there are any
-            if len(self.linked_cols) > 2:
-                linked_df = pd.merge(
-                    left=linked_df,
-                    right=full_anon_df,
-                    how='left',
-                    on=[self.base_col, self.linked_cols[-1]]
+            child_series = (
+                parent_series
+                    .groupby(parent_series)
+                    .transform(
+                        lambda x: np.random.choice(
+                            a=(self.sql_df[self.sql_df[parent_col] == min(x)]
+                                .iloc[:, child_col_pos]),
+                            size=len(x)
+                        )
+                    ) 
                 )
+            
+            child_series.name = child_col
+            all_child_series.append(child_series)
+
+            if not child_col_pos == len(self.linked_cols) - 1:
+                _child_series_generator(child_series, all_child_series)
+
+            return all_child_series
+
+        all_child_series = _child_series_generator(base_col_series)          
+
+        #everything from base_col and down the linked_cols order
+        linked_df = pd.concat([base_col_series, *all_child_series], axis=1)
+
+        #we need to check if there are any columns to the left of the base_col,
+        #like in Region => NHS Board of Treatment => Hospital. Also need to update
+        #the original_values of any left-side columns for weights_table later.
+        if self.base_col_pos != 0:
+
+            linked_df = pd.merge(
+                left=linked_df,
+                right=self.sql_df.iloc[:, 0:self.base_col_pos + 1].drop_duplicates(),
+                how="left",
+                on=self.base_col
+            )
+
+            return linked_df
 
         return linked_df
 
@@ -552,54 +538,34 @@ class _LinkedDataGenerator:
 
         if self.anon_set != "random":
 
-            #grab the full anonymising dataset
-            full_anon_df = query_anon_database(self.table_name)
-
-            #replace original_values with anonymised aliases for weights_table
-            #except for the last Missing data row
             orig_df = self.spec_dict['columns'][self.base_col]['original_values']
-            orig_df.iloc[0:-1, 0] = (full_anon_df
-                                    .iloc[:, 1].unique()[0:self.base_col_unique_count])
-            self.spec_dict['columns'][self.base_col]['original_values'] = orig_df
+            repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
+            aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
+            self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
 
-            #carry on with the programme
-            base_col_df = (
-                self.spec_dict['columns'][self.base_col]['original_values']
-            )
-
-            base_col_prob = np.array(base_col_df['probability_vector'])
-
-            base_col_prob /= base_col_prob.sum()
-            
-            #add +1 for Missing data which is part of original values, but not unique count
-            idx = np.random.choice(self.base_col_unique_count + 1, self.num_rows, p=base_col_prob)
-            anon_list = [full_anon_df.iloc[x, :].values for x in idx]
-
-            linked_df = pd.DataFrame(columns=self.linked_cols, data=anon_list)
-
-            return linked_df
-        
-        #random
-        # If the linked columns in the source dataframe don't have np.NaNs,
-        # then Missing data isn't added to the SQL table. However it is part
-        # of the original_values table, with its own probability_vector value
-        # so unless we add a dummy row, np.random.choice will complain
-
-        if self.spec_dict['columns'][self.base_col]['miss_probability'] == 0:
-            # add dummy Missing Data row to sql_rows
-            self.sql_rows.append(("Missing data",) * len(self.linked_cols))
-
-        base_col_df = (
-            self.spec_dict['columns'][self.base_col]['original_values']
-        )
-
+        #whether aliased or not
+        base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
         base_col_prob = np.array(base_col_df['probability_vector'])
         base_col_prob /= base_col_prob.sum()
 
-        idx = np.random.choice(len(self.sql_rows), self.num_rows, p=base_col_prob)
-        anon_list = [self.sql_rows[x] for x in idx]
+        base_col_series = pd.Series(
+            data=np.random.choice(
+                a=base_col_df[self.base_col].unique(),
+                size=self.num_rows,
+                p=base_col_prob),
+            name=self.base_col   
+        )
 
-        linked_df = pd.DataFrame(columns=self.linked_cols, data=anon_list)
+        missing_data_row = ("Missing data",) * len(self.linked_cols)
+        self.sql_df.loc[len(self.sql_df) + 1] = missing_data_row
+
+        #join all left-side columns to base_col_series
+        linked_df = pd.merge(
+                left=base_col_series,
+                right=self.sql_df.drop_duplicates(),
+                how="left",
+                on=self.base_col
+            )
         
         return linked_df
 
@@ -614,7 +580,7 @@ class _LinkedDataGenerator:
                 
                 #just generate a DF with duplicate paired columns
                 for pair in self.spec_dict['columns'][c]['paired_columns']:
-                    
+
                     #overwrite linked_df
                     linked_df = pd.concat(
                         [linked_df, pd.Series(linked_df[c], name=pair)],
@@ -728,6 +694,9 @@ def _create_paired_columns_lookup(spec_dict, base_column):
             paired_df = query_anon_database(table_name=table_name)
             paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
             paired_df.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
+            #Missing data isn't ever in the SQL - but if Missing data is generated for
+            #one of the linked columns, we want to propagate it to its links
+            paired_df.loc[len(paired_df) + 1] = ["Missing data"] * paired_df.shape[1]
 
             return paired_df
 
@@ -741,5 +710,4 @@ def _create_paired_columns_lookup(spec_dict, base_column):
         
         return paired_df
                             
-    #if no pairs, just return None
-    return None
+    return None #pragma: no cover

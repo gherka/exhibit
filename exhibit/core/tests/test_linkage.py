@@ -14,7 +14,7 @@ import numpy as np
 from pandas.testing import assert_frame_equal
 
 # Exibit imports
-from exhibit.core.sql import create_temp_table
+from exhibit.core.sql import create_temp_table, query_anon_database
 from exhibit.db import db_util
 
 # Module under test
@@ -196,12 +196,394 @@ class linkageTests(unittest.TestCase):
         setattr(test_LDG, "table_name", "temp_1234_0")
         setattr(test_LDG, "id", "1234")
         setattr(test_LDG, "linked_group", (0, ["C1", "C2"]))
+        setattr(test_LDG, "linked_cols", ["C1", "C2"])
 
         assert_frame_equal(
             left=test_LDG.alias_linked_column_values(test_linked_df),
             right=expected_df)
 
         db_util.drop_tables(["temp_1234_0"])
+
+    def test_scenario_1(self):
+        '''
+        Values in all linked columns are drawn from uniform distribution.
+
+        This happens when the number of unique values in each column
+        exceeds the user-specified threshold. In this case, the values
+        are stored in anon.db and the user has no way to specify bespoke
+        probabilities.
+        '''
+
+        sql_df = pd.DataFrame(data={
+            "A":sorted([f"A{i}" for i in range(5)]*2),
+            "B": [f"B{i}" for i in range(10)]
+        })
+
+        #we're bypassing __init__ and going straight to testing scenario code
+        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+            mock_init.return_value = None
+            test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
+
+            setattr(test_LDG, "num_rows", 10000)
+            setattr(test_LDG, "sql_df", sql_df)
+            setattr(test_LDG, "linked_cols", ["A", "B"])
+
+        result = test_LDG.scenario_1()
+        
+        # for uniform distribution we're allowing +-5% in the difference of frequencies
+        expected_std_A = 100
+        expected_std_B = 50
+
+        self.assertTrue(result["A"].value_counts().std() <= expected_std_A)
+        self.assertTrue(result["B"].value_counts().std() <= expected_std_B)
+
+    def test_scenario_2_random(self):
+        '''
+        In this scenario, we need to respect the probabilities where they are given 
+        for a column that is not the most granular, like NHS Board column in the
+        NHS Board - NHS Hospital linked group.
+
+        In the test case, A4 should have greater probability than other A-s and
+        within each A, B-s should be uniform. 
+        '''
+
+        test_dict = {
+            "columns": {
+                "A": {
+                    "uniques": 5,
+                    "original_values":
+                        pd.DataFrame(data={
+                            "A": [f"A{i}" for i in range(5)] + ["Missing data"],
+                            "probability_vector": [0.1, 0.1, 0.1, 0.1, 0.6, 0]
+                        })
+                },
+                "B": {
+                    "uniques" : 10
+
+                }
+            }
+        }
+
+        sql_df = pd.DataFrame(data={
+            "A":sorted([f"A{i}" for i in range(5)]*2),
+            "B": [f"B{i}" for i in range(10)]
+        })
+
+        #we're bypassing __init__ and going straight to testing scenario code
+        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+            mock_init.return_value = None
+            test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
+
+            setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "anon_set", "random")
+            setattr(test_LDG, "base_col", "A")
+            setattr(test_LDG, "base_col_pos", 0)
+            setattr(test_LDG, "base_col_unique_count", 5)
+            setattr(test_LDG, "num_rows", 10000)
+            setattr(test_LDG, "sql_df", sql_df)
+            setattr(test_LDG, "linked_cols", ["A", "B"])
+
+        result = test_LDG.scenario_2()
+        
+        # Bs in sub-groups should be uniform, As should follow the probabilities
+        # We allow for 5-10% difference from the uniform value due to random sampling
+        zero_1s = [f"A{i}" for i in range(4)]
+
+        #base_col is OK to test against probabilities - they are generated first
+        as_prob_zero1 = result["A"].value_counts().loc[zero_1s]
+        as_prob_zero6 = result["A"].value_counts().loc["A4"]
+        
+        #"child" columns have to be tested against their group's std() to avoid the
+        # effects of differnt "parents" having slightly higher / lower frequencies.
+        #note that pandas's std() is for samples, and we need population std()
+        bs_std_zero1 = (result
+            .groupby("A")["B"]
+            .apply(lambda x: x.value_counts().std(ddof=0))
+            .filter(zero_1s)
+        )
+
+        bs_std_zero6 = (result
+            .groupby("A")["B"]
+            .apply(lambda x: x.value_counts().std(ddof=0))
+            .loc["A4"]
+        )
+
+        self.assertTrue(all(as_prob_zero1 >= 900) & all(as_prob_zero1 <= 1100))
+        self.assertTrue(as_prob_zero6 >= 5700 & as_prob_zero6 <= 6300)
+
+        #somewhat arbitrary bounds for standard deviations
+        self.assertTrue(all(bs_std_zero1 <= 50))
+        self.assertTrue(bs_std_zero6 <= 150)
+    
+    def test_scenario_2_random_4_cols(self):
+        '''
+        Each column has 2 child values.
+        '''
+
+        test_dict = {
+            "columns": {
+                "A": {
+                    "uniques": 2,
+                    "original_values":
+                        pd.DataFrame(data={
+                            "A": [f"A{i}" for i in range(2)] + ["Missing data"],
+                            "probability_vector": [0.2, 0.8, 0]
+                        })
+                },
+                "B": {
+                    "uniques": 4,
+                    "original_values":
+                        pd.DataFrame(data={
+                            "B": [f"B{i}" for i in range(4)] + ["Missing data"],
+                            "probability_vector": [0.1, 0.1, 0.4, 0.4, 0]
+                        })
+                },
+                "C": {
+                    "uniques": 8
+                },
+                "D": {
+                    "uniques": 16
+                }
+            }
+        }
+
+        sql_df = pd.DataFrame(data={
+            "A": sorted([f"A{i}" for i in range(2)]*16),
+            "B": sorted([f"B{i}" for i in range(4)]*8),
+            "C": sorted([f"C{i}" for i in range(8)]*4),
+            "D": sorted([f"D{i}" for i in range(16)]*2),
+        })
+
+        #we're bypassing __init__ and going straight to testing scenario code
+        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+            mock_init.return_value = None
+            test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
+
+            setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "anon_set", "random")
+            setattr(test_LDG, "base_col", "B")
+            setattr(test_LDG, "base_col_pos", 1)
+            setattr(test_LDG, "base_col_unique_count", 4)
+            setattr(test_LDG, "num_rows", 10000)
+            setattr(test_LDG, "sql_df", sql_df)
+            setattr(test_LDG, "linked_cols", ["A", "B", "C", "D"])
+
+        result = test_LDG.scenario_2()
+        
+        #first test that high-level column (A) is correctly split ~20-80
+        self.assertAlmostEqual(
+            0.2/0.8,
+            result.groupby("A").size().agg(lambda x: x[0]/x[1]),
+            delta=0.1
+        )
+
+        #also test that lower-order columns are uniformly generated
+        as_zero2 = result.groupby(["A", "B", "C", "D"]).size().loc["A0"]
+        as_zero8 = result.groupby(["A", "B", "C", "D"]).size().loc["A1"]
+
+        self.assertTrue(all(as_zero2 >= 200) & all(as_zero2 <= 300))
+        self.assertTrue(all(as_zero8 >= 900) & all(as_zero8 <= 1100))
+
+        #finally, a sense check that we have 10000 generated rows at the end
+        self.assertEqual(result.shape[0], 10000)
+    
+    def test_scenario_2_aliased(self):
+        '''
+        In this scenario, we need to respect the probabilities where they are given 
+        for an aliased column that is not the most granular, like NHS Board column
+        in the NHS Board - NHS Hospital linked group.
+
+        In the test case, A4 (aliased to Andes) should have greater probability than 
+        other A-s and within each A, B-s should be uniform.
+        '''
+
+        test_dict = {
+            "columns": {
+                "A": {
+                    "uniques": 5,
+                    "original_values":
+                        pd.DataFrame(data={
+                            "A": [f"A{i}" for i in range(5)] + ["Missing Data"],
+                            "probability_vector": [0.1, 0.1, 0.1, 0.1, 0.6, 0]
+                        })
+                },
+                "B": {
+                    "uniques" : 10
+
+                }
+            }
+        }
+
+        sql_df = query_anon_database("mountains").rename(columns={"range": "A"})
+
+        #we're bypassing __init__ and going straight to testing scenario code
+        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+            mock_init.return_value = None
+            test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
+
+            setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "anon_set", "mountains")
+            setattr(test_LDG, "base_col", "A")
+            setattr(test_LDG, "base_col_pos", 0)
+            setattr(test_LDG, "base_col_unique_count", 5)
+            setattr(test_LDG, "num_rows", 10000)
+            setattr(test_LDG, "sql_df", sql_df)
+            setattr(test_LDG, "linked_cols", ["A", "B"])
+
+        result = test_LDG.scenario_2()
+        
+        #remeber that values are mapped by position - A0 is first value in the
+        #range column of mountains - Alps.
+        zero_1s = ["Alps", "Caucasus", "Himalayas", "Sain Elias"]
+
+        as_prob_zero1 = result["A"].value_counts().filter(zero_1s)
+        as_prob_zero6 = result["A"].value_counts().loc["Andes"]
+        
+        bs_std_zero1 = (result
+            .groupby("A")["B"]
+            .apply(lambda x: x.value_counts().std(ddof=0))
+            .filter(zero_1s)
+        )
+
+        bs_std_zero6 = (result
+            .groupby("A")["B"]
+            .apply(lambda x: x.value_counts().std(ddof=0))
+            .loc["Andes"]
+        )
+
+        self.assertTrue(all(as_prob_zero1 >= 900) & all(as_prob_zero1 <= 1100))
+        self.assertTrue(as_prob_zero6 >= 5700 & as_prob_zero6 <= 6300)
+
+        #somewhat arbitrary bounds for standard deviations
+        self.assertTrue(all(bs_std_zero1 <= 50))
+        self.assertTrue(bs_std_zero6 <= 150)
+    
+    def test_scenario_3_random(self):
+        '''
+        Doc string
+        '''
+
+        test_dict = {
+            "columns": {
+                "A": {
+                    "uniques": 3,
+                },
+                "B": {
+                    "uniques" : 6,
+                    "original_values":
+                        pd.DataFrame(data={
+                            "B": [f"B{i}" for i in range(6)] + ["Missing data"],
+                            "probability_vector": [0.1, 0.1, 0.2, 0.2, 0.3, 0.1, 0]
+                        })
+
+                }
+            }
+        }
+
+        sql_df = pd.DataFrame(data={
+            "A":sorted([f"A{i}" for i in range(3)]*2),
+            "B": [f"B{i}" for i in range(6)]
+        })
+
+        #we're bypassing __init__ and going straight to testing scenario code
+        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+            mock_init.return_value = None
+            test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
+
+            setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "anon_set", "random")
+            setattr(test_LDG, "base_col", "B")
+            setattr(test_LDG, "base_col_pos", 1)
+            setattr(test_LDG, "base_col_unique_count", 6)
+            setattr(test_LDG, "num_rows", 10000)
+            setattr(test_LDG, "sql_df", sql_df)
+            setattr(test_LDG, "linked_cols", ["A", "B"])
+
+        result = test_LDG.scenario_3()
+
+        #test that high-level column (A) is correctly split ~20-80
+        #between A0 and A1 + A2 (derived from children's probabilieis).
+        self.assertAlmostEqual(
+            0.2/0.8,
+            result.groupby("A").size().agg(lambda x: x[0] / (x[1] + x[2])),
+            delta=0.1
+        )
+
+        #test one of the granular column probabilities
+        test_b4 = result["B"].value_counts()["B4"]
+        self.assertTrue(test_b4 >= 2900 & test_b4 <= 3100)
+
+        #finally, test that left join didn't result in inflated row numbers
+        self.assertEqual(result.shape[0], 10000)
+
+    def test_scenario_3_aliased(self):
+        '''
+        Doc string
+        '''
+
+        test_dict = {
+            "columns": {
+                "A": {
+                    "uniques": 3,
+                },
+                "B": {
+                    "uniques" : 6,
+                    "original_values":
+                        pd.DataFrame(data={
+                            "B": [f"B{i}" for i in range(6)] + ["Missing data"],
+                            "probability_vector": [0.1, 0.1, 0.2, 0.2, 0.3, 0.1, 0]
+                        })
+
+                }
+            }
+        }
+
+        sql_df = pd.DataFrame(data={
+            "A":sorted([f"A{i}" for i in range(3)]*2),
+            "B": [f"B{i}" for i in range(6)]
+        })
+
+        #we're bypassing __init__ and going straight to testing scenario code
+        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+            mock_init.return_value = None
+            test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
+
+            setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "anon_set", "mountains")
+            setattr(test_LDG, "base_col", "B")
+            setattr(test_LDG, "base_col_pos", 1)
+            setattr(test_LDG, "base_col_unique_count", 6)
+            setattr(test_LDG, "num_rows", 10000)
+            setattr(test_LDG, "sql_df", sql_df)
+            setattr(test_LDG, "linked_cols", ["A", "B"])
+
+        result = test_LDG.scenario_3()
+
+        #test that high-level column (A) is correctly split ~20-80
+        #between A0 and A1 + A2 (derived from children's probabilieis).
+        self.assertAlmostEqual(
+            0.2/0.8,
+            result.groupby("A").size().agg(lambda x: x[0] / (x[1] + x[2])),
+            delta=0.1
+        )
+
+        #test one of the granular column probabilities
+        test_b4 = result["B"].value_counts()["B4"]
+        self.assertTrue(test_b4 >= 2900 & test_b4 <= 3100)
+
+        #finally, test that left join didn't result in inflated row numbers
+        self.assertEqual(result.shape[0], 10000)
+
+    def test_merge_common_member_tuples(self):
+        '''
+        Doc string
+        '''
+
+        test_tuples = [("A", "B"), ("B", "C"), ("D", "E")]
+        expected = [["A", "B", "C"], ["D", "E"]]
+        result = tm._merge_common_member_tuples(test_tuples)
+
+        self.assertCountEqual(expected, result)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
