@@ -464,6 +464,7 @@ class referenceTests(unittest.TestCase):
         What this reference test is covering:
             - number of unique values exceeds CT in all columns
             - anonymisation method is hierarchical "mountains"
+            - anon columns are specified using dot notation
             - sex is a "complete" categorical column
             - only the most granular linked column has missing values
         '''
@@ -502,16 +503,16 @@ class referenceTests(unittest.TestCase):
                     {"cross_join_all_unique_values": True}
                 ,
                 "hb_code": 
-                    {"anonymising_set":"mountains"}
+                    {"anonymising_set":"mountains.range"}
                 ,
                 "hb_name": 
-                    {"anonymising_set":"mountains"}
+                    {"anonymising_set":"mountains.range"}
                 ,
                 "loc_code": 
-                    {"anonymising_set":"mountains"}
+                    {"anonymising_set":"mountains.peak"}
                 ,
                 "loc_name": 
-                    {"anonymising_set":"mountains"}
+                    {"anonymising_set":"mountains.peak"}
                 },
         }
                  

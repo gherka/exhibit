@@ -155,11 +155,9 @@ class validatorTests(unittest.TestCase):
         test_dict = {
             "columns": {
                 "Board Code": {
-                    "cross_join_all_unique_values": False,
                     "anonymising_set": "random"
                 },
                 "Board":  {
-                    "cross_join_all_unique_values": False,
                     "anonymising_set": "random"
                 },
             },
@@ -170,14 +168,9 @@ class validatorTests(unittest.TestCase):
         }
 
         test_dict1 = deepcopy(test_dict)
-        test_dict1['columns']['Board']['cross_join_all_unique_values'] = True
-
-        test_dict2 = deepcopy(test_dict)
-        test_dict2['columns']['Board']['anonymising_set'] = "fish"
+        test_dict1['columns']['Board']['anonymising_set'] = "fish"
         
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict1))
-        self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict2))
-
 
     def test_paired_cols_shared_attributes(self):
         '''
@@ -291,6 +284,7 @@ class validatorTests(unittest.TestCase):
 
         test_dict_1 = {
             "metadata": {
+                "categorical_columns": [],
                 "numerical_columns" : [
                     "Spam Eggs",
                     "Spam",
@@ -306,6 +300,9 @@ class validatorTests(unittest.TestCase):
 
         test_dict_2 = {
             "metadata": {
+                "categorical_columns": [
+                    "Bacon"
+                ],
                 "numerical_columns" : [
                     "Spam Eggs",
                     "Spam",

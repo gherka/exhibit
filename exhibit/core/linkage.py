@@ -256,7 +256,9 @@ class _LinkedDataGenerator:
         self.spec_dict = spec_dict
         self.linked_group = linked_group
         self.linked_cols = linked_group[1]
-        self.anon_set = spec_dict['columns'][self.linked_cols[0]]['anonymising_set']
+        #take the root name of the set (mountains in case of mountains.peak)
+        self.anon_set = (
+            spec_dict['columns'][self.linked_cols[0]]['anonymising_set'].split(".")[0])
 
         self.id = self.spec_dict['metadata']['id']
         self.num_rows = num_rows
@@ -292,17 +294,49 @@ class _LinkedDataGenerator:
         else:
             self.scenario = 2
             
-        #Generator can have two flavours: random (using existing values) and aliased
-        #which influences the semantics of the anon.db table name where the data is kept 
+        #all relevant linked data is pulled from SQL into sql_df attribute
+        self.sql_df = self.build_sql_dataframe()
+
+    def build_sql_dataframe(self):
+        '''
+        Values for linked columns can be drawn either from the original values stored 
+        in the linked group's table or they can be drawn from a pre-defined set, like
+        mountaints or patients. You can also specify that only certain columns are 
+        extracted, like CHI number and age, even though the full patients set contains
+        other columns like first and last names, etc.
+        '''
+
         if self.anon_set != "random":
-            self.table_name = self.anon_set
-            self.sql_df = query_anon_database(self.table_name)
+            #either all linked columns are the same (mountains) or
+            #each column is explicitly mapped to a SQL table column
+            #like mountains.range and mountaints.peak. Validator will
+            #error out when linked columns don't share the root table
+            #or when there is a mix of notations.
+
+            sql_df = query_anon_database(self.anon_set)
+            filter_cols = []
+
+            for col in self.linked_cols:
+
+                col_anon_set = self.spec_dict["columns"][col]["anonymising_set"]
+                
+                #spec column has a dot notation to reference a specific SQL column
+                if not col_anon_set == self.anon_set:
+                    filter_cols.append(col_anon_set.split(".")[1])
+            
+            if filter_cols:
+                sql_df = sql_df[filter_cols]
+  
             #rename SQL columns to linked_group cols
-            self.sql_df.columns = self.linked_cols
+            sql_df.columns = self.linked_cols
+
         else:
             #column names match the spec
-            self.table_name = f"temp_{spec_dict['metadata']['id']}_{linked_group[0]}"
-            self.sql_df = query_anon_database(self.table_name)
+            table_name = f"temp_{self.id}_{self.linked_group[0]}"
+            sql_df = query_anon_database(table_name)
+
+        return sql_df
+        
 
     def pick_scenario(self):
         '''
@@ -387,7 +421,7 @@ class _LinkedDataGenerator:
         # or other aliased dataset.        
         linked_table_name = f"temp_{self.id}_{self.linked_group[0]}"
 
-        for linked_col in self.linked_cols:
+        for linked_col in self.linked_cols: #noqa
 
             anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
             orig_vals = self.spec_dict['columns'][linked_col]['original_values']

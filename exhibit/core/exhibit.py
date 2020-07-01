@@ -238,8 +238,9 @@ class newExhibit:
         if not self.spec_dict['constraints']['allow_duplicates']:
             duplicated_idx = anon_df.duplicated()
             number_dropped = sum(duplicated_idx)
-            print(f"WARNING: Deleted {number_dropped} duplicates.")
-            anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
+            if number_dropped > 0:
+                print(f"WARNING: Deleted {number_dropped} duplicates.")
+                anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
 
         #5) ADD CONTINUOUS VARIABLES TO ANON DF  
         for num_col in self.spec_dict['metadata']['numerical_columns']:

@@ -147,12 +147,16 @@ class newValidator:
     def validate_linked_cols(self, spec_dict=None):
         '''
         All linked columns should share certain attributes
+        To future proof the checking of anonymising sets, add
+        a check to see if linked columns are specified using
+        mixed notation: mountains for one column and mountains.peak
+        for another.
         '''
 
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['cross_join_all_unique_values', 'anonymising_set']
+        LINKED_ATTRS = ['anonymising_set']
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
@@ -168,7 +172,7 @@ class newValidator:
 
                 for col in linked_cols:
                 
-                    group_flags.add(spec_dict["columns"][col][attr])
+                    group_flags.add(spec_dict["columns"][col][attr].split(".")[0])
                 
                 #each linked group should have 1 value for each attribute
                 if len(group_flags) != 1:
@@ -224,7 +228,7 @@ class newValidator:
         So far, only three are available: mountains, birds and random
         '''
 
-        VALID_SETS = ['random', 'mountains', 'birds']
+        VALID_SETS = ['random', 'mountains', 'birds', "patients"]
 
         if spec_dict is None:
             spec_dict = self.spec_dict
@@ -301,6 +305,7 @@ class newValidator:
 
             for linked_group in spec_dict['constraints']['linked_columns']:
                 linked_set = spec_dict['columns'][linked_group[1][0]]['anonymising_set']
+                linked_set = linked_set.split(".")[0]
                 linked_col_count = len(linked_group[1])
 
                 if linked_set != "random":
@@ -344,8 +349,8 @@ class newValidator:
                     (len(tcon) != 3) | 
                     ((" " in tcon.x) & ("~" not in tcon.x)) |
                     ((" " in tcon.y) & ("~" not in tcon.y)) |
-                    (tcon.x.replace("~", "") not in
-                         spec_dict["metadata"]["numerical_columns"])
+                    (tcon.x.replace("~", "") in
+                         spec_dict["metadata"]["categorical_columns"])
                 )
 
                 if fail_conds:

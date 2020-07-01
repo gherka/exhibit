@@ -13,7 +13,7 @@ import pandas as pd
 # Exhibit imports
 from exhibit.core.utils import package_dir
 
-def query_anon_database(table_name, column=None, size=None, order=None, db_uri=None):
+def query_anon_database(table_name, column=None, size=None, order="rowid", db_uri=None):
     '''
     Query anon.db and return a nice dataframe or series
 
@@ -28,7 +28,7 @@ def query_anon_database(table_name, column=None, size=None, order=None, db_uri=N
     size : int
         optional. The parameter to go into LIMIT statement
     order : str
-        option. The column to order the results by
+        optional. The column to order the results by; defaults to rowid
     db_uri : str
         optional. For testing.
 
@@ -47,7 +47,7 @@ def query_anon_database(table_name, column=None, size=None, order=None, db_uri=N
         column = column[0]
 
     #build the sql string:
-    order_sql = f"ORDER BY {order}" if order else ""
+    order_sql = f"ORDER BY {order}"
     size_sql = f"LIMIT {size}" if size else ""
     
     sql = f"""
