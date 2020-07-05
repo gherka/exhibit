@@ -13,6 +13,7 @@ import numpy as np
 from ..utils import get_attr_values
 from ..sql import query_anon_database
 from ..linkage import generate_linked_anon_df
+from .regex import generate_regex_column
 
 # EXPORTABLE METHODS
 # ==================
@@ -126,6 +127,8 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
     Things are further complicated if users want to use a single column
     from an anonymising table, like mountains.peak
 
+    Needs a refactor!
+
     Parameters:
     -----------
     spec_dict : dict
@@ -142,6 +145,8 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
 
     col_type = spec_dict['columns'][col_name]['type']
     uniques = spec_dict['columns'][col_name]['uniques']
+
+    fixed_anon_sets = ["random", "mountains", "patients", "birds"]
     
     if col_type == "date":
 
@@ -153,14 +158,18 @@ def _generate_anon_series(spec_dict, col_name, num_rows):
 
         random_dates = np.random.choice(all_pos_dates, num_rows)
 
-        return pd.Series(random_dates, name=col_name)        
-
-    #capture categorical-only information
-    anon_set = spec_dict['columns'][col_name]['anonymising_set']
-    paired_cols = spec_dict['columns'][col_name]['paired_columns']
-    ct = spec_dict['metadata']['category_threshold']
+        return pd.Series(random_dates, name=col_name)   
     
-    #values were stored in ; randomise based on uniform distribution
+    #capture categorical-only information
+    paired_cols = spec_dict['columns'][col_name]['paired_columns']
+    anon_set = spec_dict['columns'][col_name]['anonymising_set']
+    ct = spec_dict['metadata']['category_threshold']
+
+    #special case for regex columns
+    if (uniques > ct) and anon_set.split(".")[0] not in fixed_anon_sets:
+        return generate_regex_column(anon_set, col_name, num_rows)  
+
+    #values were stored in SQL; randomise based on uniform distribution
     if uniques > ct:
 
         safe_col_name = col_name.replace(" ", "$")

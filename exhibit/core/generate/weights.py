@@ -33,6 +33,8 @@ def generate_weights_table(spec_dict, target_cols):
     Weights and probabilities should be at least 0.001;
     even if the original, non-anonymised data has a smaller
     probability.
+
+    Refactor!
     '''
     
     tuple_list = []
@@ -175,10 +177,12 @@ def generate_weights(df, cat_col, num_col):
     List of weights in ascending order of values rounded to 3 digits.
     '''
 
+    nan_placeholder = "Missing data"
+
     #min_count=1 ensures that [np.NaN, np.NaN] is summed to np.NaN and not zero
     weights = (
         df
-        .fillna({cat_col:"Missing data"})
+        .fillna({cat_col:nan_placeholder})
         .groupby([cat_col])[num_col].sum(min_count=1)
     )
 
@@ -186,16 +190,16 @@ def generate_weights(df, cat_col, num_col):
     
     temp_output = weights['ws'].sort_index(kind="mergesort")
 
-    if "Missing data" not in temp_output:
+    if nan_placeholder not in temp_output:
         temp_output = temp_output.append(pd.Series(
-            index=["Missing data"],
+            index=[nan_placeholder],
             data=0
         ))
     
     #pop and reinsert "Missing data" at the end of the list
     else:
-        cached = temp_output[temp_output.index.str.contains("Missing data")]
-        temp_output = temp_output.drop("Missing data")
+        cached = temp_output[temp_output.index.str.contains(nan_placeholder)]
+        temp_output = temp_output.drop(nan_placeholder)
         temp_output = temp_output.append(cached)
 
     #last item in the list must be Missing data weight for the num_col, 
@@ -225,12 +229,17 @@ def target_columns_for_weights_table(spec_dict):
     A set of column names
     '''
 
+    fixed_sql_sets = ["random", "mountains", "birds", "patients"]
+
     cat_cols = spec_dict['metadata']['categorical_columns'] #includes linked
     cat_cols_set = set(cat_cols)
 
-    #drop paired columns
+    #drop paired columns and regex columns
     for cat_col in cat_cols:
-        if is_paired(spec_dict, cat_col):
+        anon_set = spec_dict["columns"][cat_col]["anonymising_set"]
+        if (
+            is_paired(spec_dict, cat_col) or
+            anon_set.split(".")[0] not in fixed_sql_sets):
             cat_cols_set.remove(cat_col)
 
     return cat_cols_set

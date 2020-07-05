@@ -24,18 +24,22 @@ class weightsTests(unittest.TestCase):
         test_spec['metadata']['categorical_columns'] = list("ABC")
 
         test_spec['columns']['A'] = {
+            "anonymising_set": "random",
             'type'           :'categorical',
             'original_values':[]}
 
         test_spec['columns']['B'] = {
+            "anonymising_set": "random",
             'type'           :'categorical',
             'original_values':"See paired column"}
 
         test_spec['columns']['C'] = {
+            "anonymising_set": "random",
             'type'           :'categorical',
             'original_values':[]}
 
         test_spec['columns']['D'] = {
+            "anonymising_set": "random",
             'type'           :'time',
             'original_values':[]}
   

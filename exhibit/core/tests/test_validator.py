@@ -206,25 +206,25 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict1))
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict2))
 
-    def test_anonymising_set_names(self):
-        '''
-        So far, only three are available: mountain ranges, birds and random
-        '''
+    # def test_anonymising_set_names(self):
+    #     '''
+    #     So far, only three are available: mountain ranges, birds and random
+    #     '''
 
-        validatorMock = Mock()
+    #     validatorMock = Mock()
 
-        test_dict = {
-            "columns": {
-                "Board Code": {
-                    "type":"categorical",
-                    "anonymising_set": "fish"
-                }
-            }
-        }
+    #     test_dict = {
+    #         "columns": {
+    #             "Board Code": {
+    #                 "type":"categorical",
+    #                 "anonymising_set": "fish"
+    #             }
+    #         }
+    #     }
 
-        self.assertFalse(
-            tm.validate_anonymising_set_names(validatorMock, spec_dict=test_dict)
-            )
+    #     self.assertFalse(
+    #         tm.validate_anonymising_set_names(validatorMock, spec_dict=test_dict)
+    #         )
 
     def test_anonymising_set_lengths(self):
         '''

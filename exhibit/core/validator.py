@@ -223,36 +223,36 @@ class newValidator:
 
         return True
 
-    def validate_anonymising_set_names(self, spec_dict=None):
-        '''
-        So far, only three are available: mountains, birds and random
-        '''
+    # def validate_anonymising_set_names(self, spec_dict=None):
+    #     '''
+    #     So far, only three are available: mountains, birds and random
+    #     '''
 
-        VALID_SETS = ['random', 'mountains', 'birds', "patients"]
+    #     VALID_SETS = ['random', 'mountains', 'birds', "patients"]
 
-        if spec_dict is None:
-            spec_dict = self.spec_dict
+    #     if spec_dict is None:
+    #         spec_dict = self.spec_dict
 
-        fail_msg = textwrap.dedent("""
-        VALIDATION FAIL: %(anon_set)s in column %(col)s is not a valid anonymising set
-        """)
+    #     fail_msg = textwrap.dedent("""
+    #     VALIDATION FAIL: %(anon_set)s in column %(col)s is not a valid anonymising set
+    #     """)
 
-        for c, v in get_attr_values(
-                spec_dict=spec_dict,
-                attr='anonymising_set',
-                col_names=True,
-                types=['categorical']):
+    #     for c, v in get_attr_values(
+    #             spec_dict=spec_dict,
+    #             attr='anonymising_set',
+    #             col_names=True,
+    #             types=['categorical']):
             
-            #mountains.peak is a valid mountains set
-            if v.split(".")[0] not in VALID_SETS:
+    #         #mountains.peak is a valid mountains set
+    #         if v.split(".")[0] not in VALID_SETS:
 
-                print(fail_msg % {
-                    "anon_set" : v,
-                    "col" : c
-                    })
-                return False
+    #             print(fail_msg % {
+    #                 "anon_set" : v,
+    #                 "col" : c
+    #                 })
+    #             return False
 
-        return True
+    #     return True
 
     def validate_anonymising_set_length(self, spec_dict=None):
         '''
@@ -260,6 +260,8 @@ class newValidator:
         at least the same as the number of unique values of the
         column that is being anonymised
         '''
+
+        sql_anon_sets = ["mountains", "patients", "birds"]
 
         if spec_dict is None:
             spec_dict = self.spec_dict
@@ -274,7 +276,7 @@ class newValidator:
                 col_names=True,
                 types=['categorical']):
             
-            if v != "random":
+            if v.split(".")[0] in sql_anon_sets:
                 col_uniques = spec_dict['columns'][c]['uniques']
                 anon_uniques = number_of_table_rows(v)
 
