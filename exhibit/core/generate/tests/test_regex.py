@@ -18,7 +18,7 @@ class regexTests(unittest.TestCase):
         The pattern has a character range, a quantifier, a static part
         and a range given by fixed characters
         '''
-        anon_pattern = r"GMC[0-9]{5}[SM]"
+        anon_pattern = r"x{2}GMC[0-9]{5}[SM]"
 
         result = tm.generate_regex_column(anon_pattern, "GMC", 100)
 

@@ -194,7 +194,7 @@ def table_info(table_name, db_uri=None):
             headers = ",".join([x[1] for x in c.fetchall()])
 
             print(headers)
-            print(*[",".join(x) for x in result], sep="\n")
+            print(*[",".join([str(y) for y in x]) for x in result], sep="\n")
 
         else:
 
