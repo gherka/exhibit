@@ -102,10 +102,10 @@ def _generate_random_class_characters(pattern, size):
     #if class is given as a range, split on -
     if "-" in pattern:
         lower_char, upper_char = re.split("-", pattern)
-        #convert to ASCII codes
+        #convert to ASCII codes, with inclusive upper end
         lower_ord = ord(lower_char)
         upper_ord = ord(upper_char)
-        result_array = np.random.randint(lower_ord, upper_ord, size=(size, quant))
+        result_array = np.random.randint(lower_ord, upper_ord + 1, size=(size, quant))
         result = ["".join(chr(x) for x in y) for y in result_array]
     
     #pattern given as a list of characters [abc]

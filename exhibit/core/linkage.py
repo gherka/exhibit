@@ -476,9 +476,9 @@ class _LinkedDataGenerator:
         but it's not the most granular column in the group. Remember, that
         this column will be the first FROM THE END of the linked columns group.
 
-        Currently, there isn't an anonymising set that has more than 2 columns
-        so we don't need to worry about replacing original_values for any "left-side"
-        columns in the linked group - only base column.
+        To make things simpler, we don't generate non-user defined columns
+        individually, instead we generate all of them at once, using the indices
+        and sizes of the base column's probabilistically drawn values.
         '''
 
         if self.anon_set != "random":
@@ -505,65 +505,24 @@ class _LinkedDataGenerator:
             name=self.base_col   
         )
 
-        #at this point we have correct probabilities for base_column from user spec
-        #and need to draw "child" values from the same anonymising DF.        
-        def _child_series_generator(parent_series, all_child_series=None):
-            '''
-            Recursive generator of child series.
+        # once we've satisfied the probabilities of the base column,
+        # all we need to do is to generate random uniform indices of
+        # rows to match the generated values, sized accordingly.
+        base_col_counts = base_col_series.value_counts()
 
-            Moving from parent_column down the linked_cols order, generate
-            uniform values for linked column based on the parent column.
-            '''
+        sub_dfs = []
 
-            if all_child_series is None:
-                all_child_series = []
+        for base_col_value, size in base_col_counts.iteritems():
             
-            parent_col = parent_series.name
-            parent_col_pos = self.linked_cols.index(parent_col)
+            pool_of_idx = (
+                self.sql_df[self.sql_df[self.base_col] == base_col_value].index)
+            rnd_idx = np.random.choice(a=pool_of_idx, size=size)
+            sub_dfs.append(
+                self.sql_df[self.linked_cols].iloc[rnd_idx])
+        
+        result = pd.concat(sub_dfs).reset_index(drop=True)
 
-            child_col_pos = parent_col_pos + 1
-            child_col = self.linked_cols[child_col_pos]
-
-            child_series = (
-                parent_series
-                    .groupby(parent_series)
-                    .transform(
-                        lambda x: np.random.choice(
-                            a=(self.sql_df[self.sql_df[parent_col] == min(x)]
-                                .iloc[:, child_col_pos]),
-                            size=len(x)
-                        )
-                    ) 
-                )
-            
-            child_series.name = child_col
-            all_child_series.append(child_series)
-
-            if not child_col_pos == len(self.linked_cols) - 1:
-                _child_series_generator(child_series, all_child_series)
-
-            return all_child_series
-
-        all_child_series = _child_series_generator(base_col_series)          
-
-        #everything from base_col and down the linked_cols order
-        linked_df = pd.concat([base_col_series, *all_child_series], axis=1)
-
-        #we need to check if there are any columns to the left of the base_col,
-        #like in Region => NHS Board of Treatment => Hospital. Also need to update
-        #the original_values of any left-side columns for weights_table later.
-        if self.base_col_pos != 0:
-
-            linked_df = pd.merge(
-                left=linked_df,
-                right=self.sql_df.iloc[:, 0:self.base_col_pos + 1].drop_duplicates(),
-                how="left",
-                on=self.base_col
-            )
-
-            return linked_df
-
-        return linked_df
+        return result       
 
     def scenario_3(self):
         '''

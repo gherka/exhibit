@@ -112,6 +112,9 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
+    #make sure data is stripped from extra whitespace to match the spec
+    data = [tuple([y.strip() for y in x]) for x in data]
+
     if len(col_names) == 1:
         col_list = col_names[0]
     else:

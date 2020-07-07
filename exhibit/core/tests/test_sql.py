@@ -48,14 +48,18 @@ class sqlTests(unittest.TestCase):
 
     def test_temp_table_insertion(self):
         '''
-        Temporary lookup table in anon.db
+        Temporary lookup table in anon.db - also testing
+        extra whitespace in source data. When values are
+        formatted for the spec, extra whitespace is stripped
+        so we have to make sure the same happens when values
+        are put in the SQL db.
         '''
 
-        expected = [(1, 2), (1, 2)]
+        expected = [("A", "B"), ("A", "B")]
         output = tm.create_temp_table(
             table_name='test_table',
             col_names=list('AB'),
-            data=[(1, 2), (1, 2)],
+            data=[("A ", "B"), ("A", "B")],
             db_uri="file:test_db?mode=memory",
             return_table=True)
 

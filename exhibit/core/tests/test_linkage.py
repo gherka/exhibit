@@ -414,7 +414,11 @@ class linkageTests(unittest.TestCase):
             }
         }
 
-        sql_df = query_anon_database("mountains").rename(columns={"range": "A"})
+        sql_df = (query_anon_database("mountains")
+                    .rename(columns={
+                        "range": "A",
+                        "peak" : "B"
+                        }))
 
         #we're bypassing __init__ and going straight to testing scenario code
         with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
