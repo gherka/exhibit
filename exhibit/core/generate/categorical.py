@@ -3,364 +3,374 @@ Methods to generate categorical columns / values
 '''
 
 # Standard library imports
+from collections import namedtuple
 from itertools import chain
+import textwrap
 
 # External library imports
 import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from ..utils import get_attr_values
+from ..utils import get_attr_values, package_dir
 from ..sql import query_anon_database
 from ..linkage import generate_linked_anon_df
 from .regex import generate_regex_column
 
 # EXPORTABLE METHODS
 # ==================
-def generate_categorical_data(spec_dict, core_rows):
+class CategoricalDataGenerator:
     '''
-    Brings together all the components of categorical (inc. timeseries)
-    data generation.
+    Although this class is pretty bare, it still helps avoid passing
+    the same variables through functions and also mirrors the setup
+    for generation of linked data.
 
-    Parameters
-    ----------
-    spec_dict : dict
-        complete specification of the source dataframe
-    core_rows : int
-        number of rows to generate for each column
-
-    Returns
-    -------
-    A dataframe with all categorical columns
+    One area that potentially needs looking at is if the user makes
+    manual changes to column values that were initially put into SQL
+    (where uniques > CT) - for now, this works only for linked data.
     '''
 
-    #1) CREATE PLACEHOLDER LIST OF GENERATED DFs
-    generated_dfs = []
+    def __init__(self, spec_dict, core_rows):
+        '''
+        This class is covering the entire spec_dict as far as the 
+        generation of non-numerical data is concerned.
+        '''
+        
+        self.spec_dict = spec_dict
+        self.num_rows = core_rows
+        self.fixed_anon_sets = ["random", "mountains", "patients", "birds"]
+        
+        (self.all_cols,
+         self.complete_cols,
+         self.paired_cols,
+         self.skipped_cols) = self._get_column_types()
 
-    #2) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-    for linked_group in spec_dict['constraints']['linked_columns']:
-        linked_df = generate_linked_anon_df(spec_dict, linked_group, core_rows)
-        generated_dfs.append(linked_df)
+    def generate(self):
+        '''
+        Brings together all the components of non-numerical data generation.
 
-    #3) DEFINE COLUMNS TO SKIP
-    #   - nested linked columns (generated as part of #2)
-    #   - complete columns - all values are used
-    #   - columns where original values = "See paired column"
-    
-    nested_linked_cols = [
-        sublist for n, sublist in spec_dict['constraints']['linked_columns']
-        ]
+        Returns
+        -------
+        A dataframe with all categorical columns
+        '''
 
-    complete_cols = [c for c, v in get_attr_values(
-        spec_dict,
-        "cross_join_all_unique_values",
-        col_names=True, 
-        types=['categorical', 'date']) if v]
+        generated_dfs = []
 
-    list_of_orig_val_tuples = get_attr_values(
-        spec_dict,
-        'original_values',
-        col_names=True,
-        types=['categorical', "date"])
+        #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
+        for linked_group in self.spec_dict['constraints']['linked_columns']:
+            linked_df = generate_linked_anon_df(
+                spec_dict=self.spec_dict,
+                linked_group=linked_group,
+                num_rows=self.num_rows)
 
-    paired = [k for k, v in list_of_orig_val_tuples if str(v) == "See paired column"]
+            generated_dfs.append(linked_df)
 
-    skipped_cols = (
-        list(chain.from_iterable(nested_linked_cols)) +
-        complete_cols +
-        paired
-    )
+        #2) GENERATE NON-LINKED DFs
+        for col in [col for col in self.all_cols if col not in self.skipped_cols]:
+            s = self._generate_anon_series(col)
 
-    #4) GENERATE NON-LINKED DFs
-    for col in [k for k, v in list_of_orig_val_tuples if k not in skipped_cols]:
-        s = _generate_anon_series(spec_dict, col, core_rows)
-        generated_dfs.append(s)
+            generated_dfs.append(s)
 
-    #5) CONCAT GENERATED DFs AND SERIES
-    temp_anon_df = pd.concat(generated_dfs, axis=1)
+        #3) CONCAT GENERATED DFs AND SERIES
+        temp_anon_df = pd.concat(generated_dfs, axis=1)
 
-    #6) GENERATE SERIES WITH "COMPLETE" COLUMNS, LIKE TIME
-    complete_series = []
+        #4) GENERATE SERIES WITH "COMPLETE", CROSS-JOINED COLUMNS
+        complete_series = []
 
-    for col in spec_dict['columns']:
-        if col in complete_cols:
-            s = _generate_complete_series(spec_dict, col)
+        for col in self.complete_cols:
+            s = self._generate_complete_series(col)
             #paired columns return None
             if not s is None:
                 complete_series.append(s)
-    
-    #7) OUTER JOIN
-    temp_anon_df['key'] = 1
-
-    for s in complete_series:
-
-        temp_anon_df = pd.merge(
-            temp_anon_df,
-            pd.DataFrame(s).assign(key=1),
-            how="outer",
-            on="key"
-        )
         
-    anon_df = temp_anon_df
-    
-    #Tidy up
-    anon_df.drop('key', axis=1, inplace=True)
+        #5) OUTER JOIN
+        temp_anon_df['key'] = 1
 
-    return anon_df
+        for s in complete_series:
 
-# INNER MODULE METHODS
-# ====================
-def _generate_anon_series(spec_dict, col_name, num_rows):
-    '''
-    Generate basic categorical series anonymised according to user input
+            temp_anon_df = pd.merge(
+                temp_anon_df,
+                pd.DataFrame(s).assign(key=1),
+                how="outer",
+                on="key"
+            )
+        
+        #6) TIDY UP
+        anon_df = temp_anon_df.drop('key', axis=1)
 
-    Try to reduce complexity and break up branches!
+        return anon_df
 
-    The code can take different paths depending on these things: 
-     - whether a the anonymising method is set to random or a custom set
-     - whether the number of unique values exceeds the threshold
-     - whether the column has any paired columns
+    def _generate_timeseries(self, col_name, complete=False):
+        '''
+        Basic generator of randomised / complete timeseries data
 
-    The paths differ primarily in terms of where the data sits: as part
-    of the spec in original_values or in anon.db
+        Parameters:
+        ----------
+        col_name  : str
+            time column to generate (type checks are made upstream)
+        complete  : boolean
+            if timeseries is meant to be "complete", return full series
+            without picking N=num_rows random values from the pool
 
-    Things are further complicated if users want to use a single column
-    from an anonymising table, like mountains.peak
-
-    Needs a refactor!
-
-    Parameters:
-    -----------
-    spec_dict : dict
-        the usual
-    col_name : str
-        column name to process & anonymise
-    num_rows : int
-        number of rows to generate
-
-    Returns:
-    -------
-    Pandas Series object or a Dataframe
-    '''
-
-    col_type = spec_dict['columns'][col_name]['type']
-    uniques = spec_dict['columns'][col_name]['uniques']
-
-    fixed_anon_sets = ["random", "mountains", "patients", "birds"]
-    
-    if col_type == "date":
+        Returns:
+        --------
+        pd.Series
+        '''
 
         all_pos_dates = pd.date_range(
-            start=spec_dict['columns'][col_name]['from'],
-            periods=spec_dict['columns'][col_name]['uniques'],
-            freq=spec_dict['columns'][col_name]['frequency'],            
+            start=self.spec_dict['columns'][col_name]['from'],
+            periods=self.spec_dict['columns'][col_name]['uniques'],
+            freq=self.spec_dict['columns'][col_name]['frequency'],            
         )
 
-        random_dates = np.random.choice(all_pos_dates, num_rows)
+        if complete:
+            return pd.Series(all_pos_dates, name=col_name)
+        
+        random_dates = np.random.choice(all_pos_dates, self.num_rows)
 
-        return pd.Series(random_dates, name=col_name)   
-    
-    #capture categorical-only information
-    paired_cols = spec_dict['columns'][col_name]['paired_columns']
-    anon_set = spec_dict['columns'][col_name]['anonymising_set']
-    ct = spec_dict['metadata']['category_threshold']
+        return pd.Series(random_dates, name=col_name)
 
-    #special case for regex columns
-    if (uniques > ct) and anon_set.split(".")[0] not in fixed_anon_sets:
-        return generate_regex_column(anon_set, col_name, num_rows)  
+    def _generate_anon_series(self, col_name):
+        '''
+        Generate basic categorical series anonymised according to user input
 
-    #values were stored in SQL; randomise based on uniform distribution
-    if uniques > ct:
+        The code can take different paths depending on these things: 
+        - whether a the anonymising method is set to random or a custom set
+        - whether the number of unique values exceeds the threshold
+        - whether the column has any paired columns
 
-        safe_col_name = col_name.replace(" ", "$")
+        The paths differ primarily in terms of where the data sits: as part
+        of the spec in original_values or in anon.db
 
-        table_name = f"temp_{spec_dict['metadata']['id']}_{safe_col_name}"
+        Things are further complicated if users want to use a single column
+        from an anonymising table, like mountains.peak
 
-        if anon_set != "random":
-            table_name, *sql_column = anon_set.split(".")
-            col_df = query_anon_database(table_name, sql_column, uniques)
+        Parameters:
+        -----------
+        col_name : str
+            column name to process & anonymise
 
-            #we must make sure that the anonymising set is suitable for paired column
-            #generation, meaning 1:1 and not 1:many or many:1 relationship
+        Returns:
+        -------
+        Pandas Series object or a Dataframe
+        '''
+
+        col_type = self.spec_dict['columns'][col_name]['type']
+        col_attrs = self.spec_dict['columns'][col_name]
+
+        if col_type == "date":
             
-            for col in col_df.columns: # pragma: no cover
-                if col_df[col].nunique() != col_df.shape[0]:
-                    raise TypeError("anonymising dataset contains duplicates")
+            return self._generate_timeseries(col_name, complete=False)  
+        
+        #capture categorical-only information
+        uniques = col_attrs['uniques']
+        paired_cols = col_attrs['paired_columns']
+        anon_set = col_attrs['anonymising_set']
+        root_anon_set = anon_set.split(".")[0]
+        ct = self.spec_dict['metadata']['category_threshold']
 
-            #rename the first column of the anon_set df to be same as original
-            col_df.rename(columns={col_df.columns[0]:col_name}, inplace=True)
+        #special case if anonymising set isn't defined - assume regex
+        if root_anon_set not in self.fixed_anon_sets:
+            print(textwrap.dedent(f"""
+            WARNING: Anonymising set for {col_name} not recognized.
+            Assuming regex pattern and uniform random distribution.
+            """))
+            return generate_regex_column(anon_set, col_name, self.num_rows)  
 
-            #if the column has paired columns and a non-random anonymising set,
-            #the anonymising set must also provide the paired columns or the same
-            #values will be used for the original + paired columns
+        #values were stored in SQL; randomise based on uniform distribution
+        if uniques > ct:
+            return self._generate_from_sql(col_name, col_attrs)
 
-            if len(paired_cols) + 1 > col_df.shape[1]:
+        #we have access to original_values and the paths are dependant on anon_set
+        col_df = col_attrs['original_values']
+        col_prob = np.array(col_df['probability_vector'])
 
-                for paired_col in paired_cols:
-
-                    col_df[paired_col] = col_df[col_name]
-
-                col_values = col_df[col_name].to_list()
-
-                original_series = pd.Series(
-                    data=np.random.choice(a=col_values, size=num_rows),
-                    name=col_name
-                )
-
-                return pd.merge(original_series, col_df, how="left", on=col_name)
-
-            col_df = col_df.iloc[:, 0:len(paired_cols)+1]
-            col_df.columns = [col_name] + paired_cols
+        if anon_set == "random": 
 
             col_values = col_df[col_name].to_list()
+
             original_series = pd.Series(
-                data=np.random.choice(a=col_values, size=num_rows),
+                data=np.random.choice(a=col_values, size=self.num_rows, p=col_prob),
                 name=col_name)
 
             if paired_cols:
-                paired_df = col_df[[col_name] + paired_cols]
+                paired_df = (
+                    col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
+                        .rename(columns=lambda x: x.replace('paired_', ''))
+                )
+
                 return pd.merge(original_series, paired_df, how="left", on=col_name)
 
             return original_series
 
-        #If function hasn't returned by now, that means the anonymising set is random
-        col_df = query_anon_database(table_name)
+        #finally, if we have original_values, but anon_set is not random
+        #we pick the N distinct values from the anonymysing set, replace
+        #the original values + paired column values in the original_values
+        #DATAFRAME, making sure the changes happen in-place which means
+        #that downstream, the weights table will be built based on the
+        #modified "original_values" dataframe.
 
-        col_values = col_df[col_name].to_list()
+        sql_df = self._generate_from_sql(col_name, col_attrs, complete=True)
+        orig_df = col_attrs['original_values']
 
-        original_series = pd.Series(
-            data=np.random.choice(a=col_values, size=num_rows),
-            name=col_name)
+        #missing data is the last row
+        repl = sql_df[col_name].unique()[0:uniques]
+        aliased_df = orig_df.replace(orig_df[col_name].values[:-1], repl)
+        self.spec_dict['columns'][col_name]['original_values'] = aliased_df
 
-        if paired_cols:
-            paired_df = (
-                col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
-                    .rename(columns=lambda x: x.replace('paired_', ''))
+        #we ignore Missing Data probability
+        idx = np.random.choice(a=len(sql_df), p=col_prob[:-1], size=self.num_rows)
+        anon_list = [sql_df.iloc[x, :].values for x in idx]
+        anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
+
+        return anon_df
+        
+    def _generate_from_sql(self, col_name, col_attrs, complete=False, db_uri=None):
+        '''
+        Whatever the anonymising method, if a column has more unique values than
+        allowed by the category_threshold parameter, it will be put into SQLite3 db.
+        '''
+
+        anon_set = col_attrs["anonymising_set"]
+        uniques = col_attrs["uniques"]
+        paired_cols = col_attrs["paired_columns"]
+
+        if db_uri is None:
+            db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+
+        #1) QUERY SQL TO GET VALUES USED TO BUILD THE DATAFRAME
+        if anon_set == "random":
+
+            safe_col_name = col_name.replace(" ", "$")
+            table_name = f"temp_{self.spec_dict['metadata']['id']}_{safe_col_name}"
+            sql_df = query_anon_database(table_name, db_uri=db_uri)
+
+        else:
+            table_name, *sql_column = anon_set.split(".")
+            sql_df = query_anon_database(table_name, sql_column, uniques)
+            #rename sql_df columns to be same as original + paired; zip is 
+            #only going to pair up columns up to the shorter list!
+            sql_df.rename(
+                columns=dict(zip(
+                    sql_df.columns,
+                    [col_name] + paired_cols
+                )),
+                inplace=True
             )
 
-            return pd.merge(original_series, paired_df, how="left", on=col_name)
+        #2) GENERATE ANONYMISED ROWS
+        if complete:
+            anon_df = sql_df
+        else:
+            idx = np.random.choice(len(sql_df), self.num_rows)
+            anon_list = [sql_df.iloc[x, :].values for x in idx]
+            anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 
-        return original_series  
-    
-    #This path is the most straightforward: when the number of unique_values doesn't
-    #exceed the category_threshold and we can get all information from original_values
+        #3) HANDLE MISSING PAIRED COLUMNS IN SQL
+        #if the column has paired columns and a non-random anonymising set,
+        #the anonymising set must also provide the paired columns or the same
+        #values will be used for the original + paired columns
+        missing_paired_cols = set(paired_cols) - set(sql_df.columns[1:])
 
-    if anon_set == "random": 
-
-        col_df = spec_dict['columns'][col_name]['original_values']
-
-        col_prob = np.array(col_df['probability_vector'])
-
-        col_prob /= col_prob.sum()
-
-        col_values = col_df[col_name].to_list()
-
-        original_series = pd.Series(
-            data=np.random.choice(a=col_values, size=num_rows, p=col_prob),
-            name=col_name)
-
-        if paired_cols:
-            paired_df = (
-                col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
-                    .rename(columns=lambda x: x.replace('paired_', ''))
+        if missing_paired_cols:
+            missing_df = pd.DataFrame(
+                data=zip(*[anon_df[col_name]] * len(missing_paired_cols)),
+                columns=missing_paired_cols
             )
 
-            return pd.merge(original_series, paired_df, how="left", on=col_name)
+            anon_df = pd.concat([anon_df, missing_df], axis=1)
 
-        return original_series
+        return anon_df
 
-    #finally, if we have original_values, but anon_set is not random
-    #we pick the N distinct values from the anonymysing set, replace
-    #the original values + paired column values in the original_values
-    #DATAFRAME, making sure the changes happen in-place which means
-    #that downstream, the weights table will be built based on the
-    #modified "original_values" dataframe.
+    def _generate_complete_series(self, col_name):
+        '''
+        This function doesn't take num_rows argument because
+        we are always generating the full number of rows
+        for this column as specified in the spec.
 
-    table_name, *sql_column = anon_set.split(".")
-    col_df = query_anon_database(table_name, sql_column, uniques)
+        Function path depends on the column type: date or categorical
 
-    for col in col_df.columns:
-        if col_df[col].nunique() != col_df.shape[0]:
-            raise TypeError("anonymising dataset contains duplicates")
+        Returns
+        -------
+        pd.Series for non-paired columns and pd.DataFrame for pairs
 
-    col_df.rename(columns={col_df.columns[0]:col_name}, inplace=True)
+        For now, the function doesn't support columns where values are
+        stored in the DB because the number of their uniques exceeds
+        category threshold or if they are anonymised using a set from DB.
+        '''
+        
+        col_attrs = self.spec_dict['columns'][col_name]
+        
+        if col_attrs['type'] == "date":
 
-    if len(paired_cols) + 1 > col_df.shape[1]:
+            return self._generate_timeseries(col_name, complete=True) 
+        
+        # if paired column, skip, and add pairs as part of parent column's processing
+        if col_name in self.paired_cols:
+            return None
 
-        for paired_col in paired_cols:
+        # if column has paired columns, return a dataframe with it + paired cols
+        paired_cols = col_attrs['paired_columns']
 
-            col_df[paired_col] = col_df[col_name]
+        # all categorical columns have "Missing data" as -1 row so we exclude it
+        if paired_cols:
+            paired_complete_df = (
+                col_attrs['original_values'].iloc[:-1, 0:len(paired_cols)+1])
+            paired_complete_df.rename(
+                columns=lambda x: x.replace('paired_', ''), inplace=True)
 
-    orig_df = spec_dict['columns'][col_name]['original_values']
+            return paired_complete_df
 
-    #missing data is the last row
-    orig_df.iloc[0:-1, 0:len(paired_cols)+1] = col_df.iloc[:, 0:len(paired_cols)+1].values
+        return pd.Series(col_attrs['original_values'].iloc[:-1, 0], name=col_name)
 
-    spec_dict['columns'][col_name]['original_values'] = orig_df
+    def _get_column_types(self):
+        '''
+        Convenience function to categorise columns into 4 types:
+            - nested linked columns (generated separately as part of linkage.py)
+            - complete columns - all values are used
+            - columns where original values = "See paired column"
 
-    col_df = spec_dict['columns'][col_name]['original_values']
+        All of the above are treated in a special way either in a separate
+        generation routine (like linked columns) or are generated as a
+        by-product of another routine (like paired columns). Columns that remain,
+        are generated in a "normal" way as part of this module.
 
-    col_prob = np.array(col_df['probability_vector'])
+        Returns
+        -------
+        namedtuple("Columns", ["all", "complete", "paired", "skipped"])
+        '''
 
-    col_prob /= col_prob.sum()
-    
-    col_values = col_df[col_name].to_list()
+        Columns = namedtuple("Columns", ["all", "complete", "paired", "skipped"])
 
-    original_series = pd.Series(
-        data=np.random.choice(a=col_values, size=num_rows, p=col_prob),
-        name=col_name)
+        all_cols = (
+            self.spec_dict["metadata"]["categorical_columns"] +
+            self.spec_dict["metadata"]["date_columns"])
+        
+        nested_linked_cols = [
+            sublist for n, sublist in self.spec_dict['constraints']['linked_columns']
+            ]
 
-    if paired_cols:
-        paired_df = (
-            col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
-                .rename(columns=lambda x: x.replace('paired_', ''))
+        complete_cols = [c for c, v in get_attr_values(
+            self.spec_dict,
+            "cross_join_all_unique_values",
+            col_names=True, 
+            types=['categorical', 'date']) if v]
+
+        list_of_orig_val_tuples = get_attr_values(
+            self.spec_dict,
+            'original_values',
+            col_names=True,
+            types=['categorical', "date"])
+
+        paired_cols = [
+            k for k, v in list_of_orig_val_tuples if str(v) == "See paired column"]
+
+        skipped_cols = (
+            list(chain.from_iterable(nested_linked_cols)) +
+            complete_cols +
+            paired_cols
         )
 
-        return pd.merge(original_series, paired_df, how="left", on=col_name)
+        column_types = Columns(all_cols, complete_cols, paired_cols, skipped_cols)
 
-    return original_series
-
-def _generate_complete_series(spec_dict, col_name):
-    '''
-    This function doesn't take num_rows argument because
-    we are always generating the full number of rows
-    for this column as specified in the spec.
-
-    Function path depends on the column type: date or categorical
-
-    Returns
-    -------
-    pd.Series for non-paired columns and pd.DataFrame for pairs
-
-    For now, the function doesn't support columns where values are
-    stored in the DB because the number of their uniques exceeds
-    category threshold or if they are anonymised using a set from DB.
-    '''
-    
-    col_attrs = spec_dict['columns'][col_name]
-    
-    if col_attrs['type'] == "date":
-
-        result = pd.date_range(
-            start=col_attrs['from'],
-            periods=col_attrs['uniques'],
-            freq=col_attrs['frequency'],            
-        )
-        return pd.Series(result, name=col_name)
-    
-    # if paired column, skip, and add pairs as part of parent column's processing
-    if str(col_attrs['original_values']) == 'See paired column':
-        return None
-
-    # if column has paired columns, return a dataframe with it + paired cols
-    paired_cols = col_attrs['paired_columns']
-
-    # all categorical columns have "Missing data" as -1 row so we exclude it
-    if paired_cols:
-        paired_complete_df = col_attrs['original_values'].iloc[:-1, 0:len(paired_cols)+1]
-        paired_complete_df.rename(
-            columns=lambda x: x.replace('paired_', ''), inplace=True)
-
-        return paired_complete_df
-
-    return pd.Series(col_attrs['original_values'].iloc[:-1, 0], name=col_name)
+        return column_types

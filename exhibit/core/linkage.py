@@ -495,7 +495,6 @@ class _LinkedDataGenerator:
         #process the first (base) parent column
         base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
         base_col_prob = np.array(base_col_df['probability_vector'])
-        base_col_prob /= base_col_prob.sum()
 
         base_col_series = pd.Series(
             data=np.random.choice(
@@ -539,7 +538,6 @@ class _LinkedDataGenerator:
         #whether aliased or not
         base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
         base_col_prob = np.array(base_col_df['probability_vector'])
-        base_col_prob /= base_col_prob.sum()
 
         base_col_series = pd.Series(
             data=np.random.choice(

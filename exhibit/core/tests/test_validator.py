@@ -6,14 +6,8 @@ Unit and reference tests for the Exhibit package
 import unittest
 from unittest.mock import Mock
 from copy import deepcopy
-from io import StringIO
-import textwrap
 
-# Exhibit imports
-from exhibit.sample import sample
-from exhibit.core.formatters import parse_original_values
-
-# Module under test
+# Module under test (or more correctly, class and its methods)
 from exhibit.core.validator import newValidator as tm
 
 class validatorTests(unittest.TestCase):
@@ -107,43 +101,6 @@ class validatorTests(unittest.TestCase):
 
         self.assertFalse(test_func)
 
-    def test_probability_vector_validator(self):
-        '''
-        The sum of all probability values should equal 1
-
-        Remember that with added CT code, not all categorical columns
-        have a dataframe in original_values.
-        '''
-
-        test_spec = sample.inpatients_spec
-        
-        #modify list in place
-        orig_vals = test_spec['columns']['hb_name']['original_values']
-        #set the first value of the probality vector to 1
-        orig_vals[-2] = "Scotland | scot | 1 | 0.028 | 0.339 | 0.346"
-        #parse the csv-like string into dataframe
-        test_spec['columns']['hb_name']['original_values'] = (
-            parse_original_values(orig_vals))
-        
-        validatorMock = Mock()
-        validatorMock.ct = 25
-        
-        out = StringIO()
-
-        expected = textwrap.dedent("""
-        VALIDATION WARNING: The probability vector of hb_name doesn't
-        sum up to 1 and will be rescaled.
-        """)
-
-        #We're only capturing the warning print message
-        tm.validate_probability_vector(
-            self=validatorMock,
-            spec_dict=test_spec,
-            out=out
-            )
-
-        self.assertEqual(expected, out.getvalue())
-
     def test_linked_cols_shared_attributes(self):
         '''
         If linked columns have different attributes for generation
@@ -206,26 +163,6 @@ class validatorTests(unittest.TestCase):
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict1))
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict2))
 
-    # def test_anonymising_set_names(self):
-    #     '''
-    #     So far, only three are available: mountain ranges, birds and random
-    #     '''
-
-    #     validatorMock = Mock()
-
-    #     test_dict = {
-    #         "columns": {
-    #             "Board Code": {
-    #                 "type":"categorical",
-    #                 "anonymising_set": "fish"
-    #             }
-    #         }
-    #     }
-
-    #     self.assertFalse(
-    #         tm.validate_anonymising_set_names(validatorMock, spec_dict=test_dict)
-    #         )
-
     def test_anonymising_set_lengths(self):
         '''
         Anonomyising sets should have at least the same
@@ -233,9 +170,10 @@ class validatorTests(unittest.TestCase):
         weights and probability vectors
         '''
 
-        validatorMock = Mock()
-
         test_dict = {
+            "metadata": {
+                "category_threshold": 30
+            },
             "columns": {
                 "Board Code": {
                     "uniques": 20,
@@ -245,8 +183,10 @@ class validatorTests(unittest.TestCase):
             }
         }
 
+        testValidator = tm(test_dict)
+
         self.assertFalse(
-            tm.validate_anonymising_set_length(validatorMock, spec_dict=test_dict)
+            tm.validate_anonymising_set_length(testValidator, spec_dict=test_dict)
             )
 
     def test_anonymising_set_width(self):
@@ -426,7 +366,6 @@ class validatorTests(unittest.TestCase):
             tm.validate_scaling_parameters(
                 validatorMock, spec_dict=test_dict_range)
             )
-
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

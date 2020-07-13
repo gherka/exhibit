@@ -24,7 +24,7 @@ from .utils import (
                     count_core_rows)
 
 from .generate.missing import add_missing_data_to_series
-from .generate.categorical import generate_categorical_data
+from .generate.categorical import CategoricalDataGenerator
 from .generate.yaml import generate_YAML_string
 
 from .generate.continuous import (
@@ -219,7 +219,8 @@ class newExhibit:
         core_rows = count_core_rows(self.spec_dict)
 
         #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
-        anon_df = generate_categorical_data(self.spec_dict, core_rows)
+        cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows)
+        anon_df = cat_gen.generate()
 
         #3) HANDLE MISSING DATA IN CATEGORICAL COLUMNS
         #add Missing data (proxy for np.NaN) to categorical columns

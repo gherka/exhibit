@@ -2,9 +2,12 @@
 A collection of converters to help with outputting
 and reading back user specification
 '''
+# Standard library imports
+import textwrap
 
 # External library imports
 import pandas as pd
+import numpy as np
 from pandas.api.types import is_datetime64_dtype
 
 def format_header(dataframe, series_name, prefix=None):
@@ -273,5 +276,18 @@ def parse_original_values(original_values):
         columns=[x.strip() for x in original_values[0].split('|')],
         dtype='float'
     )
+
+    col_prob = np.array(df['probability_vector'])
+    col_name = df.columns[0]
+
+    warning = textwrap.dedent(f"""
+        VALIDATION WARNING: The probability vector of {col_name} doesn't
+        sum up to 1 and will be rescaled.
+        """)
+
+    if col_prob.sum() != 1:
+        print(warning)
+        col_prob /= col_prob.sum()
+        df["probability_vector"] = col_prob
 
     return df

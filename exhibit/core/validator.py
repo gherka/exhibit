@@ -9,11 +9,6 @@ before a new spec is sent to the execution
 from operator import mul
 from functools import reduce
 import textwrap
-import math
-import sys
-
-# External library imports
-import pandas as pd
 
 # Exhibit imports
 from .constraints import tokenise_constraint
@@ -37,8 +32,8 @@ class newValidator:
 
         self.spec_dict = spec_dict
         self.ct = self.spec_dict['metadata']['category_threshold']
+        self.fixed_sql_sets = ["mountains", "birds", "patients"]
         
-
     def run_validator(self):
         '''
         Run all validator methods defined in the class
@@ -110,38 +105,6 @@ class newValidator:
         if spec_dict['metadata']['number_of_rows'] < min_combi:
             print(fail_msg)
             return False
-        return True
-
-    def validate_probability_vector(self, spec_dict=None, out=sys.stdout):
-        '''
-        Each columns's probability vector should always sum up to 1
-        However, it is easier for users to increase the probability
-        of values individually without adjusting others, so we'll be
-        normalising the range to between 0 and 1. Show warning if it
-        happens, but allow the generation to continue.
-        '''
-
-        warning_msg = textwrap.dedent("""
-        VALIDATION WARNING: The probability vector of %(err_col)s doesn't
-        sum up to 1 and will be rescaled.
-        """)
-
-        if spec_dict is None:
-            spec_dict = self.spec_dict
-
-        for c, v in get_attr_values(
-                spec_dict=spec_dict,
-                attr='original_values',
-                col_names=True,
-                types=['categorical']):
-
-            if isinstance(v, pd.DataFrame):
-                prob_vector = v["probability_vector"]
-
-                if not math.isclose(sum(prob_vector), 1, rel_tol=1e-1):
-                    out.write(warning_msg % {"err_col" : c})
-                    return True
-
         return True
 
     def validate_linked_cols(self, spec_dict=None):
@@ -223,45 +186,12 @@ class newValidator:
 
         return True
 
-    # def validate_anonymising_set_names(self, spec_dict=None):
-    #     '''
-    #     So far, only three are available: mountains, birds and random
-    #     '''
-
-    #     VALID_SETS = ['random', 'mountains', 'birds', "patients"]
-
-    #     if spec_dict is None:
-    #         spec_dict = self.spec_dict
-
-    #     fail_msg = textwrap.dedent("""
-    #     VALIDATION FAIL: %(anon_set)s in column %(col)s is not a valid anonymising set
-    #     """)
-
-    #     for c, v in get_attr_values(
-    #             spec_dict=spec_dict,
-    #             attr='anonymising_set',
-    #             col_names=True,
-    #             types=['categorical']):
-            
-    #         #mountains.peak is a valid mountains set
-    #         if v.split(".")[0] not in VALID_SETS:
-
-    #             print(fail_msg % {
-    #                 "anon_set" : v,
-    #                 "col" : c
-    #                 })
-    #             return False
-
-    #     return True
-
     def validate_anonymising_set_length(self, spec_dict=None):
         '''
         Number of unique values of an anonymising set must be
         at least the same as the number of unique values of the
         column that is being anonymised
         '''
-
-        sql_anon_sets = ["mountains", "patients", "birds"]
 
         if spec_dict is None:
             spec_dict = self.spec_dict
@@ -276,7 +206,7 @@ class newValidator:
                 col_names=True,
                 types=['categorical']):
             
-            if v.split(".")[0] in sql_anon_sets:
+            if v.split(".")[0] in self.fixed_sql_sets:
                 col_uniques = spec_dict['columns'][c]['uniques']
                 anon_uniques = number_of_table_rows(v)
 
