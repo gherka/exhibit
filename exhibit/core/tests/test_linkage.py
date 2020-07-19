@@ -589,6 +589,28 @@ class linkageTests(unittest.TestCase):
 
         self.assertCountEqual(expected, result)
 
+    def test_linked_groups_from_pairs(self):
+        '''
+        Doc string
+        '''
+
+        test_connections = [
+            ("B", "C"),
+            ("A", "B"),
+            ("C", "D"),
+            ("E", "F")
+        ]
+
+        expected = [
+            (0, ["A", "B", "C", "D"]),
+            (1, ["E", "F"])
+        ]
+
+        test_tree = tm.LinkedColumnsTree(test_connections)
+        result = test_tree.tree
+
+        self.assertListEqual(expected, result)
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

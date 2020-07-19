@@ -8,6 +8,7 @@ before a new spec is sent to the execution
 # Standard library imports
 from operator import mul
 from functools import reduce
+from itertools import chain
 import textwrap
 
 # Exhibit imports
@@ -361,5 +362,27 @@ class newValidator:
                 if not range_params.issubset(col["scaling_parameters"].keys()):
                     print(fail_msg % num_col)
                     return False
+        return True
+
+    def validate_no_repeating_columns_in_linked_groups(self, spec_dict=None):
+        '''
+        Doc string
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        fail_msg = textwrap.dedent("""
+        VALIDATION FAIL: Duplicate column(s) in linked groups
+        """)
+
+        nested_list = spec_dict["constraints"]["linked_columns"]
+        flat_list = list(chain(*[sublist for _, sublist in nested_list]))
+        flat_set = set(flat_list)
+
+        if len(flat_list) != len(flat_set):
+            print(fail_msg)
+            return False
+        
         return True
         

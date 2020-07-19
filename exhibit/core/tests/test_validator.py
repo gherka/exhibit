@@ -367,6 +367,28 @@ class validatorTests(unittest.TestCase):
                 validatorMock, spec_dict=test_dict_range)
             )
 
+    def test_no_repeating_colums_in_linked_groups(self):
+        '''
+        Each column could only be in one linked group - otherwise,
+        it's impossible to determine how it should be generated.        
+        '''
+
+        validatorMock = Mock()
+
+        test_dict = {
+            "constraints" : {
+                "linked_columns": [
+                    [0, ["A", "B", "C"]],
+                    [1, ["A", "D"]]
+                ]
+            }
+        }
+
+        self.assertFalse(
+            tm.validate_no_repeating_columns_in_linked_groups(
+                validatorMock, spec_dict=test_dict)
+            )
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

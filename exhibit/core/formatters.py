@@ -8,16 +8,13 @@ import textwrap
 # External library imports
 import pandas as pd
 import numpy as np
-from pandas.api.types import is_datetime64_dtype
 
 def format_header(dataframe, series_name, prefix=None):
     '''
     Function to pad the header values based on the length
     of the header column's values
 
-    If the series is timeseries, convert it to ISO date string
-    rather than include the time element as this will mess up
-    the padding length.
+    Applies only to categorical columns with original_values
     
     Parameters
     ----------
@@ -33,10 +30,7 @@ def format_header(dataframe, series_name, prefix=None):
     Formatted string value of series_name
     '''
 
-    if is_datetime64_dtype(dataframe[series_name]):
-        series = dataframe[series_name].dt.strftime("%Y-%m-%d").unique()
-    else:
-        series = dataframe[series_name].unique().astype(str)
+    series = dataframe[series_name].unique().astype(str)
 
     if prefix:
         series_name = prefix + series_name

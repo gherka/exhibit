@@ -3,7 +3,7 @@ Module isolating methods and classes to find, process and generate linked column
 '''
 
 # Standard library imports
-from itertools import chain, combinations
+from itertools import combinations
 from typing import Tuple, List
 from collections import deque, defaultdict
 
@@ -36,68 +36,79 @@ class LinkedColumnsTree:
         (linked columns group number,
         list of grouped columns)
         '''
-        self._tree = []
-        self.add_connections(connections)
-        self.tree = [(i, list(chain(*x))) for i, x in enumerate(self._tree)]
+        self.chain_counter = 0
+        self.chains = {0:[]}
+        self.opening_nodes = {}
+        self.closing_nodes = {}
 
-    def add_connections(self, connections):
-        '''
-        Doc string
-        '''
-        for node1, node2 in connections:
-            self.add_node(node1, node2)
-        
-    def find_element_pos(self, e, source_list):
-        '''
-        The tree is a list implementation of a (mutable)
-        matrix and finding position involves simply
-        traversing i and j dimensions.
-        '''
-        #vertical position is i
-        for i, l in enumerate(source_list):
-            #horizontal position is j
-            for j, sublist in enumerate(l):
-                if e in sublist:
-                    return (i, j)
-        return None
+        self.process_nodes(connections)
+        self.tree = list((i, l) for i, l in self.chains.items())
     
-    def add_node(self, node1, node2):
+    def create_new_chain(self, opening_node, closing_node):
         '''
-        There are three possible outcome when processing a
-        linked columns tuple:
-
-        - Neither columns are in the tree already
-        - Ancestor (node1) column is in the tree
-        - Descendant (node2) column is in the tree
-
-        The fourth possible situation, both columns already
-        in the tree, isn't possible because duplicates are
-        filtered out by find_linked_columns.
-        
+        Each chain has to have at least two seeding nodes.
         '''
-        
-        apos = self.find_element_pos(node1, self._tree)
-        dpos = self.find_element_pos(node2, self._tree)
-        
-        #add a new completely new row with both nodes
-        if (apos is None) & (dpos is None):
-            self._tree.append([[node1], [node2]])
-        
-        #if found ancestor in the tree, add descendant
-        elif (not apos is None) & (dpos is None):
-            ai, aj = apos
-            if isinstance(self._tree[ai][aj], list):
-                self._tree[ai][aj+1].append(node2)
-            else:
-                self._tree[ai][aj+1].append([node2])
+
+        self.chains[self.chain_counter] = [opening_node, closing_node]
+        self.opening_nodes[self.chain_counter] = opening_node
+        self.closing_nodes[self.chain_counter] = closing_node
+        self.chain_counter += 1
+
+    def extend_chain(self, chain_id, new_node):
+        '''
+        Append new_node to the end of an existing chain.
+        '''
+
+        current_chain = self.chains[chain_id]
+        new_chain = current_chain + [new_node]
+        self.chains[chain_id] = new_chain
+        self.closing_nodes[chain_id] = new_node
+
+    def prepend_chain(self, chain_id, new_node):
+        '''
+        Extend the chain in other direction, adding new node to the front
+        '''
+
+        current_chain = self.chains[chain_id]
+        new_chain = [new_node] + current_chain
+        self.chains[chain_id] = new_chain
+        self.opening_nodes[chain_id] = new_node
+
+    def nodes_in_chain_already(self, connection):
+        '''
+        Ensure we're not creating new chains from node pairs
+        that are already included in other chains.
+        '''
+
+        for _, chain in self.chains.items():
+            if connection[0] in chain and connection[1] in chain:
+                return True
+        return False
+
+    def process_nodes(self, connections):
+        '''
+        Build chains from connections.
+        '''
+       
+        inner_loop = list(connections)
+
+        for connection in connections:
+
+            if not self.nodes_in_chain_already(connection):
                 
-        #if found descendant in the tree, add ancestor
-        elif (apos is None) & (not dpos is None):
-            di, dj = dpos
-            if isinstance(self._tree[di][dj], list):
-                self._tree[di][dj-1].append(node1)
-            else:
-                self._tree[di][dj-1].append([node1])
+                chain_id = self.chain_counter
+                self.create_new_chain(connection[0], connection[1])
+                inner_loop.remove(connection)
+
+                for first_node, second_node in inner_loop:
+
+                    if first_node in self.closing_nodes[chain_id]:
+
+                        self.extend_chain(chain_id, second_node)
+
+                    if second_node in self.opening_nodes[chain_id]:
+
+                        self.prepend_chain(chain_id, first_node)
 
 def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_rows):
     '''
@@ -132,11 +143,6 @@ def find_hierarchically_linked_columns(df, spec):
     '''
 
     linked = []
-
-    #drop NAs because replacing them with Missing data means
-    #that columns that are normally linked, won't be (Missing data will
-    #appear for multiple "parent" columns)
-    df = df.select_dtypes(exclude=np.number).dropna()
     
     #single value and paired columns are ignored
     cols = []
@@ -152,19 +158,23 @@ def find_hierarchically_linked_columns(df, spec):
 
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):
+        #drop NAs because replacing them with Missing data means
+        #that columns that are normally linked, won't be (Missing data will
+        #appear for multiple "parent" columns) 
+        pair_df = df[[col1, col2]].dropna()
         
         #1:many relationship exists for one of two columns
         if (( 
-                df.groupby(col1)[col2].nunique().max() == 1 and
-                df.groupby(col2)[col1].nunique().max() > 1
+                pair_df.groupby(col1)[col2].nunique().max() == 1 and
+                pair_df.groupby(col2)[col1].nunique().max() > 1
             )
         or ( 
-                df.groupby(col1)[col2].nunique().max() > 1 and
-                df.groupby(col2)[col1].nunique().max() == 1
+                pair_df.groupby(col1)[col2].nunique().max() > 1 and
+                pair_df.groupby(col2)[col1].nunique().max() == 1
             )):
             
         #ancestor (1 in 1:many pair) is appened first
-            if df.groupby(col1)[col2].nunique().max() > 1:
+            if pair_df.groupby(col1)[col2].nunique().max() > 1:
                 linked.append((col1, col2))
                 
             else:
@@ -627,8 +637,6 @@ def _merge_common_member_tuples(paired_tuples):
 
         if not original_sort_order[b][0]:
             original_sort_order[b][0] = 1
-        else:
-            original_sort_order[b][0] -= 0
 
     l = sorted(paired_tuples, key=min)
     queue = deque(l)

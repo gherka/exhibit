@@ -189,7 +189,7 @@ def guess_date_frequency(timeseries):
         if first_period in period_range:
             return period_alias
             
-    return None
+    return None #pragma: no cover
 
 def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired=True):
     '''
@@ -221,7 +221,7 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired
     if types is None:
         types = ['categorical', 'date', 'continuous']
     
-    if not isinstance(types, list):
+    if not isinstance(types, list): #pragma: no cover
         types = [types]
 
     attrs = []

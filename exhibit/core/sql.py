@@ -9,6 +9,7 @@ from contextlib import closing
 
 #External library imports
 import pandas as pd
+import numpy as np
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
@@ -113,7 +114,8 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
     #make sure data is stripped from extra whitespace to match the spec
-    data = [tuple([y.strip() for y in x]) for x in data]
+    #as an extra precaution we're dropping any rows with np.NaN values in them
+    data = [tuple([y.strip() for y in x]) for x in data if np.NaN not in x]
 
     if len(col_names) == 1:
         col_list = col_names[0]

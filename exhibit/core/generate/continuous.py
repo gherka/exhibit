@@ -186,7 +186,7 @@ def _generate_cont_val(
         return _draw_from_normal_distribution(
             row, weights_table, num_col, **dist_params)
 
-    return None
+    return None #pragma: no cover
 
 def _draw_from_normal_distribution(row, wt, num_col, mean, std, **_kwargs):
     '''
@@ -197,14 +197,8 @@ def _draw_from_normal_distribution(row, wt, num_col, mean, std, **_kwargs):
 
     for cat_col, val in row.iteritems():
 
-        try:
-
-            w, ew = wt[(num_col, cat_col, val)]['weights']
+        w, ew = wt[(num_col, cat_col, val)]['weights']
             
-        except KeyError:
-
-            w, ew = (0, 0)
-
         #don't make any changes if no difference from equal weight
         row_diff = 0 if (w - ew) == 0 else (w / ew) - 1
 
@@ -267,7 +261,9 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
     Scale series to target_sum. If precision is integer, try to round 
     the values up in such a way that preserve the target_sum
     '''
-
+    if series.isna().all(): #pragma: no cover
+        return series
+        
     scaling_factor = target_sum / series.dropna().sum()
 
     scaled_series = series * scaling_factor
@@ -300,6 +296,10 @@ def _conditional_rounding(series, target_sum):
     '''
 
     #determine the value by which each row differs from the target_sum
+    #if series is composed entirely of null values, return original
+    if series.isna().all(): #pragma: no cover
+        return series
+    
     row_diff = (target_sum - series.dropna().sum()) / len(series.dropna())
         
     #adjust values so that they sum up to target_sum; if column's type is float,
@@ -352,7 +352,7 @@ def _apply_dispersion(value, dispersion_pct):
     add a flag to the spec generation
     '''
     
-    if value == np.inf:
+    if value == np.inf: #pragma: no cover
         return 0
     
     if dispersion_pct == 0:

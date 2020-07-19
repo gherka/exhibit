@@ -183,7 +183,7 @@ class newExhibit:
         if self._args.source.suffix == '.yml':
             with open(self._args.source) as f:
                 self.spec_dict = yaml.safe_load(f)
-        else:
+        else: #pragma: no cover
             raise TypeError('Specification is not in .yml format')
 
 

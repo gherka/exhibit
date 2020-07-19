@@ -74,9 +74,14 @@ class continuousTests(unittest.TestCase):
         test_case_3 = tm._apply_dispersion(0, 0.2)
         expected_3 = (0 <= test_case_3 <= 2)
 
+        #na returns na
+        test_case_4 = tm._apply_dispersion(np.NaN, 0.2)
+        expected_4 = np.isnan(test_case_4)
+
         self.assertTrue(expected_1)
         self.assertTrue(expected_2)
         self.assertTrue(expected_3)
+        self.assertTrue(expected_4)
 
     def test_conditional_rounding(self):
         '''
