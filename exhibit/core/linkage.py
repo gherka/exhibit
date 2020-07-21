@@ -36,79 +36,181 @@ class LinkedColumnsTree:
         (linked columns group number,
         list of grouped columns)
         '''
-        self.chain_counter = 0
-        self.chains = {0:[]}
-        self.opening_nodes = {}
-        self.closing_nodes = {}
 
-        self.process_nodes(connections)
+        self.chain_counter = 0
+        self.chains = self.process_nodes(connections)
         self.tree = list((i, l) for i, l in self.chains.items())
-    
-    def create_new_chain(self, opening_node, closing_node):
+     
+    def process_nodes(self, connections, chains=None):
+        '''
+        Recursively build chains from connections.
+
+        Returns a dictionary with chain_id : chain
+        '''
+
+        #initialise empty chains dictionary
+        if chains is None:
+            chains = {0:[]}
+
+        #stop condition for recursion
+        if not connections:
+            return chains
+
+        #create a new chain from the first pair of nodes
+        chains = self.create_new_chain(connections[0], chains)
+
+        #fill the chain with the rest of the nodes, if able  
+        finished_chain, remaining_connections = self.build_chain(
+            connections, chains[self.chain_counter-1])
+
+        chains[self.chain_counter-1] = finished_chain
+        
+        return self.process_nodes(remaining_connections, chains)       
+        
+    def build_chain(self, connections, chain):
+        '''
+        Changes to the passed in chain are happening in-place
+        because chain is a mutable list. Maybe refactor later.
+
+        Returns remaining connection pairs in a list after the
+        initial chain was finalized.
+        '''
+
+        #make a copy of connections to remove processed pairs  
+        inner_loop = list(connections)
+
+        #if variable doesn't get overridden as part of the loop,
+        #it means the chain is finished and nothing can be done
+        #with any of the pairs as pertains to the worked-on chain.
+        reset = False
+
+        for connection in connections:
+            #connection already exists
+            if self.nodes_in_chain_already(connection, chain):
+                inner_loop.remove(connection)
+                reset = True
+                continue
+            #it's possible to extend one of the existing chains
+            if self.can_extend_chain(connection, chain):
+                chain = self.extend_chain(connection, chain)
+                inner_loop.remove(connection)
+                reset = True
+                continue
+            #it's possible to prepend one of the existing chains
+            if self.can_prepend_chain(connection, chain):
+                chain = self.prepend_chain(connection, chain)
+                inner_loop.remove(connection)
+                reset = True
+                continue
+            #is the connection one of two that can be merged and new node spliced-in
+            if self.splice_node(connection, connections, chain, inner_loop):
+                reset = True
+                continue
+        
+        if reset:
+            return self.build_chain(inner_loop, chain)
+        
+        return chain, inner_loop  
+
+    def create_new_chain(self, connection, chains):
         '''
         Each chain has to have at least two seeding nodes.
+
+        This function uses chain_counter from the outer scope
+        (defined in the __init__)
+
+        Returns an updated chains dictionary
         '''
 
-        self.chains[self.chain_counter] = [opening_node, closing_node]
-        self.opening_nodes[self.chain_counter] = opening_node
-        self.closing_nodes[self.chain_counter] = closing_node
+        opening_node, closing_node = connection
+
+        chains[self.chain_counter] = [opening_node, closing_node]
         self.chain_counter += 1
 
-    def extend_chain(self, chain_id, new_node):
+        return chains
+
+    def extend_chain(self, connection, chain):
         '''
         Append new_node to the end of an existing chain.
         '''
 
-        current_chain = self.chains[chain_id]
-        new_chain = current_chain + [new_node]
-        self.chains[chain_id] = new_chain
-        self.closing_nodes[chain_id] = new_node
+        return chain + [connection[1]]
 
-    def prepend_chain(self, chain_id, new_node):
+    def prepend_chain(self, connection, chain):
         '''
         Extend the chain in other direction, adding new node to the front
         '''
 
-        current_chain = self.chains[chain_id]
-        new_chain = [new_node] + current_chain
-        self.chains[chain_id] = new_chain
-        self.opening_nodes[chain_id] = new_node
+        return [connection[0]] + chain
 
-    def nodes_in_chain_already(self, connection):
+    def nodes_in_chain_already(self, connection, chain):
         '''
         Ensure we're not creating new chains from node pairs
         that are already included in other chains.
         '''
 
-        for _, chain in self.chains.items():
-            if connection[0] in chain and connection[1] in chain:
-                return True
+        if connection[0] in chain and connection[1] in chain:
+            return True
         return False
 
-    def process_nodes(self, connections):
+    def can_extend_chain(self, connection, chain):
         '''
-        Build chains from connections.
+        Convenience function
         '''
-       
-        inner_loop = list(connections)
 
-        for connection in connections:
+        if connection[0] == chain[-1]:
+            return True
+        return False
 
-            if not self.nodes_in_chain_already(connection):
-                
-                chain_id = self.chain_counter
-                self.create_new_chain(connection[0], connection[1])
-                inner_loop.remove(connection)
+    def can_prepend_chain(self, connection, chain):
+        '''
+        Convenience function
+        '''
 
-                for first_node, second_node in inner_loop:
+        if connection[1] == chain[0]:
+            return True
+        return False
 
-                    if first_node in self.closing_nodes[chain_id]:
+    def splice_node(self, connection, connections, chain, inner_loop):
+        '''
+        Connections are pairs of columns that are hierarchically
+        linked so if multiple columns are linked in a single chain,
+        we need to re-consititute the chain from these paired links.
 
-                        self.extend_chain(chain_id, second_node)
+        Also, the order of the pairs in connections is not guaranteed,
+        so we need to iterate until we're certain no link is missed.
 
-                    if second_node in self.opening_nodes[chain_id]:
+        It's also crucial that we only create un-interrupted chains so
+        [B,C] is a valid link in the [A,B,C,D] chain if there are also
+        [A,B] AND [C,D] links. 
+        '''
+        
+        #Example: initial chain = [A, D]
+        for splice_buddy in connections:
 
-                        self.prepend_chain(chain_id, first_node)
+            splice_node = None
+
+            if connection[1] == splice_buddy[0]: # (A, B) + (B, D)
+                opening_node = connection[0]
+                closing_node = splice_buddy[1]
+                splice_node = connection[1]
+
+            elif connection[0] == splice_buddy[1]: # (B, D) + (A, B)
+                opening_node = splice_buddy[0]
+                closing_node = connection[1]
+                splice_node = connection[0]
+
+            if splice_node:
+
+                if (
+                    opening_node in chain and
+                    closing_node in chain and
+                    abs(chain.index(opening_node) - chain.index(closing_node)) == 1):
+                    chain.insert(chain.index(opening_node) + 1, splice_node) #in-place
+                    inner_loop.remove(connection)
+                    return True
+
+        return False
 
 def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_rows):
     '''

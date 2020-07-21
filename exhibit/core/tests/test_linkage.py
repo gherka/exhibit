@@ -595,15 +595,22 @@ class linkageTests(unittest.TestCase):
         '''
 
         test_connections = [
+            ("A", "D"),  
+            ("C", "D"), 
+            ("F", "G"),
+            ("B", "D"),
+            ("E", "F"), #pre-pend to (F,G)
+            ("A", "C"), 
+            ("A", "B"), 
             ("B", "C"),
-            ("A", "B"),
-            ("C", "D"),
-            ("E", "F")
+            ("G", "H"), #append to (E,F,G)
+            ("I", "J")  #independent group
         ]
 
         expected = [
             (0, ["A", "B", "C", "D"]),
-            (1, ["E", "F"])
+            (1, ["E", "F", "G", "H"]),
+            (2, ["I", "J"])
         ]
 
         test_tree = tm.LinkedColumnsTree(test_connections)
