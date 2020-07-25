@@ -1,6 +1,7 @@
 '''
 Mini module for generating the weights table & related outputs
 '''
+
 # Standard library imports
 from collections import namedtuple
 
@@ -33,8 +34,6 @@ def generate_weights_table(spec_dict, target_cols):
     Weights and probabilities should be at least 0.001;
     even if the original, non-anonymised data has a smaller
     probability.
-
-    Refactor!
     '''
     
     tuple_list = []
@@ -47,83 +46,19 @@ def generate_weights_table(spec_dict, target_cols):
         set(spec_dict['metadata']['numerical_columns']) -
         set(spec_dict['derived_columns'])
     )
-
-    table_id = spec_dict['metadata']['id']
-    linked_groups = spec_dict['constraints']['linked_columns']
-       
+    
     for cat_col in target_cols:
 
-        anon_set = spec_dict['columns'][cat_col]['anonymising_set']
         val_count = spec_dict['columns'][cat_col]['uniques']
         equal_weight = 1 / val_count
         full_anon_flag = False
 
         #if column is put into anon.db, weights are always uniform
         if exceeds_ct(spec_dict, cat_col):
-            
-            #determine the source of the data (table_name and sql_column)
-            if anon_set != "random":
-                
-                table_name, *sql_column = anon_set.split(".")
 
-                #if column is part of linked group and set is multi-column
-                #table_name will still be equal to anon_set, but sql_column
-                #will have to depend on column's position in linked group
-                if not sql_column:
-
-                    for linked_group in linked_groups:
-                        for i, col in enumerate(linked_group[1]):
-                            if col == cat_col:
-                                col_pos = i
-
-                    ws_df = pd.DataFrame(
-                        data=(
-                            query_anon_database(table_name)
-                                .iloc[:, col_pos]
-                                .drop_duplicates()
-                        )
-                    )
-                    
-                    #rename columns to match the source
-                    ws_df.columns = [cat_col]
-
-                else:
-                    ws_df = pd.DataFrame(
-                        data=query_anon_database(table_name, sql_column)
-                    )
-                    #rename columns to match the source
-                    ws_df.columns = [cat_col]
-                
-            else:
-                #two options:
-                #either column is part if a linked group which means
-                #the table_name is for the linked group, not column
-                #or column is saved into db under its own name
-
-                for linked_group in linked_groups:
-
-                    if cat_col in linked_group[1]:
-
-                        table_name = f"temp_{table_id}_{linked_group[0]}"
-                        sql_column = cat_col.replace(" ", "$")
-                        
-                        ws_df = pd.DataFrame(
-                            data=query_anon_database(table_name, sql_column)
-                        )
-                        break
-
-                else:
-
-                    table_name = f"temp_{table_id}_{cat_col.replace(' ', '$')}"
-                    ws_df = pd.DataFrame(
-                        data=query_anon_database(table_name)
-                    )
-            
-            #Finally, generate equal weights for the column and put into weights_df
-            for num_col in num_cols:
-                ws_df[num_col] = 1 / val_count
             full_anon_flag = True
-
+            ws_df = _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols)
+            
         else:
             #meaning, there are original_values, including weights
             ws_df = spec_dict['columns'][cat_col]['original_values']
@@ -149,7 +84,6 @@ def generate_weights_table(spec_dict, target_cols):
                              columns=['num_col', 'cat_col', 'cat_value', 'weights'])
 
     #move the indexed dataframe to dict for perfomance
-
     result = (
         output_df
             .set_index(['num_col', 'cat_col', 'cat_value'])
@@ -204,7 +138,6 @@ def generate_weights(df, cat_col, num_col):
 
     #last item in the list must be Missing data weight for the num_col, 
     #regardless of whether Missing data is a value in cat_col
-
     output = temp_output.to_list()
 
     return output
@@ -246,6 +179,92 @@ def target_columns_for_weights_table(spec_dict):
 
 # INNER MODULE METHODS
 # ====================
+def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
+    '''
+    Function to create a weights dataframe for a categorical column
+    whose values are drawn from anon.db.
+
+    There are 4 of possible scenarios:
+     - random shuffle of existing values in a linked column
+     - random shuffle of existing values in a standalone column
+     - values drawn from an anonymising set for a linked column
+     - values drawn from an anonymising set for a standaline column
+
+    Anonymising set for a linked group is often given just by its name,
+    like "mountains" which means we need to loop over ALL linked groups
+    and ALL linked columns within them to find the exact right linked column.
+
+    '''
+
+    table_id = spec_dict['metadata']['id']
+    linked_groups = spec_dict['constraints']['linked_columns']
+    anon_set = spec_dict['columns'][cat_col]['anonymising_set']
+    val_count = spec_dict['columns'][cat_col]['uniques']
+
+    #determine the source of the data (table_name and sql_column)
+    if anon_set != "random":
+        
+        table_name, *sql_column = anon_set.split(".")
+
+        #if column is part of linked group and set is multi-column
+        #table_name will still be equal to anon_set, but sql_column
+        #will have to depend on column's position in linked group
+        if not sql_column:
+
+            for linked_group in linked_groups:
+                for i, col in enumerate(linked_group[1]):
+                    if col == cat_col:
+                        col_pos = i
+
+            ws_df = pd.DataFrame(
+                data=(
+                    query_anon_database(table_name)
+                        .iloc[:, col_pos]
+                        .drop_duplicates()
+                )
+            )
+            
+            #rename columns to match the source
+            ws_df.columns = [cat_col]
+
+        else:
+            ws_df = pd.DataFrame(
+                data=query_anon_database(table_name, sql_column)
+            )
+            #rename columns to match the source
+            ws_df.columns = [cat_col]
+        
+    else:
+        #two options:
+        #either column is part if a linked group which means
+        #the table_name is for the linked group, not column
+        #or column is saved into db under its own name
+
+        for linked_group in linked_groups:
+
+            if cat_col in linked_group[1]:
+
+                table_name = f"temp_{table_id}_{linked_group[0]}"
+                sql_column = cat_col.replace(" ", "$")
+                
+                ws_df = pd.DataFrame(
+                    data=query_anon_database(table_name, sql_column)
+                )
+                break
+
+        else:
+
+            table_name = f"temp_{table_id}_{cat_col.replace(' ', '$')}"
+            ws_df = pd.DataFrame(
+                data=query_anon_database(table_name)
+            )
+    
+    #Finally, generate equal weights for the column and put into weights_df
+    for num_col in num_cols:
+        ws_df[num_col] = 1 / val_count
+    
+    return ws_df
+
 def _weights_transform(x, weights):
     '''
     Transform weights values, including zeroes and NaNs, to 

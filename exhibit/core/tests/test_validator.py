@@ -282,8 +282,7 @@ class validatorTests(unittest.TestCase):
                 "Spam" : {
                     "distribution" : "weighted_uniform_with_dispersion",
                     "distribution_parameters": {
-                        "uniform_base_value": 1000,
-                        "dispersion": 0.1
+                        "uniform_base_value": 1000
                     }
                 }
             }
@@ -299,19 +298,18 @@ class validatorTests(unittest.TestCase):
                 "Spam" : {
                     "distribution" : "normal",
                     "distribution_parameters": {
-                        "mean": 10,
-                        "std": 5
+                        "mean": 10
                     }
                 }
             }
         }
 
-        self.assertTrue(
+        self.assertFalse(
             tm.validate_distribution_parameters(
                 validatorMock, spec_dict=test_dict_uniform)
             )
 
-        self.assertTrue(
+        self.assertFalse(
             tm.validate_distribution_parameters(
                 validatorMock, spec_dict=test_dict_normal)
             )
@@ -334,7 +332,7 @@ class validatorTests(unittest.TestCase):
                 "Spam" : {
                     "scaling" : "target_sum",
                     "scaling_parameters": {
-                        "target_sum": 1000,
+                        "target_eggs": 1000,
                     }
                 }
             }
@@ -350,19 +348,18 @@ class validatorTests(unittest.TestCase):
                 "Spam" : {
                     "scaling" : "range",
                     "scaling_parameters": {
-                        "target_min": 5,
-                        "target_max": 10
+                        "target_min": 5
                     }
                 }
             }
         }
 
-        self.assertTrue(
+        self.assertFalse(
             tm.validate_scaling_parameters(
                 validatorMock, spec_dict=test_dict_target_sum)
             )
 
-        self.assertTrue(
+        self.assertFalse(
             tm.validate_scaling_parameters(
                 validatorMock, spec_dict=test_dict_range)
             )

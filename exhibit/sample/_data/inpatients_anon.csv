@@ -3,10 +3,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 50-59,1.16,S08000020,NHS Grampian,43.0,Elective Inpatients,2018-07-01,A,37.0
 50-59,1.19,S08000020,NHS Grampian,37.0,Elective Inpatients,2018-10-01,A,31.0
 50-59,1.16,S08000020,NHS Grampian,36.0,Elective Inpatients,2019-01-01,A,31.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,578.0,All Daycases,2018-04-01,B,572.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,538.0,All Daycases,2018-07-01,B,533.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,503.0,All Daycases,2018-10-01,B,498.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,553.0,All Daycases,2019-01-01,B,548.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,603.0,All Daycases,2018-04-01,B,572.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,562.0,All Daycases,2018-07-01,B,533.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,525.0,All Daycases,2018-10-01,B,498.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,578.0,All Daycases,2019-01-01,B,548.0
 60-69,1.25,S08000021,NHS Greater Glasgow & Clyde,202.0,Elective Inpatients,2018-04-01,A,161.0
 60-69,1.25,S08000021,NHS Greater Glasgow & Clyde,181.0,Elective Inpatients,2018-07-01,A,145.0
 60-69,1.26,S08000021,NHS Greater Glasgow & Clyde,187.0,Elective Inpatients,2018-10-01,A,149.0
@@ -15,10 +15,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 50-59,2.54,S08000024,NHS Lothian,591.0,Emergency Inpatients,2018-07-01,A,233.0
 50-59,2.54,S08000024,NHS Lothian,599.0,Emergency Inpatients,2018-10-01,A,236.0
 50-59,2.54,S08000024,NHS Lothian,662.0,Emergency Inpatients,2019-01-01,A,261.0
-40-49,1.02,S08000020,NHS Grampian,59.0,All Daycases,2018-04-01,B,58.0
-40-49,1.02,S08000020,NHS Grampian,60.0,All Daycases,2018-07-01,B,59.0
-40-49,1.02,S08000020,NHS Grampian,60.0,All Daycases,2018-10-01,B,59.0
-40-49,1.02,S08000020,NHS Grampian,62.0,All Daycases,2019-01-01,B,61.0
+40-49,1.05,S08000020,NHS Grampian,61.0,All Daycases,2018-04-01,B,58.0
+40-49,1.05,S08000020,NHS Grampian,62.0,All Daycases,2018-07-01,B,59.0
+40-49,1.05,S08000020,NHS Grampian,62.0,All Daycases,2018-10-01,B,59.0
+40-49,1.05,S08000020,NHS Grampian,64.0,All Daycases,2019-01-01,B,61.0
 60-69,3.57,S08000030,NHS Tayside,393.0,Emergency Inpatients,2018-04-01,B,110.0
 60-69,3.57,S08000030,NHS Tayside,389.0,Emergency Inpatients,2018-07-01,B,109.0
 60-69,3.58,S08000030,NHS Tayside,430.0,Emergency Inpatients,2018-10-01,B,120.0
@@ -27,10 +27,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 40-49,1.0,S08000025,NHS Orkney,2.0,Elective Inpatients,2018-07-01,B,2.0
 40-49,1.0,S08000025,NHS Orkney,2.0,Elective Inpatients,2018-10-01,B,2.0
 40-49,1.0,S08000025,NHS Orkney,1.0,Elective Inpatients,2019-01-01,B,1.0
-80-89,1.01,S08000015,NHS Ayrshire & Arran,80.0,All Daycases,2018-04-01,B,79.0
-80-89,1.01,S08000015,NHS Ayrshire & Arran,78.0,All Daycases,2018-07-01,B,77.0
-80-89,1.01,S08000015,NHS Ayrshire & Arran,81.0,All Daycases,2018-10-01,B,80.0
-80-89,1.01,S08000015,NHS Ayrshire & Arran,84.0,All Daycases,2019-01-01,B,83.0
+80-89,1.05,S08000015,NHS Ayrshire & Arran,83.0,All Daycases,2018-04-01,B,79.0
+80-89,1.05,S08000015,NHS Ayrshire & Arran,81.0,All Daycases,2018-07-01,B,77.0
+80-89,1.05,S08000015,NHS Ayrshire & Arran,84.0,All Daycases,2018-10-01,B,80.0
+80-89,1.06,S08000015,NHS Ayrshire & Arran,88.0,All Daycases,2019-01-01,B,83.0
 90+,1.0,S08000019,NHS Forth Valley,7.0,All Daycases,2018-04-01,B,7.0
 90+,1.0,S08000019,NHS Forth Valley,8.0,All Daycases,2018-07-01,B,8.0
 90+,1.0,S08000019,NHS Forth Valley,8.0,All Daycases,2018-10-01,B,8.0
@@ -43,22 +43,22 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 70-79,2.22,S08000016,NHS Borders,20.0,Elective Inpatients,2018-07-01,A,9.0
 70-79,2.09,S08000016,NHS Borders,23.0,Elective Inpatients,2018-10-01,A,11.0
 70-79,2.2,S08000016,NHS Borders,22.0,Elective Inpatients,2019-01-01,A,10.0
-50-59,1.01,S08000020,NHS Grampian,118.0,All Daycases,2018-04-01,A,117.0
-50-59,1.01,S08000020,NHS Grampian,122.0,All Daycases,2018-07-01,A,121.0
-50-59,1.01,S08000020,NHS Grampian,123.0,All Daycases,2018-10-01,A,122.0
-50-59,1.01,S08000020,NHS Grampian,115.0,All Daycases,2019-01-01,A,114.0
-50-59,1.01,S08000024,NHS Lothian,222.0,All Daycases,2018-04-01,A,220.0
-50-59,1.01,S08000024,NHS Lothian,223.0,All Daycases,2018-07-01,A,221.0
-50-59,1.01,S08000024,NHS Lothian,197.0,All Daycases,2018-10-01,A,195.0
-50-59,1.01,S08000024,NHS Lothian,211.0,All Daycases,2019-01-01,A,209.0
+50-59,1.05,S08000020,NHS Grampian,123.0,All Daycases,2018-04-01,A,117.0
+50-59,1.06,S08000020,NHS Grampian,128.0,All Daycases,2018-07-01,A,121.0
+50-59,1.06,S08000020,NHS Grampian,129.0,All Daycases,2018-10-01,A,122.0
+50-59,1.05,S08000020,NHS Grampian,120.0,All Daycases,2019-01-01,A,114.0
+50-59,1.05,S08000024,NHS Lothian,232.0,All Daycases,2018-04-01,A,220.0
+50-59,1.05,S08000024,NHS Lothian,233.0,All Daycases,2018-07-01,A,221.0
+50-59,1.06,S08000024,NHS Lothian,206.0,All Daycases,2018-10-01,A,195.0
+50-59,1.05,S08000024,NHS Lothian,220.0,All Daycases,2019-01-01,A,209.0
 90+,4.25,S08000023,NHS Lanarkshire,34.0,Elective Inpatients,2018-04-01,B,8.0
 90+,4.25,S08000023,NHS Lanarkshire,34.0,Elective Inpatients,2018-07-01,B,8.0
 90+,4.0,S08000023,NHS Lanarkshire,36.0,Elective Inpatients,2018-10-01,B,9.0
 90+,4.0,S08000023,NHS Lanarkshire,32.0,Elective Inpatients,2019-01-01,B,8.0
-10-19,1.0,S08000022,NHS Highland,11.0,All Daycases,2018-04-01,B,11.0
-10-19,1.0,S08000022,NHS Highland,11.0,All Daycases,2018-07-01,B,11.0
-10-19,1.0,S08000022,NHS Highland,10.0,All Daycases,2018-10-01,B,10.0
-10-19,1.0,S08000022,NHS Highland,11.0,All Daycases,2019-01-01,B,11.0
+10-19,1.09,S08000022,NHS Highland,12.0,All Daycases,2018-04-01,B,11.0
+10-19,1.09,S08000022,NHS Highland,12.0,All Daycases,2018-07-01,B,11.0
+10-19,1.1,S08000022,NHS Highland,11.0,All Daycases,2018-10-01,B,10.0
+10-19,1.09,S08000022,NHS Highland,12.0,All Daycases,2019-01-01,B,11.0
 10-19,1.0,S08000023,NHS Lanarkshire,9.0,Elective Inpatients,2018-04-01,A,9.0
 10-19,1.0,S08000023,NHS Lanarkshire,9.0,Elective Inpatients,2018-07-01,A,9.0
 10-19,1.0,S08000023,NHS Lanarkshire,8.0,Elective Inpatients,2018-10-01,A,8.0
@@ -67,10 +67,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 0-9,1.0,S08000029,NHS Fife,3.0,Elective Inpatients,2018-07-01,B,3.0
 0-9,1.0,S08000029,NHS Fife,2.0,Elective Inpatients,2018-10-01,B,2.0
 0-9,1.0,S08000029,NHS Fife,3.0,Elective Inpatients,2019-01-01,B,3.0
-80-89,1.01,S08000020,NHS Grampian,85.0,All Daycases,2018-04-01,B,84.0
-80-89,1.01,S08000020,NHS Grampian,93.0,All Daycases,2018-07-01,B,92.0
-80-89,1.01,S08000020,NHS Grampian,83.0,All Daycases,2018-10-01,B,82.0
-80-89,1.01,S08000020,NHS Grampian,86.0,All Daycases,2019-01-01,B,85.0
+80-89,1.06,S08000020,NHS Grampian,89.0,All Daycases,2018-04-01,B,84.0
+80-89,1.05,S08000020,NHS Grampian,97.0,All Daycases,2018-07-01,B,92.0
+80-89,1.06,S08000020,NHS Grampian,87.0,All Daycases,2018-10-01,B,82.0
+80-89,1.06,S08000020,NHS Grampian,90.0,All Daycases,2019-01-01,B,85.0
 70-79,1.62,S08000023,NHS Lanarkshire,104.0,Elective Inpatients,2018-04-01,A,64.0
 70-79,1.63,S08000023,NHS Lanarkshire,96.0,Elective Inpatients,2018-07-01,A,59.0
 70-79,1.64,S08000023,NHS Lanarkshire,108.0,Elective Inpatients,2018-10-01,A,66.0
@@ -79,17 +79,17 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,4.5,S08000026,NHS Shetland,27.0,Emergency Inpatients,2018-07-01,B,6.0
 80-89,4.17,S08000026,NHS Shetland,25.0,Emergency Inpatients,2018-10-01,B,6.0
 80-89,4.29,S08000026,NHS Shetland,30.0,Emergency Inpatients,2019-01-01,B,7.0
-90+,1.0,S08000022,NHS Highland,10.0,All Daycases,2018-04-01,B,10.0
-90+,1.0,S08000022,NHS Highland,10.0,All Daycases,2018-07-01,B,10.0
-90+,1.0,S08000022,NHS Highland,10.0,All Daycases,2018-10-01,B,10.0
-90+,1.0,S08000022,NHS Highland,10.0,All Daycases,2019-01-01,B,10.0
+90+,1.1,S08000022,NHS Highland,11.0,All Daycases,2018-04-01,B,10.0
+90+,1.1,S08000022,NHS Highland,11.0,All Daycases,2018-07-01,B,10.0
+90+,1.1,S08000022,NHS Highland,11.0,All Daycases,2018-10-01,B,10.0
+90+,1.1,S08000022,NHS Highland,11.0,All Daycases,2019-01-01,B,10.0
 80-89,5.2,S08000019,NHS Forth Valley,52.0,Elective Inpatients,2018-04-01,B,10.0
 80-89,5.2,S08000019,NHS Forth Valley,52.0,Elective Inpatients,2018-07-01,B,10.0
 80-89,5.2,S08000019,NHS Forth Valley,52.0,Elective Inpatients,2018-10-01,B,10.0
 80-89,5.0,S08000019,NHS Forth Valley,55.0,Elective Inpatients,2019-01-01,B,11.0
-40-49,1.0,S08000015,NHS Ayrshire & Arran,18.0,Elective Inpatients,2018-04-01,B,18.0
-40-49,1.0,S08000015,NHS Ayrshire & Arran,20.0,Elective Inpatients,2018-07-01,B,20.0
-40-49,1.0,S08000015,NHS Ayrshire & Arran,20.0,Elective Inpatients,2018-10-01,B,20.0
+40-49,1.06,S08000015,NHS Ayrshire & Arran,19.0,Elective Inpatients,2018-04-01,B,18.0
+40-49,1.05,S08000015,NHS Ayrshire & Arran,21.0,Elective Inpatients,2018-07-01,B,20.0
+40-49,1.05,S08000015,NHS Ayrshire & Arran,21.0,Elective Inpatients,2018-10-01,B,20.0
 40-49,1.0,S08000015,NHS Ayrshire & Arran,16.0,Elective Inpatients,2019-01-01,B,16.0
 70-79,3.18,S08000023,NHS Lanarkshire,741.0,Emergency Inpatients,2018-04-01,B,233.0
 70-79,3.18,S08000023,NHS Lanarkshire,728.0,Emergency Inpatients,2018-07-01,B,229.0
@@ -103,30 +103,30 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 60-69,2.43,S08000021,NHS Greater Glasgow & Clyde,1543.0,Emergency Inpatients,2018-07-01,B,634.0
 60-69,2.43,S08000021,NHS Greater Glasgow & Clyde,1582.0,Emergency Inpatients,2018-10-01,B,650.0
 60-69,2.43,S08000021,NHS Greater Glasgow & Clyde,1508.0,Emergency Inpatients,2019-01-01,B,620.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,24.0,Elective Inpatients,2018-04-01,A,24.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,22.0,Elective Inpatients,2018-07-01,A,22.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,20.0,Elective Inpatients,2018-10-01,A,20.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,21.0,Elective Inpatients,2019-01-01,A,21.0
-90+,1.0,S08000030,NHS Tayside,12.0,All Daycases,2018-04-01,B,12.0
-90+,1.0,S08000030,NHS Tayside,13.0,All Daycases,2018-07-01,B,13.0
-90+,1.0,S08000030,NHS Tayside,13.0,All Daycases,2018-10-01,B,13.0
-90+,1.0,S08000030,NHS Tayside,13.0,All Daycases,2019-01-01,B,13.0
+10-19,1.04,S08000021,NHS Greater Glasgow & Clyde,25.0,Elective Inpatients,2018-04-01,A,24.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,23.0,Elective Inpatients,2018-07-01,A,22.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,21.0,Elective Inpatients,2018-10-01,A,20.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,22.0,Elective Inpatients,2019-01-01,A,21.0
+90+,1.08,S08000030,NHS Tayside,13.0,All Daycases,2018-04-01,B,12.0
+90+,1.08,S08000030,NHS Tayside,14.0,All Daycases,2018-07-01,B,13.0
+90+,1.08,S08000030,NHS Tayside,14.0,All Daycases,2018-10-01,B,13.0
+90+,1.08,S08000030,NHS Tayside,14.0,All Daycases,2019-01-01,B,13.0
 50-59,2.45,S08000016,NHS Borders,81.0,Emergency Inpatients,2018-04-01,A,33.0
 50-59,2.48,S08000016,NHS Borders,82.0,Emergency Inpatients,2018-07-01,A,33.0
 50-59,2.5,S08000016,NHS Borders,75.0,Emergency Inpatients,2018-10-01,A,30.0
 50-59,2.43,S08000016,NHS Borders,85.0,Emergency Inpatients,2019-01-01,A,35.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,255.0,All Daycases,2018-04-01,B,253.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,268.0,All Daycases,2018-07-01,B,265.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,251.0,All Daycases,2018-10-01,B,249.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,261.0,All Daycases,2019-01-01,B,258.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,15.0,Elective Inpatients,2018-04-01,A,15.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,16.0,Elective Inpatients,2018-07-01,A,16.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,14.0,Elective Inpatients,2018-10-01,A,14.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,15.0,Elective Inpatients,2019-01-01,A,15.0
-70-79,1.01,S08000020,NHS Grampian,136.0,All Daycases,2018-04-01,B,135.0
-70-79,1.01,S08000020,NHS Grampian,149.0,All Daycases,2018-07-01,B,148.0
-70-79,1.01,S08000020,NHS Grampian,127.0,All Daycases,2018-10-01,B,126.0
-70-79,1.01,S08000020,NHS Grampian,151.0,All Daycases,2019-01-01,B,150.0
+40-49,1.06,S08000021,NHS Greater Glasgow & Clyde,267.0,All Daycases,2018-04-01,B,253.0
+40-49,1.06,S08000021,NHS Greater Glasgow & Clyde,280.0,All Daycases,2018-07-01,B,265.0
+40-49,1.06,S08000021,NHS Greater Glasgow & Clyde,263.0,All Daycases,2018-10-01,B,249.0
+40-49,1.05,S08000021,NHS Greater Glasgow & Clyde,272.0,All Daycases,2019-01-01,B,258.0
+30-39,1.07,S08000015,NHS Ayrshire & Arran,16.0,Elective Inpatients,2018-04-01,A,15.0
+30-39,1.06,S08000015,NHS Ayrshire & Arran,17.0,Elective Inpatients,2018-07-01,A,16.0
+30-39,1.07,S08000015,NHS Ayrshire & Arran,15.0,Elective Inpatients,2018-10-01,A,14.0
+30-39,1.07,S08000015,NHS Ayrshire & Arran,16.0,Elective Inpatients,2019-01-01,A,15.0
+70-79,1.05,S08000020,NHS Grampian,142.0,All Daycases,2018-04-01,B,135.0
+70-79,1.05,S08000020,NHS Grampian,156.0,All Daycases,2018-07-01,B,148.0
+70-79,1.06,S08000020,NHS Grampian,133.0,All Daycases,2018-10-01,B,126.0
+70-79,1.05,S08000020,NHS Grampian,158.0,All Daycases,2019-01-01,B,150.0
 40-49,2.0,S08000022,NHS Highland,90.0,Emergency Inpatients,2018-04-01,B,45.0
 40-49,1.97,S08000022,NHS Highland,77.0,Emergency Inpatients,2018-07-01,B,39.0
 40-49,2.0,S08000022,NHS Highland,84.0,Emergency Inpatients,2018-10-01,B,42.0
@@ -143,30 +143,30 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 60-69,1.33,S08000016,NHS Borders,12.0,Elective Inpatients,2018-07-01,B,9.0
 60-69,1.3,S08000016,NHS Borders,13.0,Elective Inpatients,2018-10-01,B,10.0
 60-69,1.33,S08000016,NHS Borders,12.0,Elective Inpatients,2019-01-01,B,9.0
-60-69,1.01,S08000022,NHS Highland,68.0,All Daycases,2018-04-01,B,67.0
-60-69,1.01,S08000022,NHS Highland,75.0,All Daycases,2018-07-01,B,74.0
-60-69,1.01,S08000022,NHS Highland,75.0,All Daycases,2018-10-01,B,74.0
-60-69,1.01,S08000022,NHS Highland,77.0,All Daycases,2019-01-01,B,76.0
-60-69,1.01,S08000023,NHS Lanarkshire,206.0,All Daycases,2018-04-01,B,204.0
-60-69,1.01,S08000023,NHS Lanarkshire,189.0,All Daycases,2018-07-01,B,187.0
-60-69,1.01,S08000023,NHS Lanarkshire,178.0,All Daycases,2018-10-01,B,176.0
-60-69,1.01,S08000023,NHS Lanarkshire,205.0,All Daycases,2019-01-01,B,203.0
-90+,1.0,S08000023,NHS Lanarkshire,23.0,All Daycases,2018-04-01,B,23.0
-90+,1.0,S08000023,NHS Lanarkshire,25.0,All Daycases,2018-07-01,B,25.0
-90+,1.0,S08000023,NHS Lanarkshire,28.0,All Daycases,2018-10-01,B,28.0
-90+,1.0,S08000023,NHS Lanarkshire,28.0,All Daycases,2019-01-01,B,28.0
+60-69,1.06,S08000022,NHS Highland,71.0,All Daycases,2018-04-01,B,67.0
+60-69,1.05,S08000022,NHS Highland,78.0,All Daycases,2018-07-01,B,74.0
+60-69,1.05,S08000022,NHS Highland,78.0,All Daycases,2018-10-01,B,74.0
+60-69,1.05,S08000022,NHS Highland,80.0,All Daycases,2019-01-01,B,76.0
+60-69,1.05,S08000023,NHS Lanarkshire,215.0,All Daycases,2018-04-01,B,204.0
+60-69,1.05,S08000023,NHS Lanarkshire,197.0,All Daycases,2018-07-01,B,187.0
+60-69,1.06,S08000023,NHS Lanarkshire,186.0,All Daycases,2018-10-01,B,176.0
+60-69,1.05,S08000023,NHS Lanarkshire,214.0,All Daycases,2019-01-01,B,203.0
+90+,1.04,S08000023,NHS Lanarkshire,24.0,All Daycases,2018-04-01,B,23.0
+90+,1.04,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-07-01,B,25.0
+90+,1.07,S08000023,NHS Lanarkshire,30.0,All Daycases,2018-10-01,B,28.0
+90+,1.07,S08000023,NHS Lanarkshire,30.0,All Daycases,2019-01-01,B,28.0
 60-69,1.87,S08000030,NHS Tayside,56.0,Elective Inpatients,2018-04-01,A,30.0
 60-69,1.81,S08000030,NHS Tayside,56.0,Elective Inpatients,2018-07-01,A,31.0
 60-69,1.81,S08000030,NHS Tayside,49.0,Elective Inpatients,2018-10-01,A,27.0
 60-69,1.8,S08000030,NHS Tayside,54.0,Elective Inpatients,2019-01-01,A,30.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,49.0,All Daycases,2018-04-01,A,49.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,47.0,All Daycases,2018-07-01,A,47.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,44.0,All Daycases,2018-10-01,A,44.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,46.0,All Daycases,2019-01-01,A,46.0
-40-49,1.01,S08000023,NHS Lanarkshire,92.0,All Daycases,2018-04-01,B,91.0
-40-49,1.01,S08000023,NHS Lanarkshire,94.0,All Daycases,2018-07-01,B,93.0
-40-49,1.01,S08000023,NHS Lanarkshire,97.0,All Daycases,2018-10-01,B,96.0
-40-49,1.01,S08000023,NHS Lanarkshire,99.0,All Daycases,2019-01-01,B,98.0
+30-39,1.06,S08000015,NHS Ayrshire & Arran,52.0,All Daycases,2018-04-01,A,49.0
+30-39,1.06,S08000015,NHS Ayrshire & Arran,50.0,All Daycases,2018-07-01,A,47.0
+30-39,1.05,S08000015,NHS Ayrshire & Arran,46.0,All Daycases,2018-10-01,A,44.0
+30-39,1.07,S08000015,NHS Ayrshire & Arran,49.0,All Daycases,2019-01-01,A,46.0
+40-49,1.05,S08000023,NHS Lanarkshire,96.0,All Daycases,2018-04-01,B,91.0
+40-49,1.05,S08000023,NHS Lanarkshire,98.0,All Daycases,2018-07-01,B,93.0
+40-49,1.05,S08000023,NHS Lanarkshire,101.0,All Daycases,2018-10-01,B,96.0
+40-49,1.05,S08000023,NHS Lanarkshire,103.0,All Daycases,2019-01-01,B,98.0
 70-79,2.09,S08000022,NHS Highland,46.0,Elective Inpatients,2018-04-01,A,22.0
 70-79,2.04,S08000022,NHS Highland,47.0,Elective Inpatients,2018-07-01,A,23.0
 70-79,2.1,S08000022,NHS Highland,44.0,Elective Inpatients,2018-10-01,A,21.0
@@ -175,58 +175,58 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 0-9,1.0,S08000022,NHS Highland,9.0,Emergency Inpatients,2018-07-01,A,9.0
 0-9,1.12,S08000022,NHS Highland,9.0,Emergency Inpatients,2018-10-01,A,8.0
 0-9,1.0,S08000022,NHS Highland,9.0,Emergency Inpatients,2019-01-01,A,9.0
-60-69,1.01,S08000030,NHS Tayside,105.0,All Daycases,2018-04-01,A,104.0
-60-69,1.01,S08000030,NHS Tayside,106.0,All Daycases,2018-07-01,A,105.0
-60-69,1.01,S08000030,NHS Tayside,104.0,All Daycases,2018-10-01,A,103.0
-60-69,1.01,S08000030,NHS Tayside,109.0,All Daycases,2019-01-01,A,108.0
+60-69,1.06,S08000030,NHS Tayside,110.0,All Daycases,2018-04-01,A,104.0
+60-69,1.06,S08000030,NHS Tayside,111.0,All Daycases,2018-07-01,A,105.0
+60-69,1.06,S08000030,NHS Tayside,109.0,All Daycases,2018-10-01,A,103.0
+60-69,1.06,S08000030,NHS Tayside,114.0,All Daycases,2019-01-01,A,108.0
 60-69,1.44,S08000015,NHS Ayrshire & Arran,59.0,Elective Inpatients,2018-04-01,A,41.0
 60-69,1.44,S08000015,NHS Ayrshire & Arran,56.0,Elective Inpatients,2018-07-01,A,39.0
 60-69,1.44,S08000015,NHS Ayrshire & Arran,56.0,Elective Inpatients,2018-10-01,A,39.0
 60-69,1.43,S08000015,NHS Ayrshire & Arran,50.0,Elective Inpatients,2019-01-01,A,35.0
-20-29,1.0,S08000023,NHS Lanarkshire,19.0,Elective Inpatients,2018-04-01,B,19.0
-20-29,1.0,S08000023,NHS Lanarkshire,16.0,Elective Inpatients,2018-07-01,B,16.0
-20-29,1.0,S08000023,NHS Lanarkshire,18.0,Elective Inpatients,2018-10-01,B,18.0
-20-29,1.0,S08000023,NHS Lanarkshire,18.0,Elective Inpatients,2019-01-01,B,18.0
+20-29,1.05,S08000023,NHS Lanarkshire,20.0,Elective Inpatients,2018-04-01,B,19.0
+20-29,1.06,S08000023,NHS Lanarkshire,17.0,Elective Inpatients,2018-07-01,B,16.0
+20-29,1.06,S08000023,NHS Lanarkshire,19.0,Elective Inpatients,2018-10-01,B,18.0
+20-29,1.06,S08000023,NHS Lanarkshire,19.0,Elective Inpatients,2019-01-01,B,18.0
 10-19,1.24,S08000024,NHS Lothian,47.0,Emergency Inpatients,2018-04-01,B,38.0
 10-19,1.22,S08000024,NHS Lothian,45.0,Emergency Inpatients,2018-07-01,B,37.0
 10-19,1.25,S08000024,NHS Lothian,45.0,Emergency Inpatients,2018-10-01,B,36.0
 10-19,1.24,S08000024,NHS Lothian,51.0,Emergency Inpatients,2019-01-01,B,41.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,59.0,Elective Inpatients,2018-04-01,A,58.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,63.0,Elective Inpatients,2018-07-01,A,62.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,65.0,Elective Inpatients,2018-10-01,A,64.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,56.0,Elective Inpatients,2019-01-01,A,55.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,61.0,Elective Inpatients,2018-04-01,A,58.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,65.0,Elective Inpatients,2018-07-01,A,62.0
+30-39,1.06,S08000021,NHS Greater Glasgow & Clyde,68.0,Elective Inpatients,2018-10-01,A,64.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,58.0,Elective Inpatients,2019-01-01,A,55.0
 30-39,1.62,S08000020,NHS Grampian,105.0,Emergency Inpatients,2018-04-01,B,65.0
 30-39,1.61,S08000020,NHS Grampian,95.0,Emergency Inpatients,2018-07-01,B,59.0
 30-39,1.63,S08000020,NHS Grampian,93.0,Emergency Inpatients,2018-10-01,B,57.0
 30-39,1.62,S08000020,NHS Grampian,105.0,Emergency Inpatients,2019-01-01,B,65.0
-50-59,1.01,S08000024,NHS Lothian,214.0,All Daycases,2018-04-01,B,212.0
-50-59,1.01,S08000024,NHS Lothian,184.0,All Daycases,2018-07-01,B,182.0
-50-59,1.01,S08000024,NHS Lothian,201.0,All Daycases,2018-10-01,B,199.0
-50-59,1.01,S08000024,NHS Lothian,180.0,All Daycases,2019-01-01,B,178.0
-40-49,1.0,S08000016,NHS Borders,15.0,All Daycases,2018-04-01,B,15.0
-40-49,1.0,S08000016,NHS Borders,15.0,All Daycases,2018-07-01,B,15.0
-40-49,1.0,S08000016,NHS Borders,15.0,All Daycases,2018-10-01,B,15.0
-40-49,1.0,S08000016,NHS Borders,14.0,All Daycases,2019-01-01,B,14.0
+50-59,1.06,S08000024,NHS Lothian,224.0,All Daycases,2018-04-01,B,212.0
+50-59,1.05,S08000024,NHS Lothian,192.0,All Daycases,2018-07-01,B,182.0
+50-59,1.06,S08000024,NHS Lothian,210.0,All Daycases,2018-10-01,B,199.0
+50-59,1.06,S08000024,NHS Lothian,188.0,All Daycases,2019-01-01,B,178.0
+40-49,1.07,S08000016,NHS Borders,16.0,All Daycases,2018-04-01,B,15.0
+40-49,1.07,S08000016,NHS Borders,16.0,All Daycases,2018-07-01,B,15.0
+40-49,1.07,S08000016,NHS Borders,16.0,All Daycases,2018-10-01,B,15.0
+40-49,1.07,S08000016,NHS Borders,15.0,All Daycases,2019-01-01,B,14.0
 90+,5.0,S08000021,NHS Greater Glasgow & Clyde,95.0,Elective Inpatients,2018-04-01,B,19.0
 90+,4.75,S08000021,NHS Greater Glasgow & Clyde,95.0,Elective Inpatients,2018-07-01,B,20.0
 90+,4.95,S08000021,NHS Greater Glasgow & Clyde,99.0,Elective Inpatients,2018-10-01,B,20.0
 90+,4.95,S08000021,NHS Greater Glasgow & Clyde,104.0,Elective Inpatients,2019-01-01,B,21.0
-10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,80.0,All Daycases,2018-04-01,A,79.0
-10-19,1.02,S08000021,NHS Greater Glasgow & Clyde,67.0,All Daycases,2018-07-01,A,66.0
-10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,69.0,All Daycases,2018-10-01,A,68.0
-10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,68.0,All Daycases,2019-01-01,A,67.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,83.0,All Daycases,2018-04-01,A,79.0
+10-19,1.06,S08000021,NHS Greater Glasgow & Clyde,70.0,All Daycases,2018-07-01,A,66.0
+10-19,1.06,S08000021,NHS Greater Glasgow & Clyde,72.0,All Daycases,2018-10-01,A,68.0
+10-19,1.06,S08000021,NHS Greater Glasgow & Clyde,71.0,All Daycases,2019-01-01,A,67.0
 20-29,1.22,S08000023,NHS Lanarkshire,84.0,Emergency Inpatients,2018-04-01,A,69.0
 20-29,1.21,S08000023,NHS Lanarkshire,86.0,Emergency Inpatients,2018-07-01,A,71.0
 20-29,1.22,S08000023,NHS Lanarkshire,89.0,Emergency Inpatients,2018-10-01,A,73.0
 20-29,1.21,S08000023,NHS Lanarkshire,91.0,Emergency Inpatients,2019-01-01,A,75.0
 20-29,1.0,S08000016,NHS Borders,9.0,All Daycases,2018-04-01,B,9.0
-20-29,1.0,S08000016,NHS Borders,10.0,All Daycases,2018-07-01,B,10.0
-20-29,1.0,S08000016,NHS Borders,10.0,All Daycases,2018-10-01,B,10.0
+20-29,1.1,S08000016,NHS Borders,11.0,All Daycases,2018-07-01,B,10.0
+20-29,1.1,S08000016,NHS Borders,11.0,All Daycases,2018-10-01,B,10.0
 20-29,1.0,S08000016,NHS Borders,9.0,All Daycases,2019-01-01,B,9.0
-60-69,1.01,S08000029,NHS Fife,98.0,All Daycases,2018-04-01,A,97.0
-60-69,1.01,S08000029,NHS Fife,97.0,All Daycases,2018-07-01,A,96.0
-60-69,1.01,S08000029,NHS Fife,88.0,All Daycases,2018-10-01,A,87.0
-60-69,1.01,S08000029,NHS Fife,99.0,All Daycases,2019-01-01,A,98.0
+60-69,1.05,S08000029,NHS Fife,102.0,All Daycases,2018-04-01,A,97.0
+60-69,1.05,S08000029,NHS Fife,101.0,All Daycases,2018-07-01,A,96.0
+60-69,1.06,S08000029,NHS Fife,92.0,All Daycases,2018-10-01,A,87.0
+60-69,1.05,S08000029,NHS Fife,103.0,All Daycases,2019-01-01,A,98.0
 20-29,1.36,S08000021,NHS Greater Glasgow & Clyde,236.0,Emergency Inpatients,2018-04-01,A,174.0
 20-29,1.35,S08000021,NHS Greater Glasgow & Clyde,233.0,Emergency Inpatients,2018-07-01,A,172.0
 20-29,1.36,S08000021,NHS Greater Glasgow & Clyde,248.0,Emergency Inpatients,2018-10-01,A,183.0
@@ -247,18 +247,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 10-19,1.0,S08000025,NHS Orkney,1.0,All Daycases,2018-07-01,B,1.0
 10-19,1.0,S08000025,NHS Orkney,1.0,All Daycases,2018-10-01,B,1.0
 10-19,1.0,S08000025,NHS Orkney,1.0,All Daycases,2019-01-01,B,1.0
-20-29,1.0,S08000021,NHS Greater Glasgow & Clyde,41.0,Elective Inpatients,2018-04-01,B,41.0
-20-29,1.0,S08000021,NHS Greater Glasgow & Clyde,44.0,Elective Inpatients,2018-07-01,B,44.0
-20-29,1.0,S08000021,NHS Greater Glasgow & Clyde,45.0,Elective Inpatients,2018-10-01,B,45.0
-20-29,1.0,S08000021,NHS Greater Glasgow & Clyde,44.0,Elective Inpatients,2019-01-01,B,44.0
-40-49,1.02,S08000030,NHS Tayside,54.0,All Daycases,2018-04-01,A,53.0
-40-49,1.0,S08000030,NHS Tayside,46.0,All Daycases,2018-07-01,A,46.0
-40-49,1.0,S08000030,NHS Tayside,51.0,All Daycases,2018-10-01,A,51.0
-40-49,1.02,S08000030,NHS Tayside,53.0,All Daycases,2019-01-01,A,52.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,356.0,All Daycases,2018-04-01,A,353.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,348.0,All Daycases,2018-07-01,A,345.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,358.0,All Daycases,2018-10-01,A,355.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,346.0,All Daycases,2019-01-01,A,343.0
+20-29,1.05,S08000021,NHS Greater Glasgow & Clyde,43.0,Elective Inpatients,2018-04-01,B,41.0
+20-29,1.05,S08000021,NHS Greater Glasgow & Clyde,46.0,Elective Inpatients,2018-07-01,B,44.0
+20-29,1.04,S08000021,NHS Greater Glasgow & Clyde,47.0,Elective Inpatients,2018-10-01,B,45.0
+20-29,1.05,S08000021,NHS Greater Glasgow & Clyde,46.0,Elective Inpatients,2019-01-01,B,44.0
+40-49,1.06,S08000030,NHS Tayside,56.0,All Daycases,2018-04-01,A,53.0
+40-49,1.07,S08000030,NHS Tayside,49.0,All Daycases,2018-07-01,A,46.0
+40-49,1.06,S08000030,NHS Tayside,54.0,All Daycases,2018-10-01,A,51.0
+40-49,1.06,S08000030,NHS Tayside,55.0,All Daycases,2019-01-01,A,52.0
+80-89,1.05,S08000021,NHS Greater Glasgow & Clyde,372.0,All Daycases,2018-04-01,A,353.0
+80-89,1.06,S08000021,NHS Greater Glasgow & Clyde,364.0,All Daycases,2018-07-01,A,345.0
+80-89,1.05,S08000021,NHS Greater Glasgow & Clyde,374.0,All Daycases,2018-10-01,A,355.0
+80-89,1.06,S08000021,NHS Greater Glasgow & Clyde,362.0,All Daycases,2019-01-01,A,343.0
 10-19,1.59,S08000030,NHS Tayside,27.0,Emergency Inpatients,2018-04-01,A,17.0
 10-19,1.59,S08000030,NHS Tayside,27.0,Emergency Inpatients,2018-07-01,A,17.0
 10-19,1.59,S08000030,NHS Tayside,27.0,Emergency Inpatients,2018-10-01,A,17.0
@@ -267,10 +267,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,8.39,S08000024,NHS Lothian,1553.0,Emergency Inpatients,2018-07-01,A,185.0
 80-89,8.4,S08000024,NHS Lothian,1781.0,Emergency Inpatients,2018-10-01,A,212.0
 80-89,8.4,S08000024,NHS Lothian,1755.0,Emergency Inpatients,2019-01-01,A,209.0
-10-19,1.0,S08000030,NHS Tayside,13.0,All Daycases,2018-04-01,A,13.0
-10-19,1.0,S08000030,NHS Tayside,14.0,All Daycases,2018-07-01,A,14.0
-10-19,1.0,S08000030,NHS Tayside,15.0,All Daycases,2018-10-01,A,15.0
-10-19,1.0,S08000030,NHS Tayside,15.0,All Daycases,2019-01-01,A,15.0
+10-19,1.08,S08000030,NHS Tayside,14.0,All Daycases,2018-04-01,A,13.0
+10-19,1.07,S08000030,NHS Tayside,15.0,All Daycases,2018-07-01,A,14.0
+10-19,1.07,S08000030,NHS Tayside,16.0,All Daycases,2018-10-01,A,15.0
+10-19,1.07,S08000030,NHS Tayside,16.0,All Daycases,2019-01-01,A,15.0
 40-49,2.01,S08000015,NHS Ayrshire & Arran,151.0,Emergency Inpatients,2018-04-01,B,75.0
 40-49,2.0,S08000015,NHS Ayrshire & Arran,140.0,Emergency Inpatients,2018-07-01,B,70.0
 40-49,2.01,S08000015,NHS Ayrshire & Arran,135.0,Emergency Inpatients,2018-10-01,B,67.0
@@ -279,30 +279,30 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 90+,1.0,S08000017,NHS Dumfries & Galloway,7.0,All Daycases,2018-07-01,A,7.0
 90+,1.0,S08000017,NHS Dumfries & Galloway,7.0,All Daycases,2018-10-01,A,7.0
 90+,1.0,S08000017,NHS Dumfries & Galloway,6.0,All Daycases,2019-01-01,A,6.0
-60-69,1.01,S08000021,NHS Greater Glasgow & Clyde,506.0,All Daycases,2018-04-01,A,501.0
-60-69,1.01,S08000021,NHS Greater Glasgow & Clyde,516.0,All Daycases,2018-07-01,A,511.0
-60-69,1.01,S08000021,NHS Greater Glasgow & Clyde,500.0,All Daycases,2018-10-01,A,495.0
-60-69,1.01,S08000021,NHS Greater Glasgow & Clyde,565.0,All Daycases,2019-01-01,A,560.0
+60-69,1.05,S08000021,NHS Greater Glasgow & Clyde,528.0,All Daycases,2018-04-01,A,501.0
+60-69,1.05,S08000021,NHS Greater Glasgow & Clyde,539.0,All Daycases,2018-07-01,A,511.0
+60-69,1.05,S08000021,NHS Greater Glasgow & Clyde,522.0,All Daycases,2018-10-01,A,495.0
+60-69,1.06,S08000021,NHS Greater Glasgow & Clyde,591.0,All Daycases,2019-01-01,A,560.0
 70-79,5.62,S08000030,NHS Tayside,759.0,Emergency Inpatients,2018-04-01,A,135.0
 70-79,5.6,S08000030,NHS Tayside,723.0,Emergency Inpatients,2018-07-01,A,129.0
 70-79,5.6,S08000030,NHS Tayside,790.0,Emergency Inpatients,2018-10-01,A,141.0
 70-79,5.62,S08000030,NHS Tayside,669.0,Emergency Inpatients,2019-01-01,A,119.0
-0-9,1.0,S08000020,NHS Grampian,13.0,All Daycases,2018-04-01,A,13.0
-0-9,1.0,S08000020,NHS Grampian,11.0,All Daycases,2018-07-01,A,11.0
-0-9,1.0,S08000020,NHS Grampian,11.0,All Daycases,2018-10-01,A,11.0
-0-9,1.0,S08000020,NHS Grampian,13.0,All Daycases,2019-01-01,A,13.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,16.0,All Daycases,2018-04-01,A,16.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,18.0,All Daycases,2018-07-01,A,18.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,17.0,All Daycases,2018-10-01,A,17.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,18.0,All Daycases,2019-01-01,A,18.0
+0-9,1.08,S08000020,NHS Grampian,14.0,All Daycases,2018-04-01,A,13.0
+0-9,1.09,S08000020,NHS Grampian,12.0,All Daycases,2018-07-01,A,11.0
+0-9,1.09,S08000020,NHS Grampian,12.0,All Daycases,2018-10-01,A,11.0
+0-9,1.08,S08000020,NHS Grampian,14.0,All Daycases,2019-01-01,A,13.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,17.0,All Daycases,2018-04-01,A,16.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,19.0,All Daycases,2018-07-01,A,18.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,18.0,All Daycases,2018-10-01,A,17.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,19.0,All Daycases,2019-01-01,A,18.0
 10-19,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2018-04-01,B,2.0
 10-19,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2018-07-01,B,2.0
 10-19,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2018-10-01,B,2.0
 10-19,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2019-01-01,B,2.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,55.0,Elective Inpatients,2018-04-01,B,54.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,57.0,Elective Inpatients,2018-07-01,B,56.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,56.0,Elective Inpatients,2018-10-01,B,55.0
-30-39,1.02,S08000021,NHS Greater Glasgow & Clyde,54.0,Elective Inpatients,2019-01-01,B,53.0
+30-39,1.06,S08000021,NHS Greater Glasgow & Clyde,57.0,Elective Inpatients,2018-04-01,B,54.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,59.0,Elective Inpatients,2018-07-01,B,56.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,58.0,Elective Inpatients,2018-10-01,B,55.0
+30-39,1.06,S08000021,NHS Greater Glasgow & Clyde,56.0,Elective Inpatients,2019-01-01,B,53.0
 10-19,1.0,S08000026,NHS Shetland,1.0,Elective Inpatients,2018-04-01,B,1.0
 10-19,1.0,S08000026,NHS Shetland,1.0,Elective Inpatients,2018-07-01,B,1.0
 10-19,1.0,S08000026,NHS Shetland,1.0,Elective Inpatients,2018-10-01,B,1.0
@@ -315,10 +315,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 40-49,1.57,S08000023,NHS Lanarkshire,195.0,Emergency Inpatients,2018-07-01,B,124.0
 40-49,1.57,S08000023,NHS Lanarkshire,171.0,Emergency Inpatients,2018-10-01,B,109.0
 40-49,1.57,S08000023,NHS Lanarkshire,192.0,Emergency Inpatients,2019-01-01,B,122.0
-10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,74.0,All Daycases,2018-04-01,B,73.0
-10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,76.0,All Daycases,2018-07-01,B,75.0
-10-19,1.02,S08000021,NHS Greater Glasgow & Clyde,65.0,All Daycases,2018-10-01,B,64.0
-10-19,1.02,S08000021,NHS Greater Glasgow & Clyde,66.0,All Daycases,2019-01-01,B,65.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,77.0,All Daycases,2018-04-01,B,73.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,79.0,All Daycases,2018-07-01,B,75.0
+10-19,1.06,S08000021,NHS Greater Glasgow & Clyde,68.0,All Daycases,2018-10-01,B,64.0
+10-19,1.06,S08000021,NHS Greater Glasgow & Clyde,69.0,All Daycases,2019-01-01,B,65.0
 70-79,4.26,S08000016,NHS Borders,166.0,Emergency Inpatients,2018-04-01,B,39.0
 70-79,4.26,S08000016,NHS Borders,149.0,Emergency Inpatients,2018-07-01,B,35.0
 70-79,4.19,S08000016,NHS Borders,151.0,Emergency Inpatients,2018-10-01,B,36.0
@@ -331,10 +331,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 30-39,1.0,S08000019,NHS Forth Valley,6.0,Elective Inpatients,2018-07-01,B,6.0
 30-39,1.17,S08000019,NHS Forth Valley,7.0,Elective Inpatients,2018-10-01,B,6.0
 30-39,1.17,S08000019,NHS Forth Valley,7.0,Elective Inpatients,2019-01-01,B,6.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,103.0,All Daycases,2018-04-01,B,102.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,110.0,All Daycases,2018-07-01,B,109.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,109.0,All Daycases,2018-10-01,B,108.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,94.0,All Daycases,2019-01-01,B,93.0
+50-59,1.06,S08000015,NHS Ayrshire & Arran,108.0,All Daycases,2018-04-01,B,102.0
+50-59,1.06,S08000015,NHS Ayrshire & Arran,115.0,All Daycases,2018-07-01,B,109.0
+50-59,1.06,S08000015,NHS Ayrshire & Arran,114.0,All Daycases,2018-10-01,B,108.0
+50-59,1.05,S08000015,NHS Ayrshire & Arran,98.0,All Daycases,2019-01-01,B,93.0
 10-19,1.22,S08000015,NHS Ayrshire & Arran,28.0,Emergency Inpatients,2018-04-01,A,23.0
 10-19,1.21,S08000015,NHS Ayrshire & Arran,29.0,Emergency Inpatients,2018-07-01,A,24.0
 10-19,1.24,S08000015,NHS Ayrshire & Arran,26.0,Emergency Inpatients,2018-10-01,A,21.0
@@ -347,34 +347,34 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 90+,2.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2018-07-01,A,1.0
 90+,2.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2018-10-01,A,1.0
 90+,2.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2019-01-01,A,1.0
-30-39,1.0,S08000024,NHS Lothian,27.0,Elective Inpatients,2018-04-01,B,27.0
-30-39,1.0,S08000024,NHS Lothian,25.0,Elective Inpatients,2018-07-01,B,25.0
-30-39,1.0,S08000024,NHS Lothian,24.0,Elective Inpatients,2018-10-01,B,24.0
-30-39,1.0,S08000024,NHS Lothian,25.0,Elective Inpatients,2019-01-01,B,25.0
+30-39,1.04,S08000024,NHS Lothian,28.0,Elective Inpatients,2018-04-01,B,27.0
+30-39,1.04,S08000024,NHS Lothian,26.0,Elective Inpatients,2018-07-01,B,25.0
+30-39,1.04,S08000024,NHS Lothian,25.0,Elective Inpatients,2018-10-01,B,24.0
+30-39,1.04,S08000024,NHS Lothian,26.0,Elective Inpatients,2019-01-01,B,25.0
 60-69,1.0,S08000026,NHS Shetland,8.0,All Daycases,2018-04-01,B,8.0
 60-69,1.0,S08000026,NHS Shetland,8.0,All Daycases,2018-07-01,B,8.0
 60-69,1.0,S08000026,NHS Shetland,7.0,All Daycases,2018-10-01,B,7.0
 60-69,1.0,S08000026,NHS Shetland,8.0,All Daycases,2019-01-01,B,8.0
-10-19,1.0,S08000023,NHS Lanarkshire,33.0,Emergency Inpatients,2018-04-01,A,33.0
-10-19,1.0,S08000023,NHS Lanarkshire,37.0,Emergency Inpatients,2018-07-01,A,37.0
-10-19,1.0,S08000023,NHS Lanarkshire,32.0,Emergency Inpatients,2018-10-01,A,32.0
+10-19,1.06,S08000023,NHS Lanarkshire,35.0,Emergency Inpatients,2018-04-01,A,33.0
+10-19,1.05,S08000023,NHS Lanarkshire,39.0,Emergency Inpatients,2018-07-01,A,37.0
+10-19,1.06,S08000023,NHS Lanarkshire,34.0,Emergency Inpatients,2018-10-01,A,32.0
 10-19,1.0,S08000023,NHS Lanarkshire,35.0,Emergency Inpatients,2019-01-01,A,35.0
 70-79,3.82,S08000021,NHS Greater Glasgow & Clyde,2413.0,Emergency Inpatients,2018-04-01,A,631.0
 70-79,3.82,S08000021,NHS Greater Glasgow & Clyde,2881.0,Emergency Inpatients,2018-07-01,A,754.0
 70-79,3.82,S08000021,NHS Greater Glasgow & Clyde,2737.0,Emergency Inpatients,2018-10-01,A,716.0
 70-79,3.82,S08000021,NHS Greater Glasgow & Clyde,2811.0,Emergency Inpatients,2019-01-01,A,735.0
-30-39,1.02,S08000020,NHS Grampian,53.0,All Daycases,2018-04-01,A,52.0
-30-39,1.0,S08000020,NHS Grampian,51.0,All Daycases,2018-07-01,A,51.0
-30-39,1.02,S08000020,NHS Grampian,54.0,All Daycases,2018-10-01,A,53.0
-30-39,1.02,S08000020,NHS Grampian,53.0,All Daycases,2019-01-01,A,52.0
+30-39,1.06,S08000020,NHS Grampian,55.0,All Daycases,2018-04-01,A,52.0
+30-39,1.06,S08000020,NHS Grampian,54.0,All Daycases,2018-07-01,A,51.0
+30-39,1.06,S08000020,NHS Grampian,56.0,All Daycases,2018-10-01,A,53.0
+30-39,1.06,S08000020,NHS Grampian,55.0,All Daycases,2019-01-01,A,52.0
 20-29,1.82,S08000030,NHS Tayside,62.0,Emergency Inpatients,2018-04-01,B,34.0
 20-29,1.83,S08000030,NHS Tayside,66.0,Emergency Inpatients,2018-07-01,B,36.0
 20-29,1.84,S08000030,NHS Tayside,59.0,Emergency Inpatients,2018-10-01,B,32.0
 20-29,1.81,S08000030,NHS Tayside,58.0,Emergency Inpatients,2019-01-01,B,32.0
-0-9,1.02,S08000021,NHS Greater Glasgow & Clyde,54.0,Emergency Inpatients,2018-04-01,B,53.0
-0-9,1.02,S08000021,NHS Greater Glasgow & Clyde,53.0,Emergency Inpatients,2018-07-01,B,52.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,49.0,Emergency Inpatients,2018-10-01,B,49.0
-0-9,1.02,S08000021,NHS Greater Glasgow & Clyde,58.0,Emergency Inpatients,2019-01-01,B,57.0
+0-9,1.06,S08000021,NHS Greater Glasgow & Clyde,56.0,Emergency Inpatients,2018-04-01,B,53.0
+0-9,1.06,S08000021,NHS Greater Glasgow & Clyde,55.0,Emergency Inpatients,2018-07-01,B,52.0
+0-9,1.06,S08000021,NHS Greater Glasgow & Clyde,52.0,Emergency Inpatients,2018-10-01,B,49.0
+0-9,1.05,S08000021,NHS Greater Glasgow & Clyde,60.0,Emergency Inpatients,2019-01-01,B,57.0
 80-89,3.05,S08000021,NHS Greater Glasgow & Clyde,314.0,Elective Inpatients,2018-04-01,B,103.0
 80-89,3.03,S08000021,NHS Greater Glasgow & Clyde,300.0,Elective Inpatients,2018-07-01,B,99.0
 80-89,3.05,S08000021,NHS Greater Glasgow & Clyde,326.0,Elective Inpatients,2018-10-01,B,107.0
@@ -383,18 +383,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 0-9,1.0,S08000030,NHS Tayside,3.0,Elective Inpatients,2018-07-01,A,3.0
 0-9,1.0,S08000030,NHS Tayside,3.0,Elective Inpatients,2018-10-01,A,3.0
 0-9,1.0,S08000030,NHS Tayside,3.0,Elective Inpatients,2019-01-01,A,3.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,46.0,All Daycases,2018-04-01,B,46.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,40.0,All Daycases,2018-07-01,B,40.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,46.0,All Daycases,2018-10-01,B,46.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,45.0,All Daycases,2019-01-01,B,45.0
+60-69,1.07,S08000017,NHS Dumfries & Galloway,49.0,All Daycases,2018-04-01,B,46.0
+60-69,1.05,S08000017,NHS Dumfries & Galloway,42.0,All Daycases,2018-07-01,B,40.0
+60-69,1.07,S08000017,NHS Dumfries & Galloway,49.0,All Daycases,2018-10-01,B,46.0
+60-69,1.04,S08000017,NHS Dumfries & Galloway,47.0,All Daycases,2019-01-01,B,45.0
 30-39,1.74,S08000020,NHS Grampian,101.0,Emergency Inpatients,2018-04-01,A,58.0
 30-39,1.75,S08000020,NHS Grampian,117.0,Emergency Inpatients,2018-07-01,A,67.0
 30-39,1.74,S08000020,NHS Grampian,113.0,Emergency Inpatients,2018-10-01,A,65.0
 30-39,1.75,S08000020,NHS Grampian,119.0,Emergency Inpatients,2019-01-01,A,68.0
-70-79,1.01,S08000023,NHS Lanarkshire,226.0,All Daycases,2018-04-01,A,224.0
-70-79,1.01,S08000023,NHS Lanarkshire,218.0,All Daycases,2018-07-01,A,216.0
-70-79,1.01,S08000023,NHS Lanarkshire,230.0,All Daycases,2018-10-01,A,228.0
-70-79,1.01,S08000023,NHS Lanarkshire,206.0,All Daycases,2019-01-01,A,204.0
+70-79,1.05,S08000023,NHS Lanarkshire,236.0,All Daycases,2018-04-01,A,224.0
+70-79,1.06,S08000023,NHS Lanarkshire,228.0,All Daycases,2018-07-01,A,216.0
+70-79,1.06,S08000023,NHS Lanarkshire,241.0,All Daycases,2018-10-01,A,228.0
+70-79,1.05,S08000023,NHS Lanarkshire,215.0,All Daycases,2019-01-01,A,204.0
 90+,11.85,S08000015,NHS Ayrshire & Arran,237.0,Emergency Inpatients,2018-04-01,B,20.0
 90+,11.84,S08000015,NHS Ayrshire & Arran,225.0,Emergency Inpatients,2018-07-01,B,19.0
 90+,11.68,S08000015,NHS Ayrshire & Arran,257.0,Emergency Inpatients,2018-10-01,B,22.0
@@ -411,10 +411,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 60-69,2.0,S08000019,NHS Forth Valley,34.0,Elective Inpatients,2018-07-01,B,17.0
 60-69,1.94,S08000019,NHS Forth Valley,33.0,Elective Inpatients,2018-10-01,B,17.0
 60-69,2.0,S08000019,NHS Forth Valley,32.0,Elective Inpatients,2019-01-01,B,16.0
-50-59,1.01,S08000029,NHS Fife,77.0,All Daycases,2018-04-01,A,76.0
-50-59,1.01,S08000029,NHS Fife,70.0,All Daycases,2018-07-01,A,69.0
-50-59,1.01,S08000029,NHS Fife,79.0,All Daycases,2018-10-01,A,78.0
-50-59,1.01,S08000029,NHS Fife,85.0,All Daycases,2019-01-01,A,84.0
+50-59,1.05,S08000029,NHS Fife,80.0,All Daycases,2018-04-01,A,76.0
+50-59,1.06,S08000029,NHS Fife,73.0,All Daycases,2018-07-01,A,69.0
+50-59,1.05,S08000029,NHS Fife,82.0,All Daycases,2018-10-01,A,78.0
+50-59,1.06,S08000029,NHS Fife,89.0,All Daycases,2019-01-01,A,84.0
 80-89,3.76,S08000020,NHS Grampian,109.0,Elective Inpatients,2018-04-01,A,29.0
 80-89,3.81,S08000020,NHS Grampian,99.0,Elective Inpatients,2018-07-01,A,26.0
 80-89,3.8,S08000020,NHS Grampian,95.0,Elective Inpatients,2018-10-01,A,25.0
@@ -431,10 +431,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,3.4,S08000022,NHS Highland,51.0,Elective Inpatients,2018-07-01,B,15.0
 80-89,3.4,S08000022,NHS Highland,51.0,Elective Inpatients,2018-10-01,B,15.0
 80-89,3.54,S08000022,NHS Highland,46.0,Elective Inpatients,2019-01-01,B,13.0
-60-69,1.01,S08000023,NHS Lanarkshire,207.0,All Daycases,2018-04-01,A,205.0
-60-69,1.01,S08000023,NHS Lanarkshire,201.0,All Daycases,2018-07-01,A,199.0
-60-69,1.01,S08000023,NHS Lanarkshire,220.0,All Daycases,2018-10-01,A,218.0
-60-69,1.01,S08000023,NHS Lanarkshire,191.0,All Daycases,2019-01-01,A,189.0
+60-69,1.05,S08000023,NHS Lanarkshire,216.0,All Daycases,2018-04-01,A,205.0
+60-69,1.06,S08000023,NHS Lanarkshire,210.0,All Daycases,2018-07-01,A,199.0
+60-69,1.06,S08000023,NHS Lanarkshire,230.0,All Daycases,2018-10-01,A,218.0
+60-69,1.05,S08000023,NHS Lanarkshire,199.0,All Daycases,2019-01-01,A,189.0
 80-89,6.9,S08000021,NHS Greater Glasgow & Clyde,3072.0,Emergency Inpatients,2018-04-01,A,445.0
 80-89,6.89,S08000021,NHS Greater Glasgow & Clyde,3233.0,Emergency Inpatients,2018-07-01,A,469.0
 80-89,6.89,S08000021,NHS Greater Glasgow & Clyde,2763.0,Emergency Inpatients,2018-10-01,A,401.0
@@ -451,10 +451,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 90+,11.0,S08000022,NHS Highland,132.0,Emergency Inpatients,2018-07-01,B,12.0
 90+,11.15,S08000022,NHS Highland,145.0,Emergency Inpatients,2018-10-01,B,13.0
 90+,11.36,S08000022,NHS Highland,125.0,Emergency Inpatients,2019-01-01,B,11.0
-60-69,1.01,S08000024,NHS Lothian,228.0,All Daycases,2018-04-01,B,226.0
-60-69,1.01,S08000024,NHS Lothian,238.0,All Daycases,2018-07-01,B,236.0
-60-69,1.01,S08000024,NHS Lothian,253.0,All Daycases,2018-10-01,B,251.0
-60-69,1.01,S08000024,NHS Lothian,216.0,All Daycases,2019-01-01,B,214.0
+60-69,1.05,S08000024,NHS Lothian,238.0,All Daycases,2018-04-01,B,226.0
+60-69,1.06,S08000024,NHS Lothian,249.0,All Daycases,2018-07-01,B,236.0
+60-69,1.06,S08000024,NHS Lothian,265.0,All Daycases,2018-10-01,B,251.0
+60-69,1.06,S08000024,NHS Lothian,226.0,All Daycases,2019-01-01,B,214.0
 40-49,1.27,S08000030,NHS Tayside,19.0,Elective Inpatients,2018-04-01,B,15.0
 40-49,1.23,S08000030,NHS Tayside,16.0,Elective Inpatients,2018-07-01,B,13.0
 40-49,1.21,S08000030,NHS Tayside,17.0,Elective Inpatients,2018-10-01,B,14.0
@@ -467,30 +467,30 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 0-9,1.08,S08000024,NHS Lothian,27.0,Emergency Inpatients,2018-07-01,B,25.0
 0-9,1.07,S08000024,NHS Lothian,29.0,Emergency Inpatients,2018-10-01,B,27.0
 0-9,1.12,S08000024,NHS Lothian,28.0,Emergency Inpatients,2019-01-01,B,25.0
-30-39,1.0,S08000023,NHS Lanarkshire,21.0,Elective Inpatients,2018-04-01,B,21.0
-30-39,1.0,S08000023,NHS Lanarkshire,20.0,Elective Inpatients,2018-07-01,B,20.0
-30-39,1.0,S08000023,NHS Lanarkshire,21.0,Elective Inpatients,2018-10-01,B,21.0
-30-39,1.0,S08000023,NHS Lanarkshire,22.0,Elective Inpatients,2019-01-01,B,22.0
-60-69,1.01,S08000020,NHS Grampian,118.0,All Daycases,2018-04-01,B,117.0
-60-69,1.01,S08000020,NHS Grampian,121.0,All Daycases,2018-07-01,B,120.0
-60-69,1.01,S08000020,NHS Grampian,132.0,All Daycases,2018-10-01,B,131.0
-60-69,1.01,S08000020,NHS Grampian,123.0,All Daycases,2019-01-01,B,122.0
-60-69,1.01,S08000015,NHS Ayrshire & Arran,138.0,All Daycases,2018-04-01,A,137.0
-60-69,1.01,S08000015,NHS Ayrshire & Arran,125.0,All Daycases,2018-07-01,A,124.0
-60-69,1.01,S08000015,NHS Ayrshire & Arran,119.0,All Daycases,2018-10-01,A,118.0
-60-69,1.01,S08000015,NHS Ayrshire & Arran,119.0,All Daycases,2019-01-01,A,118.0
-40-49,1.0,S08000029,NHS Fife,46.0,All Daycases,2018-04-01,B,46.0
-40-49,1.0,S08000029,NHS Fife,39.0,All Daycases,2018-07-01,B,39.0
-40-49,1.0,S08000029,NHS Fife,40.0,All Daycases,2018-10-01,B,40.0
-40-49,1.0,S08000029,NHS Fife,46.0,All Daycases,2019-01-01,B,46.0
+30-39,1.05,S08000023,NHS Lanarkshire,22.0,Elective Inpatients,2018-04-01,B,21.0
+30-39,1.05,S08000023,NHS Lanarkshire,21.0,Elective Inpatients,2018-07-01,B,20.0
+30-39,1.05,S08000023,NHS Lanarkshire,22.0,Elective Inpatients,2018-10-01,B,21.0
+30-39,1.05,S08000023,NHS Lanarkshire,23.0,Elective Inpatients,2019-01-01,B,22.0
+60-69,1.05,S08000020,NHS Grampian,123.0,All Daycases,2018-04-01,B,117.0
+60-69,1.06,S08000020,NHS Grampian,127.0,All Daycases,2018-07-01,B,120.0
+60-69,1.05,S08000020,NHS Grampian,138.0,All Daycases,2018-10-01,B,131.0
+60-69,1.06,S08000020,NHS Grampian,129.0,All Daycases,2019-01-01,B,122.0
+60-69,1.06,S08000015,NHS Ayrshire & Arran,145.0,All Daycases,2018-04-01,A,137.0
+60-69,1.06,S08000015,NHS Ayrshire & Arran,131.0,All Daycases,2018-07-01,A,124.0
+60-69,1.05,S08000015,NHS Ayrshire & Arran,124.0,All Daycases,2018-10-01,A,118.0
+60-69,1.05,S08000015,NHS Ayrshire & Arran,124.0,All Daycases,2019-01-01,A,118.0
+40-49,1.07,S08000029,NHS Fife,49.0,All Daycases,2018-04-01,B,46.0
+40-49,1.05,S08000029,NHS Fife,41.0,All Daycases,2018-07-01,B,39.0
+40-49,1.05,S08000029,NHS Fife,42.0,All Daycases,2018-10-01,B,40.0
+40-49,1.07,S08000029,NHS Fife,49.0,All Daycases,2019-01-01,B,46.0
 10-19,1.09,S08000021,NHS Greater Glasgow & Clyde,93.0,Emergency Inpatients,2018-04-01,A,85.0
 10-19,1.1,S08000021,NHS Greater Glasgow & Clyde,101.0,Emergency Inpatients,2018-07-01,A,92.0
 10-19,1.09,S08000021,NHS Greater Glasgow & Clyde,104.0,Emergency Inpatients,2018-10-01,A,95.0
 10-19,1.1,S08000021,NHS Greater Glasgow & Clyde,100.0,Emergency Inpatients,2019-01-01,A,91.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,219.0,All Daycases,2018-04-01,A,217.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,209.0,All Daycases,2018-07-01,A,207.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,185.0,All Daycases,2018-10-01,A,183.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,203.0,All Daycases,2019-01-01,A,201.0
+30-39,1.06,S08000021,NHS Greater Glasgow & Clyde,229.0,All Daycases,2018-04-01,A,217.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,218.0,All Daycases,2018-07-01,A,207.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,193.0,All Daycases,2018-10-01,A,183.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,212.0,All Daycases,2019-01-01,A,201.0
 50-59,1.22,S08000024,NHS Lothian,77.0,Elective Inpatients,2018-04-01,A,63.0
 50-59,1.22,S08000024,NHS Lothian,78.0,Elective Inpatients,2018-07-01,A,64.0
 50-59,1.22,S08000024,NHS Lothian,67.0,Elective Inpatients,2018-10-01,A,55.0
@@ -515,22 +515,22 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 40-49,1.33,S08000030,NHS Tayside,20.0,Elective Inpatients,2018-07-01,A,15.0
 40-49,1.36,S08000030,NHS Tayside,19.0,Elective Inpatients,2018-10-01,A,14.0
 40-49,1.29,S08000030,NHS Tayside,18.0,Elective Inpatients,2019-01-01,A,14.0
-40-49,1.0,S08000030,NHS Tayside,42.0,All Daycases,2018-04-01,B,42.0
-40-49,1.0,S08000030,NHS Tayside,47.0,All Daycases,2018-07-01,B,47.0
-40-49,1.0,S08000030,NHS Tayside,43.0,All Daycases,2018-10-01,B,43.0
-40-49,1.0,S08000030,NHS Tayside,42.0,All Daycases,2019-01-01,B,42.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,361.0,All Daycases,2018-04-01,B,358.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,335.0,All Daycases,2018-07-01,B,332.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,306.0,All Daycases,2018-10-01,B,303.0
-80-89,1.01,S08000021,NHS Greater Glasgow & Clyde,355.0,All Daycases,2019-01-01,B,352.0
+40-49,1.05,S08000030,NHS Tayside,44.0,All Daycases,2018-04-01,B,42.0
+40-49,1.06,S08000030,NHS Tayside,50.0,All Daycases,2018-07-01,B,47.0
+40-49,1.05,S08000030,NHS Tayside,45.0,All Daycases,2018-10-01,B,43.0
+40-49,1.05,S08000030,NHS Tayside,44.0,All Daycases,2019-01-01,B,42.0
+80-89,1.06,S08000021,NHS Greater Glasgow & Clyde,378.0,All Daycases,2018-04-01,B,358.0
+80-89,1.05,S08000021,NHS Greater Glasgow & Clyde,350.0,All Daycases,2018-07-01,B,332.0
+80-89,1.06,S08000021,NHS Greater Glasgow & Clyde,320.0,All Daycases,2018-10-01,B,303.0
+80-89,1.05,S08000021,NHS Greater Glasgow & Clyde,371.0,All Daycases,2019-01-01,B,352.0
 70-79,2.07,S08000017,NHS Dumfries & Galloway,31.0,Elective Inpatients,2018-04-01,B,15.0
 70-79,2.0,S08000017,NHS Dumfries & Galloway,28.0,Elective Inpatients,2018-07-01,B,14.0
 70-79,2.0,S08000017,NHS Dumfries & Galloway,26.0,Elective Inpatients,2018-10-01,B,13.0
 70-79,2.0,S08000017,NHS Dumfries & Galloway,26.0,Elective Inpatients,2019-01-01,B,13.0
-10-19,1.0,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-04-01,B,26.0
-10-19,1.0,S08000023,NHS Lanarkshire,29.0,All Daycases,2018-07-01,B,29.0
-10-19,1.0,S08000023,NHS Lanarkshire,25.0,All Daycases,2018-10-01,B,25.0
-10-19,1.0,S08000023,NHS Lanarkshire,28.0,All Daycases,2019-01-01,B,28.0
+10-19,1.04,S08000023,NHS Lanarkshire,27.0,All Daycases,2018-04-01,B,26.0
+10-19,1.07,S08000023,NHS Lanarkshire,31.0,All Daycases,2018-07-01,B,29.0
+10-19,1.04,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-10-01,B,25.0
+10-19,1.07,S08000023,NHS Lanarkshire,30.0,All Daycases,2019-01-01,B,28.0
 90+,4.38,S08000023,NHS Lanarkshire,35.0,Elective Inpatients,2018-04-01,A,8.0
 90+,4.75,S08000023,NHS Lanarkshire,38.0,Elective Inpatients,2018-07-01,A,8.0
 90+,4.33,S08000023,NHS Lanarkshire,39.0,Elective Inpatients,2018-10-01,A,9.0
@@ -547,10 +547,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,3.69,S08000022,NHS Highland,59.0,Elective Inpatients,2018-07-01,A,16.0
 80-89,3.73,S08000022,NHS Highland,56.0,Elective Inpatients,2018-10-01,A,15.0
 80-89,3.73,S08000022,NHS Highland,56.0,Elective Inpatients,2019-01-01,A,15.0
-20-29,1.0,S08000029,NHS Fife,27.0,All Daycases,2018-04-01,A,27.0
-20-29,1.0,S08000029,NHS Fife,28.0,All Daycases,2018-07-01,A,28.0
-20-29,1.0,S08000029,NHS Fife,25.0,All Daycases,2018-10-01,A,25.0
-20-29,1.0,S08000029,NHS Fife,29.0,All Daycases,2019-01-01,A,29.0
+20-29,1.04,S08000029,NHS Fife,28.0,All Daycases,2018-04-01,A,27.0
+20-29,1.07,S08000029,NHS Fife,30.0,All Daycases,2018-07-01,A,28.0
+20-29,1.04,S08000029,NHS Fife,26.0,All Daycases,2018-10-01,A,25.0
+20-29,1.07,S08000029,NHS Fife,31.0,All Daycases,2019-01-01,A,29.0
 10-19,1.0,S08000025,NHS Orkney,2.0,Emergency Inpatients,2018-04-01,B,2.0
 10-19,1.0,S08000025,NHS Orkney,2.0,Emergency Inpatients,2018-07-01,B,2.0
 10-19,1.0,S08000025,NHS Orkney,2.0,Emergency Inpatients,2018-10-01,B,2.0
@@ -579,18 +579,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,11.74,S08000019,NHS Forth Valley,552.0,Emergency Inpatients,2018-07-01,A,47.0
 80-89,11.52,S08000019,NHS Forth Valley,507.0,Emergency Inpatients,2018-10-01,A,44.0
 80-89,11.7,S08000019,NHS Forth Valley,550.0,Emergency Inpatients,2019-01-01,A,47.0
-90+,1.01,S08000021,NHS Greater Glasgow & Clyde,70.0,All Daycases,2018-04-01,B,69.0
-90+,1.02,S08000021,NHS Greater Glasgow & Clyde,65.0,All Daycases,2018-07-01,B,64.0
-90+,1.02,S08000021,NHS Greater Glasgow & Clyde,66.0,All Daycases,2018-10-01,B,65.0
-90+,1.02,S08000021,NHS Greater Glasgow & Clyde,65.0,All Daycases,2019-01-01,B,64.0
+90+,1.06,S08000021,NHS Greater Glasgow & Clyde,73.0,All Daycases,2018-04-01,B,69.0
+90+,1.06,S08000021,NHS Greater Glasgow & Clyde,68.0,All Daycases,2018-07-01,B,64.0
+90+,1.06,S08000021,NHS Greater Glasgow & Clyde,69.0,All Daycases,2018-10-01,B,65.0
+90+,1.06,S08000021,NHS Greater Glasgow & Clyde,68.0,All Daycases,2019-01-01,B,64.0
 0-9,1.0,S08000023,NHS Lanarkshire,6.0,Elective Inpatients,2018-04-01,A,6.0
 0-9,1.0,S08000023,NHS Lanarkshire,6.0,Elective Inpatients,2018-07-01,A,6.0
 0-9,1.0,S08000023,NHS Lanarkshire,5.0,Elective Inpatients,2018-10-01,A,5.0
 0-9,1.0,S08000023,NHS Lanarkshire,6.0,Elective Inpatients,2019-01-01,A,6.0
-30-39,1.0,S08000020,NHS Grampian,13.0,Elective Inpatients,2018-04-01,B,13.0
-30-39,1.0,S08000020,NHS Grampian,15.0,Elective Inpatients,2018-07-01,B,15.0
-30-39,1.0,S08000020,NHS Grampian,14.0,Elective Inpatients,2018-10-01,B,14.0
-30-39,1.0,S08000020,NHS Grampian,16.0,Elective Inpatients,2019-01-01,B,16.0
+30-39,1.08,S08000020,NHS Grampian,14.0,Elective Inpatients,2018-04-01,B,13.0
+30-39,1.07,S08000020,NHS Grampian,16.0,Elective Inpatients,2018-07-01,B,15.0
+30-39,1.07,S08000020,NHS Grampian,15.0,Elective Inpatients,2018-10-01,B,14.0
+30-39,1.06,S08000020,NHS Grampian,17.0,Elective Inpatients,2019-01-01,B,16.0
 70-79,3.43,S08000023,NHS Lanarkshire,939.0,Emergency Inpatients,2018-04-01,A,274.0
 70-79,3.42,S08000023,NHS Lanarkshire,896.0,Emergency Inpatients,2018-07-01,A,262.0
 70-79,3.43,S08000023,NHS Lanarkshire,925.0,Emergency Inpatients,2018-10-01,A,270.0
@@ -599,14 +599,14 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.48,S08000022,NHS Highland,40.0,Emergency Inpatients,2018-07-01,A,27.0
 20-29,1.52,S08000022,NHS Highland,41.0,Emergency Inpatients,2018-10-01,A,27.0
 20-29,1.46,S08000022,NHS Highland,38.0,Emergency Inpatients,2019-01-01,A,26.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,431.0,All Daycases,2018-04-01,B,427.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,406.0,All Daycases,2018-07-01,B,402.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,428.0,All Daycases,2018-10-01,B,424.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,394.0,All Daycases,2019-01-01,B,390.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,12.0,Elective Inpatients,2018-04-01,B,12.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,13.0,Elective Inpatients,2018-07-01,B,13.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,13.0,Elective Inpatients,2018-10-01,B,13.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,13.0,Elective Inpatients,2019-01-01,B,13.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,450.0,All Daycases,2018-04-01,B,427.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,424.0,All Daycases,2018-07-01,B,402.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,447.0,All Daycases,2018-10-01,B,424.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,411.0,All Daycases,2019-01-01,B,390.0
+0-9,1.08,S08000021,NHS Greater Glasgow & Clyde,13.0,Elective Inpatients,2018-04-01,B,12.0
+0-9,1.08,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2018-07-01,B,13.0
+0-9,1.08,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2018-10-01,B,13.0
+0-9,1.08,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2019-01-01,B,13.0
 20-29,1.0,S08000022,NHS Highland,6.0,Elective Inpatients,2018-04-01,A,6.0
 20-29,1.0,S08000022,NHS Highland,6.0,Elective Inpatients,2018-07-01,A,6.0
 20-29,1.0,S08000022,NHS Highland,6.0,Elective Inpatients,2018-10-01,A,6.0
@@ -623,18 +623,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.12,S08000023,NHS Lanarkshire,75.0,Emergency Inpatients,2018-07-01,B,67.0
 20-29,1.11,S08000023,NHS Lanarkshire,73.0,Emergency Inpatients,2018-10-01,B,66.0
 20-29,1.11,S08000023,NHS Lanarkshire,70.0,Emergency Inpatients,2019-01-01,B,63.0
-90+,1.01,S08000021,NHS Greater Glasgow & Clyde,76.0,All Daycases,2018-04-01,A,75.0
-90+,1.01,S08000021,NHS Greater Glasgow & Clyde,69.0,All Daycases,2018-07-01,A,68.0
-90+,1.01,S08000021,NHS Greater Glasgow & Clyde,72.0,All Daycases,2018-10-01,A,71.0
-90+,1.01,S08000021,NHS Greater Glasgow & Clyde,78.0,All Daycases,2019-01-01,A,77.0
+90+,1.05,S08000021,NHS Greater Glasgow & Clyde,79.0,All Daycases,2018-04-01,A,75.0
+90+,1.06,S08000021,NHS Greater Glasgow & Clyde,72.0,All Daycases,2018-07-01,A,68.0
+90+,1.06,S08000021,NHS Greater Glasgow & Clyde,75.0,All Daycases,2018-10-01,A,71.0
+90+,1.05,S08000021,NHS Greater Glasgow & Clyde,81.0,All Daycases,2019-01-01,A,77.0
 70-79,4.5,S08000016,NHS Borders,162.0,Emergency Inpatients,2018-04-01,A,36.0
 70-79,4.51,S08000016,NHS Borders,167.0,Emergency Inpatients,2018-07-01,A,37.0
 70-79,4.52,S08000016,NHS Borders,190.0,Emergency Inpatients,2018-10-01,A,42.0
 70-79,4.55,S08000016,NHS Borders,191.0,Emergency Inpatients,2019-01-01,A,42.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,48.0,All Daycases,2018-04-01,A,48.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,46.0,All Daycases,2018-07-01,A,46.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,50.0,All Daycases,2018-10-01,A,50.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,45.0,All Daycases,2019-01-01,A,45.0
+0-9,1.06,S08000021,NHS Greater Glasgow & Clyde,51.0,All Daycases,2018-04-01,A,48.0
+0-9,1.07,S08000021,NHS Greater Glasgow & Clyde,49.0,All Daycases,2018-07-01,A,46.0
+0-9,1.06,S08000021,NHS Greater Glasgow & Clyde,53.0,All Daycases,2018-10-01,A,50.0
+0-9,1.04,S08000021,NHS Greater Glasgow & Clyde,47.0,All Daycases,2019-01-01,A,45.0
 20-29,1.25,S08000021,NHS Greater Glasgow & Clyde,231.0,Emergency Inpatients,2018-04-01,B,185.0
 20-29,1.25,S08000021,NHS Greater Glasgow & Clyde,206.0,Emergency Inpatients,2018-07-01,B,165.0
 20-29,1.25,S08000021,NHS Greater Glasgow & Clyde,222.0,Emergency Inpatients,2018-10-01,B,178.0
@@ -647,10 +647,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 50-59,1.04,S08000015,NHS Ayrshire & Arran,29.0,Elective Inpatients,2018-07-01,B,28.0
 50-59,1.03,S08000015,NHS Ayrshire & Arran,34.0,Elective Inpatients,2018-10-01,B,33.0
 50-59,1.0,S08000015,NHS Ayrshire & Arran,28.0,Elective Inpatients,2019-01-01,B,28.0
-20-29,1.0,S08000023,NHS Lanarkshire,19.0,Elective Inpatients,2018-04-01,A,19.0
-20-29,1.0,S08000023,NHS Lanarkshire,17.0,Elective Inpatients,2018-07-01,A,17.0
-20-29,1.0,S08000023,NHS Lanarkshire,19.0,Elective Inpatients,2018-10-01,A,19.0
-20-29,1.0,S08000023,NHS Lanarkshire,16.0,Elective Inpatients,2019-01-01,A,16.0
+20-29,1.05,S08000023,NHS Lanarkshire,20.0,Elective Inpatients,2018-04-01,A,19.0
+20-29,1.06,S08000023,NHS Lanarkshire,18.0,Elective Inpatients,2018-07-01,A,17.0
+20-29,1.05,S08000023,NHS Lanarkshire,20.0,Elective Inpatients,2018-10-01,A,19.0
+20-29,1.06,S08000023,NHS Lanarkshire,17.0,Elective Inpatients,2019-01-01,A,16.0
 90+,1.0,S08000016,NHS Borders,4.0,All Daycases,2018-04-01,A,4.0
 90+,1.0,S08000016,NHS Borders,5.0,All Daycases,2018-07-01,A,5.0
 90+,1.0,S08000016,NHS Borders,5.0,All Daycases,2018-10-01,A,5.0
@@ -679,10 +679,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.53,S08000015,NHS Ayrshire & Arran,66.0,Emergency Inpatients,2018-07-01,A,43.0
 20-29,1.54,S08000015,NHS Ayrshire & Arran,77.0,Emergency Inpatients,2018-10-01,A,50.0
 20-29,1.52,S08000015,NHS Ayrshire & Arran,73.0,Emergency Inpatients,2019-01-01,A,48.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,156.0,All Daycases,2018-04-01,B,154.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,154.0,All Daycases,2018-07-01,B,153.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,163.0,All Daycases,2018-10-01,B,161.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,142.0,All Daycases,2019-01-01,B,141.0
+20-29,1.05,S08000021,NHS Greater Glasgow & Clyde,162.0,All Daycases,2018-04-01,B,154.0
+20-29,1.05,S08000021,NHS Greater Glasgow & Clyde,161.0,All Daycases,2018-07-01,B,153.0
+20-29,1.06,S08000021,NHS Greater Glasgow & Clyde,170.0,All Daycases,2018-10-01,B,161.0
+20-29,1.06,S08000021,NHS Greater Glasgow & Clyde,149.0,All Daycases,2019-01-01,B,141.0
 90+,5.18,S08000021,NHS Greater Glasgow & Clyde,114.0,Elective Inpatients,2018-04-01,A,22.0
 90+,5.1,S08000021,NHS Greater Glasgow & Clyde,107.0,Elective Inpatients,2018-07-01,A,21.0
 90+,5.1,S08000021,NHS Greater Glasgow & Clyde,107.0,Elective Inpatients,2018-10-01,A,21.0
@@ -691,22 +691,22 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 70-79,1.82,S08000021,NHS Greater Glasgow & Clyde,329.0,Elective Inpatients,2018-07-01,A,181.0
 70-79,1.82,S08000021,NHS Greater Glasgow & Clyde,289.0,Elective Inpatients,2018-10-01,A,159.0
 70-79,1.82,S08000021,NHS Greater Glasgow & Clyde,286.0,Elective Inpatients,2019-01-01,A,157.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,127.0,Elective Inpatients,2018-04-01,B,126.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,119.0,Elective Inpatients,2018-07-01,B,118.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,124.0,Elective Inpatients,2018-10-01,B,123.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,133.0,Elective Inpatients,2019-01-01,B,132.0
+50-59,1.06,S08000021,NHS Greater Glasgow & Clyde,133.0,Elective Inpatients,2018-04-01,B,126.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,124.0,Elective Inpatients,2018-07-01,B,118.0
+50-59,1.06,S08000021,NHS Greater Glasgow & Clyde,130.0,Elective Inpatients,2018-10-01,B,123.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,139.0,Elective Inpatients,2019-01-01,B,132.0
 20-29,1.45,S08000029,NHS Fife,45.0,Emergency Inpatients,2018-04-01,A,31.0
 20-29,1.39,S08000029,NHS Fife,46.0,Emergency Inpatients,2018-07-01,A,33.0
 20-29,1.45,S08000029,NHS Fife,48.0,Emergency Inpatients,2018-10-01,A,33.0
 20-29,1.45,S08000029,NHS Fife,48.0,Emergency Inpatients,2019-01-01,A,33.0
-20-29,1.0,S08000015,NHS Ayrshire & Arran,39.0,All Daycases,2018-04-01,B,39.0
-20-29,1.0,S08000015,NHS Ayrshire & Arran,36.0,All Daycases,2018-07-01,B,36.0
-20-29,1.0,S08000015,NHS Ayrshire & Arran,37.0,All Daycases,2018-10-01,B,37.0
-20-29,1.0,S08000015,NHS Ayrshire & Arran,38.0,All Daycases,2019-01-01,B,38.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,186.0,All Daycases,2018-04-01,B,184.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,183.0,All Daycases,2018-07-01,B,181.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,172.0,All Daycases,2018-10-01,B,170.0
-30-39,1.01,S08000021,NHS Greater Glasgow & Clyde,177.0,All Daycases,2019-01-01,B,175.0
+20-29,1.05,S08000015,NHS Ayrshire & Arran,41.0,All Daycases,2018-04-01,B,39.0
+20-29,1.06,S08000015,NHS Ayrshire & Arran,38.0,All Daycases,2018-07-01,B,36.0
+20-29,1.05,S08000015,NHS Ayrshire & Arran,39.0,All Daycases,2018-10-01,B,37.0
+20-29,1.05,S08000015,NHS Ayrshire & Arran,40.0,All Daycases,2019-01-01,B,38.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,194.0,All Daycases,2018-04-01,B,184.0
+30-39,1.06,S08000021,NHS Greater Glasgow & Clyde,191.0,All Daycases,2018-07-01,B,181.0
+30-39,1.05,S08000021,NHS Greater Glasgow & Clyde,179.0,All Daycases,2018-10-01,B,170.0
+30-39,1.06,S08000021,NHS Greater Glasgow & Clyde,185.0,All Daycases,2019-01-01,B,175.0
 70-79,3.83,S08000029,NHS Fife,402.0,Emergency Inpatients,2018-04-01,B,105.0
 70-79,3.82,S08000029,NHS Fife,397.0,Emergency Inpatients,2018-07-01,B,104.0
 70-79,3.81,S08000029,NHS Fife,446.0,Emergency Inpatients,2018-10-01,B,117.0
@@ -735,10 +735,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 40-49,2.19,S08000015,NHS Ayrshire & Arran,158.0,Emergency Inpatients,2018-07-01,A,72.0
 40-49,2.18,S08000015,NHS Ayrshire & Arran,157.0,Emergency Inpatients,2018-10-01,A,72.0
 40-49,2.19,S08000015,NHS Ayrshire & Arran,162.0,Emergency Inpatients,2019-01-01,A,74.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,115.0,All Daycases,2018-04-01,A,114.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,109.0,All Daycases,2018-07-01,A,108.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,98.0,All Daycases,2018-10-01,A,97.0
-50-59,1.01,S08000015,NHS Ayrshire & Arran,107.0,All Daycases,2019-01-01,A,106.0
+50-59,1.05,S08000015,NHS Ayrshire & Arran,120.0,All Daycases,2018-04-01,A,114.0
+50-59,1.06,S08000015,NHS Ayrshire & Arran,114.0,All Daycases,2018-07-01,A,108.0
+50-59,1.05,S08000015,NHS Ayrshire & Arran,102.0,All Daycases,2018-10-01,A,97.0
+50-59,1.06,S08000015,NHS Ayrshire & Arran,112.0,All Daycases,2019-01-01,A,106.0
 80-89,5.6,S08000025,NHS Orkney,28.0,Emergency Inpatients,2018-04-01,B,5.0
 80-89,5.4,S08000025,NHS Orkney,27.0,Emergency Inpatients,2018-07-01,B,5.0
 80-89,5.4,S08000025,NHS Orkney,27.0,Emergency Inpatients,2018-10-01,B,5.0
@@ -791,46 +791,46 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,2.03,S08000030,NHS Tayside,77.0,Emergency Inpatients,2018-07-01,A,38.0
 20-29,2.0,S08000030,NHS Tayside,72.0,Emergency Inpatients,2018-10-01,A,36.0
 20-29,2.0,S08000030,NHS Tayside,70.0,Emergency Inpatients,2019-01-01,A,35.0
-90+,1.0,S08000024,NHS Lothian,31.0,All Daycases,2018-04-01,A,31.0
-90+,1.0,S08000024,NHS Lothian,34.0,All Daycases,2018-07-01,A,34.0
-90+,1.0,S08000024,NHS Lothian,29.0,All Daycases,2018-10-01,A,29.0
-90+,1.0,S08000024,NHS Lothian,29.0,All Daycases,2019-01-01,A,29.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,143.0,All Daycases,2018-04-01,A,142.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,165.0,All Daycases,2018-07-01,A,163.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,151.0,All Daycases,2018-10-01,A,150.0
-20-29,1.01,S08000021,NHS Greater Glasgow & Clyde,161.0,All Daycases,2019-01-01,A,159.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,454.0,All Daycases,2018-04-01,A,450.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,435.0,All Daycases,2018-07-01,A,431.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,448.0,All Daycases,2018-10-01,A,444.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,458.0,All Daycases,2019-01-01,A,454.0
+90+,1.06,S08000024,NHS Lothian,33.0,All Daycases,2018-04-01,A,31.0
+90+,1.06,S08000024,NHS Lothian,36.0,All Daycases,2018-07-01,A,34.0
+90+,1.07,S08000024,NHS Lothian,31.0,All Daycases,2018-10-01,A,29.0
+90+,1.07,S08000024,NHS Lothian,31.0,All Daycases,2019-01-01,A,29.0
+20-29,1.06,S08000021,NHS Greater Glasgow & Clyde,150.0,All Daycases,2018-04-01,A,142.0
+20-29,1.06,S08000021,NHS Greater Glasgow & Clyde,172.0,All Daycases,2018-07-01,A,163.0
+20-29,1.05,S08000021,NHS Greater Glasgow & Clyde,158.0,All Daycases,2018-10-01,A,150.0
+20-29,1.06,S08000021,NHS Greater Glasgow & Clyde,168.0,All Daycases,2019-01-01,A,159.0
+50-59,1.06,S08000021,NHS Greater Glasgow & Clyde,475.0,All Daycases,2018-04-01,A,450.0
+50-59,1.06,S08000021,NHS Greater Glasgow & Clyde,455.0,All Daycases,2018-07-01,A,431.0
+50-59,1.05,S08000021,NHS Greater Glasgow & Clyde,468.0,All Daycases,2018-10-01,A,444.0
+50-59,1.06,S08000021,NHS Greater Glasgow & Clyde,479.0,All Daycases,2019-01-01,A,454.0
 0-9,1.0,S08000019,NHS Forth Valley,1.0,Elective Inpatients,2018-04-01,A,1.0
 0-9,1.0,S08000019,NHS Forth Valley,1.0,Elective Inpatients,2018-07-01,A,1.0
 0-9,1.0,S08000019,NHS Forth Valley,1.0,Elective Inpatients,2018-10-01,A,1.0
 0-9,1.0,S08000019,NHS Forth Valley,1.0,Elective Inpatients,2019-01-01,A,1.0
-40-49,1.0,S08000023,NHS Lanarkshire,31.0,Elective Inpatients,2018-04-01,A,31.0
-40-49,1.0,S08000023,NHS Lanarkshire,29.0,Elective Inpatients,2018-07-01,A,29.0
-40-49,1.0,S08000023,NHS Lanarkshire,30.0,Elective Inpatients,2018-10-01,A,30.0
-40-49,1.0,S08000023,NHS Lanarkshire,26.0,Elective Inpatients,2019-01-01,A,26.0
+40-49,1.06,S08000023,NHS Lanarkshire,33.0,Elective Inpatients,2018-04-01,A,31.0
+40-49,1.07,S08000023,NHS Lanarkshire,31.0,Elective Inpatients,2018-07-01,A,29.0
+40-49,1.07,S08000023,NHS Lanarkshire,32.0,Elective Inpatients,2018-10-01,A,30.0
+40-49,1.04,S08000023,NHS Lanarkshire,27.0,Elective Inpatients,2019-01-01,A,26.0
 40-49,1.71,S08000019,NHS Forth Valley,12.0,Elective Inpatients,2018-04-01,A,7.0
 40-49,1.57,S08000019,NHS Forth Valley,11.0,Elective Inpatients,2018-07-01,A,7.0
 40-49,1.57,S08000019,NHS Forth Valley,11.0,Elective Inpatients,2018-10-01,A,7.0
 40-49,1.62,S08000019,NHS Forth Valley,13.0,Elective Inpatients,2019-01-01,A,8.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,75.0,Elective Inpatients,2018-04-01,B,74.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,72.0,Elective Inpatients,2018-07-01,B,71.0
-40-49,1.02,S08000021,NHS Greater Glasgow & Clyde,66.0,Elective Inpatients,2018-10-01,B,65.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,80.0,Elective Inpatients,2019-01-01,B,79.0
-30-39,1.0,S08000016,NHS Borders,11.0,All Daycases,2018-04-01,B,11.0
-30-39,1.0,S08000016,NHS Borders,10.0,All Daycases,2018-07-01,B,10.0
+40-49,1.05,S08000021,NHS Greater Glasgow & Clyde,78.0,Elective Inpatients,2018-04-01,B,74.0
+40-49,1.06,S08000021,NHS Greater Glasgow & Clyde,75.0,Elective Inpatients,2018-07-01,B,71.0
+40-49,1.06,S08000021,NHS Greater Glasgow & Clyde,69.0,Elective Inpatients,2018-10-01,B,65.0
+40-49,1.05,S08000021,NHS Greater Glasgow & Clyde,83.0,Elective Inpatients,2019-01-01,B,79.0
+30-39,1.09,S08000016,NHS Borders,12.0,All Daycases,2018-04-01,B,11.0
+30-39,1.1,S08000016,NHS Borders,11.0,All Daycases,2018-07-01,B,10.0
 30-39,1.0,S08000016,NHS Borders,9.0,All Daycases,2018-10-01,B,9.0
-30-39,1.0,S08000016,NHS Borders,10.0,All Daycases,2019-01-01,B,10.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,49.0,All Daycases,2018-04-01,A,49.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,48.0,All Daycases,2018-07-01,A,48.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,45.0,All Daycases,2018-10-01,A,45.0
-60-69,1.0,S08000017,NHS Dumfries & Galloway,43.0,All Daycases,2019-01-01,A,43.0
-10-19,1.0,S08000030,NHS Tayside,12.0,All Daycases,2018-04-01,B,12.0
-10-19,1.0,S08000030,NHS Tayside,13.0,All Daycases,2018-07-01,B,13.0
-10-19,1.0,S08000030,NHS Tayside,12.0,All Daycases,2018-10-01,B,12.0
-10-19,1.0,S08000030,NHS Tayside,11.0,All Daycases,2019-01-01,B,11.0
+30-39,1.1,S08000016,NHS Borders,11.0,All Daycases,2019-01-01,B,10.0
+60-69,1.06,S08000017,NHS Dumfries & Galloway,52.0,All Daycases,2018-04-01,A,49.0
+60-69,1.06,S08000017,NHS Dumfries & Galloway,51.0,All Daycases,2018-07-01,A,48.0
+60-69,1.04,S08000017,NHS Dumfries & Galloway,47.0,All Daycases,2018-10-01,A,45.0
+60-69,1.05,S08000017,NHS Dumfries & Galloway,45.0,All Daycases,2019-01-01,A,43.0
+10-19,1.08,S08000030,NHS Tayside,13.0,All Daycases,2018-04-01,B,12.0
+10-19,1.08,S08000030,NHS Tayside,14.0,All Daycases,2018-07-01,B,13.0
+10-19,1.08,S08000030,NHS Tayside,13.0,All Daycases,2018-10-01,B,12.0
+10-19,1.09,S08000030,NHS Tayside,12.0,All Daycases,2019-01-01,B,11.0
 50-59,2.39,S08000015,NHS Ayrshire & Arran,299.0,Emergency Inpatients,2018-04-01,A,125.0
 50-59,2.39,S08000015,NHS Ayrshire & Arran,301.0,Emergency Inpatients,2018-07-01,A,126.0
 50-59,2.41,S08000015,NHS Ayrshire & Arran,292.0,Emergency Inpatients,2018-10-01,A,121.0
@@ -852,7 +852,7 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 50-59,1.0,S08000026,NHS Shetland,1.0,Elective Inpatients,2018-10-01,A,1.0
 50-59,1.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2019-01-01,A,2.0
 50-59,1.0,S08000021,NHS Greater Glasgow & Clyde,122.0,Elective Inpatients,2018-04-01,A,122.0
-50-59,1.01,S08000021,NHS Greater Glasgow & Clyde,140.0,Elective Inpatients,2018-07-01,A,139.0
+50-59,1.06,S08000021,NHS Greater Glasgow & Clyde,147.0,Elective Inpatients,2018-07-01,A,139.0
 50-59,1.0,S08000021,NHS Greater Glasgow & Clyde,135.0,Elective Inpatients,2018-10-01,A,135.0
 50-59,1.0,S08000021,NHS Greater Glasgow & Clyde,126.0,Elective Inpatients,2019-01-01,A,126.0
 90+,8.5,S08000022,NHS Highland,17.0,Elective Inpatients,2018-04-01,A,2.0
@@ -887,10 +887,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 10-19,1.02,S08000021,NHS Greater Glasgow & Clyde,92.0,Emergency Inpatients,2018-07-01,B,90.0
 10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,85.0,Emergency Inpatients,2018-10-01,B,84.0
 10-19,1.01,S08000021,NHS Greater Glasgow & Clyde,76.0,Emergency Inpatients,2019-01-01,B,75.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,13.0,Elective Inpatients,2018-04-01,A,13.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2018-07-01,A,14.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,13.0,Elective Inpatients,2018-10-01,A,13.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2019-01-01,A,14.0
+0-9,1.08,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2018-04-01,A,13.0
+0-9,1.07,S08000021,NHS Greater Glasgow & Clyde,15.0,Elective Inpatients,2018-07-01,A,14.0
+0-9,1.08,S08000021,NHS Greater Glasgow & Clyde,14.0,Elective Inpatients,2018-10-01,A,13.0
+0-9,1.07,S08000021,NHS Greater Glasgow & Clyde,15.0,Elective Inpatients,2019-01-01,A,14.0
 90+,7.0,S08000020,NHS Grampian,28.0,Elective Inpatients,2018-04-01,B,4.0
 90+,6.75,S08000020,NHS Grampian,27.0,Elective Inpatients,2018-07-01,B,4.0
 90+,6.0,S08000020,NHS Grampian,30.0,Elective Inpatients,2018-10-01,B,5.0
@@ -911,10 +911,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 10-19,1.5,S08000030,NHS Tayside,21.0,Emergency Inpatients,2018-07-01,B,14.0
 10-19,1.47,S08000030,NHS Tayside,25.0,Emergency Inpatients,2018-10-01,B,17.0
 10-19,1.57,S08000030,NHS Tayside,22.0,Emergency Inpatients,2019-01-01,B,14.0
-80-89,1.02,S08000029,NHS Fife,59.0,All Daycases,2018-04-01,B,58.0
-80-89,1.02,S08000029,NHS Fife,57.0,All Daycases,2018-07-01,B,56.0
-80-89,1.02,S08000029,NHS Fife,57.0,All Daycases,2018-10-01,B,56.0
-80-89,1.02,S08000029,NHS Fife,54.0,All Daycases,2019-01-01,B,53.0
+80-89,1.05,S08000029,NHS Fife,61.0,All Daycases,2018-04-01,B,58.0
+80-89,1.05,S08000029,NHS Fife,59.0,All Daycases,2018-07-01,B,56.0
+80-89,1.05,S08000029,NHS Fife,59.0,All Daycases,2018-10-01,B,56.0
+80-89,1.06,S08000029,NHS Fife,56.0,All Daycases,2019-01-01,B,53.0
 30-39,1.63,S08000029,NHS Fife,70.0,Emergency Inpatients,2018-04-01,A,43.0
 30-39,1.63,S08000029,NHS Fife,62.0,Emergency Inpatients,2018-07-01,A,38.0
 30-39,1.64,S08000029,NHS Fife,74.0,Emergency Inpatients,2018-10-01,A,45.0
@@ -943,30 +943,30 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 60-69,1.0,S08000025,NHS Orkney,7.0,All Daycases,2018-07-01,B,7.0
 60-69,1.0,S08000025,NHS Orkney,6.0,All Daycases,2018-10-01,B,6.0
 60-69,1.0,S08000025,NHS Orkney,6.0,All Daycases,2019-01-01,B,6.0
-0-9,1.0,S08000024,NHS Lothian,20.0,All Daycases,2018-04-01,A,20.0
-0-9,1.0,S08000024,NHS Lothian,18.0,All Daycases,2018-07-01,A,18.0
-0-9,1.0,S08000024,NHS Lothian,19.0,All Daycases,2018-10-01,A,19.0
-0-9,1.0,S08000024,NHS Lothian,19.0,All Daycases,2019-01-01,A,19.0
+0-9,1.05,S08000024,NHS Lothian,21.0,All Daycases,2018-04-01,A,20.0
+0-9,1.06,S08000024,NHS Lothian,19.0,All Daycases,2018-07-01,A,18.0
+0-9,1.05,S08000024,NHS Lothian,20.0,All Daycases,2018-10-01,A,19.0
+0-9,1.05,S08000024,NHS Lothian,20.0,All Daycases,2019-01-01,A,19.0
 10-19,1.43,S08000017,NHS Dumfries & Galloway,10.0,Emergency Inpatients,2018-04-01,A,7.0
 10-19,1.29,S08000017,NHS Dumfries & Galloway,9.0,Emergency Inpatients,2018-07-01,A,7.0
 10-19,1.25,S08000017,NHS Dumfries & Galloway,10.0,Emergency Inpatients,2018-10-01,A,8.0
 10-19,1.29,S08000017,NHS Dumfries & Galloway,9.0,Emergency Inpatients,2019-01-01,A,7.0
-90+,1.0,S08000020,NHS Grampian,19.0,All Daycases,2018-04-01,A,19.0
-90+,1.0,S08000020,NHS Grampian,19.0,All Daycases,2018-07-01,A,19.0
-90+,1.0,S08000020,NHS Grampian,17.0,All Daycases,2018-10-01,A,17.0
-90+,1.0,S08000020,NHS Grampian,16.0,All Daycases,2019-01-01,A,16.0
-50-59,1.0,S08000016,NHS Borders,24.0,All Daycases,2018-04-01,A,24.0
-50-59,1.0,S08000016,NHS Borders,26.0,All Daycases,2018-07-01,A,26.0
-50-59,1.0,S08000016,NHS Borders,24.0,All Daycases,2018-10-01,A,24.0
-50-59,1.0,S08000016,NHS Borders,24.0,All Daycases,2019-01-01,A,24.0
-60-69,1.0,S08000016,NHS Borders,29.0,All Daycases,2018-04-01,A,29.0
-60-69,1.0,S08000016,NHS Borders,30.0,All Daycases,2018-07-01,A,30.0
-60-69,1.0,S08000016,NHS Borders,33.0,All Daycases,2018-10-01,A,33.0
-60-69,1.0,S08000016,NHS Borders,28.0,All Daycases,2019-01-01,A,28.0
-40-49,1.0,S08000022,NHS Highland,32.0,All Daycases,2018-04-01,B,32.0
-40-49,1.0,S08000022,NHS Highland,32.0,All Daycases,2018-07-01,B,32.0
-40-49,1.0,S08000022,NHS Highland,32.0,All Daycases,2018-10-01,B,32.0
-40-49,1.0,S08000022,NHS Highland,31.0,All Daycases,2019-01-01,B,31.0
+90+,1.05,S08000020,NHS Grampian,20.0,All Daycases,2018-04-01,A,19.0
+90+,1.05,S08000020,NHS Grampian,20.0,All Daycases,2018-07-01,A,19.0
+90+,1.06,S08000020,NHS Grampian,18.0,All Daycases,2018-10-01,A,17.0
+90+,1.06,S08000020,NHS Grampian,17.0,All Daycases,2019-01-01,A,16.0
+50-59,1.04,S08000016,NHS Borders,25.0,All Daycases,2018-04-01,A,24.0
+50-59,1.04,S08000016,NHS Borders,27.0,All Daycases,2018-07-01,A,26.0
+50-59,1.04,S08000016,NHS Borders,25.0,All Daycases,2018-10-01,A,24.0
+50-59,1.04,S08000016,NHS Borders,25.0,All Daycases,2019-01-01,A,24.0
+60-69,1.07,S08000016,NHS Borders,31.0,All Daycases,2018-04-01,A,29.0
+60-69,1.07,S08000016,NHS Borders,32.0,All Daycases,2018-07-01,A,30.0
+60-69,1.06,S08000016,NHS Borders,35.0,All Daycases,2018-10-01,A,33.0
+60-69,1.07,S08000016,NHS Borders,30.0,All Daycases,2019-01-01,A,28.0
+40-49,1.06,S08000022,NHS Highland,34.0,All Daycases,2018-04-01,B,32.0
+40-49,1.06,S08000022,NHS Highland,34.0,All Daycases,2018-07-01,B,32.0
+40-49,1.06,S08000022,NHS Highland,34.0,All Daycases,2018-10-01,B,32.0
+40-49,1.06,S08000022,NHS Highland,33.0,All Daycases,2019-01-01,B,31.0
 10-19,1.75,S08000019,NHS Forth Valley,14.0,Emergency Inpatients,2018-04-01,B,8.0
 10-19,1.78,S08000019,NHS Forth Valley,16.0,Emergency Inpatients,2018-07-01,B,9.0
 10-19,1.75,S08000019,NHS Forth Valley,14.0,Emergency Inpatients,2018-10-01,B,8.0
@@ -979,22 +979,22 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.0,S08000016,NHS Borders,2.0,Elective Inpatients,2018-07-01,B,2.0
 20-29,1.0,S08000016,NHS Borders,2.0,Elective Inpatients,2018-10-01,B,2.0
 20-29,1.0,S08000016,NHS Borders,2.0,Elective Inpatients,2019-01-01,B,2.0
-50-59,1.01,S08000030,NHS Tayside,72.0,All Daycases,2018-04-01,B,71.0
-50-59,1.01,S08000030,NHS Tayside,76.0,All Daycases,2018-07-01,B,75.0
-50-59,1.01,S08000030,NHS Tayside,76.0,All Daycases,2018-10-01,B,75.0
-50-59,1.01,S08000030,NHS Tayside,85.0,All Daycases,2019-01-01,B,84.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,19.0,Elective Inpatients,2018-04-01,B,19.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,20.0,Elective Inpatients,2018-07-01,B,20.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,21.0,Elective Inpatients,2018-10-01,B,21.0
-10-19,1.0,S08000021,NHS Greater Glasgow & Clyde,21.0,Elective Inpatients,2019-01-01,B,21.0
+50-59,1.06,S08000030,NHS Tayside,75.0,All Daycases,2018-04-01,B,71.0
+50-59,1.05,S08000030,NHS Tayside,79.0,All Daycases,2018-07-01,B,75.0
+50-59,1.05,S08000030,NHS Tayside,79.0,All Daycases,2018-10-01,B,75.0
+50-59,1.06,S08000030,NHS Tayside,89.0,All Daycases,2019-01-01,B,84.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,20.0,Elective Inpatients,2018-04-01,B,19.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,21.0,Elective Inpatients,2018-07-01,B,20.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,22.0,Elective Inpatients,2018-10-01,B,21.0
+10-19,1.05,S08000021,NHS Greater Glasgow & Clyde,22.0,Elective Inpatients,2019-01-01,B,21.0
 90+,19.62,S08000019,NHS Forth Valley,157.0,Emergency Inpatients,2018-04-01,B,8.0
 90+,18.0,S08000019,NHS Forth Valley,144.0,Emergency Inpatients,2018-07-01,B,8.0
 90+,18.75,S08000019,NHS Forth Valley,150.0,Emergency Inpatients,2018-10-01,B,8.0
 90+,20.14,S08000019,NHS Forth Valley,141.0,Emergency Inpatients,2019-01-01,B,7.0
-70-79,1.01,S08000022,NHS Highland,73.0,All Daycases,2018-04-01,A,72.0
-70-79,1.01,S08000022,NHS Highland,77.0,All Daycases,2018-07-01,A,76.0
-70-79,1.01,S08000022,NHS Highland,81.0,All Daycases,2018-10-01,A,80.0
-70-79,1.01,S08000022,NHS Highland,78.0,All Daycases,2019-01-01,A,77.0
+70-79,1.06,S08000022,NHS Highland,76.0,All Daycases,2018-04-01,A,72.0
+70-79,1.05,S08000022,NHS Highland,80.0,All Daycases,2018-07-01,A,76.0
+70-79,1.05,S08000022,NHS Highland,84.0,All Daycases,2018-10-01,A,80.0
+70-79,1.05,S08000022,NHS Highland,81.0,All Daycases,2019-01-01,A,77.0
 40-49,2.32,S08000024,NHS Lothian,366.0,Emergency Inpatients,2018-04-01,A,158.0
 40-49,2.31,S08000024,NHS Lothian,362.0,Emergency Inpatients,2018-07-01,A,157.0
 40-49,2.32,S08000024,NHS Lothian,308.0,Emergency Inpatients,2018-10-01,A,133.0
@@ -1031,14 +1031,14 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,7.8,S08000024,NHS Lothian,1537.0,Emergency Inpatients,2018-07-01,B,197.0
 80-89,7.82,S08000024,NHS Lothian,1416.0,Emergency Inpatients,2018-10-01,B,181.0
 80-89,7.81,S08000024,NHS Lothian,1577.0,Emergency Inpatients,2019-01-01,B,202.0
-10-19,1.0,S08000015,NHS Ayrshire & Arran,16.0,All Daycases,2018-04-01,A,16.0
-10-19,1.0,S08000015,NHS Ayrshire & Arran,17.0,All Daycases,2018-07-01,A,17.0
-10-19,1.0,S08000015,NHS Ayrshire & Arran,16.0,All Daycases,2018-10-01,A,16.0
-10-19,1.0,S08000015,NHS Ayrshire & Arran,18.0,All Daycases,2019-01-01,A,18.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,41.0,All Daycases,2018-04-01,B,41.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,45.0,All Daycases,2018-07-01,B,45.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,47.0,All Daycases,2018-10-01,B,47.0
-30-39,1.0,S08000015,NHS Ayrshire & Arran,48.0,All Daycases,2019-01-01,B,48.0
+10-19,1.06,S08000015,NHS Ayrshire & Arran,17.0,All Daycases,2018-04-01,A,16.0
+10-19,1.06,S08000015,NHS Ayrshire & Arran,18.0,All Daycases,2018-07-01,A,17.0
+10-19,1.06,S08000015,NHS Ayrshire & Arran,17.0,All Daycases,2018-10-01,A,16.0
+10-19,1.06,S08000015,NHS Ayrshire & Arran,19.0,All Daycases,2019-01-01,A,18.0
+30-39,1.05,S08000015,NHS Ayrshire & Arran,43.0,All Daycases,2018-04-01,B,41.0
+30-39,1.04,S08000015,NHS Ayrshire & Arran,47.0,All Daycases,2018-07-01,B,45.0
+30-39,1.06,S08000015,NHS Ayrshire & Arran,50.0,All Daycases,2018-10-01,B,47.0
+30-39,1.06,S08000015,NHS Ayrshire & Arran,51.0,All Daycases,2019-01-01,B,48.0
 30-39,1.53,S08000029,NHS Fife,55.0,Emergency Inpatients,2018-04-01,B,36.0
 30-39,1.51,S08000029,NHS Fife,62.0,Emergency Inpatients,2018-07-01,B,41.0
 30-39,1.49,S08000029,NHS Fife,61.0,Emergency Inpatients,2018-10-01,B,41.0
@@ -1055,22 +1055,22 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 70-79,1.0,S08000025,NHS Orkney,7.0,All Daycases,2018-07-01,B,7.0
 70-79,1.0,S08000025,NHS Orkney,6.0,All Daycases,2018-10-01,B,6.0
 70-79,1.0,S08000025,NHS Orkney,7.0,All Daycases,2019-01-01,B,7.0
-30-39,1.01,S08000024,NHS Lothian,90.0,All Daycases,2018-04-01,A,89.0
-30-39,1.01,S08000024,NHS Lothian,94.0,All Daycases,2018-07-01,A,93.0
-30-39,1.01,S08000024,NHS Lothian,83.0,All Daycases,2018-10-01,A,82.0
-30-39,1.01,S08000024,NHS Lothian,100.0,All Daycases,2019-01-01,A,99.0
+30-39,1.06,S08000024,NHS Lothian,94.0,All Daycases,2018-04-01,A,89.0
+30-39,1.05,S08000024,NHS Lothian,98.0,All Daycases,2018-07-01,A,93.0
+30-39,1.06,S08000024,NHS Lothian,87.0,All Daycases,2018-10-01,A,82.0
+30-39,1.05,S08000024,NHS Lothian,104.0,All Daycases,2019-01-01,A,99.0
 40-49,2.34,S08000017,NHS Dumfries & Galloway,68.0,Emergency Inpatients,2018-04-01,A,29.0
 40-49,2.32,S08000017,NHS Dumfries & Galloway,65.0,Emergency Inpatients,2018-07-01,A,28.0
 40-49,2.38,S08000017,NHS Dumfries & Galloway,57.0,Emergency Inpatients,2018-10-01,A,24.0
 40-49,2.38,S08000017,NHS Dumfries & Galloway,62.0,Emergency Inpatients,2019-01-01,A,26.0
-20-29,1.0,S08000022,NHS Highland,23.0,All Daycases,2018-04-01,A,23.0
-20-29,1.0,S08000022,NHS Highland,22.0,All Daycases,2018-07-01,A,22.0
-20-29,1.0,S08000022,NHS Highland,19.0,All Daycases,2018-10-01,A,19.0
-20-29,1.0,S08000022,NHS Highland,21.0,All Daycases,2019-01-01,A,21.0
-0-9,1.0,S08000023,NHS Lanarkshire,23.0,Emergency Inpatients,2018-04-01,A,23.0
-0-9,1.0,S08000023,NHS Lanarkshire,21.0,Emergency Inpatients,2018-07-01,A,21.0
-0-9,1.0,S08000023,NHS Lanarkshire,19.0,Emergency Inpatients,2018-10-01,A,19.0
-0-9,1.0,S08000023,NHS Lanarkshire,21.0,Emergency Inpatients,2019-01-01,A,21.0
+20-29,1.04,S08000022,NHS Highland,24.0,All Daycases,2018-04-01,A,23.0
+20-29,1.05,S08000022,NHS Highland,23.0,All Daycases,2018-07-01,A,22.0
+20-29,1.05,S08000022,NHS Highland,20.0,All Daycases,2018-10-01,A,19.0
+20-29,1.05,S08000022,NHS Highland,22.0,All Daycases,2019-01-01,A,21.0
+0-9,1.04,S08000023,NHS Lanarkshire,24.0,Emergency Inpatients,2018-04-01,A,23.0
+0-9,1.05,S08000023,NHS Lanarkshire,22.0,Emergency Inpatients,2018-07-01,A,21.0
+0-9,1.05,S08000023,NHS Lanarkshire,20.0,Emergency Inpatients,2018-10-01,A,19.0
+0-9,1.05,S08000023,NHS Lanarkshire,22.0,Emergency Inpatients,2019-01-01,A,21.0
 70-79,1.95,S08000022,NHS Highland,39.0,Elective Inpatients,2018-04-01,B,20.0
 70-79,2.0,S08000022,NHS Highland,38.0,Elective Inpatients,2018-07-01,B,19.0
 70-79,1.9,S08000022,NHS Highland,40.0,Elective Inpatients,2018-10-01,B,21.0
@@ -1087,14 +1087,14 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 40-49,1.0,S08000015,NHS Ayrshire & Arran,19.0,Elective Inpatients,2018-07-01,A,19.0
 40-49,1.05,S08000015,NHS Ayrshire & Arran,20.0,Elective Inpatients,2018-10-01,A,19.0
 40-49,1.06,S08000015,NHS Ayrshire & Arran,17.0,Elective Inpatients,2019-01-01,A,16.0
-60-69,1.02,S08000019,NHS Forth Valley,56.0,All Daycases,2018-04-01,B,55.0
-60-69,1.0,S08000019,NHS Forth Valley,50.0,All Daycases,2018-07-01,B,50.0
-60-69,1.02,S08000019,NHS Forth Valley,55.0,All Daycases,2018-10-01,B,54.0
-60-69,1.0,S08000019,NHS Forth Valley,51.0,All Daycases,2019-01-01,B,51.0
-30-39,1.01,S08000023,NHS Lanarkshire,79.0,All Daycases,2018-04-01,A,78.0
-30-39,1.01,S08000023,NHS Lanarkshire,79.0,All Daycases,2018-07-01,A,78.0
-30-39,1.01,S08000023,NHS Lanarkshire,71.0,All Daycases,2018-10-01,A,70.0
-30-39,1.01,S08000023,NHS Lanarkshire,78.0,All Daycases,2019-01-01,A,77.0
+60-69,1.05,S08000019,NHS Forth Valley,58.0,All Daycases,2018-04-01,B,55.0
+60-69,1.06,S08000019,NHS Forth Valley,53.0,All Daycases,2018-07-01,B,50.0
+60-69,1.06,S08000019,NHS Forth Valley,57.0,All Daycases,2018-10-01,B,54.0
+60-69,1.06,S08000019,NHS Forth Valley,54.0,All Daycases,2019-01-01,B,51.0
+30-39,1.05,S08000023,NHS Lanarkshire,82.0,All Daycases,2018-04-01,A,78.0
+30-39,1.05,S08000023,NHS Lanarkshire,82.0,All Daycases,2018-07-01,A,78.0
+30-39,1.06,S08000023,NHS Lanarkshire,74.0,All Daycases,2018-10-01,A,70.0
+30-39,1.05,S08000023,NHS Lanarkshire,81.0,All Daycases,2019-01-01,A,77.0
 20-29,1.0,S08000017,NHS Dumfries & Galloway,3.0,Elective Inpatients,2018-04-01,B,3.0
 20-29,1.0,S08000017,NHS Dumfries & Galloway,3.0,Elective Inpatients,2018-07-01,B,3.0
 20-29,1.0,S08000017,NHS Dumfries & Galloway,3.0,Elective Inpatients,2018-10-01,B,3.0
@@ -1107,18 +1107,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 0-9,1.15,S08000024,NHS Lothian,31.0,Emergency Inpatients,2018-07-01,A,27.0
 0-9,1.15,S08000024,NHS Lothian,31.0,Emergency Inpatients,2018-10-01,A,27.0
 0-9,1.19,S08000024,NHS Lothian,31.0,Emergency Inpatients,2019-01-01,A,26.0
-50-59,1.01,S08000023,NHS Lanarkshire,160.0,All Daycases,2018-04-01,A,158.0
-50-59,1.01,S08000023,NHS Lanarkshire,182.0,All Daycases,2018-07-01,A,180.0
-50-59,1.01,S08000023,NHS Lanarkshire,185.0,All Daycases,2018-10-01,A,183.0
-50-59,1.01,S08000023,NHS Lanarkshire,171.0,All Daycases,2019-01-01,A,169.0
+50-59,1.06,S08000023,NHS Lanarkshire,167.0,All Daycases,2018-04-01,A,158.0
+50-59,1.06,S08000023,NHS Lanarkshire,190.0,All Daycases,2018-07-01,A,180.0
+50-59,1.05,S08000023,NHS Lanarkshire,193.0,All Daycases,2018-10-01,A,183.0
+50-59,1.05,S08000023,NHS Lanarkshire,178.0,All Daycases,2019-01-01,A,169.0
 60-69,1.0,S08000026,NHS Shetland,7.0,All Daycases,2018-04-01,A,7.0
 60-69,1.0,S08000026,NHS Shetland,7.0,All Daycases,2018-07-01,A,7.0
 60-69,1.0,S08000026,NHS Shetland,7.0,All Daycases,2018-10-01,A,7.0
 60-69,1.0,S08000026,NHS Shetland,7.0,All Daycases,2019-01-01,A,7.0
-0-9,1.0,S08000023,NHS Lanarkshire,16.0,All Daycases,2018-04-01,A,16.0
-0-9,1.0,S08000023,NHS Lanarkshire,16.0,All Daycases,2018-07-01,A,16.0
-0-9,1.0,S08000023,NHS Lanarkshire,18.0,All Daycases,2018-10-01,A,18.0
-0-9,1.0,S08000023,NHS Lanarkshire,18.0,All Daycases,2019-01-01,A,18.0
+0-9,1.06,S08000023,NHS Lanarkshire,17.0,All Daycases,2018-04-01,A,16.0
+0-9,1.06,S08000023,NHS Lanarkshire,17.0,All Daycases,2018-07-01,A,16.0
+0-9,1.06,S08000023,NHS Lanarkshire,19.0,All Daycases,2018-10-01,A,18.0
+0-9,1.06,S08000023,NHS Lanarkshire,19.0,All Daycases,2019-01-01,A,18.0
 50-59,1.36,S08000030,NHS Tayside,30.0,Elective Inpatients,2018-04-01,B,22.0
 50-59,1.36,S08000030,NHS Tayside,30.0,Elective Inpatients,2018-07-01,B,22.0
 50-59,1.38,S08000030,NHS Tayside,33.0,Elective Inpatients,2018-10-01,B,24.0
@@ -1131,10 +1131,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,10.26,S08000030,NHS Tayside,821.0,Emergency Inpatients,2018-07-01,A,80.0
 80-89,10.21,S08000030,NHS Tayside,868.0,Emergency Inpatients,2018-10-01,A,85.0
 80-89,10.21,S08000030,NHS Tayside,888.0,Emergency Inpatients,2019-01-01,A,87.0
-50-59,1.0,S08000019,NHS Forth Valley,48.0,All Daycases,2018-04-01,A,48.0
-50-59,1.0,S08000019,NHS Forth Valley,45.0,All Daycases,2018-07-01,A,45.0
-50-59,1.0,S08000019,NHS Forth Valley,49.0,All Daycases,2018-10-01,A,49.0
-50-59,1.0,S08000019,NHS Forth Valley,42.0,All Daycases,2019-01-01,A,42.0
+50-59,1.06,S08000019,NHS Forth Valley,51.0,All Daycases,2018-04-01,A,48.0
+50-59,1.04,S08000019,NHS Forth Valley,47.0,All Daycases,2018-07-01,A,45.0
+50-59,1.06,S08000019,NHS Forth Valley,52.0,All Daycases,2018-10-01,A,49.0
+50-59,1.05,S08000019,NHS Forth Valley,44.0,All Daycases,2019-01-01,A,42.0
 40-49,1.05,S08000020,NHS Grampian,21.0,Elective Inpatients,2018-04-01,A,20.0
 40-49,1.05,S08000020,NHS Grampian,20.0,Elective Inpatients,2018-07-01,A,19.0
 40-49,1.06,S08000020,NHS Grampian,19.0,Elective Inpatients,2018-10-01,A,18.0
@@ -1147,10 +1147,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 70-79,4.74,S08000017,NHS Dumfries & Galloway,294.0,Emergency Inpatients,2018-07-01,A,62.0
 70-79,4.7,S08000017,NHS Dumfries & Galloway,268.0,Emergency Inpatients,2018-10-01,A,57.0
 70-79,4.73,S08000017,NHS Dumfries & Galloway,303.0,Emergency Inpatients,2019-01-01,A,64.0
-40-49,1.0,S08000019,NHS Forth Valley,27.0,All Daycases,2018-04-01,B,27.0
-40-49,1.0,S08000019,NHS Forth Valley,27.0,All Daycases,2018-07-01,B,27.0
-40-49,1.0,S08000019,NHS Forth Valley,24.0,All Daycases,2018-10-01,B,24.0
-40-49,1.0,S08000019,NHS Forth Valley,27.0,All Daycases,2019-01-01,B,27.0
+40-49,1.04,S08000019,NHS Forth Valley,28.0,All Daycases,2018-04-01,B,27.0
+40-49,1.04,S08000019,NHS Forth Valley,28.0,All Daycases,2018-07-01,B,27.0
+40-49,1.04,S08000019,NHS Forth Valley,25.0,All Daycases,2018-10-01,B,24.0
+40-49,1.04,S08000019,NHS Forth Valley,28.0,All Daycases,2019-01-01,B,27.0
 70-79,1.7,S08000021,NHS Greater Glasgow & Clyde,290.0,Elective Inpatients,2018-04-01,B,171.0
 70-79,1.69,S08000021,NHS Greater Glasgow & Clyde,266.0,Elective Inpatients,2018-07-01,B,157.0
 70-79,1.7,S08000021,NHS Greater Glasgow & Clyde,263.0,Elective Inpatients,2018-10-01,B,155.0
@@ -1159,18 +1159,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 70-79,1.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2018-07-01,B,2.0
 70-79,1.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2018-10-01,B,2.0
 70-79,1.0,S08000026,NHS Shetland,2.0,Elective Inpatients,2019-01-01,B,2.0
-60-69,1.01,S08000020,NHS Grampian,136.0,All Daycases,2018-04-01,A,135.0
-60-69,1.01,S08000020,NHS Grampian,124.0,All Daycases,2018-07-01,A,123.0
-60-69,1.01,S08000020,NHS Grampian,125.0,All Daycases,2018-10-01,A,124.0
-60-69,1.01,S08000020,NHS Grampian,134.0,All Daycases,2019-01-01,A,133.0
-20-29,1.0,S08000020,NHS Grampian,38.0,All Daycases,2018-04-01,A,38.0
-20-29,1.0,S08000020,NHS Grampian,39.0,All Daycases,2018-07-01,A,39.0
-20-29,1.0,S08000020,NHS Grampian,39.0,All Daycases,2018-10-01,A,39.0
-20-29,1.0,S08000020,NHS Grampian,43.0,All Daycases,2019-01-01,A,43.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,615.0,All Daycases,2018-04-01,A,609.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,524.0,All Daycases,2018-07-01,A,519.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,608.0,All Daycases,2018-10-01,A,602.0
-70-79,1.01,S08000021,NHS Greater Glasgow & Clyde,517.0,All Daycases,2019-01-01,A,512.0
+60-69,1.05,S08000020,NHS Grampian,142.0,All Daycases,2018-04-01,A,135.0
+60-69,1.06,S08000020,NHS Grampian,130.0,All Daycases,2018-07-01,A,123.0
+60-69,1.06,S08000020,NHS Grampian,131.0,All Daycases,2018-10-01,A,124.0
+60-69,1.05,S08000020,NHS Grampian,140.0,All Daycases,2019-01-01,A,133.0
+20-29,1.05,S08000020,NHS Grampian,40.0,All Daycases,2018-04-01,A,38.0
+20-29,1.05,S08000020,NHS Grampian,41.0,All Daycases,2018-07-01,A,39.0
+20-29,1.05,S08000020,NHS Grampian,41.0,All Daycases,2018-10-01,A,39.0
+20-29,1.05,S08000020,NHS Grampian,45.0,All Daycases,2019-01-01,A,43.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,642.0,All Daycases,2018-04-01,A,609.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,547.0,All Daycases,2018-07-01,A,519.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,635.0,All Daycases,2018-10-01,A,602.0
+70-79,1.05,S08000021,NHS Greater Glasgow & Clyde,540.0,All Daycases,2019-01-01,A,512.0
 90+,6.6,S08000020,NHS Grampian,33.0,Elective Inpatients,2018-04-01,A,5.0
 90+,7.5,S08000020,NHS Grampian,30.0,Elective Inpatients,2018-07-01,A,4.0
 90+,6.4,S08000020,NHS Grampian,32.0,Elective Inpatients,2018-10-01,A,5.0
@@ -1179,10 +1179,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,5.76,S08000023,NHS Lanarkshire,939.0,Emergency Inpatients,2018-07-01,B,163.0
 80-89,5.78,S08000023,NHS Lanarkshire,924.0,Emergency Inpatients,2018-10-01,B,160.0
 80-89,5.77,S08000023,NHS Lanarkshire,964.0,Emergency Inpatients,2019-01-01,B,167.0
-40-49,1.0,S08000019,NHS Forth Valley,27.0,All Daycases,2018-04-01,A,27.0
-40-49,1.0,S08000019,NHS Forth Valley,28.0,All Daycases,2018-07-01,A,28.0
-40-49,1.0,S08000019,NHS Forth Valley,26.0,All Daycases,2018-10-01,A,26.0
-40-49,1.0,S08000019,NHS Forth Valley,26.0,All Daycases,2019-01-01,A,26.0
+40-49,1.04,S08000019,NHS Forth Valley,28.0,All Daycases,2018-04-01,A,27.0
+40-49,1.07,S08000019,NHS Forth Valley,30.0,All Daycases,2018-07-01,A,28.0
+40-49,1.04,S08000019,NHS Forth Valley,27.0,All Daycases,2018-10-01,A,26.0
+40-49,1.04,S08000019,NHS Forth Valley,27.0,All Daycases,2019-01-01,A,26.0
 90+,13.45,S08000022,NHS Highland,148.0,Emergency Inpatients,2018-04-01,A,11.0
 90+,13.45,S08000022,NHS Highland,148.0,Emergency Inpatients,2018-07-01,A,11.0
 90+,13.9,S08000022,NHS Highland,139.0,Emergency Inpatients,2018-10-01,A,10.0
@@ -1191,10 +1191,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,4.02,S08000024,NHS Lothian,205.0,Elective Inpatients,2018-07-01,A,51.0
 80-89,4.05,S08000024,NHS Lothian,174.0,Elective Inpatients,2018-10-01,A,43.0
 80-89,4.02,S08000024,NHS Lothian,189.0,Elective Inpatients,2019-01-01,A,47.0
-20-29,1.02,S08000023,NHS Lanarkshire,54.0,All Daycases,2018-04-01,B,53.0
-20-29,1.02,S08000023,NHS Lanarkshire,53.0,All Daycases,2018-07-01,B,52.0
-20-29,1.02,S08000023,NHS Lanarkshire,60.0,All Daycases,2018-10-01,B,59.0
-20-29,1.02,S08000023,NHS Lanarkshire,59.0,All Daycases,2019-01-01,B,58.0
+20-29,1.06,S08000023,NHS Lanarkshire,56.0,All Daycases,2018-04-01,B,53.0
+20-29,1.06,S08000023,NHS Lanarkshire,55.0,All Daycases,2018-07-01,B,52.0
+20-29,1.05,S08000023,NHS Lanarkshire,62.0,All Daycases,2018-10-01,B,59.0
+20-29,1.05,S08000023,NHS Lanarkshire,61.0,All Daycases,2019-01-01,B,58.0
 40-49,1.0,S08000025,NHS Orkney,3.0,All Daycases,2018-04-01,B,3.0
 40-49,1.0,S08000025,NHS Orkney,3.0,All Daycases,2018-07-01,B,3.0
 40-49,1.0,S08000025,NHS Orkney,3.0,All Daycases,2018-10-01,B,3.0
@@ -1211,30 +1211,30 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 30-39,1.63,S08000022,NHS Highland,49.0,Emergency Inpatients,2018-07-01,B,30.0
 30-39,1.64,S08000022,NHS Highland,54.0,Emergency Inpatients,2018-10-01,B,33.0
 30-39,1.61,S08000022,NHS Highland,50.0,Emergency Inpatients,2019-01-01,B,31.0
-0-9,1.0,S08000021,NHS Greater Glasgow & Clyde,51.0,Emergency Inpatients,2018-04-01,A,51.0
-0-9,1.02,S08000021,NHS Greater Glasgow & Clyde,56.0,Emergency Inpatients,2018-07-01,A,55.0
-0-9,1.02,S08000021,NHS Greater Glasgow & Clyde,61.0,Emergency Inpatients,2018-10-01,A,60.0
-0-9,1.02,S08000021,NHS Greater Glasgow & Clyde,56.0,Emergency Inpatients,2019-01-01,A,55.0
-40-49,1.01,S08000024,NHS Lothian,103.0,All Daycases,2018-04-01,B,102.0
-40-49,1.01,S08000024,NHS Lothian,116.0,All Daycases,2018-07-01,B,115.0
-40-49,1.01,S08000024,NHS Lothian,125.0,All Daycases,2018-10-01,B,124.0
-40-49,1.01,S08000024,NHS Lothian,121.0,All Daycases,2019-01-01,B,120.0
-10-19,1.0,S08000029,NHS Fife,11.0,All Daycases,2018-04-01,B,11.0
-10-19,1.0,S08000029,NHS Fife,12.0,All Daycases,2018-07-01,B,12.0
-10-19,1.0,S08000029,NHS Fife,12.0,All Daycases,2018-10-01,B,12.0
-10-19,1.0,S08000029,NHS Fife,11.0,All Daycases,2019-01-01,B,11.0
+0-9,1.06,S08000021,NHS Greater Glasgow & Clyde,54.0,Emergency Inpatients,2018-04-01,A,51.0
+0-9,1.05,S08000021,NHS Greater Glasgow & Clyde,58.0,Emergency Inpatients,2018-07-01,A,55.0
+0-9,1.05,S08000021,NHS Greater Glasgow & Clyde,63.0,Emergency Inpatients,2018-10-01,A,60.0
+0-9,1.05,S08000021,NHS Greater Glasgow & Clyde,58.0,Emergency Inpatients,2019-01-01,A,55.0
+40-49,1.06,S08000024,NHS Lothian,108.0,All Daycases,2018-04-01,B,102.0
+40-49,1.05,S08000024,NHS Lothian,121.0,All Daycases,2018-07-01,B,115.0
+40-49,1.06,S08000024,NHS Lothian,131.0,All Daycases,2018-10-01,B,124.0
+40-49,1.06,S08000024,NHS Lothian,127.0,All Daycases,2019-01-01,B,120.0
+10-19,1.09,S08000029,NHS Fife,12.0,All Daycases,2018-04-01,B,11.0
+10-19,1.08,S08000029,NHS Fife,13.0,All Daycases,2018-07-01,B,12.0
+10-19,1.08,S08000029,NHS Fife,13.0,All Daycases,2018-10-01,B,12.0
+10-19,1.09,S08000029,NHS Fife,12.0,All Daycases,2019-01-01,B,11.0
 90+,6.2,S08000015,NHS Ayrshire & Arran,31.0,Elective Inpatients,2018-04-01,A,5.0
 90+,6.4,S08000015,NHS Ayrshire & Arran,32.0,Elective Inpatients,2018-07-01,A,5.0
 90+,6.4,S08000015,NHS Ayrshire & Arran,32.0,Elective Inpatients,2018-10-01,A,5.0
 90+,7.0,S08000015,NHS Ayrshire & Arran,28.0,Elective Inpatients,2019-01-01,A,4.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,16.0,All Daycases,2018-04-01,B,16.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,15.0,All Daycases,2018-07-01,B,15.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,16.0,All Daycases,2018-10-01,B,16.0
-30-39,1.0,S08000017,NHS Dumfries & Galloway,16.0,All Daycases,2019-01-01,B,16.0
-20-29,1.0,S08000020,NHS Grampian,38.0,All Daycases,2018-04-01,B,38.0
-20-29,1.0,S08000020,NHS Grampian,35.0,All Daycases,2018-07-01,B,35.0
-20-29,1.0,S08000020,NHS Grampian,37.0,All Daycases,2018-10-01,B,37.0
-20-29,1.0,S08000020,NHS Grampian,34.0,All Daycases,2019-01-01,B,34.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,17.0,All Daycases,2018-04-01,B,16.0
+30-39,1.07,S08000017,NHS Dumfries & Galloway,16.0,All Daycases,2018-07-01,B,15.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,17.0,All Daycases,2018-10-01,B,16.0
+30-39,1.06,S08000017,NHS Dumfries & Galloway,17.0,All Daycases,2019-01-01,B,16.0
+20-29,1.05,S08000020,NHS Grampian,40.0,All Daycases,2018-04-01,B,38.0
+20-29,1.06,S08000020,NHS Grampian,37.0,All Daycases,2018-07-01,B,35.0
+20-29,1.05,S08000020,NHS Grampian,39.0,All Daycases,2018-10-01,B,37.0
+20-29,1.06,S08000020,NHS Grampian,36.0,All Daycases,2019-01-01,B,34.0
 60-69,3.02,S08000017,NHS Dumfries & Galloway,163.0,Emergency Inpatients,2018-04-01,B,54.0
 60-69,3.0,S08000017,NHS Dumfries & Galloway,171.0,Emergency Inpatients,2018-07-01,B,57.0
 60-69,3.02,S08000017,NHS Dumfries & Galloway,166.0,Emergency Inpatients,2018-10-01,B,55.0
@@ -1255,22 +1255,22 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.0,S08000016,NHS Borders,8.0,All Daycases,2018-07-01,A,8.0
 20-29,1.0,S08000016,NHS Borders,9.0,All Daycases,2018-10-01,A,9.0
 20-29,1.0,S08000016,NHS Borders,9.0,All Daycases,2019-01-01,A,9.0
-0-9,1.0,S08000020,NHS Grampian,11.0,All Daycases,2018-04-01,B,11.0
-0-9,1.0,S08000020,NHS Grampian,11.0,All Daycases,2018-07-01,B,11.0
-0-9,1.0,S08000020,NHS Grampian,10.0,All Daycases,2018-10-01,B,10.0
-0-9,1.0,S08000020,NHS Grampian,11.0,All Daycases,2019-01-01,B,11.0
-10-19,1.0,S08000024,NHS Lothian,32.0,All Daycases,2018-04-01,A,32.0
-10-19,1.0,S08000024,NHS Lothian,31.0,All Daycases,2018-07-01,A,31.0
-10-19,1.0,S08000024,NHS Lothian,34.0,All Daycases,2018-10-01,A,34.0
-10-19,1.0,S08000024,NHS Lothian,32.0,All Daycases,2019-01-01,A,32.0
-90+,1.0,S08000023,NHS Lanarkshire,28.0,All Daycases,2018-04-01,A,28.0
-90+,1.0,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-07-01,A,26.0
-90+,1.0,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-10-01,A,26.0
-90+,1.0,S08000023,NHS Lanarkshire,28.0,All Daycases,2019-01-01,A,28.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,258.0,All Daycases,2018-04-01,A,256.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,286.0,All Daycases,2018-07-01,A,283.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,277.0,All Daycases,2018-10-01,A,274.0
-40-49,1.01,S08000021,NHS Greater Glasgow & Clyde,279.0,All Daycases,2019-01-01,A,276.0
+0-9,1.09,S08000020,NHS Grampian,12.0,All Daycases,2018-04-01,B,11.0
+0-9,1.09,S08000020,NHS Grampian,12.0,All Daycases,2018-07-01,B,11.0
+0-9,1.1,S08000020,NHS Grampian,11.0,All Daycases,2018-10-01,B,10.0
+0-9,1.09,S08000020,NHS Grampian,12.0,All Daycases,2019-01-01,B,11.0
+10-19,1.06,S08000024,NHS Lothian,34.0,All Daycases,2018-04-01,A,32.0
+10-19,1.06,S08000024,NHS Lothian,33.0,All Daycases,2018-07-01,A,31.0
+10-19,1.06,S08000024,NHS Lothian,36.0,All Daycases,2018-10-01,A,34.0
+10-19,1.06,S08000024,NHS Lothian,34.0,All Daycases,2019-01-01,A,32.0
+90+,1.07,S08000023,NHS Lanarkshire,30.0,All Daycases,2018-04-01,A,28.0
+90+,1.04,S08000023,NHS Lanarkshire,27.0,All Daycases,2018-07-01,A,26.0
+90+,1.04,S08000023,NHS Lanarkshire,27.0,All Daycases,2018-10-01,A,26.0
+90+,1.07,S08000023,NHS Lanarkshire,30.0,All Daycases,2019-01-01,A,28.0
+40-49,1.05,S08000021,NHS Greater Glasgow & Clyde,270.0,All Daycases,2018-04-01,A,256.0
+40-49,1.06,S08000021,NHS Greater Glasgow & Clyde,299.0,All Daycases,2018-07-01,A,283.0
+40-49,1.05,S08000021,NHS Greater Glasgow & Clyde,289.0,All Daycases,2018-10-01,A,274.0
+40-49,1.05,S08000021,NHS Greater Glasgow & Clyde,291.0,All Daycases,2019-01-01,A,276.0
 20-29,1.0,S08000026,NHS Shetland,2.0,All Daycases,2018-04-01,A,2.0
 20-29,1.0,S08000026,NHS Shetland,2.0,All Daycases,2018-07-01,A,2.0
 20-29,1.0,S08000026,NHS Shetland,2.0,All Daycases,2018-10-01,A,2.0
@@ -1283,14 +1283,14 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,,S08000026,NHS Shetland,0.0,Elective Inpatients,2018-07-01,A,0.0
 20-29,,S08000026,NHS Shetland,0.0,Elective Inpatients,2018-10-01,A,0.0
 20-29,,S08000026,NHS Shetland,0.0,Elective Inpatients,2019-01-01,A,0.0
-20-29,1.0,S08000020,NHS Grampian,12.0,Elective Inpatients,2018-04-01,A,12.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2018-07-01,A,11.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2018-10-01,A,11.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2019-01-01,A,11.0
-60-69,1.0,S08000016,NHS Borders,28.0,All Daycases,2018-04-01,B,28.0
-60-69,1.0,S08000016,NHS Borders,29.0,All Daycases,2018-07-01,B,29.0
-60-69,1.0,S08000016,NHS Borders,25.0,All Daycases,2018-10-01,B,25.0
-60-69,1.0,S08000016,NHS Borders,28.0,All Daycases,2019-01-01,B,28.0
+20-29,1.08,S08000020,NHS Grampian,13.0,Elective Inpatients,2018-04-01,A,12.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2018-07-01,A,11.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2018-10-01,A,11.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2019-01-01,A,11.0
+60-69,1.07,S08000016,NHS Borders,30.0,All Daycases,2018-04-01,B,28.0
+60-69,1.07,S08000016,NHS Borders,31.0,All Daycases,2018-07-01,B,29.0
+60-69,1.04,S08000016,NHS Borders,26.0,All Daycases,2018-10-01,B,25.0
+60-69,1.07,S08000016,NHS Borders,30.0,All Daycases,2019-01-01,B,28.0
 40-49,1.03,S08000024,NHS Lothian,33.0,Elective Inpatients,2018-04-01,B,32.0
 40-49,1.0,S08000024,NHS Lothian,34.0,Elective Inpatients,2018-07-01,B,34.0
 40-49,1.03,S08000024,NHS Lothian,36.0,Elective Inpatients,2018-10-01,B,35.0
@@ -1299,10 +1299,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 30-39,1.86,S08000017,NHS Dumfries & Galloway,39.0,Emergency Inpatients,2018-07-01,A,21.0
 30-39,1.9,S08000017,NHS Dumfries & Galloway,40.0,Emergency Inpatients,2018-10-01,A,21.0
 30-39,1.86,S08000017,NHS Dumfries & Galloway,39.0,Emergency Inpatients,2019-01-01,A,21.0
-0-9,1.0,S08000023,NHS Lanarkshire,22.0,Emergency Inpatients,2018-04-01,B,22.0
-0-9,1.0,S08000023,NHS Lanarkshire,20.0,Emergency Inpatients,2018-07-01,B,20.0
-0-9,1.0,S08000023,NHS Lanarkshire,18.0,Emergency Inpatients,2018-10-01,B,18.0
-0-9,1.0,S08000023,NHS Lanarkshire,20.0,Emergency Inpatients,2019-01-01,B,20.0
+0-9,1.05,S08000023,NHS Lanarkshire,23.0,Emergency Inpatients,2018-04-01,B,22.0
+0-9,1.05,S08000023,NHS Lanarkshire,21.0,Emergency Inpatients,2018-07-01,B,20.0
+0-9,1.06,S08000023,NHS Lanarkshire,19.0,Emergency Inpatients,2018-10-01,B,18.0
+0-9,1.05,S08000023,NHS Lanarkshire,21.0,Emergency Inpatients,2019-01-01,B,20.0
 80-89,6.21,S08000023,NHS Lanarkshire,1031.0,Emergency Inpatients,2018-04-01,A,166.0
 80-89,6.24,S08000023,NHS Lanarkshire,1029.0,Emergency Inpatients,2018-07-01,A,165.0
 80-89,6.22,S08000023,NHS Lanarkshire,1020.0,Emergency Inpatients,2018-10-01,A,164.0
@@ -1315,10 +1315,10 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.69,S08000017,NHS Dumfries & Galloway,27.0,Emergency Inpatients,2018-07-01,A,16.0
 20-29,1.67,S08000017,NHS Dumfries & Galloway,25.0,Emergency Inpatients,2018-10-01,A,15.0
 20-29,1.69,S08000017,NHS Dumfries & Galloway,27.0,Emergency Inpatients,2019-01-01,A,16.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2018-04-01,B,11.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2018-07-01,B,11.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2018-10-01,B,11.0
-20-29,1.0,S08000020,NHS Grampian,11.0,Elective Inpatients,2019-01-01,B,11.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2018-04-01,B,11.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2018-07-01,B,11.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2018-10-01,B,11.0
+20-29,1.09,S08000020,NHS Grampian,12.0,Elective Inpatients,2019-01-01,B,11.0
 70-79,2.9,S08000025,NHS Orkney,29.0,Emergency Inpatients,2018-04-01,A,10.0
 70-79,2.78,S08000025,NHS Orkney,25.0,Emergency Inpatients,2018-07-01,A,9.0
 70-79,3.0,S08000025,NHS Orkney,27.0,Emergency Inpatients,2018-10-01,A,9.0
@@ -1339,18 +1339,18 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 20-29,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2018-07-01,A,2.0
 20-29,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2018-10-01,A,2.0
 20-29,1.0,S08000026,NHS Shetland,2.0,Emergency Inpatients,2019-01-01,A,2.0
-50-59,1.01,S08000023,NHS Lanarkshire,150.0,All Daycases,2018-04-01,B,149.0
-50-59,1.01,S08000023,NHS Lanarkshire,149.0,All Daycases,2018-07-01,B,148.0
-50-59,1.01,S08000023,NHS Lanarkshire,173.0,All Daycases,2018-10-01,B,171.0
-50-59,1.01,S08000023,NHS Lanarkshire,153.0,All Daycases,2019-01-01,B,152.0
+50-59,1.05,S08000023,NHS Lanarkshire,157.0,All Daycases,2018-04-01,B,149.0
+50-59,1.05,S08000023,NHS Lanarkshire,156.0,All Daycases,2018-07-01,B,148.0
+50-59,1.05,S08000023,NHS Lanarkshire,180.0,All Daycases,2018-10-01,B,171.0
+50-59,1.05,S08000023,NHS Lanarkshire,160.0,All Daycases,2019-01-01,B,152.0
 90+,10.0,S08000017,NHS Dumfries & Galloway,10.0,Elective Inpatients,2018-04-01,A,1.0
 90+,12.0,S08000017,NHS Dumfries & Galloway,12.0,Elective Inpatients,2018-07-01,A,1.0
 90+,11.0,S08000017,NHS Dumfries & Galloway,11.0,Elective Inpatients,2018-10-01,A,1.0
 90+,10.0,S08000017,NHS Dumfries & Galloway,10.0,Elective Inpatients,2019-01-01,A,1.0
-90+,1.0,S08000030,NHS Tayside,12.0,All Daycases,2018-04-01,A,12.0
-90+,1.0,S08000030,NHS Tayside,12.0,All Daycases,2018-07-01,A,12.0
-90+,1.0,S08000030,NHS Tayside,14.0,All Daycases,2018-10-01,A,14.0
-90+,1.0,S08000030,NHS Tayside,11.0,All Daycases,2019-01-01,A,11.0
+90+,1.08,S08000030,NHS Tayside,13.0,All Daycases,2018-04-01,A,12.0
+90+,1.08,S08000030,NHS Tayside,13.0,All Daycases,2018-07-01,A,12.0
+90+,1.07,S08000030,NHS Tayside,15.0,All Daycases,2018-10-01,A,14.0
+90+,1.09,S08000030,NHS Tayside,12.0,All Daycases,2019-01-01,A,11.0
 70-79,1.83,S08000029,NHS Fife,44.0,Elective Inpatients,2018-04-01,B,24.0
 70-79,1.83,S08000029,NHS Fife,44.0,Elective Inpatients,2018-07-01,B,24.0
 70-79,1.86,S08000029,NHS Fife,52.0,Elective Inpatients,2018-10-01,B,28.0
@@ -1363,14 +1363,14 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 40-49,2.19,S08000022,NHS Highland,92.0,Emergency Inpatients,2018-07-01,A,42.0
 40-49,2.2,S08000022,NHS Highland,90.0,Emergency Inpatients,2018-10-01,A,41.0
 40-49,2.16,S08000022,NHS Highland,95.0,Emergency Inpatients,2019-01-01,A,44.0
-30-39,1.01,S08000024,NHS Lothian,83.0,All Daycases,2018-04-01,B,82.0
-30-39,1.01,S08000024,NHS Lothian,82.0,All Daycases,2018-07-01,B,81.0
-30-39,1.01,S08000024,NHS Lothian,94.0,All Daycases,2018-10-01,B,93.0
-30-39,1.01,S08000024,NHS Lothian,81.0,All Daycases,2019-01-01,B,80.0
-10-19,1.0,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-04-01,A,26.0
-10-19,1.0,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-07-01,A,26.0
-10-19,1.0,S08000023,NHS Lanarkshire,26.0,All Daycases,2018-10-01,A,26.0
-10-19,1.0,S08000023,NHS Lanarkshire,25.0,All Daycases,2019-01-01,A,25.0
+30-39,1.06,S08000024,NHS Lothian,87.0,All Daycases,2018-04-01,B,82.0
+30-39,1.05,S08000024,NHS Lothian,85.0,All Daycases,2018-07-01,B,81.0
+30-39,1.05,S08000024,NHS Lothian,98.0,All Daycases,2018-10-01,B,93.0
+30-39,1.05,S08000024,NHS Lothian,84.0,All Daycases,2019-01-01,B,80.0
+10-19,1.04,S08000023,NHS Lanarkshire,27.0,All Daycases,2018-04-01,A,26.0
+10-19,1.04,S08000023,NHS Lanarkshire,27.0,All Daycases,2018-07-01,A,26.0
+10-19,1.04,S08000023,NHS Lanarkshire,27.0,All Daycases,2018-10-01,A,26.0
+10-19,1.04,S08000023,NHS Lanarkshire,26.0,All Daycases,2019-01-01,A,25.0
 60-69,2.63,S08000021,NHS Greater Glasgow & Clyde,1796.0,Emergency Inpatients,2018-04-01,A,683.0
 60-69,2.63,S08000021,NHS Greater Glasgow & Clyde,1645.0,Emergency Inpatients,2018-07-01,A,626.0
 60-69,2.63,S08000021,NHS Greater Glasgow & Clyde,1571.0,Emergency Inpatients,2018-10-01,A,598.0
@@ -1399,7 +1399,7 @@ age,avlos,hb_code,hb_name,los,measure,quarter_date,sex,stays
 80-89,3.69,S08000029,NHS Fife,59.0,Elective Inpatients,2018-07-01,A,16.0
 80-89,3.73,S08000029,NHS Fife,56.0,Elective Inpatients,2018-10-01,A,15.0
 80-89,3.62,S08000029,NHS Fife,58.0,Elective Inpatients,2019-01-01,A,16.0
-20-29,1.0,S08000029,NHS Fife,27.0,All Daycases,2018-04-01,B,27.0
-20-29,1.0,S08000029,NHS Fife,27.0,All Daycases,2018-07-01,B,27.0
-20-29,1.0,S08000029,NHS Fife,23.0,All Daycases,2018-10-01,B,23.0
-20-29,1.0,S08000029,NHS Fife,27.0,All Daycases,2019-01-01,B,27.0
+20-29,1.04,S08000029,NHS Fife,28.0,All Daycases,2018-04-01,B,27.0
+20-29,1.04,S08000029,NHS Fife,28.0,All Daycases,2018-07-01,B,27.0
+20-29,1.04,S08000029,NHS Fife,24.0,All Daycases,2018-10-01,B,23.0
+20-29,1.04,S08000029,NHS Fife,28.0,All Daycases,2019-01-01,B,27.0

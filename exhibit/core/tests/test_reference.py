@@ -205,7 +205,7 @@ class referenceTests(unittest.TestCase):
                 },
                 'BNFItemCode':{'anonymising_set':'birds'},
                 'BNFItemDescription':{'anonymising_set':'birds'},
-                'GPPracticeName':{'anonymising_set':'mountains.peak'}
+                'GPPracticeName':{'anonymising_set':'random'}
             },
             'constraints':{'linked_columns':[]}
         }

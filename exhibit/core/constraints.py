@@ -187,10 +187,13 @@ class ConstraintHandler:
                 return y - 1 * offset
             if op.__name__ == 'greater':
                 return y + 1 * offset
-            return y
+            #covers ==, >=, <=
+            return y #pragma: no cover
 
         # all other columns have distrubution + parameters to guide us
         dist = root["distribution"]
+
+        adj_factor = 0
 
         # depending on the original distribution type, adjust the range        
         if dist == "weighted_uniform_with_dispersion":
@@ -200,10 +203,6 @@ class ConstraintHandler:
         elif dist == "normal":
 
             adj_factor = root["distribution_parameters"]["std"]
-        
-        else:
-
-            adj_factor = 0
 
         # if dispersion is zero, pick the next valid value
         if adj_factor == 0:
@@ -215,10 +214,17 @@ class ConstraintHandler:
             return y
 
         # new x value is drawn from the dispersion-based interval around y
-        new_x_min = max(0, y - adj_factor)
-        new_x_max = y + adj_factor
-
-        return self.recursive_randint(new_x_min, new_x_max, y, op)
+        if "less" in op.__name__:
+            new_x_max = y
+            new_x_min = max(0, y - adj_factor)
+            return self.recursive_randint(new_x_min, new_x_max, y, op)
+        if "greater" in op.__name__:
+            new_x_min = y
+            new_x_max = y + adj_factor
+            return self.recursive_randint(new_x_min, new_x_max, y, op)
+        # only option left is constraint is x == y so we return y
+        return y
+        
 
     def recursive_randint(self, new_x_min, new_x_max, y, op):
         '''

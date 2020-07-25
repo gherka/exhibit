@@ -166,10 +166,10 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result_df["A"] >= result_df["B B"]))
 
-    def test_adjust_value_to_constraint_scalar(self):
+    def test_adjust_value_to_constraint_scalar_uniform(self):
         '''
-        Inner functions not yet tested; if tokenised value is not
-        an operator OR a column name, try to parse it as a scalar
+        The column that is being adjusted to a scalar is generated
+        using weighted uniform parameters (dispersion)
         '''
 
         self.ch.spec_dict["columns"] = {
@@ -193,18 +193,63 @@ class constraintsTests(unittest.TestCase):
 
         test_df = pd.DataFrame(
             data={
-                "A A":[1, 0, 20, 2, 50],
+                "A A":[np.NaN, 0, 20, 2, 50],
                 "B":[1, 5, 21, 1, 1000]
             }
         )
 
         result_df = test_df.copy()
 
-        constraint = "~A A~ >= 30"
+        constraint = "~A A~ > 30"
 
         self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
 
-        self.assertTrue(all(result_df["A A"] >= 30))
+        self.assertTrue(all(result_df["A A"].dropna() > 30))
+
+    def test_adjust_value_to_constraint_scalar_normal(self):
+        '''
+        The column that is being adjusted to a scalar is generated
+        using normal distribution parameters (mean and std)
+        '''
+
+        self.ch.spec_dict["columns"] = {
+            "A": {
+                "type": "continuous",
+                "distribution": "normal",
+                "distribution_parameters": {
+                    "mean": 30,
+                    "std": 5
+                }
+            }
+        }
+
+        self.ch.dependent_column = "A"
+
+        test_df = pd.DataFrame(
+            data={
+                "A": np.random.normal(loc=0, scale=2, size=100),
+            }
+        )
+
+        result_df = test_df.copy()
+
+        constraint_1 = "A > 30"
+        constraint_2 = "A < 30"
+        constraint_3 = "A == 30"
+
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint_1)
+        #99.7% of values should be within 3x std 
+        self.assertTrue(all(result_df["A"] > 30))
+        self.assertTrue(all(result_df["A"] < 45))
+
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint_2)
+        #99.7% of values should be within 3x std 
+        self.assertTrue(all(result_df["A"] < 30))
+        self.assertTrue(all(result_df["A"] > 15))
+
+        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint_3)
+        self.assertTrue(all(result_df["A"] == 30))
+
 
     def test_adjust_value_to_constraint_expression(self):
         '''
@@ -256,7 +301,6 @@ class constraintsTests(unittest.TestCase):
         self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
 
         self.assertTrue(all(result_df["C"] < (result_df["A"] + result_df["B"])))
-
 
     def test_adjust_date_column_to_another_date_column(self):
         '''
@@ -326,11 +370,11 @@ class constraintsTests(unittest.TestCase):
 
         result_df = test_df.copy()
 
-        constraint = "arrival_date < '2018-01-05'"
+        constraint = "arrival_date > '2018-01-05'"
 
         self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
 
-        self.assertTrue(all(result_df["arrival_date"] < datetime(2018, 1, 5)))
+        self.assertTrue(all(result_df["arrival_date"] > datetime(2018, 1, 5)))
 
     def test_constraint_clean_up_for_eval(self):
         '''
