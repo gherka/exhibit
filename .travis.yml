@@ -1,5 +1,9 @@
 language: python
 install:
  - pip install -r requirements.txt
+ - pip install coverage
+ - pip install coveralls
 script: 
- - python -m unittest -b
+ - coverage run --source=exhibit -m unittest discover
+after_success:
+ - coveralls
