@@ -11,7 +11,7 @@ You can specify how many rows of the dummy data to generate, which columns to an
 
 The tool has two principal modes of operation: 
  - `fromdata` which produces a detailed, user-editable specification `.yml` file which can be opened by any text editor
- - `fromspec` which produces the anonymised dataset
+ - `fromspec` which produces the anonymised dataset from the supplied specification
 
 See the `-h` listing for the full list of optional command line parameters.
 
@@ -25,12 +25,18 @@ Note that is tool is still in beta so you might want to install it in developmen
 ---
 ### Sample data
 
-The repository includes a few sample datasets and exhibit specifications. They are saved in the `exhibit/sample/_data` and `exhibit/sample_spec` folders respectively. You're welcome to try them out or suggest any other datasets that would be useful to include in the tool.
+The repository includes a few sample datasets and exhibit specifications. They are saved in the `exhibit/sample/_data` and `exhibit/sample/_spec` folders respectively. You're welcome to try them out or suggest any other datasets that would be useful to include in the tool.
 
 ---
 ### Database
 
-Exhibit is bundled with a SQLite3 database and a Python utility tool to interact with with it. Alternatively, you can connect directly to `/exhbit/db/anon.db`. The database contains two sample anonymising datasets: `mountains` and `birds`. The former has 15 mountain ranges and their top 10 peaks making it useful for anonymising hierarchical pairs, like NHS Boards and Hospitals. `birds` is simply 150 pairs of common / scientific bird names. This can be useful for 1:1 paired columns. The database also creates temporary tables to store columns where the number of unique values exceeds user threshold. 
+Exhibit is bundled with a SQLite3 database and a Python utility tool to interact with with it. Alternatively, you can connect directly to `/exhbit/db/anon.db`. The database contains three sample anonymising datasets: `mountains`, `birds` and `patients`.
+
+ - `mountains` has 15 mountain ranges and their top 10 peaks making it useful for anonymising hierarchical pairs, like NHS Boards and Hospitals.
+ - `birds` has 150 pairs of common / scientific bird names. This can be useful for 1:1 paired columns.
+ - `patients` has 360 made-up patient records with details such as gender, 5-year age band, date of birth and CHI number. Fields from this dataset can be selectively pulled in when linked data is required.
+
+The database is also used to store temporary data for columns where the number of unique values exceeds user threshold and thus not available for editing directly in the `yml` file. Note that this means original, confidential data  might be saved in the `exhibit/db/anon.db` file. You can purge all temporary tables by calling `--purge` command from the included utility tool or by interfacing with the database directly.
 
 ---
 ### Disclaimer
