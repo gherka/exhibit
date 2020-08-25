@@ -8,6 +8,7 @@ environment variable so that imports work correctly
 import unittest
 import os
 from copy import deepcopy
+from datetime import datetime
 from pathlib import Path
 
 # External library imports
@@ -84,6 +85,17 @@ class utilsTests(unittest.TestCase):
         result = [tm.guess_date_frequency(x) for x in test_cases]
 
         expected = ["D", "MS", "MS", "QS", "QS", "YS"]
+
+        self.assertEqual(result, expected)
+
+    def test_date_frequency_guesser_single_date(self):
+        '''
+        For large datasets, sometimes you want to limit it to a single date.
+        '''
+
+        single_series = pd.Series([datetime(year=2020, month=1, day=1)] * 10)
+        result = tm.guess_date_frequency(single_series)
+        expected = "UNKNOWN"
 
         self.assertEqual(result, expected)
 

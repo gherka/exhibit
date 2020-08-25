@@ -157,6 +157,10 @@ def guess_date_frequency(timeseries):
     -------
     Time alias string or None
     '''
+
+    #special case of a single date
+    if len(timeseries.dropna().unique()) == 1:
+        return "UNKNOWN"
     
     time_diff_counts = (timeseries
                         .drop_duplicates()
