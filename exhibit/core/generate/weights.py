@@ -120,7 +120,7 @@ def generate_weights(df, cat_col, num_col):
         .groupby([cat_col])[num_col].sum(min_count=1)
     )
 
-    weights['ws'] = weights.transform(_weights_transform, args=[weights])
+    weights['ws'] = weights.transform(_weights_transform, weights=weights)
     
     temp_output = weights['ws'].sort_index(kind="mergesort")
 

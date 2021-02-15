@@ -226,7 +226,6 @@ class referenceTests(unittest.TestCase):
             left=expected_df,
             right=temp_df,
             check_exact=False,
-            check_less_precise=True,
         )
     
     def test_reference_prescribing_linked_mnt_anon_data(self):
@@ -271,7 +270,6 @@ class referenceTests(unittest.TestCase):
             left=expected_df,
             right=temp_df,
             check_exact=False,
-            check_less_precise=True,
         )
     
     def test_reference_inpatient_anon_data(self):
@@ -318,7 +316,6 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon,
             right=xA.anon_df,
             check_exact=False,
-            check_less_precise=True,
         )
 
     def test_reference_inpatient_ct10_random_data(self):
@@ -391,7 +388,6 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_ct10,
             right=temp_df,
             check_exact=False,
-            check_less_precise=True,
         )
 
     def test_reference_inpatient_ct50_random_data(self):
@@ -456,7 +452,6 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_ct50,
             right=temp_df,
             check_exact=False,
-            check_less_precise=True,
         )
 
     def test_reference_inpatient_ct10_mountains_data(self):
@@ -536,7 +531,6 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_mnt_ct10,
             right=temp_df,
             check_exact=False,
-            check_less_precise=True,
         )
 
     def test_reference_inpatient_ct50_mountains_data(self):
@@ -611,7 +605,6 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_mnt_ct50,
             right=temp_df,
             check_exact=False,
-            check_less_precise=True,
         )
 
     @classmethod
