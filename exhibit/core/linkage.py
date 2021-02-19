@@ -665,7 +665,7 @@ class _LinkedDataGenerator:
         #join all left-side columns to base_col_series
         linked_df = pd.merge(
                 left=base_col_series,
-                right=self.sql_df.drop_duplicates(),
+                right=self.sql_df.drop_duplicates(subset=[self.base_col], keep="last"),
                 how="left",
                 on=self.base_col
             )
