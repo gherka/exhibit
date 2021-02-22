@@ -460,8 +460,11 @@ class referenceTests(unittest.TestCase):
             - number of unique values exceeds CT in all columns
             - anonymisation method is hierarchical "mountains"
             - anon columns are specified using dot notation
-            - sex is a "complete" categorical column
+            - sex is a "complete" categorical column, but there will be gaps
+            where missind data is generated in other columns - categorical
+            values are generated first, and then "blanked" based on miss_pct            
             - only the most granular linked column has missing values
+            - avlos is not derived and is calculated "blindly"
         '''
 
         np.random.seed(0)
@@ -509,6 +512,9 @@ class referenceTests(unittest.TestCase):
                 "loc_name": 
                     {"anonymising_set":"mountains.peak"}
                 },
+            "constraints": {
+                "boolean_constraints" : {}
+            }
         }
                  
         temp_spec, temp_df = self.temp_exhibit(

@@ -300,8 +300,8 @@ class continuousTests(unittest.TestCase):
             test_df["Nums"] = result
 
             self.assertEqual(
-                (test_df[test_df["C1"] == "A"]["Nums"].sum() /
-                test_df[test_df["C1"] == "B"]["Nums"].sum()), 0.25
+                round((test_df[test_df["C1"] == "A"]["Nums"].sum() /
+                test_df[test_df["C1"] == "B"]["Nums"].sum()), 2), 0.25
             )
 
             self.assertAlmostEqual(test_df["Nums"].sum(), test_sum)

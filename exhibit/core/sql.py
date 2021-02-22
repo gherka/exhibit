@@ -14,7 +14,9 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import package_dir
 
-def query_anon_database(table_name, column=None, size=None, order="rowid", db_uri=None):
+def query_anon_database(
+    table_name, column=None, size=None,
+    order="rowid", db_uri=None, exclude_missing=False):
     '''
     Query anon.db and return a nice dataframe or series
 
@@ -32,6 +34,9 @@ def query_anon_database(table_name, column=None, size=None, order="rowid", db_ur
         optional. The column to order the results by; defaults to rowid
     db_uri : str
         optional. For testing.
+    exclude_missing : bool
+        optional. Set to True to exclude the special "Missing data"
+        value from the column, if SQL is for the single column only
 
     Returns
     -------
@@ -50,10 +55,13 @@ def query_anon_database(table_name, column=None, size=None, order="rowid", db_ur
     #build the sql string:
     order_sql = f"ORDER BY {order}"
     size_sql = f"LIMIT {size}" if size else ""
+    where_sql = (
+        f"WHERE {column} != 'Missing data'" if (column and exclude_missing) else "")
     
     sql = f"""
     SELECT DISTINCT {str(column or '*')}
     FROM {table_name}
+    {where_sql}
     {order_sql}
     {size_sql}
     """
@@ -122,7 +130,7 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
     else:
         col_list = ', '.join(col_names)
 
-    params = ', '.join(['?' for x in col_names])
+    params = ', '.join(['?' for _ in col_names])
 
     drop_sql = f"DROP TABLE IF EXISTS {table_name}"
     create_sql = f"CREATE TABLE {table_name} ({col_list})"

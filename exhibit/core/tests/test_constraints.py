@@ -392,19 +392,19 @@ class constraintsTests(unittest.TestCase):
         c3_expected = "Spam == Spam__Spam__Eggs - Spam__Eggs"
 
         self.assertEqual(
-            self.ch.clean_up_constraint(c1),
+            tm.clean_up_constraint(c1),
             c1_expected
         )
 
         self.assertEqual(
-            self.ch.clean_up_constraint(c2),
+            tm.clean_up_constraint(c2),
             c2_expected
         )
 
         self.assertEqual(
-            self.ch.clean_up_constraint(c3),
+            tm.clean_up_constraint(c3),
             c3_expected
-        )
+        )     
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

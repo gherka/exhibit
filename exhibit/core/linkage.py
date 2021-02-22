@@ -539,24 +539,19 @@ class _LinkedDataGenerator:
             orig_vals = self.spec_dict['columns'][linked_col]['original_values']
             
             if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
-
+                
+                #we need to drop "Missing data" prior to sorting to avoid it
+                #messing up the aliasing mappings which rely on two sets of
+                #column names being in the same order.
                 original_col_values = sorted(
                     query_anon_database(
                         table_name=linked_table_name,
-                        column=linked_col.replace(" ", "$")
+                        column=linked_col.replace(" ", "$"),
+                        exclude_missing=True
                     )[linked_col])
                 
-                #potentially, user-edited
-                current_col_values = orig_vals[linked_col]
-                # Missing data is always last in orig_vals, but not always in anon.db
-                if "Missing data" in original_col_values:
-                    original_col_values.append(
-                        original_col_values.pop(
-                            original_col_values.index("Missing data")
-                        )
-                    )
-                else:
-                    original_col_values.append("Missing data")
+                #potentially, user-edited; Missind data always last
+                current_col_values = orig_vals[linked_col][:-1]
 
                 repl_dict = dict(
                     zip(
@@ -658,9 +653,6 @@ class _LinkedDataGenerator:
                 p=base_col_prob),
             name=self.base_col   
         )
-
-        missing_data_row = ("Missing data",) * len(self.linked_cols)
-        self.sql_df.loc[len(self.sql_df) + 1] = missing_data_row
 
         #join all left-side columns to base_col_series
         linked_df = pd.merge(
@@ -795,9 +787,6 @@ def _create_paired_columns_lookup(spec_dict, base_column):
             paired_df = query_anon_database(table_name=table_name)
             paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
             paired_df.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
-            #Missing data isn't ever in the SQL - but if Missing data is generated for
-            #one of the linked columns, we want to propagate it to its links
-            paired_df.loc[len(paired_df) + 1] = ["Missing data"] * paired_df.shape[1]
 
             return paired_df
 

@@ -15,6 +15,11 @@ class ConstraintHandler:
     '''
     Keep all internal constraint-handling methods in one place
     with the added bonus of a shared spec_dict object
+
+    Currently, conditional constraints are limited to handling
+    just the na values - "make_nan" and "no_nan". In future, might
+    add more and the code for specific conditional "actions" will
+    go into this class rather than the MissingDataGenerator.
     '''
 
     def __init__(self, spec_dict):
@@ -32,12 +37,12 @@ class ConstraintHandler:
         Modifies anon_df in place at each function call!
         '''
 
-        clean_rule = self.clean_up_constraint(bool_constraint)
+        clean_rule = clean_up_constraint(bool_constraint)
         
         #only apply the adjustments to rows that DON'T already meet the constraint
         mask = (anon_df
                     .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                    .eval(clean_rule)
+                    .eval(clean_rule, engine="python")
         )
 
         #at this point, the tokeniser produces "safe" column names, with __
@@ -64,7 +69,7 @@ class ConstraintHandler:
 
             anon_df["test_expression"] = (anon_df
                                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                                .eval(self.independent_expression))
+                                .eval(self.independent_expression, engine="python"))
 
         anon_df.loc[~mask, self.dependent_column.replace("__", " ")] = (
             anon_df[~mask]
@@ -94,35 +99,6 @@ class ConstraintHandler:
             return True
         except ValueError:
             return False
-
-    @staticmethod
-    def clean_up_constraint(rule_string):
-        '''
-        The default way to handle column names with whitespace in eval strings
-        is to enclose them in backticks. However, the default tokeniser will
-        occasionally tokenise elements of the column name that weren't separated by
-        whitespace originally, leading to errors when tokens are reassembled with
-        a safe character. For example, "Clinical Pathway 31Day" will be reassembled
-        as "Clinical_Pathway_31_Day".
-
-        The solution is to process the constraint first, before passing it to eval,
-        not forgetting to rename the dataframe columns with a __ instead of a whitespace
-        '''
-        
-        column_names = re.findall(r"~.*?~", rule_string)
-        repl_dict = {"~": "", " ": "__"}
-        clean_rule = rule_string
-
-        for col_name in column_names:
-            
-            clean_col_name = re.sub(
-                '|'.join(repl_dict.keys()),
-                lambda x: repl_dict[x.group()],
-                col_name)
-
-            clean_rule = clean_rule.replace(col_name, clean_col_name)
-
-        return clean_rule
             
     def adjust_value_to_constraint(
                                 self,
@@ -252,7 +228,6 @@ class ConstraintHandler:
                 return y + 1
             return y
 
-
 # EXPORTABLE METHODS
 # ==================
 def find_boolean_columns(df):
@@ -313,6 +288,34 @@ def find_boolean_columns(df):
                 break
             
     return output
+
+def clean_up_constraint(rule_string):
+    '''
+    The default way to handle column names with whitespace in eval strings
+    is to enclose them in backticks. However, the default tokeniser will
+    occasionally tokenise elements of the column name that weren't separated by
+    whitespace originally, leading to errors when tokens are reassembled with
+    a safe character. For example, "Clinical Pathway 31Day" will be reassembled
+    as "Clinical_Pathway_31_Day".
+
+    The solution is to process the constraint first, before passing it to eval,
+    not forgetting to rename the dataframe columns with a __ instead of a whitespace
+    '''
+    
+    column_names = re.findall(r"~.*?~", rule_string)
+    repl_dict = {"~": "", " ": "__"}
+    clean_rule = rule_string
+
+    for col_name in column_names:
+        
+        clean_col_name = re.sub(
+            '|'.join(repl_dict.keys()),
+            lambda x: repl_dict[x.group()],
+            col_name)
+
+        clean_rule = clean_rule.replace(col_name, clean_col_name)
+
+    return clean_rule
 
 def tokenise_constraint(constraint):
     '''

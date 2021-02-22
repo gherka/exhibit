@@ -23,9 +23,13 @@ from .utils import (
                     path_checker, read_with_date_parser,
                     count_core_rows)
 
-from .generate.missing import add_missing_data_to_series
+from .generate.missing import MissingDataGenerator
 from .generate.categorical import CategoricalDataGenerator
 from .generate.yaml import generate_YAML_string
+
+from .generate.weights import (
+                    generate_weights_table,
+                    target_columns_for_weights_table)
 
 from .generate.continuous import (
                     generate_continuous_column,
@@ -222,20 +226,14 @@ class newExhibit:
         cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows)
         anon_df = cat_gen.generate()
 
-        #3) HANDLE MISSING DATA IN CATEGORICAL COLUMNS
-        #add Missing data (proxy for np.NaN) to categorical columns
+        # Missing data can only be added after all categorical columns
+        # and all continous columns have been generated. This is because
+        # a categorical column might have a conditional contraint depending
+        # on a continous column or vice versa. So initial values are generated
+        # without regard for weights for Missing data which are later adjusted
+        # as required.
 
-        rands = np.random.random(size=anon_df.shape[0]) # pylint: disable=no-member
-        anon_df_cat = anon_df[self.spec_dict['metadata']['categorical_columns']]
-
-        for col in anon_df_cat.columns:
-            anon_df[col] = add_missing_data_to_series(
-                spec_dict=self.spec_dict,
-                rands=rands,
-                series=anon_df[col]
-            )
-
-        #4) CHECK IF DUPLICATES ARE OK
+        #3) CHECK IF DUPLICATES ARE OK
         if not self.spec_dict['constraints']['allow_duplicates']:
             duplicated_idx = anon_df.duplicated()
             number_dropped = sum(duplicated_idx)
@@ -243,10 +241,20 @@ class newExhibit:
                 print(f"WARNING: Deleted {number_dropped} duplicates.")
                 anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
 
-        #5) ADD CONTINUOUS VARIABLES TO ANON DF  
+        #4) ADD CONTINUOUS VARIABLES TO ANON DF
+        # at this point, we don't have any Missing data placeholders (or actual nans)
+        # these are added after this step when we can properly account for conditional
+        # constraints and other inter-dependencies
+        target_cols = target_columns_for_weights_table(self.spec_dict)
+        wt = generate_weights_table(self.spec_dict, target_cols)
+
+        # save the objects so that they are generated only once
+        self.spec_dict["weights_table"] = wt
+        self.spec_dict["weights_table_target_cols"] = target_cols
+
         for num_col in self.spec_dict['metadata']['numerical_columns']:
             
-            #skip derived columns as they require primary columns generated first
+            # skip derived columns; they need main columns (inc. nulls) generated first
             if num_col in self.spec_dict['derived_columns']:
                 continue
 
@@ -256,22 +264,23 @@ class newExhibit:
                                                     col_name=num_col
             )
 
-        #Missing data is a special value used in categorical columns as a proxy for nan
-        anon_df.replace("Missing data", np.NaN, inplace=True)
+        #5) GENERATE MISSING DATA IN ALL COLUMNS
+        miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
+        anon_df = miss_gen.add_missing_data()
 
-        #6) PROCESS BOOLEAN CONSTRAINTS (IF ANY) AND PROPAGATE NULLS IN LINKED COLUMNS
+        #7) PROCESS BOOLEAN AND CONDITIONAL CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict)
         
         for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
 
             ch.adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
 
-        #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict['derived_columns'].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
             
-        #8) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #9) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self): # pragma: no cover

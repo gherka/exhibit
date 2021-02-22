@@ -180,6 +180,9 @@ constraints:
   allow_duplicates: false
   boolean_constraints:
   - los >= stays
+  conditional_constraints:
+    Example condition:
+      Example column: Example action
   linked_columns: []
 #----------------------------------------------------------
 #DERIVED COLUMNS
@@ -195,5 +198,5 @@ constraints:
 #Denomininator column B, you would write Rate: (A / B)
 #----------------------------------------------------------
 derived_columns:
-  Example_Column: Example_Calculation
+  Example column: Example calculation
   avlos: (los / stays)

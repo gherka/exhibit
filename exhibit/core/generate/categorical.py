@@ -182,7 +182,8 @@ class CategoricalDataGenerator:
             return self._generate_from_sql(col_name, col_attrs)
 
         #we have access to original_values and the paths are dependant on anon_set
-        col_df = col_attrs['original_values']
+        #take every row except last which is reserved for Missing data
+        col_df = col_attrs['original_values'].iloc[:-1, :]
         col_prob = np.array(col_df['probability_vector'])
 
         if anon_set == "random": 
@@ -211,15 +212,17 @@ class CategoricalDataGenerator:
         #modified "original_values" dataframe.
 
         sql_df = self._generate_from_sql(col_name, col_attrs, complete=True)
+
+        #includes Missing data row as opposed to col_df which doesn't
         orig_df = col_attrs['original_values']
 
         #missing data is the last row
-        repl = sql_df[col_name].unique()[0:uniques]
+        repl = sql_df[col_name].unique()
         aliased_df = orig_df.replace(orig_df[col_name].values[:-1], repl)
         self.spec_dict['columns'][col_name]['original_values'] = aliased_df
 
-        #we ignore Missing Data probability
-        idx = np.random.choice(a=len(sql_df), p=col_prob[:-1], size=self.num_rows)
+        #we ignore Missing Data probability when we originally create the variable
+        idx = np.random.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
         anon_list = [sql_df.iloc[x, :].values for x in idx]
         anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 

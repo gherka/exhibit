@@ -10,10 +10,6 @@ import numpy as np
 import pandas as pd
 from scipy.stats import norm
 
-# Exhibit imports
-from .weights import (target_columns_for_weights_table,
-                       generate_weights_table)
-
 # EXPORTABLE METHODS
 # ==================
 def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
@@ -37,41 +33,27 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
 
     target_cols = (
         kwargs.get("target_cols") or #or short-circuits on first True
-        target_columns_for_weights_table(spec_dict))
-    
-    wt = (
-        kwargs.get("wt") or 
-        generate_weights_table(spec_dict, target_cols))
+        spec_dict["weights_table_target_cols"])
 
+    wt = (
+        kwargs.get("wt") or #or short-circuits on first True
+        spec_dict["weights_table"])
+    
     # Extract relevant variables from the user spec
     dist = spec_dict['columns'][col_name]['distribution']
     dist_params = spec_dict['columns'][col_name]['distribution_parameters']
     scaling = spec_dict['columns'][col_name].get('scaling', None)
-    scaling_params = spec_dict['columns'][col_name].get('scaling_parameters', None)
-
-    null_pct = spec_dict['columns'][col_name]['miss_probability']
+    scaling_params = spec_dict['columns'][col_name].get('scaling_parameters', {})
     precision = spec_dict['columns'][col_name]['precision']
 
-    # Generate index for nulls based on spec & add nulls to anon_df
-    np.random.seed(spec_dict["metadata"]["random_seed"])
-
-    null_idx = np.random.choice(
-        a=[True, False],
-        size=anon_df.shape[0],
-        p=[null_pct, 1-null_pct]
-    )
-
-    #new_series filled with NAs
-    new_series = pd.Series(index=anon_df.index, name=col_name, dtype=float)
-
-    # Generate real values in non-null cells by looking up values of 
+    # Generate continuous values by looking up values of 
     # categorical columns in the weights table and progressively reduce
     # the sum total of the column by the weight of each columns' value
     # of if fit is set to distribution, draw from a normal distribution
     # taking into account values' weights and column mean & standard deviation
 
-    new_series.loc[~null_idx] = anon_df.loc[~null_idx, target_cols].apply(
-        func=_generate_cont_val,
+    new_series = anon_df.loc[:, target_cols].apply(
+        func=generate_cont_val,
         axis=1,
         weights_table=wt,
         num_col=col_name,
@@ -79,15 +61,26 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         dist_params=dist_params)
 
     # Scale the generated series
+    new_series = scale_continuous_column(
+        scaling, new_series, precision=precision, **scaling_params)
+
+    return new_series
+
+def scale_continuous_column(scaling, series, precision, **scaling_params):
+    '''
+    Doc string
+    '''
+
+    # Scale the generated series
     if scaling == "target_sum":
 
-        return _scale_to_target_sum(new_series, precision, **scaling_params)
+        return _scale_to_target_sum(series, precision, **scaling_params)
 
     if scaling == "range":
 
-        return _scale_to_range(new_series, **scaling_params)
-
-    return new_series
+        return _scale_to_range(series, **scaling_params)
+    
+    return series
 
 def generate_derived_column(anon_df, calculation, precision=2):
     '''
@@ -121,7 +114,7 @@ def generate_derived_column(anon_df, calculation, precision=2):
     if "groupby" in safe_calculation:
         #groupby requires pd.eval, not df.eval
         temp_series = (pd
-                    .eval(safe_calculation, local_dict={"df":safe_df})
+                    .eval(safe_calculation, local_dict={"df":safe_df}, engine="python")
                     .round(precision)
                 )
 
@@ -137,16 +130,13 @@ def generate_derived_column(anon_df, calculation, precision=2):
         return groupby_output
 
     basic_output = (safe_df
-                    .eval(safe_calculation, local_dict={"df":safe_df})
+                    .eval(safe_calculation, local_dict={"df":safe_df}, engine="python")
                     .round(precision)
                 )
 
     return basic_output  
 
-# INNER MODULE METHODS
-# ====================
-
-def _generate_cont_val(
+def generate_cont_val(
     row,
     weights_table,
     num_col,
@@ -187,6 +177,9 @@ def _generate_cont_val(
             row, weights_table, num_col, **dist_params)
 
     return None #pragma: no cover
+
+# INNER MODULE METHODS
+# ====================
 
 def _draw_from_normal_distribution(row, wt, num_col, mean, std, **_kwargs):
     '''
@@ -261,6 +254,7 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
     Scale series to target_sum. If precision is integer, try to round 
     the values up in such a way that preserve the target_sum
     '''
+
     if series.isna().all(): #pragma: no cover
         return series
         
@@ -273,7 +267,7 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
         rounded_scaled_series = _conditional_rounding(scaled_series, target_sum)
         return rounded_scaled_series
     
-    return scaled_series
+    return round(scaled_series, 2)
 
 def _conditional_rounding(series, target_sum):
     '''
@@ -308,7 +302,7 @@ def _conditional_rounding(series, target_sum):
         np.where(
             series + row_diff >= 0,
             series + row_diff,
-            np.where(np.isnan(series), np.NaN, 0)
+            np.where(pd.isnull(series), np.NaN, 0)
             )
     )
     
@@ -328,7 +322,12 @@ def _conditional_rounding(series, target_sum):
     values.update(np.maximum(np.ceil(clean_values.iloc[0:boundary]), 1))
     values.update(np.floor(clean_values.iloc[boundary:]))
     
-    return values
+    #return a series of ints or cast to float if there are any NAs
+    #see https://github.com/pandas-dev/pandas/issues/29618
+    #before migrating to the new Pandas null-aware int dtype
+    result = values if values.isna().any() else values.astype(int)
+    
+    return result
 
 def _apply_dispersion(value, dispersion_pct):
     '''

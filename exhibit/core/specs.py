@@ -84,7 +84,7 @@ class newSpec:
             },
             'columns': {},
             'constraints': {},
-            'derived_columns': {"Example_Column": "Example_Calculation"},
+            'derived_columns': {"Example column": "Example calculation"},
             }
 
     def missing_data_chance(self, col):
@@ -317,6 +317,11 @@ class newSpec:
         # boolean logic, e.g. A > B or A < 100
         bool_constraints = find_boolean_columns(self.df)
         self.output['constraints']['boolean_constraints'] = bool_constraints
+
+        # add conditional constraints placeholder
+        self.output['constraints']['conditional_constraints'] = {
+            "Example condition" : {"Example column" : "Example action"}
+        }
 
         # find and save linked columns
         linked_cols = find_hierarchically_linked_columns(self.df, self.output)
