@@ -92,32 +92,58 @@ def generate_YAML_string(spec_dict):
     # CONSTRAINTS
     # ===========
     #
-    # The tool will try to guess which columns are "linked".
-    # The meaning of "linked" varies depending on whether the
-    # columns are categorical or numerical.
+    # There are two types of constraints you can impose of the data:
+    # - boolean (working title)
+    # - conditional
+    # 
+    # Boolean constraints take the form of a simple statement of the
+    # form dependent_column operator expression / indepedent_column.
+    # The tool will try to guess these relationships when creating a
+    # spec. You can also force a column to be always smaller / larger
+    # than a scalar value. Note that adding a boolean contraint between
+    # two columns will affect the distribution of weights and also the
+    # target sum as these are designed to work with a single column.
     #
-    # For linked categorical columns, values in one column must
-    # map 1 : many to values in another column. The columns are
-    # listed in descending order from parent to child/children.
-    #
-    # For linked numerical columns, all non-null values in one
-    # column must be smaller / larger than corresponding row values
-    # in another column.
+    # Conditional constraints are more flexible and can target specific
+    # columns with different actions. For now, only "make_nan" and
+    # "no_nan" are supported. This is for cases where generating a value
+    # in one column, like Readmissions Within 28 days necessitates
+    # a value in Readmissions Within 7 days.
     #
     # If a column name has spaces, make sure to surround it with
-    # the tilde character ~. You can also force a column to be
-    # always smaller / larger than a scalar value. Note that adding
-    # a boolean contraint between two columns will affect the 
-    # distribution of weights and also the target sum as these are
-    # designed to work with a single, discrete column. When comapring
-    # a date column against a fixed date, make sure it's in an ISO
-    # format and is enclosed in single quites like so: '2018-12-01'.
+    # the tilde character ~. When comapring a date column against a
+    # fixed date, make sure it's in an ISO format and is enclosed in
+    # single quites like so '2018-12-01'.
     # ----------------------------------------------------------
     """)
 
     yaml_constraints = yaml.safe_dump(yaml_list[2], sort_keys=False, width=1000)
 
     c4 = textwrap.dedent("""\
+    # ----------------------------------------------------------
+    # LINKED COLUMNS
+    # ===============
+    #
+    # Groups of columns where values follow a one-to-many relationship
+    # (many hospitals sharing a single health board) are captured in
+    # this part of the specification. Linked column groups are created
+    # at spec generation and are saved in the anon.db SQLite database.
+    # The specification format is as follows:
+    # - - 0
+    #   - - Parent column
+    #   - - Child column
+    # - - 1
+    #   - - ...etc.
+    # It's possible to add a linked columns group manually by adding 
+    # a table to anon.db with the hierarchicaly relationships. The name
+    # of this table must follow the format: id_N  where id is taken 
+    # from the metadata section and N is the group number.
+    # ----------------------------------------------------------
+    """)
+
+    yaml_linked = yaml.safe_dump(yaml_list[3], sort_keys=False, width=1000)
+
+    c5 = textwrap.dedent("""\
     # ----------------------------------------------------------
     # DERIVED COLUMNS
     # ===============
@@ -133,10 +159,10 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_derived = yaml.safe_dump(yaml_list[3], sort_keys=False, width=1000)
+    yaml_derived = yaml.safe_dump(yaml_list[4], sort_keys=False, width=1000)
     
     spec_yaml = (
         c1 + yaml_meta + c2 + yaml_columns + c3 + yaml_constraints +
-        c4 + yaml_derived)
+        c4 + yaml_linked + c5 + yaml_derived)
 
     return spec_yaml

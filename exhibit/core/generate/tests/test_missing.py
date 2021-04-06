@@ -102,8 +102,9 @@ class missingDataTests(unittest.TestCase):
             },
             "constraints" : {
                 "conditional_constraints" : {},
-                "linked_columns" : []
-                }
+                
+                },
+            "linked_columns" : []
         }
 
         expected = [
@@ -149,11 +150,11 @@ class missingDataTests(unittest.TestCase):
             },
             "constraints" : {
                 "conditional_constraints" : {},
-                "linked_columns" : [
-                    (0, ["A", "B"]),
-                    (1, ["C", "D"])
-                    ]
-                }
+                },
+            "linked_columns" : [
+                (0, ["A", "B"]),
+                (1, ["C", "D"])
+                ]
         }
 
         expected = [
@@ -193,10 +194,10 @@ class missingDataTests(unittest.TestCase):
             },
             "constraints" : {
                 "conditional_constraints" : {},
-                "linked_columns" : [
-                    (0, ["A", "C"]),
-                    ]
-                }
+                },
+            "linked_columns" : [
+                (0, ["A", "C"]),
+                ]
         }
 
         expected = [
@@ -271,7 +272,6 @@ class missingDataTests(unittest.TestCase):
 
             },
             "constraints" : {
-                "linked_columns" : [],
                 "conditional_constraints": {
                     "A == 'spam'" : {        
                         "B" : "make_nan",
@@ -279,6 +279,7 @@ class missingDataTests(unittest.TestCase):
                     }
                 }
             },
+            "linked_columns" : [],
             "weights_table" : weights,
             "weights_table_target_cols": ["A", "B"]
         }
@@ -327,13 +328,13 @@ class missingDataTests(unittest.TestCase):
                 }
             },
             "constraints" : {
-                "linked_columns" : [],
                 "conditional_constraints": {
                     "C == C" : {        # what to do with non-null rows
                         "D" : "no_nan", # ensure a valid value is generated
                     }
                 }
-            }
+            },
+            "linked_columns" : []
         }
 
         test_data = pd.DataFrame(data={
@@ -376,8 +377,8 @@ class missingDataTests(unittest.TestCase):
             },
             "constraints" : {
                 "conditional_constraints" : {},
-                "linked_columns" : [],
-            }
+            },
+            "linked_columns" : [],
         }
 
         test_data = pd.DataFrame(data={
@@ -418,9 +419,9 @@ class missingDataTests(unittest.TestCase):
                 },
             },
             "constraints" : {
-                "linked_columns" : [],
                 "conditional_constraints" : {}
-            }
+            },
+            "linked_columns" : [],
         }
 
         test_data = pd.DataFrame(data={
@@ -498,9 +499,9 @@ class missingDataTests(unittest.TestCase):
                 },
             },
             "constraints" : {
-                "linked_columns" : [],
                 "conditional_constraints" : {}
             },
+            "linked_columns" : [],
             "weights_table" : weights,
             "weights_table_target_cols": ["C1"]
         }

@@ -207,7 +207,7 @@ class referenceTests(unittest.TestCase):
                 'BNFItemDescription':{'anonymising_set':'birds'},
                 'GPPracticeName':{'anonymising_set':'random'}
             },
-            'constraints':{'linked_columns':[]}
+            'linked_columns':[]
         }
 
         temp_spec, temp_df = self.temp_exhibit(

@@ -118,9 +118,7 @@ class validatorTests(unittest.TestCase):
                     "anonymising_set": "random"
                 },
             },
-            "constraints": {
-                "linked_columns": [[0, ['Board Code', 'Board']]] 
-            }
+            "linked_columns": [[0, ['Board Code', 'Board']]]
         
         }
 
@@ -206,9 +204,7 @@ class validatorTests(unittest.TestCase):
                     "anonymising_set": "mountains"
                 }
             },
-            "constraints": {
-                "linked_columns": [[0, ['Board', 'Local Authority', 'GP Practice']]] 
-            }
+            "linked_columns": [[0, ['Board', 'Local Authority', 'GP Practice']]]
         }
 
         self.assertFalse(
@@ -373,12 +369,10 @@ class validatorTests(unittest.TestCase):
         validatorMock = Mock()
 
         test_dict = {
-            "constraints" : {
-                "linked_columns": [
-                    [0, ["A", "B", "C"]],
-                    [1, ["A", "D"]]
-                ]
-            }
+            "linked_columns": [
+                [0, ["A", "B", "C"]],
+                [1, ["A", "D"]]
+            ]
         }
 
         self.assertFalse(

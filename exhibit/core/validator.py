@@ -126,7 +126,7 @@ class newValidator:
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
         """)
 
-        for linked_col_group in spec_dict['constraints']['linked_columns']:
+        for linked_col_group in spec_dict['linked_columns']:
             #linked_columns[0] is the index of linked group; actual columns are [1] 
             linked_cols = linked_col_group[1]
 
@@ -234,9 +234,9 @@ class newValidator:
         VALIDATION FAIL: %(anon_set)s has fewer columns than linked group %(col)s
         """)
         
-        if spec_dict['constraints']['linked_columns']:
+        if spec_dict.get('linked_columns', None):
 
-            for linked_group in spec_dict['constraints']['linked_columns']:
+            for linked_group in spec_dict['linked_columns']:
                 linked_set = spec_dict['columns'][linked_group[1][0]]['anonymising_set']
                 linked_set = linked_set.split(".")[0]
                 linked_col_count = len(linked_group[1])
@@ -376,7 +376,7 @@ class newValidator:
         VALIDATION FAIL: Duplicate column(s) in linked groups
         """)
 
-        nested_list = spec_dict["constraints"]["linked_columns"]
+        nested_list = spec_dict["linked_columns"]
         flat_list = list(chain(*[sublist for _, sublist in nested_list]))
         flat_set = set(flat_list)
 

@@ -57,7 +57,7 @@ class CategoricalDataGenerator:
         generated_dfs = []
 
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-        for linked_group in self.spec_dict['constraints']['linked_columns']:
+        for linked_group in self.spec_dict['linked_columns']:
             linked_df = generate_linked_anon_df(
                 spec_dict=self.spec_dict,
                 linked_group=linked_group,
@@ -350,7 +350,7 @@ class CategoricalDataGenerator:
             self.spec_dict["metadata"]["date_columns"])
         
         nested_linked_cols = [
-            sublist for n, sublist in self.spec_dict['constraints']['linked_columns']
+            sublist for n, sublist in self.spec_dict['linked_columns']
             ]
 
         complete_cols = [c for c, v in get_attr_values(

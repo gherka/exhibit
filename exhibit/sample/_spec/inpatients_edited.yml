@@ -156,26 +156,33 @@ columns:
     from: '2018-03-31'
     uniques: 4
     frequency: QS
-#----------------------------------------------------------
-#CONSTRAINTS
-#===========
+# ----------------------------------------------------------
+# CONSTRAINTS
+# ===========
 #
-#The tool will try to guess which columns are "linked".
-#The meaning of "linked" varies depending on whether the
-#columns are categorical or numerical.
+# There are two types of constraints you can impose of the data:
+# - boolean (working title)
+# - conditional
+# 
+# Boolean constraints take the form of a simple statement of the
+# form dependent_column operator expression / indepedent_column.
+# The tool will try to guess these relationships when creating a
+# spec. You can also force a column to be always smaller / larger
+# than a scalar value. Note that adding a boolean contraint between
+# two columns will affect the distribution of weights and also the
+# target sum as these are designed to work with a single column.
 #
-#For linked categorical columns, values in one column must
-#map 1 : many to values in another column. The columns are
-#listed in descending order from parent to child/children.
+# Conditional constraints are more flexible and can target specific
+# columns with different actions. For now, only "make_nan" and
+# "no_nan" are supported. This is for cases where generating a value
+# in one column, like Readmissions Within 28 days necessitates
+# a value in Readmissions Within 7 days.
 #
-#For linked numerical columns, all non-null values in one
-#column are smaller / larger than corresponding row values
-#in another column.
-#
-#If a column name has spaces, make sure to surround it with
-#the tilde character ~. You can also force a column to be
-#always smaller / larger than a scalar value.
-#----------------------------------------------------------
+# If a column name has spaces, make sure to surround it with
+# the tilde character ~. When comapring a date column against a
+# fixed date, make sure it's in an ISO format and is enclosed in
+# single quites like so '2018-12-01'.
+# ----------------------------------------------------------
 constraints:
   allow_duplicates: false
   boolean_constraints:
@@ -183,7 +190,26 @@ constraints:
   conditional_constraints:
     Example condition:
       Example column: Example action
-  linked_columns: []
+# ----------------------------------------------------------
+# LINKED COLUMNS
+# ===============
+#
+# Groups of columns where values follow a one-to-many relationship
+# (many hospitals sharing a single health board) are captured in
+# this part of the specification. Linked column groups are created
+# at spec generation and are saved in the anon.db SQLite database.
+# The specification format is as follows:
+# - - 0
+#   - - Parent column
+#   - - Child column
+# - - 1
+#   - - ...etc.
+# It's possible to add a linked columns group manually by adding 
+# a table to anon.db with the hierarchicaly relationships. The name
+# of this table must follow the format: id_N  where id is taken 
+# from the metadata section and N is the group number.
+# ----------------------------------------------------------
+linked_columns: []
 #----------------------------------------------------------
 #DERIVED COLUMNS
 #===============

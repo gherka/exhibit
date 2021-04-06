@@ -38,6 +38,7 @@ class specsTests(unittest.TestCase):
             'metadata',
             'columns',
             'constraints',
+            'linked_columns',
             'derived_columns',
             ]
 

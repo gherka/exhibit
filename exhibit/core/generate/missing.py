@@ -193,7 +193,7 @@ class MissingDataGenerator:
                 pairs.update([col] + attrs["paired_columns"])
 
             # linked groups
-            for _, linked_group in self.spec_dict["constraints"]["linked_columns"]:
+            for _, linked_group in self.spec_dict["linked_columns"]:
                 if col in linked_group:
                     pairs.update(linked_group)
 

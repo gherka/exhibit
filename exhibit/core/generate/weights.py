@@ -197,7 +197,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
     '''
 
     table_id = spec_dict['metadata']['id']
-    linked_groups = spec_dict['constraints']['linked_columns']
+    linked_groups = spec_dict['linked_columns']
     anon_set = spec_dict['columns'][cat_col]['anonymising_set']
     val_count = spec_dict['columns'][cat_col]['uniques']
 

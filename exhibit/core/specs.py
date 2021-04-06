@@ -84,6 +84,7 @@ class newSpec:
             },
             'columns': {},
             'constraints': {},
+            'linked_columns' : [],
             'derived_columns': {"Example column": "Example calculation"},
             }
 
@@ -327,7 +328,7 @@ class newSpec:
         linked_cols = find_hierarchically_linked_columns(self.df, self.output)
         linked_tree = LinkedColumnsTree(linked_cols).tree
 
-        self.output['constraints']['linked_columns'] = linked_tree
+        self.output['linked_columns'] = linked_tree
 
         # Add linked column values to the temp tables in anon.db
         # if we don't replace nans here, they don't get put into SQL
