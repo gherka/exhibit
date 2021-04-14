@@ -67,7 +67,7 @@ class CategoricalDataGenerator:
 
         #2) GENERATE NON-LINKED DFs
         for col in [col for col in self.all_cols if col not in self.skipped_cols]:
-            s = self._generate_anon_series(col)
+            s = self._generate_anon_series(col).sample(frac=1).reset_index(drop=True)
 
             generated_dfs.append(s)
 
@@ -77,6 +77,7 @@ class CategoricalDataGenerator:
         #4) GENERATE SERIES WITH "COMPLETE", CROSS-JOINED COLUMNS
         complete_series = []
 
+        # Complete series can sort the data again
         for col in self.complete_cols:
             s = self._generate_complete_series(col)
             #paired columns return None
@@ -96,7 +97,9 @@ class CategoricalDataGenerator:
             )
         
         #6) TIDY UP
-        anon_df = temp_anon_df.drop('key', axis=1)
+        # reset index and shuffle rows one last time
+        anon_df = (
+            temp_anon_df.drop('key', axis=1).sample(frac=1).reset_index(drop=True))
 
         return anon_df
 
@@ -246,7 +249,8 @@ class CategoricalDataGenerator:
 
             safe_col_name = col_name.replace(" ", "$")
             table_name = f"temp_{self.spec_dict['metadata']['id']}_{safe_col_name}"
-            sql_df = query_anon_database(table_name, db_uri=db_uri)
+            sql_df = query_anon_database(
+                table_name, db_uri=db_uri, exclude_missing=True)
 
         else:
             table_name, *sql_column = anon_set.split(".")

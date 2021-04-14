@@ -177,10 +177,12 @@ class newSpec:
 
                 return "Number of unique values is above category threshold"
 
+            # Some of the "long" single columns are redundant because they are
+            # part of a linked group, but we don't know which yet at this point
             create_temp_table(
                 table_name=table_name,
                 col_names=[safe_col_name],
-                data=[(x,) for x in self.df[col].unique()]
+                data=[(x,) for x in self.df[col].unique()] + [("Missing data", )]
             )
             return "Number of unique values is above category threshold"
 
@@ -331,14 +333,22 @@ class newSpec:
         self.output['linked_columns'] = linked_tree
 
         # Add linked column values to the temp tables in anon.db
-        # if we don't replace nans here, they don't get put into SQL
-        linked_temp_df = self.df[self.cat_cols].fillna("Missing data")
+        # we drop the NAs from the data at this point because
+        # we don't want to add Missing data twice.
+        linked_temp_df = self.df[self.cat_cols]
 
         for linked_group_tuple in linked_tree:
- 
+
             linked_data = list(
-                linked_temp_df.groupby(linked_group_tuple[1]).groups.keys()
+                linked_temp_df
+                    .loc[:, linked_group_tuple[1]].dropna()
+                    .groupby(linked_group_tuple[1]).groups.keys()
             )
+
+            # All linked groups must have a Missing data row as a precaution
+            # in case user modifies the spec and gives Missing data specific
+            # weights or adds miss_probability.
+            linked_data.append(["Missing data"] * len(linked_group_tuple[1]))
 
             table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
 

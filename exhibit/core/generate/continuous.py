@@ -220,6 +220,7 @@ def _draw_from_uniform_distribution(
 
             weight = wt[(num_col, cat_col, val)]['weights'].weight
 
+        # only valid for paired columns that have their values already "reduced"
         except KeyError:
 
             weight = 1

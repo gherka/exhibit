@@ -271,7 +271,8 @@ def parse_original_values(original_values):
         dtype='float'
     )
 
-    col_prob = np.array(df['probability_vector'])
+    # We exclude Missing data from the vector rescaling because it's handled separately
+    col_prob = np.array(df['probability_vector'][:-1])
     col_name = df.columns[0]
 
     warning = textwrap.dedent(f"""
@@ -279,9 +280,10 @@ def parse_original_values(original_values):
         sum up to 1 and will be rescaled.
         """)
 
+    # Don't forget to assign back to [:-1], excluding Missing data
     if col_prob.sum() != 1:
         print(warning)
         col_prob /= col_prob.sum()
-        df["probability_vector"] = col_prob
+        df.loc[df.index[:-1], "probability_vector"] = col_prob
 
     return df

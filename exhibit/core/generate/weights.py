@@ -44,7 +44,7 @@ def generate_weights_table(spec_dict, target_cols):
     
     num_cols = (
         set(spec_dict['metadata']['numerical_columns']) -
-        set(spec_dict['derived_columns'])
+        set(spec_dict.get('derived_columns', []))
     )
     
     for cat_col in target_cols:
@@ -197,7 +197,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
     '''
 
     table_id = spec_dict['metadata']['id']
-    linked_groups = spec_dict['linked_columns']
+    linked_groups = spec_dict.get('linked_columns', [])
     anon_set = spec_dict['columns'][cat_col]['anonymising_set']
     val_count = spec_dict['columns'][cat_col]['uniques']
 

@@ -181,7 +181,6 @@ class referenceTests(unittest.TestCase):
     def test_reference_prescribing_non_linked_anon_data(self):
         '''
         What this reference test is covering:
-            - anonymisation using single DB column (peaks)
             - paired 1:1 anonymisation set (birds)
             - designating paired columns as complete columns
             - unlinking of columns
@@ -226,6 +225,7 @@ class referenceTests(unittest.TestCase):
             left=expected_df,
             right=temp_df,
             check_exact=False,
+            check_dtype=False
         )
     
     def test_reference_prescribing_linked_mnt_anon_data(self):
@@ -270,6 +270,7 @@ class referenceTests(unittest.TestCase):
             left=expected_df,
             right=temp_df,
             check_exact=False,
+            check_dtype=False
         )
     
     def test_reference_inpatient_anon_data(self):
@@ -312,10 +313,14 @@ class referenceTests(unittest.TestCase):
         inpatients_anon.sort_index(axis=1, inplace=True)
         xA.anon_df.sort_index(axis=1, inplace=True)
 
+        # there is a quirk of how int is cast on Windows and Unix: int32 vs int64
+        # see SO answer:
+        # Why do Pandas integer `dtypes` not behave the same on Unix and Windows?
         assert_frame_equal(
             left=inpatients_anon,
             right=xA.anon_df,
             check_exact=False,
+            check_dtype=False
         )
 
     def test_reference_inpatient_ct10_random_data(self):
@@ -364,7 +369,7 @@ class referenceTests(unittest.TestCase):
         
         # modify spec
         test_spec_dict = {
-            "metadata": {"number_of_rows": 2000},
+            "metadata": {"number_of_rows": 2000, "random_seed": 2},
             "columns" : {"sex": {"cross_join_all_unique_values" : True}}
         }
 
@@ -388,6 +393,7 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_ct10,
             right=temp_df,
             check_exact=False,
+            check_dtype=False
         )
 
     def test_reference_inpatient_ct50_random_data(self):
@@ -452,6 +458,7 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_ct50,
             right=temp_df,
             check_exact=False,
+            check_dtype=False
         )
 
     def test_reference_inpatient_ct10_mountains_data(self):
@@ -537,6 +544,7 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_mnt_ct10,
             right=temp_df,
             check_exact=False,
+            check_dtype=False
         )
 
     def test_reference_inpatient_ct50_mountains_data(self):
@@ -611,6 +619,7 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_mnt_ct50,
             right=temp_df,
             check_exact=False,
+            check_dtype=False
         )
 
     @classmethod

@@ -211,7 +211,11 @@ class missingDataTests(unittest.TestCase):
         
     def test_make_nans_in_columns(self):
         '''
-        Doc string
+        When we're adding NANs to categorical columns, the non-null 
+        numerical values must be re-calulcated and re-scaled because
+        Missing data (NANs identifier in categorical columns) can have
+        vastly different weights compared to the old values. However,
+        we shouldn't rescaled the whole column anew, just the added values.
         '''
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
@@ -275,7 +279,6 @@ class missingDataTests(unittest.TestCase):
                 "conditional_constraints": {
                     "A == 'spam'" : {        
                         "B" : "make_nan",
-                        "C" : "make_nan"
                     }
                 }
             },
@@ -285,15 +288,15 @@ class missingDataTests(unittest.TestCase):
         }
 
         test_data = pd.DataFrame(data={
-            "A" : ["spam", "spam", "eggs", "spam"],
+            "A" : ["spam", "spam", "eggs", "eggs"],
             "B" : ["bacon"] * 4,
-            "C" : [1, 2, 3, 4],
+            "C" : [10, 20, 4, 4],
         })
 
         expected = pd.DataFrame(data={
-            "A" : ["spam", "spam", "eggs", "spam"],
-            "B" : [np.nan, np.nan, "bacon", np.nan],
-            "C" : [np.nan, np.nan, 10, np.nan],
+            "A" : ["spam", "spam", "eggs", "eggs"],
+            "B" : [np.nan, np.nan, "bacon", "bacon"],
+            "C" : [1, 1, 4, 4],
         })
 
         test_gen = tm.MissingDataGenerator(test_dict, test_data)
@@ -446,7 +449,12 @@ class missingDataTests(unittest.TestCase):
         Adding Missing data also changes the target_sum of the continuous column
         so we need to re-scale the whole column after adding missing data either
         to it or to the categorical columns.
+        
+        We rely on np.random to generate reasonable number of NAs with 0.5 prob,
+        but that can sometimes fail so we ensure that the seed is constant.
         '''
+
+        np.random.seed(0)
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
 
@@ -507,16 +515,16 @@ class missingDataTests(unittest.TestCase):
         }
 
         test_data = pd.DataFrame(data={
-            "C1" : ["A", "A", "A", "B", "B"],
-            "C2" : [100] * 5
+            "C1" : ["A", "A", "A", "B", "B"] * 20,
+            "C2" : [1] * 100
         })
 
 
         test_gen = tm.MissingDataGenerator(test_dict, test_data)
         result = test_gen.add_missing_data()
 
-        self.assertEqual(result["C2"].sum(), 200)
         self.assertTrue(result["C1"].isna().any())
+        self.assertEqual(result["C2"].sum(), 200)
         
 
 if __name__ == "__main__" and __package__ is None:

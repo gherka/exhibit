@@ -43,7 +43,7 @@ class MissingDataGenerator:
         '''
         Returns the original data, modified in place to include nan values
 
-        Since Missing data (categorical) has it's own weights, if we're adding
+        Since Missing data (categorical) has its own weights, if we're adding
         any Missing data to the dataframe, we must re-generate the contunious
         variables to make sure we use the Missing data weights and not the original.
 
@@ -132,12 +132,14 @@ class MissingDataGenerator:
             # re-set the seed for consistent results
             np.random.seed(seed)
             
-            # Extract relevant variables from the user spec
-            dist = self.spec_dict['columns'][num_col]['distribution']
-            dist_params = self.spec_dict['columns'][num_col]['distribution_parameters']
-            scaling = self.spec_dict['columns'][num_col].get('scaling', None)
-            scaling_params = self.spec_dict['columns'][num_col].get('scaling_parameters', {})
-            precision = self.spec_dict['columns'][num_col]['precision']
+            # Extract relevant num col variables from the user spec
+            num_col_dict = self.spec_dict['columns'][num_col]
+
+            dist = num_col_dict['distribution']
+            dist_params = num_col_dict['distribution_parameters']
+            scaling = num_col_dict.get('scaling', None)
+            scaling_params = num_col_dict.get('scaling_parameters', {})
+            precision = num_col_dict['precision']
             
             # if it's already NA, don't re-generate; it's NA for a reason!
             num_mask = self.nan_data[num_col].isna()
@@ -152,13 +154,21 @@ class MissingDataGenerator:
                 dist_params=dist_params
             )
 
-            # rescale the whole column, not just the masked section
-            self.nan_data[num_col] = scale_continuous_column(
+            # rescale the masked section, but make sure to change target_sum!
+            if scaling_params.get("target_sum", None):
+                old_sum = self.nan_data.loc[~mask, num_col].sum()
+                scaling_params["target_sum"] = scaling_params["target_sum"] - old_sum
+
+            repl_s =  scale_continuous_column(
                 scaling=scaling,
-                series=self.nan_data[num_col],
+                series=self.nan_data.loc[mask, num_col],
                 precision=precision,
-                **scaling_params
-            ) 
+                **scaling_params    
+            )
+
+            # for some reason assigning a series back, rather than values
+            # creates nulls in certain rows, but not others; maybe Pandas bug.
+            self.nan_data.loc[mask, num_col] = repl_s.values
 
         # replace Missing data back with np.nan
         self.nan_data.replace({"Missing data" : np.nan}, inplace=True)

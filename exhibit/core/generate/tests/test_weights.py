@@ -5,6 +5,13 @@ Test the generation of weights for continuous columns
 # Standard library imports
 import unittest
 
+# External library imports
+import pandas as pd
+
+# Exhibit imports
+from exhibit.core.sql import create_temp_table
+from exhibit.db import db_util
+
 # Module under test
 from exhibit.core.generate import weights as tm
 
@@ -12,6 +19,13 @@ class weightsTests(unittest.TestCase):
     '''
     Doc string
     '''
+    @classmethod
+    def setUpClass(cls):
+        '''
+        Create a list of tables to drop after reference tests finish
+        '''
+
+        cls._temp_tables = []
 
     def test_target_columns_for_weights_table(self):
         '''
@@ -47,6 +61,160 @@ class weightsTests(unittest.TestCase):
         result = tm.target_columns_for_weights_table(test_spec)
 
         self.assertEqual(expected, result)
+
+    def test_equal_weight_for_single_column_exceeding_ct(self):
+        '''
+        Missind data is a special value that might or might not appear
+        in the actually generated data, hence when calculating equal
+        weights, we ignore it and only divide 1 by the total number
+        of valid unique values in the column.
+        '''
+
+        data = [
+            ("A",),
+            ("B",),
+            ("C",),
+            ("D",),
+            ("E",),
+            ("Missing data",)
+        ]
+
+        create_temp_table(
+            table_name="temp_test_id_weights_CatC",
+            col_names=["CatC"], data=data)
+
+        self._temp_tables.append("temp_test_id_weights_CatC")
+
+        test_dict = {
+            "metadata": {
+                "numerical_columns": ["NumC"],
+                "category_threshold": 1,
+                "id": "test_id_weights"
+            },
+            "columns": {
+                "CatC": {
+                    "type": "categorical",
+                    "original_values": "Number of unique values is above category threshold",
+                    "uniques": 5,
+                    "anonymising_set": "random"
+                },
+                "NumC": {
+                    "type": "continuous",
+                }
+            }
+        }
+
+        test_cols = ["CatC"]
+        test_wt = tm.generate_weights_table(test_dict, test_cols)
+        
+        self.assertEqual(test_wt[("NumC", "CatC", "Missing data")]['weights'].weight, 0.2)
+        self.assertEqual(test_wt[("NumC", "CatC", "A")]['weights'].weight, 0.2)
+        
+    def test_weights_for_single_column_with_original_values(self):
+        '''
+        Doc string
+        '''
+
+        values = pd.DataFrame(data={
+            "CatC": list("ABCDE") + ["Missing data"],
+            "NumC": [0.05, 0.2, 0.35, 0.2, 0.2, 0.0] 
+        })
+
+        test_dict = {
+            "metadata": {
+                "numerical_columns": ["NumC"],
+                "category_threshold": 10,
+                "id": "test_id_weights"
+            },
+            "columns": {
+                "CatC": {
+                    "type": "categorical",
+                    "original_values": values,
+                    "uniques": 5,
+                    "anonymising_set": "random"
+                },
+                "NumC": {
+                    "type": "continuous",
+                }
+            }
+        }
+
+        test_cols = ["CatC"]
+        test_wt = tm.generate_weights_table(test_dict, test_cols)
+        
+        self.assertEqual(test_wt[("NumC", "CatC", "Missing data")]['weights'].weight, 0.0)
+        self.assertEqual(test_wt[("NumC", "CatC", "A")]['weights'].weight, 0.05)
+
+    def test_weights_for_linked_columns_with_mixed_ct(self):
+        '''
+        Doc string
+        '''
+
+        data = [
+            ("A", "A1"),
+            ("A", "A2"),
+            ("B", "B1"),
+            ("B", "B2"),
+            ("B", "B3"),
+            ("Missing data", "Missing data")
+        ]
+
+        create_temp_table(
+            table_name="temp_test_id_weights_0",
+            col_names=["LinkCat1", "LinkCat2"], data=data)
+
+        self._temp_tables.append("temp_test_id_weights_0")
+
+        values = pd.DataFrame(data={
+            "LinkCat1" : ["A", "B", "Missing data"],
+            "NumC": [0.1, 0.9, 0.0]
+        })
+
+        test_dict = {
+            "metadata": {
+                "numerical_columns": ["NumC"],
+                "category_threshold": 3,
+                "id": "test_id_weights"
+            },
+            "columns": {
+                "LinkCat1": {
+                    "type": "categorical",
+                    "original_values": values,
+                    "uniques": 2,
+                    "anonymising_set": "random"
+                },
+                "LinkCat2": {
+                    "type": "categorical",
+                    "original_values": "Number of unique values is above category threshold",
+                    "uniques": 5,
+                    "anonymising_set": "random"
+                },
+                "NumC": {
+                    "type": "continuous",
+                }
+            },
+            "linked_columns": [(0, ["LinkCat1", "LinkCat2"])]
+        }
+
+        test_cols = ["LinkCat1", "LinkCat2"]
+        test_wt = tm.generate_weights_table(test_dict, test_cols)
+        
+        self.assertEqual(
+            test_wt[("NumC", "LinkCat1", "Missing data")]['weights'].weight, 0.0)
+        self.assertEqual(
+            test_wt[("NumC", "LinkCat1", "B")]['weights'].weight, 0.9)
+        self.assertEqual(
+            test_wt[("NumC", "LinkCat2", "Missing data")]['weights'].weight, 0.2)
+        self.assertEqual(
+            test_wt[("NumC", "LinkCat2", "B1")]['weights'].weight, 0.2)
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+        
+        db_util.drop_tables(cls._temp_tables)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

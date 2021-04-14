@@ -232,7 +232,9 @@ def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_
 
     gen = _LinkedDataGenerator(spec_dict, linked_group, num_rows)
 
-    linked_df = gen.pick_scenario()
+    # make sure to scramble the order and drop index to avoid problems
+    # with clustered values and sorting when pd.concat-ing
+    linked_df = gen.pick_scenario().sample(frac=1).reset_index(drop=True)
 
     return linked_df
 
@@ -599,8 +601,8 @@ class _LinkedDataGenerator:
             aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
             self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
 
-        #process the first (base) parent column
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
+        #process the first (base) parent column; remember to exclude Missing data
+        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
         base_col_prob = np.array(base_col_df['probability_vector'])
 
         base_col_series = pd.Series(
@@ -626,7 +628,7 @@ class _LinkedDataGenerator:
             sub_dfs.append(
                 self.sql_df[self.linked_cols].iloc[rnd_idx])
         
-        result = pd.concat(sub_dfs).reset_index(drop=True)
+        result = pd.concat(sub_dfs)
 
         return result       
 
@@ -642,8 +644,8 @@ class _LinkedDataGenerator:
             aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
             self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
 
-        #whether aliased or not
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values']
+        #whether aliased or not; remember to exclude Missing data which is always last
+        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
         base_col_prob = np.array(base_col_df['probability_vector'])
 
         base_col_series = pd.Series(
