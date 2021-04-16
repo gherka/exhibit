@@ -75,13 +75,17 @@ def generate_YAML_string(spec_dict):
     #
     # The first option will generate the column by appling weights
     # to the uniform_base_value parameter and optionally perturb it
-    # within the dispersion percentage. With dispersion set to zero, you
-    # can generate identical values for any given combination of
+    # within the dispersion percentage. With dispersion set to zero,
+    # you can generate identical values for any given combination of
     # categorical values on the row.
     # 
     # A normal distribution will respect categorical weights by shifting
     # the mean accordingly. You can vary the "spread" by adjusting the 
     # std parameter.
+    # 
+    # You can also set parameters for scaling the values in continous
+    # columns. The options are target_sum or range. Note that if you
+    # include certain constraints, the final scaling can be affected.
     # ----------------------------------------------------------
     """)
 

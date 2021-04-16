@@ -397,8 +397,10 @@ class continuousTests(unittest.TestCase):
             
         test_min = 10
         test_max = 100
+        precision = "float"
 
-        scaled_series = tm._scale_to_range(test_series, test_min, test_max, False)
+        scaled_series = tm._scale_to_range(
+            test_series, precision, test_min, test_max, False)
 
         rescaled_series = scaled_series / float(sum(scaled_series)) * sum(test_series)
 
@@ -409,6 +411,25 @@ class continuousTests(unittest.TestCase):
 
         self.assertEqual(scaled_series.min(), test_min)
         self.assertEqual(scaled_series.max(), test_max)
+
+    def test_range_scaling_with_integer_precision(self):
+        '''
+        Scaling to min-max values should respect user choice regarding
+        precision of the column in the same way as scaling to target_sum
+        '''
+
+        test_series = pd.Series(
+            [1, 2, 4, 8, 16, 4, 1, np.nan]
+        )
+            
+        test_min = 10
+        test_max = 100
+        precision = "integer"
+
+        scaled_series = tm._scale_to_range(
+            test_series, precision, test_min, test_max, False)
+
+        self.assertEqual(scaled_series.dtype, "Int64")
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

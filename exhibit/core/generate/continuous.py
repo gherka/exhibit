@@ -78,7 +78,7 @@ def scale_continuous_column(scaling, series, precision, **scaling_params):
 
     if scaling == "range":
 
-        return _scale_to_range(series, **scaling_params)
+        return _scale_to_range(series, precision, **scaling_params)
     
     return series
 
@@ -229,7 +229,7 @@ def _draw_from_uniform_distribution(
 
     return _apply_dispersion(base_value, dispersion)
 
-def _scale_to_range(series, target_min, target_max, preserve_weights, **_kwargs):
+def _scale_to_range(series, precision, target_min, target_max, preserve_weights, **_kwargs):
     '''
     Scale based on target range.
 
@@ -240,15 +240,22 @@ def _scale_to_range(series, target_min, target_max, preserve_weights, **_kwargs)
 
     When preserve_weights is True and the target_min doesn't fit in with the rest of
     the weights, validator will issue a warning (TO DO)
+
+    Note that we're using Pandas-specific nullable Integer dtype - this can cause issues
+    with pd.eval() as per https://github.com/pandas-dev/pandas/issues/29618. 
     '''
 
     X = series
 
     if preserve_weights:
+        out = np.where(X == X.min(), target_min, X / X.max() * target_max)
+    else: 
+        out = (X - X.min()) / (X.max() - X.min()) * (target_max - target_min) + target_min
 
-        return np.where(X == X.min(), target_min, X / X.max() * target_max)
+    if precision == "integer":
+        return out.round().astype("Int64")
 
-    return (X - X.min()) / (X.max() - X.min()) * (target_max - target_min) + target_min
+    return out
 
 def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
     '''
