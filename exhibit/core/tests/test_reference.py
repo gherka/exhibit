@@ -95,7 +95,8 @@ class referenceTests(unittest.TestCase):
                 "category_threshold": 30,
                 "verbose"           : True,
                 "output"            : f_name,
-                "skip_columns"      : []
+                "skip_columns"      : [],
+                "equal_weights"     : False
             }
 
             fromspec_defaults = {
@@ -118,7 +119,9 @@ class referenceTests(unittest.TestCase):
                     category_threshold=fromdata_defaults["category_threshold"],
                     verbose=fromdata_defaults["verbose"],
                     output=fromdata_defaults["output"],
-                    skip_columns=fromdata_defaults['skip_columns']
+                    skip_columns=fromdata_defaults['skip_columns'],
+                    equal_weights=fromdata_defaults["equal_weights"]
+
                 )
                 
                 xA = tm.newExhibit()
@@ -161,6 +164,7 @@ class referenceTests(unittest.TestCase):
                 source=Path(package_dir('sample', '_data', 'inpatients.csv')),
                 category_threshold=30,
                 skip_columns=[],
+                equal_weights=False,
                 verbose=True,
             )
 

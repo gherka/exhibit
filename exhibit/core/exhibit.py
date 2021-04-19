@@ -112,6 +112,13 @@ class newExhibit:
             nargs='+',
             help='list of columns to skip when reading in data',
             )
+        
+        parser.add_argument(
+            '--equal_weights', '-ew',
+            default=False,
+            action='store_true',
+            help='use equal weights and probabilities for all printed column values',
+            )
  
         self._args = parser.parse_args(sys.argv[1:])
         self.spec_dict = None
@@ -147,6 +154,7 @@ class newExhibit:
             new_spec = newSpec(
                 data=self.df,
                 ct=self._args.category_threshold,
+                ew=self._args.equal_weights
                 )
 
             self.spec_dict = new_spec.output_spec_dict()

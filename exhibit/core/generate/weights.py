@@ -92,7 +92,7 @@ def generate_weights_table(spec_dict, target_cols):
 
     return result
 
-def generate_weights(df, cat_col, num_col):
+def generate_weights(df, cat_col, num_col, ew=False):
     '''
     Weights are generated for a each value in each categorical column
     where 1 means 100% of the numerical column is allocated to that value
@@ -105,6 +105,8 @@ def generate_weights(df, cat_col, num_col):
         categorical column
     num_col : str
         numerical column
+    ew : Boolean
+        equal_weights parameter from CLI
 
     Returns
     -------
@@ -119,10 +121,13 @@ def generate_weights(df, cat_col, num_col):
         .fillna({cat_col:nan_placeholder})
         .groupby([cat_col])[num_col].sum(min_count=1)
     )
-
-    weights['ws'] = weights.transform(_weights_transform, weights=weights)
+    #equalise the weights if equal_weights is True
+    if ew:
+        weights.iloc[:] = round(1 / weights.shape[0], 3)
+    else:
+        weights = weights.transform(_weights_transform, weights=weights)
     
-    temp_output = weights['ws'].sort_index(kind="mergesort")
+    temp_output = weights.sort_index(kind="mergesort")
 
     if nan_placeholder not in temp_output:
         temp_output = temp_output.append(pd.Series(

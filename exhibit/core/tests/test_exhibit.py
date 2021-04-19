@@ -100,6 +100,28 @@ class exhibitTests(unittest.TestCase):
             mo.assert_called_with('source_dataset_SPEC.yml', 'w')
             mo.return_value.__enter__.return_value.write.assert_called_with('hello')
     
+    @patch('argparse.ArgumentParser.parse_args')
+    def test_output_spec_respectes_equal_weights_argument(self, mock_args):
+        '''
+        Doc string
+        '''
+
+        mock_args.return_value = argparse.Namespace(
+            source=Path(package_dir('sample', '_data', 'inpatients.csv')),
+            verbose=True,
+            category_threshold=30,
+            equal_weights=True,
+            skip_columns=[]
+        )
+
+        xA = tm.newExhibit()
+        xA.read_data()
+        xA.generate_spec()
+
+        expected = '10-19        | 0.100              | 0.100 | 0.100 | 0.100'
+        result = xA.spec_dict["columns"]["age"]["original_values"][2]
+                
+        self.assertEqual(expected, result)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

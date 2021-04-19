@@ -31,6 +31,10 @@ class newSpec:
         If the full list is too long to display, the values are put in a dedicated
         anon.db table for later retrieval and the weights and probability vectors 
         are drawn from a uniform distribution.
+    ew : Boolean
+        if equal_weights is set to True in the CLI, all weights and probabilities of
+        columns with values printed in the spec are equalised so that the distinct
+        shapes of the data in original columns are erased.
     random_seed : int
         OPTIONAL. Default is 0    
 
@@ -57,10 +61,11 @@ class newSpec:
         processed specification
     '''
 
-    def __init__(self, data, ct, random_seed=0):
+    def __init__(self, data, ct, ew=False, random_seed=0):
 
         self.df = data.copy()
         self.ct = ct
+        self.ew = ew
         self.random_seed = random_seed
         self.id = generate_table_id()
         self.numerical_cols = set(
@@ -195,6 +200,7 @@ class newSpec:
                 dataframe=self.df,
                 numerical_cols=self.numerical_cols,
                 weights=wt,
+                ew=self.ew,
                 original_series_name=col,
                 paired_series_names=self.list_of_paired_cols(col)
                 )
@@ -215,7 +221,7 @@ class newSpec:
 
         for num_col in self.numerical_cols:
 
-            weights[num_col] = generate_weights(self.df, col, num_col)
+            weights[num_col] = generate_weights(self.df, col, num_col, ew=self.ew)
 
         categorical_d = {
             'type': 'categorical',

@@ -101,7 +101,7 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
 
     return padded_values
 
-def build_list_of_probability_vectors(dataframe, original_series_name):
+def build_list_of_probability_vectors(dataframe, original_series_name, ew=False):
     '''
     Feeder function for build_table_from_lists; at least 0.001
 
@@ -111,6 +111,8 @@ def build_list_of_probability_vectors(dataframe, original_series_name):
         source dataframe
     original_series_name : str
         Name of the column used as reference
+    ew: Boolean
+        equal_weight from the CLI parameters
 
     Returns
     -------
@@ -130,6 +132,10 @@ def build_list_of_probability_vectors(dataframe, original_series_name):
                      .sort_index(kind="mergesort")
                      .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
     )
+
+    #equalise the probability vectors if equal_weights is True
+    if ew:
+        temp_vectors.iloc[:] = 1 / temp_vectors.shape[0]
 
     if "Missing data" not in temp_vectors:
         temp_vectors = temp_vectors.append(pd.Series(
@@ -177,7 +183,7 @@ def build_list_of_column_weights(weights):
     return sorted_final
     
 def build_table_from_lists(
-    dataframe, numerical_cols, weights,
+    dataframe, numerical_cols, weights, ew,
     original_series_name, paired_series_names):
     '''
     Format information about a column (its values, its
@@ -193,6 +199,8 @@ def build_table_from_lists(
         Numerical column names required for max length / padding checking
     weights : dictionary
         Required downstream. Key is numerical column, values are a list
+    ew : Boolean
+        If set to True, generate equal weights and probabilities
     original_series_name : pd.Series
         Values from base, reference column. Required downstream
     paired_series_names : iterable
@@ -211,7 +219,7 @@ def build_table_from_lists(
         for paired_name in paired_series_names
         ]
     #generate a list of probabilities for the original column
-    p = build_list_of_probability_vectors(dataframe, original_series_name)
+    p = build_list_of_probability_vectors(dataframe, original_series_name, ew=ew)
     #generate a list of value weights for each numerical column
     w = build_list_of_column_weights(weights)
     
