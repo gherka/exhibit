@@ -7,7 +7,9 @@ import numpy as np
 
 # Exhibit imports
 from .constraints import find_boolean_columns
-from .utils import guess_date_frequency, generate_table_id, float_or_int
+from .utils import (
+    guess_date_frequency, generate_table_id,
+    float_or_int, sort_columns_by_dtype_az)
 from .formatters import build_table_from_lists
 from .sql import create_temp_table
 from .generate.weights import generate_weights
@@ -304,10 +306,7 @@ class newSpec:
         '''
 
         # sort columns by their dtype
-        sorted_col_names = sorted(
-            self.df.columns.sort_values(),
-            key=lambda x: str(self.df.dtypes.to_dict()[x]), reverse=True
-        )
+        sorted_col_names = sort_columns_by_dtype_az(self.df.dtypes)
 
         for col in sorted_col_names:
 

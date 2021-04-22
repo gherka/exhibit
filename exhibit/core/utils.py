@@ -15,6 +15,7 @@ import dateutil
 
 # External library imports
 import pandas as pd
+from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype
 
 def path_checker(path_string):
     '''
@@ -364,3 +365,26 @@ def is_paired(spec_dict, col_name):
     if isinstance(orig_vals, str) and orig_vals == 'See paired column':
         return True
     return False
+
+def sort_columns_by_dtype_az(dtypes):
+    '''
+    Given the output of df.dtypes, return the columns
+    sorted first by dtype and then alphabetically.
+    '''
+
+    def _dtype_grouper(dtype):
+        '''
+        Helper function to take care of float and ints
+        or various date time formats. Categorical columns
+        always go first, then numerical and finally dates.
+        '''
+    
+        if is_numeric_dtype(dtype):
+            return 2
+        if is_datetime64_any_dtype(dtype):
+            return 3
+        return 1
+
+    result = dtypes.sort_index().transform(_dtype_grouper).sort_values().index
+    
+    return result

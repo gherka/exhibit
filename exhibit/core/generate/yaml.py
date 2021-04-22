@@ -44,7 +44,7 @@ def generate_YAML_string(spec_dict):
 
     yaml_meta = yaml.safe_dump(yaml_list[0], sort_keys=False, width=1000)
 
-    c2 = textwrap.dedent("""\
+    c2a = textwrap.dedent("""\
     # ----------------------------------------------------------
     # COLUMN DETAILS
     # ==============
@@ -56,7 +56,9 @@ def generate_YAML_string(spec_dict):
     # specification. When making changes to the values, please
     # note their format. Values starting with a number must be
     # enclosed in quotes as per YAML rules.
-    #
+    # 
+    # CATEGORICAL COLUMNS
+    # -----------
     # The default anonymising method for categorical columns is
     # "random", meaning original values are drawn at random,
     # (respecting probabilities, if supplied) but you can add
@@ -66,7 +68,19 @@ def generate_YAML_string(spec_dict):
     # The tool comes with a number of sample anonymising sets
     # (see documentation). To use just one column from a set,
     # add a dot separator like so mountains.range
-    #
+    # ----------------------------------------------------------
+    """)
+
+    yaml_columns_all = (
+        c2a + yaml.safe_dump(yaml_list[1], sort_keys=False, width=1000))
+
+    c2b = textwrap.dedent("""\
+    # NUMERICAL COLUMNS
+    # ----------
+    # Currently, only continuous data is supported. To use numerical
+    # columns with discrete data, covert them to categorical or make
+    # sure that the precision parameter is set to integer.
+    # 
     # For Continuous columns you have two options, each with
     # their own set of distinct parameters:
     #
@@ -89,7 +103,40 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_columns = yaml.safe_dump(yaml_list[1], sort_keys=False, width=1000)
+    first_num_col = next(iter(spec_dict["metadata"]["numerical_columns"]), None)
+
+    if first_num_col:
+        num_col_in = yaml_columns_all.find(f"  {first_num_col}:\n    type: continuous")
+        yaml_columns_all = (
+            yaml_columns_all[:num_col_in] + c2b + 
+            yaml_columns_all[num_col_in:]
+        )
+
+    c2c = textwrap.dedent("""\
+    # DATE COLUMNS
+    # ----------
+    # Exhibit will try to determine date columns automatically, but
+    # you can also add them manually, providing the following paramters:
+    #   type: date
+    #   cross_join_all_unique_values: true
+    #   miss_probability: 0.0
+    #   from: '2018-03-31'
+    #   uniques: 4
+    #   frequency: QS
+    # 
+    # Frequency is based on the frequency strings of DateOffsets.
+    # See Pandas documention for more details.
+    # ----------------------------------------------------------
+    """)
+
+    first_date_col = next(iter(spec_dict["metadata"]["date_columns"]), None)
+
+    if first_date_col:
+        date_col_in = yaml_columns_all.find(f"  {first_date_col}:\n    type: date")
+        yaml_columns_all = (
+            yaml_columns_all[:date_col_in] + c2c + 
+            yaml_columns_all[date_col_in:]
+        )
 
     c3 = textwrap.dedent("""\
     # ----------------------------------------------------------
@@ -166,7 +213,7 @@ def generate_YAML_string(spec_dict):
     yaml_derived = yaml.safe_dump(yaml_list[4], sort_keys=False, width=1000)
     
     spec_yaml = (
-        c1 + yaml_meta + c2 + yaml_columns + c3 + yaml_constraints +
+        c1 + yaml_meta + yaml_columns_all + c3 + yaml_constraints +
         c4 + yaml_linked + c5 + yaml_derived)
 
     return spec_yaml

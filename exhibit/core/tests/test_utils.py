@@ -152,6 +152,25 @@ class utilsTests(unittest.TestCase):
         self.assertEqual(tm.float_or_int(test_series_2), "integer")
         self.assertEqual(tm.float_or_int(test_series_3), "float")
 
+    def test_sorting_columns_by_dtype_az(self):
+        '''
+        Using Pandas types API
+        '''
+
+        test_df = pd.DataFrame(data={
+            "A": np.array(range(1, 5)),
+            "B": np.array(range(1, 5)) / 10,
+            "C": list("ABCD"),
+            "D": pd.date_range("2018-01-01", periods=4, freq="MS"),
+            "E": np.array(range(1, 5)),
+            "AC": list("ABCD")
+        })
+
+        expected = ["AC", "C", "A", "B", "E", "D"]
+        result = tm.sort_columns_by_dtype_az(test_df.dtypes)
+
+        self.assertCountEqual(expected, result)
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

@@ -24,7 +24,7 @@ metadata:
   - quarter_date
   category_threshold: 30
   random_seed: 0
-  id: 0958a
+  id: ff811
 # ----------------------------------------------------------
 # COLUMN DETAILS
 # ==============
@@ -36,7 +36,9 @@ metadata:
 # specification. When making changes to the values, please
 # note their format. Values starting with a number must be
 # enclosed in quotes as per YAML rules.
-#
+# 
+# CATEGORICAL COLUMNS
+# -----------
 # The default anonymising method for categorical columns is
 # "random", meaning original values are drawn at random,
 # (respecting probabilities, if supplied) but you can add
@@ -46,22 +48,6 @@ metadata:
 # The tool comes with a number of sample anonymising sets
 # (see documentation). To use just one column from a set,
 # add a dot separator like so mountains.range
-#
-# For Continuous columns you have two options, each with
-# their own set of distinct parameters:
-#
-# - weighted_uniform_with_dispersion
-# - normal
-#
-# The first option will generate the column by appling weights
-# to the uniform_base_value parameter and optionally perturb it
-# within the dispersion percentage. With dispersion set to zero, you
-# can generate identical values for any given combination of
-# categorical values on the row.
-# 
-# A normal distribution will respect categorical weights by shifting
-# the mean accordingly. You can vary the "spread" by adjusting the 
-# std parameter.
 # ----------------------------------------------------------
 columns:
   age:
@@ -161,6 +147,48 @@ columns:
     cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
+# NUMERICAL COLUMNS
+# ----------
+# Currently, only continuous data is supported. To use numerical
+# columns with discrete data, covert them to categorical or make
+# sure that the precision parameter is set to integer.
+# 
+# For Continuous columns you have two options, each with
+# their own set of distinct parameters:
+#
+# - weighted_uniform_with_dispersion
+# - normal
+#
+# The first option will generate the column by appling weights
+# to the uniform_base_value parameter and optionally perturb it
+# within the dispersion percentage. With dispersion set to zero,
+# you can generate identical values for any given combination of
+# categorical values on the row.
+# 
+# A normal distribution will respect categorical weights by shifting
+# the mean accordingly. You can vary the "spread" by adjusting the 
+# std parameter.
+# 
+# You can also set parameters for scaling the values in continous
+# columns. The options are target_sum or range. Note that if you
+# include certain constraints, the final scaling can be affected.
+# ----------------------------------------------------------
+  avlos:
+    type: continuous
+    precision: float
+    distribution: weighted_uniform_with_dispersion
+    distribution_parameters:
+      uniform_base_value: 1000
+      dispersion: 0.1
+      mean: 2.96
+      std: 4.1
+    scaling: target_sum
+    scaling_parameters:
+      target_sum: 28258.352214630533
+      target_min: 0.0
+      target_max: 74.8
+      preserve_weights: true
+    miss_probability: 0.065
   los:
     type: continuous
     precision: integer
@@ -193,22 +221,20 @@ columns:
       target_max: 12888.0
       preserve_weights: true
     miss_probability: 0.0
-  avlos:
-    type: continuous
-    precision: float
-    distribution: weighted_uniform_with_dispersion
-    distribution_parameters:
-      uniform_base_value: 1000
-      dispersion: 0.1
-      mean: 2.96
-      std: 4.1
-    scaling: target_sum
-    scaling_parameters:
-      target_sum: 28258.352214630533
-      target_min: 0.0
-      target_max: 74.8
-      preserve_weights: true
-    miss_probability: 0.065
+# DATE COLUMNS
+# ----------
+# Exhibit will try to determine date columns automatically, but
+# you can also add them manually, providing the following paramters:
+#   type: date
+#   cross_join_all_unique_values: true
+#   miss_probability: 0.0
+#   from: '2018-03-31'
+#   uniques: 4
+#   frequency: QS
+# 
+# Frequency is based on the frequency strings of DateOffsets.
+# See Pandas documention for more details.
+# ----------------------------------------------------------
   quarter_date:
     type: date
     cross_join_all_unique_values: true
