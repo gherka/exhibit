@@ -320,6 +320,8 @@ class linkageTests(unittest.TestCase):
         Each column has 2 child values.
         '''
 
+        np.random.seed(0)
+
         test_dict = {
             "columns": {
                 "A": {

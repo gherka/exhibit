@@ -290,7 +290,7 @@ def parse_original_values(original_values):
 
     # Don't forget to assign back to [:-1], excluding Missing data
     if col_prob.sum() != 1:
-        print(warning)
+        if abs(col_prob.sum() - 1) > 0.05: print(warning)
         col_prob /= col_prob.sum()
         df.loc[df.index[:-1], "probability_vector"] = col_prob
 

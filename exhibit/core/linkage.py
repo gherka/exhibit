@@ -105,7 +105,6 @@ class LinkedColumnsTree:
             #is the connection one of two that can be merged and new node spliced-in
             if self.splice_node(connection, connections, chain, inner_loop):
                 reset = True
-                continue
         
         if reset:
             return self.build_chain(inner_loop, chain)
@@ -590,6 +589,10 @@ class _LinkedDataGenerator:
         and sizes of the base column's probabilistically drawn values.
         '''
 
+        base_col_vals = None
+        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
+        base_col_prob = np.array(base_col_df['probability_vector'])
+
         if self.anon_set != "random":
             #replace original_values with anonymised aliases for weights_table
             #except for the Missing data which is a special value and is always last
@@ -600,14 +603,18 @@ class _LinkedDataGenerator:
             repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
             aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
             self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
+            base_col_vals = aliased_df[self.base_col].iloc[:-1].unique()
 
-        #process the first (base) parent column; remember to exclude Missing data
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
-        base_col_prob = np.array(base_col_df['probability_vector'])
+        # original values are only in SQL; spec might have been modified
+        if base_col_vals is None:
+            base_col_vals = (
+                self.sql_df[self.base_col]
+                .loc[lambda x: x != "Missing data"]
+                .unique()[0:self.base_col_unique_count])
 
         base_col_series = pd.Series(
             data=np.random.choice(
-                a=base_col_df[self.base_col].unique(),
+                a=base_col_vals,
                 size=self.num_rows,
                 p=base_col_prob),
             name=self.base_col   
