@@ -385,6 +385,7 @@ def sort_columns_by_dtype_az(dtypes):
             return 3
         return 1
 
-    result = dtypes.sort_index().transform(_dtype_grouper).sort_values().index
+    result = dtypes.sort_index(
+        key=lambda x: list(zip(dtypes.transform(_dtype_grouper).values, x))).index
     
     return result

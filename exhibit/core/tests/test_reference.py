@@ -626,9 +626,10 @@ class referenceTests(unittest.TestCase):
             check_dtype=False
         )
 
-    def test_reference_inpatient_modified_linked_columns(self):
+    def test_reference_inpatient_modified_linked_columns_scenario_2(self):
         '''
         What this reference test is covering:
+         - scenario 2
          - custom value in one of the linked columns
          - number of linked columns in spec is less than in original SQL
         '''
@@ -677,7 +678,59 @@ class referenceTests(unittest.TestCase):
         self.assertCountEqual(
             temp_df["hb_name"].unique(),
             ["PHS Ayrshire & Arran", "NHS Borders"])
-            
+
+    def test_reference_inpatient_modified_linked_columns_scenario_3(self):
+        '''
+        What this reference test is covering:
+         - scenario 3
+         - custom value in one of the linked columns
+         - number of linked columns in spec is less than in original SQL
+        '''
+
+        np.random.seed(0)
+
+        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+
+        test_dataframe = pd.read_csv(
+            source_data_path,
+            parse_dates=['quarter_date'],
+            dayfirst=True
+        )
+
+        # modify CLI namespace
+        fromdata_namespace = {
+            "source"            : test_dataframe,
+            "category_threshold": 50
+        }
+        
+        # modify spec
+        test_spec_dict = {
+            "metadata": {"number_of_rows": 2000, "random_seed": 0},
+            "columns": {
+                "loc_name" : {
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={
+                        "loc_name": list("ABCDE") + ["Missing data"],
+                        "paired_loc_code": list("ABCDE") + ["Missing data"],
+                        "probability_vector" : [0.2] * 5 + [0],
+                        "avlos": [0.2] * 5 + [0],
+                        "los": [0.2] * 5 + [0],
+                        "stays": [0.2] * 5 + [0]})
+                }
+            }
+        }
+
+        temp_spec, temp_df = self.temp_exhibit(
+            fromdata_namespace=fromdata_namespace,
+            test_spec_dict=test_spec_dict,
+            )
+       
+        #save ID to tidy up temp columns created as part of testing
+        table_id = temp_spec['metadata']['id']
+        self._temp_tables.append(table_id)
+
+        self.assertCountEqual(temp_df["loc_name"].unique(), list("ABCDE"))
+
     @classmethod
     def tearDownClass(cls):
         '''

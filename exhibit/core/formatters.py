@@ -133,10 +133,6 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
                      .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
     )
 
-    #equalise the probability vectors if equal_weights is True
-    if ew:
-        temp_vectors.iloc[:] = 1 / temp_vectors.shape[0]
-
     if "Missing data" not in temp_vectors:
         temp_vectors = temp_vectors.append(pd.Series(
             index=["Missing data"],
@@ -147,6 +143,10 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
         cached = temp_vectors[temp_vectors.index.str.contains("Missing data")]
         temp_vectors = temp_vectors.drop("Missing data")
         temp_vectors = temp_vectors.append(cached)
+    
+    #equalise the probability vectors if equal_weights is True, except Missing data
+    if ew:
+        temp_vectors.iloc[:-1] = 1 / (temp_vectors.shape[0] - 1)
     
     vectors = temp_vectors.values.tolist()
 

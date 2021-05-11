@@ -121,12 +121,7 @@ def generate_weights(df, cat_col, num_col, ew=False):
         .fillna({cat_col:nan_placeholder})
         .groupby([cat_col])[num_col].sum(min_count=1)
     )
-    #equalise the weights if equal_weights is True
-    if ew:
-        weights.iloc[:] = round(1 / weights.shape[0], 3)
-    else:
-        weights = weights.transform(_weights_transform, weights=weights)
-    
+
     temp_output = weights.sort_index(kind="mergesort")
 
     if nan_placeholder not in temp_output:
@@ -140,6 +135,13 @@ def generate_weights(df, cat_col, num_col, ew=False):
         cached = temp_output[temp_output.index.str.contains(nan_placeholder)]
         temp_output = temp_output.drop(nan_placeholder)
         temp_output = temp_output.append(cached)
+
+    #equalise the weights if equal_weights is True, except for Missing data
+
+    temp_output = temp_output.transform(_weights_transform, weights=temp_output)
+
+    if ew:
+        temp_output.iloc[:-1] = round(1 / (temp_output.shape[0] - 1), 3)    
 
     #last item in the list must be Missing data weight for the num_col, 
     #regardless of whether Missing data is a value in cat_col

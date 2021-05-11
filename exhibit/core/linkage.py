@@ -610,6 +610,7 @@ class _LinkedDataGenerator:
             base_col_vals = (
                 self.sql_df[self.base_col]
                 .loc[lambda x: x != "Missing data"]
+                .sort_values()
                 .unique()[0:self.base_col_unique_count])
 
         base_col_series = pd.Series(
@@ -642,7 +643,15 @@ class _LinkedDataGenerator:
     def scenario_3(self):
         '''
         base_col has original_values, AND it's the most granular column
+        Note that if you delete linked column values from spec, the code
+        will still run, but the aliases will be taken from the top - which
+        might not be desirable if certain values have distinct meaning like
+        "other locations" or "no readmission". Should probably issue a warning. 
         '''
+
+        base_col_vals = None
+        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
+        base_col_prob = np.array(base_col_df['probability_vector'])
 
         if self.anon_set != "random":
 
@@ -650,20 +659,28 @@ class _LinkedDataGenerator:
             repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
             aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
             self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
+            base_col_vals = aliased_df[self.base_col].iloc[:-1].unique()
 
-        #whether aliased or not; remember to exclude Missing data which is always last
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
-        base_col_prob = np.array(base_col_df['probability_vector'])
+        # original values are only in SQL; spec might have been modified
+        # it's important to sort to make sure values align
+        if base_col_vals is None:
+            base_col_vals = (
+                self.sql_df[self.base_col]
+                .loc[lambda x: x != "Missing data"]
+                .sort_values()
+                .unique()[0:self.base_col_unique_count])
+
 
         base_col_series = pd.Series(
             data=np.random.choice(
-                a=base_col_df[self.base_col].unique(),
+                a=base_col_vals,
                 size=self.num_rows,
                 p=base_col_prob),
             name=self.base_col   
-        )
+        ) 
 
         #join all left-side columns to base_col_series
+        #WILL PRODUCE NULLS IF BASE_COL_SERIES IS ALIASED IN THE SPEC!
         linked_df = pd.merge(
                 left=base_col_series,
                 right=self.sql_df.drop_duplicates(subset=[self.base_col], keep="last"),
