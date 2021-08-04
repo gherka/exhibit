@@ -333,36 +333,39 @@ class newSpec:
 
         # find and save linked columns
         linked_cols = find_hierarchically_linked_columns(self.df, self.output)
-        linked_tree = LinkedColumnsTree(linked_cols).tree
 
-        self.output['linked_columns'] = linked_tree
+        if linked_cols:
 
-        # Add linked column values to the temp tables in anon.db
-        # we drop the NAs from the data at this point because
-        # we don't want to add Missing data twice.
-        linked_temp_df = self.df[self.cat_cols]
+            linked_tree = LinkedColumnsTree(linked_cols).tree
 
-        for linked_group_tuple in linked_tree:
+            self.output['linked_columns'] = linked_tree
 
-            linked_data = list(
-                linked_temp_df
-                    .loc[:, linked_group_tuple[1]].dropna()
-                    .groupby(linked_group_tuple[1]).groups.keys()
-            )
+            # Add linked column values to the temp tables in anon.db
+            # we drop the NAs from the data at this point because
+            # we don't want to add Missing data twice.
+            linked_temp_df = self.df[self.cat_cols]
 
-            # All linked groups must have a Missing data row as a precaution
-            # in case user modifies the spec and gives Missing data specific
-            # weights or adds miss_probability.
-            linked_data.append(["Missing data"] * len(linked_group_tuple[1]))
+            for linked_group_tuple in linked_tree:
 
-            table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
+                linked_data = list(
+                    linked_temp_df
+                        .loc[:, linked_group_tuple[1]].dropna()
+                        .groupby(linked_group_tuple[1]).groups.keys()
+                )
 
-            # Column names can't have spaces; replace with $ and then back when
-            # reading the data from the SQLite DB at execution stage.
-            create_temp_table(
-                table_name=table_name,
-                col_names=[x.replace(" ", "$") for x in linked_group_tuple[1]],
-                data=linked_data                
-            )
+                # All linked groups must have a Missing data row as a precaution
+                # in case user modifies the spec and gives Missing data specific
+                # weights or adds miss_probability.
+                linked_data.append(["Missing data"] * len(linked_group_tuple[1]))
+
+                table_name = "temp_" + self.id + f"_{linked_group_tuple[0]}"
+
+                # Column names can't have spaces; replace with $ and then back when
+                # reading the data from the SQLite DB at execution stage.
+                create_temp_table(
+                    table_name=table_name,
+                    col_names=[x.replace(" ", "$") for x in linked_group_tuple[1]],
+                    data=linked_data                
+                )
         
         return self.output

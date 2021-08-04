@@ -167,9 +167,9 @@ class utilsTests(unittest.TestCase):
         })
 
         expected = ["AC", "C", "A", "B", "E", "D"]
-        result = tm.sort_columns_by_dtype_az(test_df.dtypes)
+        result = list(tm.sort_columns_by_dtype_az(test_df.dtypes))
 
-        self.assertCountEqual(expected, result)
+        self.assertListEqual(expected, result)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

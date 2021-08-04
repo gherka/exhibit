@@ -59,6 +59,9 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         num_col=col_name,
         dist=dist,
         dist_params=dist_params)
+    
+    # Make sure the new column has a name matching the column we're generating
+    new_series.name = col_name
 
     # Scale the generated series
     new_series = scale_continuous_column(
@@ -248,7 +251,7 @@ def _scale_to_range(series, precision, target_min, target_max, preserve_weights,
     X = series
 
     if preserve_weights:
-        out = np.where(X == X.min(), target_min, X / X.max() * target_max)
+        out = pd.Series(np.where(X == X.min(), target_min, X / X.max() * target_max))
     else: 
         out = (X - X.min()) / (X.max() - X.min()) * (target_max - target_min) + target_min
 
@@ -320,7 +323,7 @@ def _conditional_rounding(series, target_sum):
     #because values are limited at the lower end at zero, sometimes it's not possible
     #to adjust them to a lower target_sum; we floor them and return
     if boundary < 0:
-        print("Target sum too low for the number of rows.")
+        print(f"Target sum for {series.name} is too low for the number of rows.")
         return pd.Series(np.floor(values))
     
     #if series has NAs, then the calcualtion will be off
