@@ -268,7 +268,7 @@ class validatorTests(unittest.TestCase):
 
         validatorMock = Mock()
 
-        test_dict_uniform = {
+        test_dict = {
             "metadata": {
                 "numerical_columns" : [
                     "Spam"
@@ -276,25 +276,9 @@ class validatorTests(unittest.TestCase):
             },
             "columns": {
                 "Spam" : {
-                    "distribution" : "weighted_uniform_with_dispersion",
+                    "distribution" : "weighted_uniform",
                     "distribution_parameters": {
-                        "uniform_base_value": 1000
-                    }
-                }
-            }
-        }
-
-        test_dict_normal = {
-            "metadata": {
-                "numerical_columns" : [
-                    "Spam"
-                ]
-            },
-            "columns": {
-                "Spam" : {
-                    "distribution" : "normal",
-                    "distribution_parameters": {
-                        "mean": 10
+                        "not_a_parameter": 1000
                     }
                 }
             }
@@ -302,62 +286,7 @@ class validatorTests(unittest.TestCase):
 
         self.assertFalse(
             tm.validate_distribution_parameters(
-                validatorMock, spec_dict=test_dict_uniform)
-            )
-
-        self.assertFalse(
-            tm.validate_distribution_parameters(
-                validatorMock, spec_dict=test_dict_normal)
-            )
-
-    def test_scaling_parameters(self):
-        '''
-        Make sure user adds all parameters required for each
-        scaling mode.
-        '''
-
-        validatorMock = Mock()
-
-        test_dict_target_sum = {
-            "metadata": {
-                "numerical_columns" : [
-                    "Spam"
-                ]
-            },
-            "columns": {
-                "Spam" : {
-                    "scaling" : "target_sum",
-                    "scaling_parameters": {
-                        "target_eggs": 1000,
-                    }
-                }
-            }
-        }
-
-        test_dict_range = {
-            "metadata": {
-                "numerical_columns" : [
-                    "Spam"
-                ]
-            },
-            "columns": {
-                "Spam" : {
-                    "scaling" : "range",
-                    "scaling_parameters": {
-                        "target_min": 5
-                    }
-                }
-            }
-        }
-
-        self.assertFalse(
-            tm.validate_scaling_parameters(
-                validatorMock, spec_dict=test_dict_target_sum)
-            )
-
-        self.assertFalse(
-            tm.validate_scaling_parameters(
-                validatorMock, spec_dict=test_dict_range)
+                validatorMock, spec_dict=test_dict)
             )
 
     def test_no_repeating_colums_in_linked_groups(self):

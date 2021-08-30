@@ -24,7 +24,7 @@ metadata:
   - quarter_date
   category_threshold: 30
   random_seed: 0
-  id: ff811
+  id: 16a82
 # ----------------------------------------------------------
 # COLUMN DETAILS
 # ==============
@@ -156,7 +156,7 @@ columns:
 # For Continuous columns you have two options, each with
 # their own set of distinct parameters:
 #
-# - weighted_uniform_with_dispersion
+# - weighted_uniform
 # - normal
 #
 # The first option will generate the column by appling weights
@@ -176,50 +176,38 @@ columns:
   avlos:
     type: continuous
     precision: float
-    distribution: weighted_uniform_with_dispersion
+    distribution: weighted_uniform
     distribution_parameters:
-      uniform_base_value: 1000
       dispersion: 0.1
-      mean: 2.96
-      std: 4.1
-    scaling: target_sum
-    scaling_parameters:
-      target_sum: 28258.352214630533
+      target_sum: 28258.35
       target_min: 0.0
       target_max: 74.8
-      preserve_weights: true
+      target_mean: 2.96
+      target_std: 4.1
     miss_probability: 0.065
   los:
     type: continuous
     precision: integer
-    distribution: weighted_uniform_with_dispersion
+    distribution: weighted_uniform
     distribution_parameters:
-      uniform_base_value: 1000
       dispersion: 0.1
-      mean: 1216.74
-      std: 6263.69
-    scaling: target_sum
-    scaling_parameters:
       target_sum: 12441120.0
       target_min: 0.0
       target_max: 176849.0
-      preserve_weights: true
+      target_mean: 1216.74
+      target_std: 6263.69
     miss_probability: 0.0
   stays:
     type: continuous
     precision: integer
-    distribution: weighted_uniform_with_dispersion
+    distribution: weighted_uniform
     distribution_parameters:
-      uniform_base_value: 1000
       dispersion: 0.1
-      mean: 296.8
-      std: 941.18
-    scaling: target_sum
-    scaling_parameters:
       target_sum: 3034766.0
       target_min: 0.0
       target_max: 12888.0
-      preserve_weights: true
+      target_mean: 296.8
+      target_std: 941.18
     miss_probability: 0.0
 # DATE COLUMNS
 # ----------

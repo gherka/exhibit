@@ -130,23 +130,17 @@ columns:
   los:
     type: continuous
     precision: integer
-    distribution: weighted_uniform_with_dispersion
+    distribution: weighted_uniform
     distribution_parameters:
-      uniform_base_value: 1000
       dispersion: 0.1
-    scaling: target_sum
-    scaling_parameters:
       target_sum: 200000
     miss_probability: 0.0
   stays:
     type: continuous
     precision: integer
-    distribution: weighted_uniform_with_dispersion
+    distribution: weighted_uniform
     distribution_parameters:
-      uniform_base_value: 1000
       dispersion: 0.1
-    scaling: target_sum
-    scaling_parameters:
       target_sum: 100000
     miss_probability: 0.0
   quarter_date:

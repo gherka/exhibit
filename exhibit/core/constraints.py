@@ -172,7 +172,7 @@ class ConstraintHandler:
         adj_factor = 0
 
         # depending on the original distribution type, adjust the range        
-        if dist == "weighted_uniform_with_dispersion":
+        if dist == "weighted_uniform":
             
             adj_factor = y * root["distribution_parameters"]["dispersion"]
         

@@ -135,14 +135,14 @@ class constraintsTests(unittest.TestCase):
         self.ch.spec_dict["columns"] = {
             "A": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }
             },
             "B B": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }
@@ -175,14 +175,14 @@ class constraintsTests(unittest.TestCase):
         self.ch.spec_dict["columns"] = {
             "A A": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }
             },
             "B": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }
@@ -263,21 +263,21 @@ class constraintsTests(unittest.TestCase):
         self.ch.spec_dict["columns"] = {
             "A": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }
             },
             "B": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }
             },
             "C": {
                 "type": "continuous",
-                "distribution": "weighted_uniform_with_dispersion",
+                "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
                 }

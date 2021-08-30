@@ -137,8 +137,6 @@ class MissingDataGenerator:
 
             dist = num_col_dict['distribution']
             dist_params = num_col_dict['distribution_parameters']
-            scaling = num_col_dict.get('scaling', None)
-            scaling_params = num_col_dict.get('scaling_parameters', {})
             precision = num_col_dict['precision']
             
             # if it's already NA, don't re-generate; it's NA for a reason!
@@ -155,15 +153,14 @@ class MissingDataGenerator:
             )
 
             # rescale the masked section, but make sure to change target_sum!
-            if scaling_params.get("target_sum", None):
+            if dist_params.get("target_sum", None):
                 old_sum = self.nan_data.loc[~mask, num_col].sum()
-                scaling_params["target_sum"] = scaling_params["target_sum"] - old_sum
+                dist_params["target_sum"] = dist_params["target_sum"] - old_sum
 
-            repl_s =  scale_continuous_column(
-                scaling=scaling,
+            repl_s = scale_continuous_column(
                 series=self.nan_data.loc[mask, num_col],
                 precision=precision,
-                **scaling_params    
+                **dist_params
             )
 
             # for some reason assigning a series back, rather than values

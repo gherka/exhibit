@@ -98,6 +98,9 @@ class continuousTests(unittest.TestCase):
         t2 = tm._conditional_rounding(test_series, 500).sum()
         e2 = 500
 
+        # conditional rounding happens after "main", ratio scaling
+        # and is based on subtracting row difference which typically
+        # operates on much smaller ranges.
         t3 = tm._conditional_rounding(test_series, 10).sum()
         e3 = 37
 
@@ -111,8 +114,6 @@ class continuousTests(unittest.TestCase):
         of the normal distribution probability function depending
         on the weights of each value in each of the columns 
         present in any given row of the anonymised dataset.
-
-        No scaling is applied.
         '''
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
@@ -129,8 +130,8 @@ class continuousTests(unittest.TestCase):
                     "precision" : "float",
                     "distribution" : "normal",
                     "distribution_parameters": {
-                        "mean": test_mean,
-                        "std": test_std,
+                        "target_mean": test_mean,
+                        "target_std": test_std,
                     },
                     "miss_probability" : 0,
                 }
@@ -165,7 +166,67 @@ class continuousTests(unittest.TestCase):
         )
 
         #Allowing for a slight random variation around the mean
-        assert 45 <= result.values.mean() <= 55
+        self.assertAlmostEqual(result.mean(), test_mean)
+
+    def test_normal_distribution_generation_with_dispersion(self):
+        '''
+        Dispersion perturbs the value pre-scaling within
+        the dispersion percentage. For now, test that it just
+        works - will need to overhaul the setting of the random
+        seed before doing proper testing.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        target_sum = 100
+
+        test_spec_dict = {
+            "metadata" : {
+                "random_seed" : 0,
+                "random_generator" : np.random.default_rng(0)
+            },
+            "columns" : {
+                "Nums" : {
+                    "precision" : "float",
+                    "distribution" : "normal",
+                    "distribution_parameters": {
+                        "dispersion" : 0.5,
+                        "target_sum" : target_sum
+                    },
+                    "miss_probability" : 0,
+                }
+            }
+        }
+
+        test_anon_df = pd.DataFrame(
+            data={
+                "C1": ["A", "A", "B", "B"]*1000,
+                "C2": ["C", "C", "D", "D"]*1000
+            }
+        )
+
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "C") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "D") : {"weights": Weights(0.5, 0.5)},
+
+        }
+
+        result = tm.generate_continuous_column(
+            test_spec_dict,
+            test_anon_df,
+            test_col,
+            target_cols=target_cols,
+            wt=wt
+        )
+
+        #TODO fix to work properly with reproducible seed
+        assert 95 <= result.sum() <= 105
 
     def test_skewed_normal_distribution_generation(self):
         '''
@@ -189,8 +250,8 @@ class continuousTests(unittest.TestCase):
                     "precision" : "float",
                     "distribution" : "normal",
                     "distribution_parameters" : {
-                        "mean": test_mean,
-                        "std": test_std
+                        "target_mean": test_mean,
+                        "target_std": test_std
                     },
                     "miss_probability" : 0,
                 }
@@ -252,13 +313,9 @@ class continuousTests(unittest.TestCase):
                 "columns" : {
                     "Nums" : {
                         "precision" : float,
-                        "distribution" : "weighted_uniform_with_dispersion",
+                        "distribution" : "weighted_uniform",
                         "distribution_parameters" : {
-                            "uniform_base_value" : 1000,
-                            "dispersion" : 0
-                        },
-                        "scaling" : "target_sum",
-                        "scaling_parameters" : {
+                            "dispersion" : 0,
                             "target_sum" : test_sum
                         },
                         "miss_probability" : 0,
@@ -306,11 +363,13 @@ class continuousTests(unittest.TestCase):
 
             self.assertAlmostEqual(test_df["Nums"].sum(), test_sum)
 
-    def test_range_scaling_with_preserving_weights(self):
+    def test_range_scaling_range_interval_ratios(self):
         '''
         If dispersion is set to zero, the weights should stay
-        the same after scaling is applied, except for the lower end
-        which should trigger a validator Warning.
+        the same after scaling is applied - expect if the target_min
+        and target_max have a different ratio to the generated_min and
+        generated_max which are driven by weights. The ratio between
+        the intervals should still match, though!
         '''
 
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
@@ -325,16 +384,11 @@ class continuousTests(unittest.TestCase):
             "columns" : {
                 "Nums" : {
                     "precision" : float,
-                    "distribution" : "weighted_uniform_with_dispersion",
+                    "distribution" : "weighted_uniform",
                     "distribution_parameters" : {
-                        "uniform_base_value" : 1000,
-                        "dispersion" : 0
-                    },
-                    "scaling" : "range",
-                    "scaling_parameters" : {
+                        "dispersion" : 0,
                         "target_min" : test_min,
                         "target_max" : test_max,
-                        "preserve_weights": True
                     },
                     "miss_probability" : 0,
                 }
@@ -353,8 +407,8 @@ class continuousTests(unittest.TestCase):
         target_cols = {"C1", "C2"}
 
         wt = {
-            ("Nums", "C1", "A") : {"weights": Weights(0.05, 0.5)},
-            ("Nums", "C1", "B") : {"weights": Weights(0.15, 0.5)},
+            ("Nums", "C1", "A") : {"weights": Weights(0.1, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.2, 0.5)},
             ("Nums", "C1", "C") : {"weights": Weights(0.3, 0.5)},
             ("Nums", "C1", "D") : {"weights": Weights(0.4, 0.5)},
             ("Nums", "C2", "E") : {"weights": Weights(0.5, 0.5)},
@@ -367,24 +421,18 @@ class continuousTests(unittest.TestCase):
             target_cols=target_cols,
             wt=wt
         )
-
+    
         test_df["Nums"] = result
 
-        new_weight_B = (
-            test_df[test_df["C1"] == "B"]["Nums"].sum() /
-            test_df["Nums"].sum()
-        )
+        a = test_df[test_df["C1"] == "A"]["Nums"].sum()
+        b = test_df[test_df["C1"] == "B"]["Nums"].sum()
+        d = test_df[test_df["C1"] == "D"]["Nums"].sum()
 
-        new_weight_C = (
-            test_df[test_df["C1"] == "C"]["Nums"].sum() /
-            test_df["Nums"].sum()
-        )
-
-        self.assertEqual(new_weight_B / new_weight_C, 0.15 / 0.3)
+        self.assertAlmostEqual((d - b) / (b - a), 0.4 / 0.2)
         self.assertEqual(test_df["Nums"].min(), test_min)
         self.assertEqual(test_df["Nums"].max(), test_max)
 
-    def test_range_scaling_without_preserving_weights(self):
+    def test_range_scaling_distribution(self):
         '''
         For linear scaling, the weights will change depending on the range
         of target_min and target_max, but the general shape of the distribution
@@ -400,7 +448,7 @@ class continuousTests(unittest.TestCase):
         precision = "float"
 
         scaled_series = tm._scale_to_range(
-            test_series, precision, test_min, test_max, False)
+            test_series, precision, test_min, test_max)
 
         rescaled_series = scaled_series / float(sum(scaled_series)) * sum(test_series)
 
@@ -416,6 +464,11 @@ class continuousTests(unittest.TestCase):
         '''
         Scaling to min-max values should respect user choice regarding
         precision of the column in the same way as scaling to target_sum
+
+        The scales of transformed values aren't the same as the originals, 
+        but the ratios hold (just with a different interval) so whereas in
+        the original 4 is twice as big as 2, in the transformed, 28 has double
+        the interval (15/91 * 6) than 16.
         '''
 
         test_series = pd.Series(
@@ -427,11 +480,53 @@ class continuousTests(unittest.TestCase):
         precision = "integer"
 
         scaled_series = tm._scale_to_range(
-            test_series, precision, test_min, test_max, False)
+            test_series, precision, test_min, test_max)
 
+        self.assertEqual(scaled_series.min(), test_min)
+        self.assertEqual(scaled_series.max(), test_max)
         self.assertEqual(scaled_series.dtype, "Int64")
+
+    def test_range_scaling_with_missing_min_max(self):
+        '''
+        If only one of the min and max is specified, we derive the other
+        end of the range from the data based on the ratio:
+        target_min / target_max = generated_min / generated_max
+        '''
+
+        test_series = pd.Series(np.random.normal(loc=10, scale=1, size=1_000))
+            
+        test_max = 1000
+        test_min = -200
+        precision = "integer"
+
+        scaled_series_1 = tm._scale_to_range(
+            test_series, precision, target_max=test_max)
+
+        scaled_series_2 = tm._scale_to_range(
+            test_series, precision, target_min=test_min)
+
+        self.assertEqual(scaled_series_1.max(), test_max)
+        self.assertEqual(scaled_series_2.min(), test_min)
+
+    def test_scale_to_statistic_mean_std(self):
+        '''
+        For detailed plots and background see the Scaling of Numerical Variables
+        notebook in the docs folder of Exhibit.
+        '''
+
+        test_series = pd.Series(np.random.normal(loc=10, scale=1, size=1_000))
+            
+        test_mean = -20
+        test_std = 5
+        precision = "float"
+
+        scaled_series = tm._scale_to_target_statistic(
+            test_series, precision, test_mean, test_std)
+
+        self.assertAlmostEqual(scaled_series.mean(), test_mean)
+        self.assertAlmostEqual(scaled_series.std(), test_std)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

@@ -40,11 +40,9 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         spec_dict["weights_table"])
     
     # Extract relevant variables from the user spec
-    dist = spec_dict['columns'][col_name]['distribution']
-    dist_params = spec_dict['columns'][col_name]['distribution_parameters']
-    scaling = spec_dict['columns'][col_name].get('scaling', None)
-    scaling_params = spec_dict['columns'][col_name].get('scaling_parameters', {})
-    precision = spec_dict['columns'][col_name]['precision']
+    dist = spec_dict["columns"][col_name]["distribution"]
+    dist_params = spec_dict["columns"][col_name]["distribution_parameters"]
+    precision = spec_dict["columns"][col_name]["precision"]
 
     # Generate continuous values by looking up values of 
     # categorical columns in the weights table and progressively reduce
@@ -65,24 +63,27 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
 
     # Scale the generated series
     new_series = scale_continuous_column(
-        scaling, new_series, precision=precision, **scaling_params)
+        new_series, precision=precision, **dist_params)
 
     return new_series
 
-def scale_continuous_column(scaling, series, precision, **scaling_params):
+def scale_continuous_column(series, precision, **dist_params):
     '''
-    Doc string
+    Dispatch method whose job is to decide what scaling is possible
+    given the available distribution parameters and invoke the 
+    corresponding function.
     '''
 
-    # Scale the generated series
-    if scaling == "target_sum":
+    if dist_params.get("target_sum", None):
+        return _scale_to_target_sum(series, precision, **dist_params)
 
-        return _scale_to_target_sum(series, precision, **scaling_params)
+    if dist_params.get("target_min", None) or dist_params.get("target_max", None):
+        return _scale_to_range(series, precision, **dist_params)
 
-    if scaling == "range":
+    if dist_params.get("target_mean", None) or dist_params.get("target_std", None):
+        return _scale_to_target_statistic(series, precision, **dist_params)
 
-        return _scale_to_range(series, precision, **scaling_params)
-    
+    # fallback is to return unscaled series
     return series
 
 def generate_derived_column(anon_df, calculation, precision=2):
@@ -111,7 +112,7 @@ def generate_derived_column(anon_df, calculation, precision=2):
     names in single quotes.
     '''
 
-    safe_calculation = re.sub(r'\b\s\b', r'__', calculation)
+    safe_calculation = re.sub(r"\b\s\b", r"__", calculation)
     safe_df = anon_df.rename(columns=lambda x: x.replace(" ", "__"))
 
     if "groupby" in safe_calculation:
@@ -160,7 +161,7 @@ def generate_cont_val(
     num_col : str
         numerical column for which to generate values
     dist : string
-        any one of [weighted_uniform_with_dispersion, normal]
+        any one of [weighted_uniform, normal]
     dist_params : dict
         dictionary containing all supporting parameters, like mean, dispersion, etc.
 
@@ -169,7 +170,7 @@ def generate_cont_val(
     Single value
     '''
 
-    if dist == "weighted_uniform_with_dispersion":
+    if dist == "weighted_uniform":
         
         return _draw_from_uniform_distribution(
             row, weights_table, num_col, **dist_params)
@@ -184,44 +185,51 @@ def generate_cont_val(
 # INNER MODULE METHODS
 # ====================
 
-def _draw_from_normal_distribution(row, wt, num_col, mean, std, **_kwargs):
+def _draw_from_normal_distribution(
+    row, wt, num_col, target_mean=1, target_std=1, **dist_params):
     '''
     Draw a single value from a normal distribution with a weighted mean.
+    If no seed values for target_mean and target_std are provided as part
+    of the spec, just use default values of 1.
+
+    If dispersion is > 0 then change the final value within the dispersion
+    percentage bounds.
     '''
 
     row_diff_sum = 1
+    dispersion = dist_params.get("dispersion", 0)
 
     for cat_col, val in row.iteritems():
 
-        w, ew = wt[(num_col, cat_col, val)]['weights']
+        w, ew = wt[(num_col, cat_col, val)]["weights"]
             
         #don't make any changes if no difference from equal weight
         row_diff = 0 if (w - ew) == 0 else (w / ew) - 1
 
         row_diff_sum = row_diff_sum + row_diff
 
-    weighted_mean = mean * row_diff_sum
+    weighted_mean = target_mean * row_diff_sum
     
     #rvs returns an array, even for size=1
-    result = norm.rvs(loc=weighted_mean, scale=std, size=1)[0]
+    result = norm.rvs(loc=weighted_mean, scale=target_std, size=1)[0]
 
-    return result
+    return _apply_dispersion(result, dispersion)
 
-def _draw_from_uniform_distribution(
-    row, wt, num_col, uniform_base_value, dispersion, **_kwargs):
+def _draw_from_uniform_distribution(row, wt, num_col, **dist_params):
     '''
     Generate a single value by progressively reducing a base value
     based on categorical values in the row and apply dispersion to
     add a random element to the result.
     '''
 
-    base_value = uniform_base_value
+    base_value = 1000
+    dispersion = dist_params.get("dispersion", 0)
 
     for cat_col, val in row.iteritems():
 
         try:
 
-            weight = wt[(num_col, cat_col, val)]['weights'].weight
+            weight = wt[(num_col, cat_col, val)]["weights"].weight
 
         # only valid for paired columns that have their values already "reduced"
         except KeyError:
@@ -232,17 +240,15 @@ def _draw_from_uniform_distribution(
 
     return _apply_dispersion(base_value, dispersion)
 
-def _scale_to_range(series, precision, target_min, target_max, preserve_weights, **_kwargs):
+def _scale_to_range(series, precision, target_min=None, target_max=None, **_kwargs):
     '''
-    Scale based on target range.
+    Scale linearly based on target range.
 
-    By default weights are preserved, which means that rather than use linear scaling
-    we base the scaling on the "old" ratios between values, making a special case
-    for the target minimum. This can be changed back to linear scaling between 
-    target_min and target_max by setting preserve_weights to False in the spec.
-
-    When preserve_weights is True and the target_min doesn't fit in with the rest of
-    the weights, validator will issue a warning (TO DO)
+    If the target range is not at the same ratio as the generated range, the weights
+    will shift, but the intervals and thus the distribution will still be correct - 
+    if the weights are 0.1, 0.2 and 0.4 then the interval between the generated values
+    at 0.2 and 0.4 weights will be double the interval between the values with weights 
+    0.1 and 0.2 - although the values themselves won't have those ratios.
 
     Note that we're using Pandas-specific nullable Integer dtype - this can cause issues
     with pd.eval() as per https://github.com/pandas-dev/pandas/issues/29618. 
@@ -250,24 +256,47 @@ def _scale_to_range(series, precision, target_min, target_max, preserve_weights,
 
     X = series
 
-    if preserve_weights:
-        out = pd.Series(np.where(X == X.min(), target_min, X / X.max() * target_max))
-    else: 
-        out = (X - X.min()) / (X.max() - X.min()) * (target_max - target_min) + target_min
+    if X.isna().all(): #pragma: no cover
+        return X
+    
+    # adjust for potential negative signs!
+    if not target_min:
+
+        target_min = target_max - abs(target_max) - abs(target_max * X.min() / X.max())
+    
+    if not target_max:
+
+        target_max = target_min + abs(target_min * X.max() / X.min()) - abs(target_min)
+
+    out = (X - X.min()) / (X.max() - X.min()) * (target_max - target_min) + target_min
 
     if precision == "integer":
-        return out.round().astype("Int64")
+
+        target_range = int(np.ceil(target_max) - np.floor(target_min))
+        bins = np.linspace(X.min(), X.max(), target_range + 2)
+        labels = np.arange(np.floor(target_min), np.ceil(target_max) + 1)
+
+        out = pd.Series(
+            pd.cut(X, bins=bins, right=True, include_lowest=True, labels=labels)
+        )
+
+        return out.astype("Int64")
 
     return out
 
 def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
     '''
     Scale series to target_sum. If precision is integer, try to round 
-    the values up in such a way that preserve the target_sum
+    the values up in such a way that preserve the target_sum. 
+
+    When scaling floats, round the results to the nearest 4 digits.
     '''
 
     if series.isna().all(): #pragma: no cover
         return series
+
+    if any(series < 0):
+        series = series + abs(series.min())
         
     scaling_factor = target_sum / series.dropna().sum()
 
@@ -278,7 +307,30 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
         rounded_scaled_series = _conditional_rounding(scaled_series, target_sum)
         return rounded_scaled_series
     
+    # TODO change this when can be sure of reproducibility
     return round(scaled_series, 2)
+
+def _scale_to_target_statistic(
+    series, precision, target_mean=None, target_std=None, **_kwargs):
+    '''
+    Could be either standard deviation or mean or both.
+    '''
+
+    if any(series < 0):
+        series = series + abs(series.min())
+
+    if not target_mean:
+        target_mean = series.mean() #pragma: no cover
+    
+    if not target_std:
+        target_std = series.std() #pragma: no cover
+    
+    result = target_mean + (series - series.mean()) * target_std / series.std()
+    
+    if precision == "integer":
+        result = result.round() #pragma: no cover
+    
+    return result
 
 def _conditional_rounding(series, target_sum):
     '''
@@ -307,8 +359,8 @@ def _conditional_rounding(series, target_sum):
     
     row_diff = (target_sum - series.dropna().sum()) / len(series.dropna())
         
-    #adjust values so that they sum up to target_sum; if column's type is float,
-    #return at this point, if it's whole number carry on - TO DO
+    # adjust values so that they sum up to target_sum; since conditional rounding
+    # happens after the main scaling, the row differences should be fairly small
     values = pd.Series(
         np.where(
             series + row_diff >= 0,
@@ -361,12 +413,12 @@ def _apply_dispersion(value, dispersion_pct):
     to have negative values that you need to anonymise, we'll need to
     add a flag to the spec generation
     '''
+
+    if dispersion_pct == 0:
+        return value
     
     if value == np.inf: #pragma: no cover
         return 0
-    
-    if dispersion_pct == 0:
-        return value
     
     if np.isnan(value):
         return np.NaN

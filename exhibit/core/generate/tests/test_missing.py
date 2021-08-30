@@ -261,15 +261,10 @@ class missingDataTests(unittest.TestCase):
                 "C": {
                     "type"            : "continuous",
                     "precision"       : "integer",
-                    "distribution"    : "weighted_uniform_with_dispersion",
+                    "distribution"    : "weighted_uniform",
                     "distribution_parameters": {
-                        "uniform_base_value" : 100,
-                        "dispersion": 0
-                    },
-                    "scaling" : "target_sum",
-                    "scaling_parameters" : {
+                        "dispersion": 0,
                         "target_sum" : 10,
-                        "preserve_weights" : True 
                     },
                     "miss_probability": 0
                 },
@@ -493,15 +488,11 @@ class missingDataTests(unittest.TestCase):
                 "C2": {
                     "type"            : "continuous",
                     "precision"       : "integer",
-                    "distribution"    : "weighted_uniform_with_dispersion",
+                    "distribution"    : "weighted_uniform",
                     "distribution_parameters": {
                         "uniform_base_value" : 100,
-                        "dispersion": 0
-                    },
-                    "scaling" : "target_sum",
-                    "scaling_parameters" : {
+                        "dispersion": 0,
                         "target_sum" : 200, # factor of two
-                        "preserve_weights" : True 
                     },
                     "miss_probability": 0
                 },

@@ -260,8 +260,7 @@ class newSpec:
         Default values for describing a numerical column:
 
             precision : [float, integer]
-            distribution : [weighted_uniform_with_dispersion, normal, poisson]
-            scaling: [target_sum, range, none]
+            distribution : [weighted_uniform, normal]
 
         Distribution and scaling options require certain parameters. By default
         all possible parameters are derived from the source data, but only the
@@ -277,19 +276,14 @@ class newSpec:
         cont_d = {
             'type': 'continuous',
             'precision': float_or_int(self.df[col]),
-            'distribution': "weighted_uniform_with_dispersion",
+            'distribution': "weighted_uniform",
             'distribution_parameters': {
-                "uniform_base_value": 1000,
                 "dispersion": 0.1,
-                "mean": float(round(self.df[col].mean(), 2)),
-                "std": float(round(self.df[col].std(), 2))
-            },
-            'scaling': "target_sum",
-            "scaling_parameters": {
-                "target_sum" : float(self.df[col].sum()),
-                "target_min": float(self.df[col].min()),
-                "target_max": float(self.df[col].max()),
-                "preserve_weights": True
+                "target_sum" : float(round(self.df[col].sum(), 2)),
+                "target_min" : float(round(self.df[col].min(), 2)),
+                "target_max" : float(round(self.df[col].max(), 2)),
+                "target_mean": float(round(self.df[col].mean(), 2)),
+                "target_std" : float(round(self.df[col].std(), 2)),
             },
             'miss_probability': self.missing_data_chance(col),
         }

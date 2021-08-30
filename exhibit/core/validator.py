@@ -301,11 +301,18 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        uniform_params = {"uniform_base_value", "dispersion"}
-        normal_params = {"mean", "std"}
+        # dispersion is optional and will default to zero
+
+        dist_params = {
+            "target_sum",
+            "target_min",
+            "target_max",
+            "target_mean",
+            "target_std",
+        }
 
         fail_msg = textwrap.dedent("""
-        VALIDATION FAIL: Distribution parameters are incorrect for column %s
+        VALIDATION FAIL: At least one distribution parameter is required for column %s
         """)
 
         for num_col in spec_dict['metadata']['numerical_columns']:
@@ -315,53 +322,11 @@ class newValidator:
             if not col:
                 continue
 
-            if col["distribution"] == "normal":
+            #at least one dist parameter has to be present
+            if dist_params.isdisjoint(col["distribution_parameters"].keys()):
+                print(fail_msg % num_col)
+                return False
 
-                if not normal_params.issubset(col["distribution_parameters"].keys()):
-                    print(fail_msg % num_col)
-                    return False
-
-            if col["distribution"] == "weighted_uniform_with_dispersion":
-
-                if not uniform_params.issubset(col["distribution_parameters"].keys()):
-                    print(fail_msg % num_col)
-                    return False
-        return True
-
-    def validate_scaling_parameters(self, spec_dict=None):
-        '''
-        Currently, there are two ways we can scale generated values:
-        to a target sum or to a range.
-        '''
-
-        if spec_dict is None:
-            spec_dict = self.spec_dict
-
-        target_sum_params = {"target_sum"}
-        range_params = {"target_min", "target_max"}
-
-        fail_msg = textwrap.dedent("""
-        VALIDATION FAIL: Scaling parameters are incorrect for column %s
-        """)
-
-        for num_col in spec_dict['metadata']['numerical_columns']:
-
-            col = spec_dict["columns"].get(num_col, None)
-            #columns in derived section don't have any parameters
-            if not col:
-                continue
-
-            if col["scaling"] == "target_sum":
-
-                if not target_sum_params.issubset(col["scaling_parameters"].keys()):
-                    print(fail_msg % num_col)
-                    return False
-
-            if col["scaling"] == "range":
-
-                if not range_params.issubset(col["scaling_parameters"].keys()):
-                    print(fail_msg % num_col)
-                    return False
         return True
 
     def validate_no_repeating_columns_in_linked_groups(self, spec_dict=None):

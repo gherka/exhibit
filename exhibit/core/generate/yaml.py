@@ -81,25 +81,29 @@ def generate_YAML_string(spec_dict):
     # columns with discrete data, covert them to categorical or make
     # sure that the precision parameter is set to integer.
     # 
-    # For Continuous columns you have two options, each with
-    # their own set of distinct parameters:
+    # For Continuous columns you have two options:
     #
-    # - weighted_uniform_with_dispersion
+    # - weighted_uniform
     # - normal
     #
     # The first option will generate the column by appling weights
-    # to the uniform_base_value parameter and optionally perturb it
+    # to a fixed value before scaling it and optionally perturb it
     # within the dispersion percentage. With dispersion set to zero,
     # you can generate identical values for any given combination of
     # categorical values on the row.
     # 
-    # A normal distribution will respect categorical weights by shifting
-    # the mean accordingly. You can vary the "spread" by adjusting the 
-    # std parameter.
+    # A normal distribution will respect categorical weights by
+    # shifting the mean accordingly. If dispersion is greater than
+    # zero, the value before scaling is perturbed within the 
+    # dispersion percentage.
     # 
-    # You can also set parameters for scaling the values in continous
-    # columns. The options are target_sum or range. Note that if you
-    # include certain constraints, the final scaling can be affected.
+    # You can also control how values are scaled by setting the
+    # distribution target parameters. You must include at least one of
+    # target_min, target_max, target_sum, target_mean or target_std.
+    #  
+    # Note that if you include certain constraints, like ensuring values
+    # in one column are always greater than values in another column,
+    # the final scaling of the column being adjusted will be affected.
     # ----------------------------------------------------------
     """)
 
@@ -144,7 +148,7 @@ def generate_YAML_string(spec_dict):
     # ===========
     #
     # There are two types of constraints you can impose of the data:
-    # - boolean (working title)
+    # - boolean
     # - conditional
     # 
     # Boolean constraints take the form of a simple statement of the
@@ -159,7 +163,7 @@ def generate_YAML_string(spec_dict):
     # columns with different actions. For now, only "make_nan" and
     # "no_nan" are supported. This is for cases where generating a value
     # in one column, like Readmissions Within 28 days necessitates
-    # a value in Readmissions Within 7 days.
+    # a valid value in Readmissions Within 7 days.
     #
     # If a column name has spaces, make sure to surround it with
     # the tilde character ~. When comapring a date column against a
