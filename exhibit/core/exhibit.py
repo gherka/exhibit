@@ -224,8 +224,9 @@ class newExhibit:
         Function only runs if validate_spec returned True
         '''
 
-        #0) SET THE RANDOM SEED
-        np.random.seed(self.spec_dict['metadata']['random_seed'])
+        #0) INITIALIZE THE RANDOM GENERATOR
+        seed=self.spec_dict['metadata']['random_seed']
+        self.spec_dict["_rng"] = np.random.default_rng(seed=seed)
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
         core_rows = count_core_rows(self.spec_dict)

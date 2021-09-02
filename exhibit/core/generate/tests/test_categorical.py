@@ -9,6 +9,7 @@ import tempfile
 from os.path import abspath, join
 
 # External library imports
+import numpy as np
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype
 from pandas.testing import assert_frame_equal
@@ -53,6 +54,7 @@ class categoricalTests(unittest.TestCase):
 
         setattr(generatorMock, "spec_dict", test_dict)
         setattr(generatorMock, "num_rows", test_num_rows)
+        setattr(generatorMock, "rng", np.random.default_rng(seed=0))
 
         result = generatorMock._generate_anon_series(test_col_name)
         
@@ -132,6 +134,7 @@ class categoricalTests(unittest.TestCase):
 
         setattr(generatorMock, "spec_dict", test_dict)
         setattr(generatorMock, "num_rows", test_num_rows)
+        setattr(generatorMock, "rng", np.random.default_rng(seed=0))
 
         with tempfile.TemporaryDirectory() as td:
             

@@ -336,8 +336,6 @@ class referenceTests(unittest.TestCase):
             - linked columns share missing categorical data
         '''
 
-        np.random.seed(0)
-
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
         test_dataframe = pd.read_csv(
@@ -348,7 +346,8 @@ class referenceTests(unittest.TestCase):
 
         # Modify test_dataframe to suit test conditions
         # Gives us 500/10225 ~ 5% chance of missing data
-        rand_idx = np.random.choice(
+        rng = np.random.default_rng(seed=0)
+        rand_idx = rng.choice(
             range(test_dataframe.shape[0]),
             size=500,
             replace=False)
@@ -357,7 +356,7 @@ class referenceTests(unittest.TestCase):
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
         # Gives us ~10% chance of missing data
-        rand_idx2 = np.random.choice(
+        rand_idx2 = rng.choice(
             range(test_dataframe.shape[0]),
             size=1000,
             replace=False)
@@ -409,7 +408,7 @@ class referenceTests(unittest.TestCase):
             - manually change date frequency from QS to M
         '''
 
-        np.random.seed(0)
+        rng = np.random.default_rng(seed=0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
@@ -420,7 +419,7 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.choice(
+        rand_idx = rng.choice(
             range(test_dataframe.shape[0]),
             size=500,
             replace=False)
@@ -478,8 +477,6 @@ class referenceTests(unittest.TestCase):
             - avlos is not derived and is calculated "blindly"
         '''
 
-        np.random.seed(0)
-
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
         test_dataframe = pd.read_csv(
@@ -489,7 +486,8 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.choice(
+        rng = np.random.default_rng(seed=0)
+        rand_idx = rng.choice(
             range(test_dataframe.shape[0]),
             size=500,
             replace=False)
@@ -559,8 +557,6 @@ class referenceTests(unittest.TestCase):
             - linked columns share missing categorical data
         '''
 
-        np.random.seed(0)
-
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
     
         test_dataframe = pd.read_csv(
@@ -570,7 +566,8 @@ class referenceTests(unittest.TestCase):
         )
 
         # Modify test_dataframe to suit test conditions
-        rand_idx = np.random.choice(
+        rng = np.random.default_rng(seed=0)
+        rand_idx = rng.choice(
             range(test_dataframe.shape[0]),
             size=500,
             replace=False)
@@ -602,8 +599,6 @@ class referenceTests(unittest.TestCase):
                     {"anonymising_set":"mountains"}
                 },
         }
-
-        np.random.seed(0)
                  
         temp_spec, temp_df = self.temp_exhibit(
             fromdata_namespace=fromdata_namespace,
@@ -621,16 +616,12 @@ class referenceTests(unittest.TestCase):
         table_id = temp_spec['metadata']['id']
         self._temp_tables.append(table_id)
 
-        # inpatients_anon_mnt_ct50.to_csv("inpatients_anon_mnt_ct50.csv", index=False)
-        # TODO fix the reproducibility!
-        self.assertEqual(inpatients_anon_mnt_ct50.shape, temp_df.shape)
-
-        # assert_frame_equal(
-        #     left=inpatients_anon_mnt_ct50,
-        #     right=temp_df,
-        #     check_exact=False,
-        #     check_dtype=False
-        # )
+        assert_frame_equal(
+            left=inpatients_anon_mnt_ct50,
+            right=temp_df,
+            check_exact=False,
+            check_dtype=False
+        )
 
     def test_reference_inpatient_modified_linked_columns_scenario_2(self):
         '''
@@ -639,8 +630,6 @@ class referenceTests(unittest.TestCase):
          - custom value in one of the linked columns
          - number of linked columns in spec is less than in original SQL
         '''
-
-        np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 
@@ -692,8 +681,6 @@ class referenceTests(unittest.TestCase):
          - custom value in one of the linked columns
          - number of linked columns in spec is less than in original SQL
         '''
-
-        np.random.seed(0)
 
         source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
 

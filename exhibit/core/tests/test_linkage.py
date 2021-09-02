@@ -227,6 +227,7 @@ class linkageTests(unittest.TestCase):
             setattr(test_LDG, "num_rows", 10000)
             setattr(test_LDG, "sql_df", sql_df)
             setattr(test_LDG, "linked_cols", ["A", "B"])
+            setattr(test_LDG, "rng", np.random.default_rng(seed=0))
 
         result = test_LDG.scenario_1()
         
@@ -275,6 +276,7 @@ class linkageTests(unittest.TestCase):
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
             setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "rng", np.random.default_rng(seed=0))
             setattr(test_LDG, "anon_set", "random")
             setattr(test_LDG, "base_col", "A")
             setattr(test_LDG, "base_col_pos", 0)
@@ -320,8 +322,6 @@ class linkageTests(unittest.TestCase):
         Each column has 2 child values.
         '''
 
-        np.random.seed(0)
-
         test_dict = {
             "columns": {
                 "A": {
@@ -362,6 +362,7 @@ class linkageTests(unittest.TestCase):
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
             setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "rng", np.random.default_rng(seed=0))
             setattr(test_LDG, "anon_set", "random")
             setattr(test_LDG, "base_col", "B")
             setattr(test_LDG, "base_col_pos", 1)
@@ -428,6 +429,7 @@ class linkageTests(unittest.TestCase):
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
             setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "rng", np.random.default_rng(seed=0))
             setattr(test_LDG, "anon_set", "mountains")
             setattr(test_LDG, "base_col", "A")
             setattr(test_LDG, "base_col_pos", 0)
@@ -497,6 +499,7 @@ class linkageTests(unittest.TestCase):
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
             setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "rng", np.random.default_rng(seed=0))
             setattr(test_LDG, "anon_set", "random")
             setattr(test_LDG, "base_col", "B")
             setattr(test_LDG, "base_col_pos", 1)
@@ -555,6 +558,7 @@ class linkageTests(unittest.TestCase):
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
             setattr(test_LDG, "spec_dict", test_dict)
+            setattr(test_LDG, "rng", np.random.default_rng(seed=0))
             setattr(test_LDG, "anon_set", "mountains")
             setattr(test_LDG, "base_col", "B")
             setattr(test_LDG, "base_col_pos", 1)

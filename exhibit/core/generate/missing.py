@@ -55,7 +55,6 @@ class MissingDataGenerator:
         3) Add nulls to the remaining columns, always mindful of the indices from 1)
         '''
 
-        seed = self.spec_dict["metadata"].get("random_seed", 0)
         missing_link_cols = self._find_columns_with_linked_missing_data()
         standalone_cols = (
             set(self.spec_dict["columns"].keys()) - 
@@ -65,12 +64,12 @@ class MissingDataGenerator:
 
         #1) Generate nulls in standalone columns, including continuous
         for col_name in standalone_cols:
-
-            # re-set the seed for consistent results
-            np.random.seed(seed)
+            
+            # reset the generator for each column
+            rng = np.random.default_rng(seed=0)
 
             miss_pct = self.spec_dict['columns'][col_name]['miss_probability']
-            rands = np.random.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
+            rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
             col_type = self.spec_dict["columns"][col_name]["type"]
             miss_value = pd.NaT if col_type == "date" else np.NaN
             repl_column = self.nan_data[col_name]
@@ -85,14 +84,14 @@ class MissingDataGenerator:
 
         #2) Generate nulls in linked and paired columns
         for cols in missing_link_cols:
-
-            # re-set the seed for consistent results
-            np.random.seed(seed)
+            
+            # reset the generator for each column
+            rng = np.random.default_rng(seed=0)
          
             # miss probability will be the same for all columns in cols
             miss_pct = self.spec_dict['columns'][next(iter(cols))]['miss_probability']
             # rands is shared for all columns in cols
-            rands = np.random.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
+            rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
 
             self.nan_data.loc[:, cols] = np.where(
                 (rands < miss_pct)[..., None],
@@ -129,9 +128,9 @@ class MissingDataGenerator:
         
         for num_col in num_cols:
 
-            # re-set the seed for consistent results
-            np.random.seed(seed)
-            
+            # reset the generator for each column
+            rng = np.random.default_rng(seed=0)
+           
             # Extract relevant num col variables from the user spec
             num_col_dict = self.spec_dict['columns'][num_col]
 
@@ -148,6 +147,7 @@ class MissingDataGenerator:
                 axis=1,
                 weights_table=self.wt,
                 num_col=num_col,
+                rng=rng,
                 dist=dist,
                 dist_params=dist_params
             )

@@ -239,6 +239,7 @@ class missingDataTests(unittest.TestCase):
         )
 
         test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "categorical_columns": ["A", "B"],
                 "numerical_columns" : ["C"]
@@ -305,6 +306,7 @@ class missingDataTests(unittest.TestCase):
         '''
 
         test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "categorical_columns": ["C", "D"],
                 "numerical_columns" : []
@@ -354,6 +356,7 @@ class missingDataTests(unittest.TestCase):
         '''
 
         test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "categorical_columns": ["A", "B"],
                 "numerical_columns" : []
@@ -397,6 +400,7 @@ class missingDataTests(unittest.TestCase):
         '''
 
         test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "categorical_columns": ["A", "B"],
                 "numerical_columns" : []
@@ -449,8 +453,6 @@ class missingDataTests(unittest.TestCase):
         but that can sometimes fail so we ensure that the seed is constant.
         '''
 
-        np.random.seed(0)
-
         Weights = namedtuple("Weights", ["weight", "equal_weight"])
 
         #demo weights table
@@ -470,6 +472,7 @@ class missingDataTests(unittest.TestCase):
         )
 
         test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata": {
                 "categorical_columns": [
                     "C1"

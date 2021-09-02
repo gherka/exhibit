@@ -233,7 +233,11 @@ def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_
 
     # make sure to scramble the order and drop index to avoid problems
     # with clustered values and sorting when pd.concat-ing
-    linked_df = gen.pick_scenario().sample(frac=1).reset_index(drop=True)
+    linked_df = (
+        gen.pick_scenario()
+            .sample(frac=1, random_state=np.random.PCG64(0))
+            .reset_index(drop=True)
+    )
 
     return linked_df
 
@@ -367,6 +371,7 @@ class _LinkedDataGenerator:
     def __init__(self, spec_dict, linked_group: Tuple[int, List[str]], num_rows):
 
         self.spec_dict = spec_dict
+        self.rng = spec_dict["_rng"]
         self.linked_group = linked_group
         self.linked_cols = linked_group[1]
         #take the root name of the set (mountains in case of mountains.peak)
@@ -570,7 +575,7 @@ class _LinkedDataGenerator:
         Values in all linked columns are drawn from a uniform distribution
         '''
 
-        idx = np.random.choice(len(self.sql_df), self.num_rows)
+        idx = self.rng.choice(len(self.sql_df), self.num_rows)
 
         anon_list = [self.sql_df.iloc[x, :].values for x in idx]
 
@@ -614,7 +619,7 @@ class _LinkedDataGenerator:
                 .unique()[0:self.base_col_unique_count])
 
         base_col_series = pd.Series(
-            data=np.random.choice(
+            data=self.rng.choice(
                 a=base_col_vals,
                 size=self.num_rows,
                 p=base_col_prob),
@@ -624,7 +629,9 @@ class _LinkedDataGenerator:
         # once we've satisfied the probabilities of the base column,
         # all we need to do is to generate random uniform indices of
         # rows to match the generated values, sized accordingly.
-        base_col_counts = base_col_series.value_counts()
+
+        # make sure we sorted the value_counts to keep RNG consistent
+        base_col_counts = base_col_series.value_counts().sort_index()
 
         sub_dfs = []
 
@@ -632,7 +639,7 @@ class _LinkedDataGenerator:
             
             pool_of_idx = (
                 self.sql_df[self.sql_df[self.base_col] == base_col_value].index)
-            rnd_idx = np.random.choice(a=pool_of_idx, size=size)
+            rnd_idx = self.rng.choice(a=pool_of_idx, size=size)
             sub_dfs.append(
                 self.sql_df[self.linked_cols].iloc[rnd_idx])
         
@@ -672,7 +679,7 @@ class _LinkedDataGenerator:
 
 
         base_col_series = pd.Series(
-            data=np.random.choice(
+            data=self.rng.choice(
                 a=base_col_vals,
                 size=self.num_rows,
                 p=base_col_prob),

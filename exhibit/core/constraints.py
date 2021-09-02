@@ -28,7 +28,7 @@ class ConstraintHandler:
         '''
 
         self.spec_dict = spec_dict
-        self.seed = spec_dict["metadata"]["random_seed"]
+        self.rng = spec_dict["_rng"]
         self.dependent_column = None
         self.independent_expression = None
 
@@ -121,7 +121,6 @@ class ConstraintHandler:
         -------
         A single adjusted value
         '''
-        np.random.seed(self.seed)
 
         op_dict = {
             "<" : np.less,
@@ -148,8 +147,6 @@ class ConstraintHandler:
         
         if pd.isnull(y):
             return np.nan
-
-        np.random.seed(self.seed)
 
         dependent_column = self.dependent_column.replace("__", " ")
         root = self.spec_dict["columns"][dependent_column]
@@ -213,7 +210,7 @@ class ConstraintHandler:
         the constraint operator.
         '''
 
-        new_x = round(np.random.uniform(new_x_min, new_x_max))
+        new_x = round(self.rng.uniform(new_x_min, new_x_max))
 
         try:
             if op(new_x, y):

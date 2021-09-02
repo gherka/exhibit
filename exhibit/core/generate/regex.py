@@ -22,8 +22,8 @@ def generate_regex_column(anon_pattern, name, size):
     '''
     
     static_quant_pattern = r"[^\]]\{\d{1}\}"
-
     static_string = anon_pattern
+    rng = np.random.default_rng(seed=0)
     
     for match in re.finditer(static_quant_pattern, anon_pattern):
         if match:
@@ -49,7 +49,7 @@ def generate_regex_column(anon_pattern, name, size):
     repl_series_dict = {}
     
     for placeholder, pattern in match_lookup.items():
-        repl_series = pd.Series(_generate_random_class_characters(pattern, size))
+        repl_series = pd.Series(_generate_random_class_characters(pattern, size, rng))
         repl_series_dict[placeholder] = repl_series
         
     final = _recursive_concat_series(static_series, repl_series_dict)
@@ -80,7 +80,7 @@ def _recursive_concat_series(static_series, repl_series):
     
     return _recursive_concat_series(final_series, repl_series)
 
-def _generate_random_class_characters(pattern, size):
+def _generate_random_class_characters(pattern, size, rng):
     '''
     Currently, no accounting is made for the number of unique values
     that the user expects from the column - in future, run a validator
@@ -105,12 +105,12 @@ def _generate_random_class_characters(pattern, size):
         #convert to ASCII codes, with inclusive upper end
         lower_ord = ord(lower_char)
         upper_ord = ord(upper_char)
-        result_array = np.random.randint(lower_ord, upper_ord + 1, size=(size, quant))
+        result_array = rng.integers(lower_ord, upper_ord + 1, size=(size, quant))
         result = ["".join(chr(x) for x in y) for y in result_array]
     
     #pattern given as a list of characters [abc]
     else:
-        result_array = np.random.randint(0, len(pattern), size=(size, quant))
+        result_array = rng.integers(0, len(pattern), size=(size, quant))
         result = ["".join(pattern[x] for x in y) for y in result_array]
     
     return result

@@ -37,6 +37,7 @@ class CategoricalDataGenerator:
         '''
         
         self.spec_dict = spec_dict
+        self.rng = spec_dict["_rng"]
         self.num_rows = core_rows
         self.fixed_anon_sets = ["random", "mountains", "patients", "birds"]
         
@@ -67,7 +68,11 @@ class CategoricalDataGenerator:
 
         #2) GENERATE NON-LINKED DFs
         for col in [col for col in self.all_cols if col not in self.skipped_cols]:
-            s = self._generate_anon_series(col).sample(frac=1).reset_index(drop=True)
+            s = (
+                self._generate_anon_series(col)
+                .sample(frac=1, random_state=np.random.PCG64(0))
+                .reset_index(drop=True)
+            )
 
             generated_dfs.append(s)
 
@@ -99,7 +104,11 @@ class CategoricalDataGenerator:
         #6) TIDY UP
         # reset index and shuffle rows one last time
         anon_df = (
-            temp_anon_df.drop('key', axis=1).sample(frac=1).reset_index(drop=True))
+            temp_anon_df
+                .drop('key', axis=1)
+                .sample(frac=1, random_state=np.random.PCG64(0))
+                .reset_index(drop=True)
+        )
 
         return anon_df
 
@@ -129,7 +138,7 @@ class CategoricalDataGenerator:
         if complete:
             return pd.Series(all_pos_dates, name=col_name)
         
-        random_dates = np.random.choice(all_pos_dates, self.num_rows)
+        random_dates = self.rng.choice(all_pos_dates, self.num_rows)
 
         return pd.Series(random_dates, name=col_name)
 
@@ -194,7 +203,7 @@ class CategoricalDataGenerator:
             col_values = col_df[col_name].to_list()
 
             original_series = pd.Series(
-                data=np.random.choice(a=col_values, size=self.num_rows, p=col_prob),
+                data=self.rng.choice(a=col_values, size=self.num_rows, p=col_prob),
                 name=col_name)
 
             if paired_cols:
@@ -225,7 +234,7 @@ class CategoricalDataGenerator:
         self.spec_dict['columns'][col_name]['original_values'] = aliased_df
 
         #we ignore Missing Data probability when we originally create the variable
-        idx = np.random.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
+        idx = self.rng.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
         anon_list = [sql_df.iloc[x, :].values for x in idx]
         anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 
@@ -269,7 +278,7 @@ class CategoricalDataGenerator:
         if complete:
             anon_df = sql_df
         else:
-            idx = np.random.choice(len(sql_df), self.num_rows)
+            idx = self.rng.choice(len(sql_df), self.num_rows)
             anon_list = [sql_df.iloc[x, :].values for x in idx]
             anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 

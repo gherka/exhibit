@@ -8,7 +8,6 @@ import re
 # External library imports
 import numpy as np
 import pandas as pd
-from scipy.stats import norm
 
 # EXPORTABLE METHODS
 # ==================
@@ -43,6 +42,7 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     dist = spec_dict["columns"][col_name]["distribution"]
     dist_params = spec_dict["columns"][col_name]["distribution_parameters"]
     precision = spec_dict["columns"][col_name]["precision"]
+    rng = spec_dict["_rng"]
 
     # Generate continuous values by looking up values of 
     # categorical columns in the weights table and progressively reduce
@@ -55,6 +55,7 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
         axis=1,
         weights_table=wt,
         num_col=col_name,
+        rng=rng,
         dist=dist,
         dist_params=dist_params)
     
@@ -144,6 +145,7 @@ def generate_cont_val(
     row,
     weights_table,
     num_col,
+    rng,
     dist,
     dist_params
     ):
@@ -160,6 +162,8 @@ def generate_cont_val(
         {(num_col, cat_col, cat_value)}:{weights: NamedTuple(weight, eq_diff)}
     num_col : str
         numerical column for which to generate values
+    rng : instantiated RandomGenerator
+        created when spec is first read
     dist : string
         any one of [weighted_uniform, normal]
     dist_params : dict
@@ -173,12 +177,12 @@ def generate_cont_val(
     if dist == "weighted_uniform":
         
         return _draw_from_uniform_distribution(
-            row, weights_table, num_col, **dist_params)
+            row, weights_table, num_col, rng, **dist_params)
 
     if dist == "normal":
 
         return _draw_from_normal_distribution(
-            row, weights_table, num_col, **dist_params)
+            row, weights_table, num_col, rng, **dist_params)
 
     return None #pragma: no cover
 
@@ -186,7 +190,7 @@ def generate_cont_val(
 # ====================
 
 def _draw_from_normal_distribution(
-    row, wt, num_col, target_mean=1, target_std=1, **dist_params):
+    row, wt, num_col, rng, target_mean=1, target_std=1, **dist_params):
     '''
     Draw a single value from a normal distribution with a weighted mean.
     If no seed values for target_mean and target_std are provided as part
@@ -211,11 +215,11 @@ def _draw_from_normal_distribution(
     weighted_mean = target_mean * row_diff_sum
     
     #rvs returns an array, even for size=1
-    result = norm.rvs(loc=weighted_mean, scale=target_std, size=1)[0]
+    result = rng.normal(loc=weighted_mean, scale=target_std, size=1)[0]
 
-    return _apply_dispersion(result, dispersion)
+    return _apply_dispersion(result, dispersion, rng)
 
-def _draw_from_uniform_distribution(row, wt, num_col, **dist_params):
+def _draw_from_uniform_distribution(row, wt, num_col, rng, **dist_params):
     '''
     Generate a single value by progressively reducing a base value
     based on categorical values in the row and apply dispersion to
@@ -238,7 +242,7 @@ def _draw_from_uniform_distribution(row, wt, num_col, **dist_params):
 
         base_value = base_value * weight
 
-    return _apply_dispersion(base_value, dispersion)
+    return _apply_dispersion(base_value, dispersion, rng)
 
 def _scale_to_range(series, precision, target_min=None, target_max=None, **_kwargs):
     '''
@@ -307,8 +311,7 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
         rounded_scaled_series = _conditional_rounding(scaled_series, target_sum)
         return rounded_scaled_series
     
-    # TODO change this when can be sure of reproducibility
-    return round(scaled_series, 2)
+    return round(scaled_series, 4)
 
 def _scale_to_target_statistic(
     series, precision, target_mean=None, target_std=None, **_kwargs):
@@ -392,7 +395,7 @@ def _conditional_rounding(series, target_sum):
     
     return result
 
-def _apply_dispersion(value, dispersion_pct):
+def _apply_dispersion(value, dispersion_pct, rng):
     '''
     Create an interval around value using dispersion_pct and return
     a random value from the interval
@@ -428,4 +431,4 @@ def _apply_dispersion(value, dispersion_pct):
     #to avoid negative rmin, include max(0, n) check
     rmin, rmax = (max(0, (value - d)), (value + d))
 
-    return np.random.uniform(rmin, rmax)
+    return rng.uniform(rmin, rmax)

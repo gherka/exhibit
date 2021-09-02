@@ -23,8 +23,7 @@ class constraintsTests(unittest.TestCase):
         '''
         
         self.ch = tm.ConstraintHandler(
-            {
-                "metadata":{"random_seed":0},
+            {  "_rng": np.random.default_rng(seed=0),
             }
         )
 
@@ -33,8 +32,6 @@ class constraintsTests(unittest.TestCase):
         Return a matching value given left side, right side and operator
         '''
         
-        np.random.seed(0)
-
         ops = [np.less, np.greater, np.equal]
         target_vals = [2, 9999, 5000]
 

@@ -3,6 +3,7 @@ Test the generation of continuous columns & values
 '''
 
 # Standard library imports
+import math
 import unittest
 from collections import namedtuple
 
@@ -61,21 +62,23 @@ class continuousTests(unittest.TestCase):
         Given a range of dispersion values, return noisy value
         '''
 
+        rng = np.random.default_rng(seed=0)
+
         #zero dispersion returns original value
-        test_case_1 = tm._apply_dispersion(5, 0)
+        test_case_1 = tm._apply_dispersion(5, 0, rng)
         expected_1 = (test_case_1 == 5)
 
         #basic interval picking
-        test_case_2 = tm._apply_dispersion(10, 0.5)
+        test_case_2 = tm._apply_dispersion(10, 0.5, rng)
         expected_2 = (5 <= test_case_2 <= 15)
 
         #avoid negative interval for values of zero where all
         #values are expected to be greater or equal to zero
-        test_case_3 = tm._apply_dispersion(0, 0.2)
+        test_case_3 = tm._apply_dispersion(0, 0.2, rng)
         expected_3 = (0 <= test_case_3 <= 2)
 
         #na returns na
-        test_case_4 = tm._apply_dispersion(np.NaN, 0.2)
+        test_case_4 = tm._apply_dispersion(np.NaN, 0.2, rng)
         expected_4 = np.isnan(test_case_4)
 
         self.assertTrue(expected_1)
@@ -122,6 +125,7 @@ class continuousTests(unittest.TestCase):
         test_std = 10
 
         test_spec_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "random_seed" : 0
             },
@@ -181,16 +185,16 @@ class continuousTests(unittest.TestCase):
         target_sum = 100
 
         test_spec_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "random_seed" : 0,
-                "random_generator" : np.random.default_rng(0)
             },
             "columns" : {
                 "Nums" : {
                     "precision" : "float",
                     "distribution" : "normal",
                     "distribution_parameters": {
-                        "dispersion" : 0.5,
+                        "dispersion" : 0.1,
                         "target_sum" : target_sum
                     },
                     "miss_probability" : 0,
@@ -225,8 +229,7 @@ class continuousTests(unittest.TestCase):
             wt=wt
         )
 
-        #TODO fix to work properly with reproducible seed
-        assert 95 <= result.sum() <= 105
+        self.assertTrue(math.isclose(result.sum(), target_sum, abs_tol=0.1))
 
     def test_skewed_normal_distribution_generation(self):
         '''
@@ -242,6 +245,7 @@ class continuousTests(unittest.TestCase):
         test_std = 10
 
         test_spec_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "random_seed" : 0
             },
@@ -307,6 +311,7 @@ class continuousTests(unittest.TestCase):
         def generate_test_dict(test_sum):
 
             test_spec_dict = {
+                "_rng" : np.random.default_rng(seed=0),
                 "metadata" : {
                     "random_seed" : 0
                 },
@@ -378,6 +383,7 @@ class continuousTests(unittest.TestCase):
         test_max = 150
 
         test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
             "metadata" : {
                 "random_seed" : 0
             },
