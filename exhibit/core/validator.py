@@ -32,7 +32,7 @@ class newValidator:
         '''
 
         self.spec_dict = spec_dict
-        self.ct = self.spec_dict['metadata']['category_threshold']
+        self.ct = self.spec_dict["metadata"]["category_threshold"]
         self.fixed_sql_sets = ["mountains", "birds", "patients"]
         
     def run_validator(self):
@@ -65,8 +65,8 @@ class newValidator:
         """)
 
         dupes = (
-            set(spec_dict['columns']) &
-            set(spec_dict['derived_columns'])
+            set(spec_dict["columns"]) &
+            set(spec_dict["derived_columns"])
         )
 
         if dupes:
@@ -88,12 +88,12 @@ class newValidator:
         
         cross_join = get_attr_values(
             spec_dict, "cross_join_all_unique_values", include_paired=False)
-        uniques = get_attr_values(spec_dict, 'uniques', include_paired=False)
+        uniques = get_attr_values(spec_dict, "uniques", include_paired=False)
 
         nums = [1]
 
         for xjoin_flag, value in zip(cross_join, uniques):
-            if (xjoin_flag == True) & (value is not None):
+            if (xjoin_flag is True) & (value is not None):
                 nums.append(value)
 
         min_combi = reduce(mul, nums)
@@ -103,7 +103,7 @@ class newValidator:
         minimum possible combintations({min_combi})
         """)
         
-        if spec_dict['metadata']['number_of_rows'] < min_combi:
+        if spec_dict["metadata"]["number_of_rows"] < min_combi:
             print(fail_msg)
             return False
         return True
@@ -120,13 +120,13 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['anonymising_set']
+        LINKED_ATTRS = ["anonymising_set"]
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
         """)
 
-        for linked_col_group in spec_dict['linked_columns']:
+        for linked_col_group in spec_dict["linked_columns"]:
             #linked_columns[0] is the index of linked group; actual columns are [1] 
             linked_cols = linked_col_group[1]
 
@@ -153,7 +153,7 @@ class newValidator:
         if spec_dict is None:
             spec_dict = self.spec_dict
 
-        LINKED_ATTRS = ['cross_join_all_unique_values', 'anonymising_set']
+        LINKED_ATTRS = ["cross_join_all_unique_values", "anonymising_set"]
 
         fail_msg = textwrap.dedent("""
         VALIDATION FAIL: Paired columns must have matching attributes (%(err_attr)s)
@@ -161,9 +161,9 @@ class newValidator:
 
         for c, v in get_attr_values(
             spec_dict=spec_dict,
-            attr='paired_columns',
+            attr="paired_columns",
             col_names=True,
-            types=['categorical']):
+            types=["categorical"]):
 
             if v:
 
@@ -203,12 +203,12 @@ class newValidator:
 
         for c, v in get_attr_values(
                 spec_dict=spec_dict,
-                attr='anonymising_set',
+                attr="anonymising_set",
                 col_names=True,
-                types=['categorical']):
+                types=["categorical"]):
             
             if v.split(".")[0] in self.fixed_sql_sets:
-                col_uniques = spec_dict['columns'][c]['uniques']
+                col_uniques = spec_dict["columns"][c]["uniques"]
                 anon_uniques = number_of_table_rows(v)
 
                 if col_uniques > anon_uniques:
@@ -234,10 +234,10 @@ class newValidator:
         VALIDATION FAIL: %(anon_set)s has fewer columns than linked group %(col)s
         """)
         
-        if spec_dict.get('linked_columns', None):
+        if spec_dict.get("linked_columns", None):
 
-            for linked_group in spec_dict['linked_columns']:
-                linked_set = spec_dict['columns'][linked_group[1][0]]['anonymising_set']
+            for linked_group in spec_dict["linked_columns"]:
+                linked_set = spec_dict["columns"][linked_group[1][0]]["anonymising_set"]
                 linked_set = linked_set.split(".")[0]
                 linked_col_count = len(linked_group[1])
 
@@ -267,9 +267,9 @@ class newValidator:
         VALIDATION FAIL: Tokenisation failed for %s
         """)
 
-        if spec_dict['constraints']['boolean_constraints']:
+        if spec_dict["constraints"]["boolean_constraints"]:
 
-            for constraint in spec_dict['constraints']['boolean_constraints']:
+            for constraint in spec_dict["constraints"]["boolean_constraints"]:
                 
                 # tokenise without cleaning up - as user has entered them
                 tcon = tokenise_constraint(constraint)
@@ -315,7 +315,7 @@ class newValidator:
         VALIDATION FAIL: At least one distribution parameter is required for column %s
         """)
 
-        for num_col in spec_dict['metadata']['numerical_columns']:
+        for num_col in spec_dict["metadata"]["numerical_columns"]:
 
             col = spec_dict["columns"].get(num_col, None)
             #columns in derived section don't have any parameters

@@ -77,7 +77,7 @@ class validatorTests(unittest.TestCase):
 
         #check the user isn't under-shooting with the number of rows
         test_spec = {
-            "metadata":{'number_of_rows':4},
+            "metadata":{"number_of_rows":4},
             "columns": {
                 "A": {
                     "type":"categorical",
@@ -118,12 +118,12 @@ class validatorTests(unittest.TestCase):
                     "anonymising_set": "random"
                 },
             },
-            "linked_columns": [[0, ['Board Code', 'Board']]]
+            "linked_columns": [[0, ["Board Code", "Board"]]]
         
         }
 
         test_dict1 = deepcopy(test_dict)
-        test_dict1['columns']['Board']['anonymising_set'] = "fish"
+        test_dict1["columns"]["Board"]["anonymising_set"] = "fish"
         
         self.assertFalse(tm.validate_linked_cols(validatorMock, spec_dict=test_dict1))
 
@@ -140,23 +140,23 @@ class validatorTests(unittest.TestCase):
                 "Board Code": {
                     "type": "categorical",
                     "cross_join_all_unique_values": False,
-                    "paired_columns": ['Board'],
+                    "paired_columns": ["Board"],
                     "anonymising_set": "random"
                 },
                 "Board":  {
                     "type": "categorical",
                     "cross_join_all_unique_values": False,
-                    "paired_columns": ['Board Code'],
+                    "paired_columns": ["Board Code"],
                     "anonymising_set": "random"
                 },
             }        
         }
 
         test_dict1 = deepcopy(test_dict)
-        test_dict1['columns']['Board']['cross_join_all_unique_values'] = True
+        test_dict1["columns"]["Board"]["cross_join_all_unique_values"] = True
 
         test_dict2 = deepcopy(test_dict)
-        test_dict2['columns']['Board']['anonymising_set'] = "fish"
+        test_dict2["columns"]["Board"]["anonymising_set"] = "fish"
         
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict1))
         self.assertFalse(tm.validate_paired_cols(validatorMock, spec_dict=test_dict2))
@@ -204,7 +204,7 @@ class validatorTests(unittest.TestCase):
                     "anonymising_set": "mountains"
                 }
             },
-            "linked_columns": [[0, ['Board', 'Local Authority', 'GP Practice']]]
+            "linked_columns": [[0, ["Board", "Local Authority", "GP Practice"]]]
         }
 
         self.assertFalse(
@@ -312,4 +312,4 @@ class validatorTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

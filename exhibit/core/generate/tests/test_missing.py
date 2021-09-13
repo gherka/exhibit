@@ -12,6 +12,9 @@ import pandas as pd
 import numpy as np
 from pandas.testing import assert_frame_equal, assert_series_equal
 
+# Exhibit imports
+from exhibit.core.specs import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
+
 # Module under test
 from exhibit.core.generate import missing as tm
 
@@ -79,7 +82,7 @@ class missingDataTests(unittest.TestCase):
                     "type"            : "categorical",
                     "paired_columns"  : ["B"],
                     "miss_probability": 0.5,
-                    "original_values" : "See paired column"
+                    "original_values" : ORIGINAL_VALUES_PAIRED
                 },
                 "B" : {
                     "type"            : "categorical",
@@ -97,7 +100,7 @@ class missingDataTests(unittest.TestCase):
                     "type"            : "categorical",
                     "paired_columns" : ["C"],
                     "miss_probability" : 0.7,
-                    "original_values" : "See paired column"
+                    "original_values" : ORIGINAL_VALUES_PAIRED
                 }
             },
             "constraints" : {
@@ -183,7 +186,7 @@ class missingDataTests(unittest.TestCase):
                     "type"            : "categorical",
                     "paired_columns" : ["A"],
                     "miss_probability" : 0.5,
-                    "original_values" : "See paired column"
+                    "original_values" : ORIGINAL_VALUES_PAIRED
                     },
                 "C" : {
                     "type"            : "categorical",
@@ -226,15 +229,15 @@ class missingDataTests(unittest.TestCase):
                 ("C", "A", "spam", Weights(0.5, 0.5)),
                 ("C", "A", "eggs", Weights(0.5, 0.5)),
                 ("C", "B", "bacon", Weights(0.5, 0.5)),
-                ("C", "A", "Missing data", Weights(0.5, 0.5)),
-                ("C", "B", "Missing data", Weights(0.5, 0.5)),
+                ("C", "A", MISSING_DATA_STR, Weights(0.5, 0.5)),
+                ("C", "B", MISSING_DATA_STR, Weights(0.5, 0.5)),
             ],
-            columns=['num_col', 'cat_col', 'cat_value', 'weights'])
+            columns=["num_col", "cat_col", "cat_value", "weights"])
 
         #reformat into dictionary
         weights = (
             weights_df
-                .set_index(['num_col', 'cat_col', 'cat_value'])
+                .set_index(["num_col", "cat_col", "cat_value"])
                 .to_dict(orient="index")
         )
 
@@ -372,7 +375,7 @@ class missingDataTests(unittest.TestCase):
                     "type"            : "categorical",
                     "paired_columns"  : ["A"],
                     "miss_probability": 0.5,
-                    "original_values" : "See paired column"
+                    "original_values" : ORIGINAL_VALUES_PAIRED
 
                 },
             },
@@ -460,14 +463,14 @@ class missingDataTests(unittest.TestCase):
             data=[
                 ("C2", "C1", "A", Weights(0.1, 0.5)),
                 ("C2", "C1", "B", Weights(0.9, 0.5)),
-                ("C2", "C1", "Missing data", Weights(0.2, 0.5)),
+                ("C2", "C1", MISSING_DATA_STR, Weights(0.2, 0.5)),
             ],
-            columns=['num_col', 'cat_col', 'cat_value', 'weights'])
+            columns=["num_col", "cat_col", "cat_value", "weights"])
 
         #reformat into dictionary
         weights = (
             weights_df
-                .set_index(['num_col', 'cat_col', 'cat_value'])
+                .set_index(["num_col", "cat_col", "cat_value"])
                 .to_dict(orient="index")
         )
 
@@ -524,4 +527,4 @@ class missingDataTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

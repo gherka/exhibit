@@ -14,6 +14,7 @@ import numpy as np
 # Exhibit import
 from .utils import exceeds_ct
 from .sql import query_anon_database
+from .specs import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 
 # EXPORTABLE METHODS & CLASSES
 # ============================
@@ -254,10 +255,10 @@ def find_hierarchically_linked_columns(df, spec):
     #single value and paired columns are ignored
     cols = []
 
-    for col in spec['metadata']['categorical_columns']:
+    for col in spec["metadata"]["categorical_columns"]:
         cond = (
             (df[col].nunique() > 1) &
-            (spec['columns'][col]['original_values'] != "See paired column")
+            (spec["columns"][col]["original_values"] != ORIGINAL_VALUES_PAIRED)
         )
 
         if cond:
@@ -376,9 +377,9 @@ class _LinkedDataGenerator:
         self.linked_cols = linked_group[1]
         #take the root name of the set (mountains in case of mountains.peak)
         self.anon_set = (
-            spec_dict['columns'][self.linked_cols[0]]['anonymising_set'].split(".")[0])
+            spec_dict["columns"][self.linked_cols[0]]["anonymising_set"].split(".")[0])
 
-        self.id = self.spec_dict['metadata']['id']
+        self.id = self.spec_dict["metadata"]["id"]
         self.num_rows = num_rows
         self.base_col = None
         self.base_col_pos = None
@@ -390,13 +391,13 @@ class _LinkedDataGenerator:
 
         #find the FIRST "base_col" with weights, starting from the end of the list
         #weights and probabilities are only there for columns whose unique count <= ct
-        ct = spec_dict['metadata']['category_threshold']
+        ct = spec_dict["metadata"]["category_threshold"]
 
         for i, col_name in enumerate(reversed(self.linked_cols)):
-            if spec_dict['columns'][col_name]['uniques'] <= ct:
+            if spec_dict["columns"][col_name]["uniques"] <= ct:
                 self.base_col = col_name
                 self.base_col_pos = len(self.linked_cols) - (i + 1)
-                self.base_col_unique_count = spec_dict['columns'][col_name]['uniques']
+                self.base_col_unique_count = spec_dict["columns"][col_name]["uniques"]
                 break
     
         #if ALL columns in the linked group have more unique values than allowed,
@@ -404,7 +405,7 @@ class _LinkedDataGenerator:
         if not self.base_col:
             self.base_col = self.linked_cols[-1]
             self.base_col_pos = -1
-            self.base_col_unique_count = spec_dict['columns'][self.base_col]['uniques']
+            self.base_col_unique_count = spec_dict["columns"][self.base_col]["uniques"]
             self.scenario = 1
 
         elif self.base_col == self.linked_cols[-1]:
@@ -541,14 +542,14 @@ class _LinkedDataGenerator:
 
         for linked_col in self.linked_cols: #noqa
 
-            anon_set = self.spec_dict['columns'][linked_col]['anonymising_set']
-            orig_vals = self.spec_dict['columns'][linked_col]['original_values']
+            anon_set = self.spec_dict["columns"][linked_col]["anonymising_set"]
+            orig_vals = self.spec_dict["columns"][linked_col]["original_values"]
             
-            if anon_set == 'random' and isinstance(orig_vals, pd.DataFrame):
+            if anon_set == "random" and isinstance(orig_vals, pd.DataFrame):
                 
-                #we need to drop "Missing data" prior to sorting to avoid it
-                #messing up the aliasing mappings which rely on two sets of
-                #column names being in the same order.
+                #we need to drop missing data placeholder prior to sorting to
+                #avoid it messing up the aliasing mappings which rely on two sets
+                #of column names being in the same order.
                 original_col_values = sorted(
                     query_anon_database(
                         table_name=linked_table_name,
@@ -595,8 +596,8 @@ class _LinkedDataGenerator:
         '''
 
         base_col_vals = None
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
-        base_col_prob = np.array(base_col_df['probability_vector'])
+        base_col_df = self.spec_dict["columns"][self.base_col]["original_values"][:-1]
+        base_col_prob = np.array(base_col_df["probability_vector"])
 
         if self.anon_set != "random":
             #replace original_values with anonymised aliases for weights_table
@@ -604,17 +605,17 @@ class _LinkedDataGenerator:
             #we only do it for the column with actual probabilities / weights, not
             #the child columns which won't have continuous column weights.
 
-            orig_df = self.spec_dict['columns'][self.base_col]['original_values']
+            orig_df = self.spec_dict["columns"][self.base_col]["original_values"]
             repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
             aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
-            self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
+            self.spec_dict["columns"][self.base_col]["original_values"] = aliased_df
             base_col_vals = aliased_df[self.base_col].iloc[:-1].unique()
 
         # original values are only in SQL; spec might have been modified
         if base_col_vals is None:
             base_col_vals = (
                 self.sql_df[self.base_col]
-                .loc[lambda x: x != "Missing data"]
+                .loc[lambda x: x != MISSING_DATA_STR]
                 .sort_values()
                 .unique()[0:self.base_col_unique_count])
 
@@ -657,15 +658,15 @@ class _LinkedDataGenerator:
         '''
 
         base_col_vals = None
-        base_col_df = self.spec_dict['columns'][self.base_col]['original_values'][:-1]
-        base_col_prob = np.array(base_col_df['probability_vector'])
+        base_col_df = self.spec_dict["columns"][self.base_col]["original_values"][:-1]
+        base_col_prob = np.array(base_col_df["probability_vector"])
 
         if self.anon_set != "random":
 
-            orig_df = self.spec_dict['columns'][self.base_col]['original_values']
+            orig_df = self.spec_dict["columns"][self.base_col]["original_values"]
             repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
             aliased_df = orig_df.replace(orig_df[self.base_col].values[:-1], repl)
-            self.spec_dict['columns'][self.base_col]['original_values'] = aliased_df
+            self.spec_dict["columns"][self.base_col]["original_values"] = aliased_df
             base_col_vals = aliased_df[self.base_col].iloc[:-1].unique()
 
         # original values are only in SQL; spec might have been modified
@@ -673,7 +674,7 @@ class _LinkedDataGenerator:
         if base_col_vals is None:
             base_col_vals = (
                 self.sql_df[self.base_col]
-                .loc[lambda x: x != "Missing data"]
+                .loc[lambda x: x != MISSING_DATA_STR]
                 .sort_values()
                 .unique()[0:self.base_col_unique_count])
 
@@ -707,7 +708,7 @@ class _LinkedDataGenerator:
             for c in self.linked_cols:
                 
                 #just generate a DF with duplicate paired columns
-                for pair in self.spec_dict['columns'][c]['paired_columns']:
+                for pair in self.spec_dict["columns"][c]["paired_columns"]:
 
                     #overwrite linked_df
                     linked_df = pd.concat(
@@ -807,7 +808,7 @@ def _create_paired_columns_lookup(spec_dict, base_column):
     '''
 
     #get a list of paired columns:
-    pairs = spec_dict['columns'][base_column]['paired_columns']
+    pairs = spec_dict["columns"][base_column]["paired_columns"]
     #sanitse base_columns name for SQL
     safe_base_col_name = base_column.replace(" ", "$")
 
@@ -818,17 +819,17 @@ def _create_paired_columns_lookup(spec_dict, base_column):
         if exceeds_ct(spec_dict, base_column):
 
             paired_df = query_anon_database(table_name=table_name)
-            paired_df.rename(columns=lambda x: x.replace('paired_', ''), inplace=True)
-            paired_df.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
+            paired_df.rename(columns=lambda x: x.replace("paired_", ""), inplace=True)
+            paired_df.rename(columns=lambda x: x.replace("$", " "), inplace=True)
 
             return paired_df
 
         #code to pull the base_column + paired column(s) from original_values
-        base_df = spec_dict['columns'][base_column]['original_values']
+        base_df = spec_dict["columns"][base_column]["original_values"]
 
         paired_df = (
             base_df[[base_column] + [f"paired_{x}" for x in pairs]]
-                .rename(columns=lambda x: x.replace('paired_', ''))
+                .rename(columns=lambda x: x.replace("paired_", ""))
         )
         
         return paired_df

@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
+from exhibit.core.specs import MISSING_DATA_STR
 from exhibit.core.utils import package_dir
 
 def query_anon_database(
@@ -35,7 +36,7 @@ def query_anon_database(
     db_uri : str
         optional. For testing.
     exclude_missing : bool
-        optional. Set to True to exclude the special "Missing data"
+        optional. Set to True to exclude the missing data placeholder
         value from the column, if SQL is for the single column only
 
     Returns
@@ -56,7 +57,8 @@ def query_anon_database(
     order_sql = f"ORDER BY {order}"
     size_sql = f"LIMIT {size}" if size else ""
     where_sql = (
-        f"WHERE {column} != 'Missing data'" if (column and exclude_missing) else "")
+        f"WHERE {column} != '{MISSING_DATA_STR}'" 
+        if (column and exclude_missing) else "")
     
     sql = f"""
     SELECT DISTINCT {str(column or '*')}
@@ -74,11 +76,11 @@ def query_anon_database(
  
     if len(column_names) == 1:
         output = pd.DataFrame(data={column_names[0]: [x[0] for x in result]})
-        output.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
+        output.rename(columns=lambda x: x.replace("$", " "), inplace=True)
         return output
     
     output = pd.DataFrame(data=result, columns=column_names)
-    output.rename(columns=lambda x: x.replace('$', ' '), inplace=True)
+    output.rename(columns=lambda x: x.replace("$", " "), inplace=True)
 
     return output
 
@@ -123,14 +125,14 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
 
     #make sure data is stripped from extra whitespace to match the spec
     #as an extra precaution we're dropping any rows with np.NaN values in them
-    data = [tuple([y.strip() for y in x]) for x in data if np.NaN not in x]
+    data = [tuple(y.strip() for y in x) for x in data if np.NaN not in x]
 
     if len(col_names) == 1:
         col_list = col_names[0]
     else:
-        col_list = ', '.join(col_names)
+        col_list = ", ".join(col_names)
 
-    params = ', '.join(['?' for _ in col_names])
+    params = ", ".join(["?" for _ in col_names])
 
     drop_sql = f"DROP TABLE IF EXISTS {table_name}"
     create_sql = f"CREATE TABLE {table_name} ({col_list})"

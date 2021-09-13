@@ -32,7 +32,7 @@ class utilsTests(unittest.TestCase):
         by argparse as strings by default.
         '''
 
-        self.assertRaises(FileNotFoundError, tm.path_checker, '123')
+        self.assertRaises(FileNotFoundError, tm.path_checker, "123")
 
     def test_path_checker_returns_path_object(self):
         '''
@@ -69,7 +69,7 @@ class utilsTests(unittest.TestCase):
         Currently only .csv files are supported
         '''
         
-        self.assertRaises(TypeError, tm.read_with_date_parser, Path('basic.xlsx'))
+        self.assertRaises(TypeError, tm.read_with_date_parser, Path("basic.xlsx"))
 
     def test_date_frequency_guesser(self):
         '''
@@ -108,7 +108,7 @@ class utilsTests(unittest.TestCase):
         test_spec = inpatients_spec
 
         #there are 7 categorical columns in the inpatients spec
-        test_list = tm.get_attr_values(test_spec, "uniques", types=['categorical'])
+        test_list = tm.get_attr_values(test_spec, "uniques", types=["categorical"])
         self.assertEqual(len(test_list), 7)
 
         #non-existant attributes are saved as None values; no error
@@ -117,7 +117,7 @@ class utilsTests(unittest.TestCase):
 
         #paired columns can be ignored
         test_list = tm.get_attr_values(
-            test_spec, "uniques", include_paired=False, types=['categorical'])
+            test_spec, "uniques", include_paired=False, types=["categorical"])
         expected = [10, 14, 48, 3, 2] #two paired columns skipped
         self.assertEqual(test_list, expected)
 
@@ -129,10 +129,10 @@ class utilsTests(unittest.TestCase):
         test_spec = deepcopy(inpatients_spec)
 
         #test setup
-        test_spec['metadata']['number_of_rows'] = 1000
-        test_spec['columns']['quarter_date']['uniques'] = 5
-        test_spec['columns']['hb_name']['uniques'] = 5
-        test_spec['columns']['hb_name']['cross_join_all_unique_values'] = True
+        test_spec["metadata"]["number_of_rows"] = 1000
+        test_spec["columns"]["quarter_date"]["uniques"] = 5
+        test_spec["columns"]["hb_name"]["uniques"] = 5
+        test_spec["columns"]["hb_name"]["cross_join_all_unique_values"] = True
 
         expected = 40
         result = tm.count_core_rows(test_spec)
@@ -174,4 +174,4 @@ class utilsTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

@@ -11,6 +11,7 @@ import pandas as pd
 
 # Exhibit imports
 from ..constraints import clean_up_constraint
+from ..specs import MISSING_DATA_STR
 from ..utils import get_attr_values
 from .continuous import generate_cont_val, scale_continuous_column
 
@@ -68,7 +69,7 @@ class MissingDataGenerator:
             # reset the generator for each column
             rng = np.random.default_rng(seed=0)
 
-            miss_pct = self.spec_dict['columns'][col_name]['miss_probability']
+            miss_pct = self.spec_dict["columns"][col_name]["miss_probability"]
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
             col_type = self.spec_dict["columns"][col_name]["type"]
             miss_value = pd.NaT if col_type == "date" else np.NaN
@@ -89,7 +90,7 @@ class MissingDataGenerator:
             rng = np.random.default_rng(seed=0)
          
             # miss probability will be the same for all columns in cols
-            miss_pct = self.spec_dict['columns'][next(iter(cols))]['miss_probability']
+            miss_pct = self.spec_dict["columns"][next(iter(cols))]["miss_probability"]
             # rands is shared for all columns in cols
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
 
@@ -110,7 +111,7 @@ class MissingDataGenerator:
         for idx, col_name in no_null_idx:
             self.nan_data.loc[idx, col_name] = self.data.loc[idx, col_name]
 
-        #5) Replace np.nan with "Missing data" placeholder for categorical columns and
+        #5) Replace np.nan with missing data placeholder for categorical columns and
         # re-generate continuous variables for those rows according to proper weights
         # only go through this step if there are nulls in categorical columns
         # and the spec_dict includes numerical columns that would be affected
@@ -124,7 +125,7 @@ class MissingDataGenerator:
             return self.nan_data
 
         cat_mask = self.nan_data[cat_cols].isna().any(axis=1)
-        self.nan_data[cat_cols] = self.nan_data[cat_cols].fillna("Missing data")
+        self.nan_data[cat_cols] = self.nan_data[cat_cols].fillna(MISSING_DATA_STR)
         
         for num_col in num_cols:
 
@@ -132,11 +133,11 @@ class MissingDataGenerator:
             rng = np.random.default_rng(seed=0)
            
             # Extract relevant num col variables from the user spec
-            num_col_dict = self.spec_dict['columns'][num_col]
+            num_col_dict = self.spec_dict["columns"][num_col]
 
-            dist = num_col_dict['distribution']
-            dist_params = num_col_dict['distribution_parameters']
-            precision = num_col_dict['precision']
+            dist = num_col_dict["distribution"]
+            dist_params = num_col_dict["distribution_parameters"]
+            precision = num_col_dict["precision"]
             
             # if it's already NA, don't re-generate; it's NA for a reason!
             num_mask = self.nan_data[num_col].isna()
@@ -168,7 +169,7 @@ class MissingDataGenerator:
             self.nan_data.loc[mask, num_col] = repl_s.values
 
         # replace Missing data back with np.nan
-        self.nan_data.replace({"Missing data" : np.nan}, inplace=True)
+        self.nan_data.replace({MISSING_DATA_STR : np.nan}, inplace=True)
 
         return self.nan_data
 

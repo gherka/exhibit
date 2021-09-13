@@ -1,13 +1,15 @@
 '''
 When exhibit folder is the entry point for the program, meaning
-it's called from python exhibit, then this script is run.
+it's launched as python exhibit, then this script is run. This is
+not a typical scenario which is to run exhibit, not python exhibit.
 '''
+
+from exhibit.command.bootstrap import main as _main
 
 def main():
     '''
     Import the main program code and run
     '''
-    from exhibit.command.bootstrap import main as _main
 
     _main()
 

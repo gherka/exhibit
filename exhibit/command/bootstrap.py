@@ -24,7 +24,7 @@ def main():
     xA = newExhibit()
 
     #Call methods on the instance of newExhibit to drive the tool
-    if xA._args.command == 'fromdata':
+    if xA._args.command == "fromdata":
         xA.read_data()
         xA.generate_spec()
         xA.write_spec()

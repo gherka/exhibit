@@ -17,6 +17,9 @@ import dateutil
 import pandas as pd
 from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype
 
+# Exhibit imports
+from .specs import ORIGINAL_VALUES_PAIRED
+
 def path_checker(path_string):
     '''
     Improves error message for user if wrong path entered
@@ -115,7 +118,7 @@ def read_with_date_parser(path, **kwargs):
     DataFrame
     '''
 
-    if path.suffix in ['.csv',]:
+    if path.suffix in [".csv",]:
 
         skipped_cols = kwargs.get("skip_columns", [])
     
@@ -224,7 +227,7 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired
     '''
     
     if types is None:
-        types = ['categorical', 'date', 'continuous']
+        types = ["categorical", "date", "continuous"]
     
     if not isinstance(types, list): #pragma: no cover
         types = [types]
@@ -232,21 +235,21 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired
     attrs = []
     attrTuple = namedtuple(attr, ["col_name", "attr_value"])
 
-    for col in spec_dict['columns']:
+    for col in spec_dict["columns"]:
 
         default_value = attrTuple(col, None)
 
         mask = (
-                (spec_dict["columns"][col]['type'] in types) and
+                (spec_dict["columns"][col]["type"] in types) and
                 (True if include_paired else not is_paired(spec_dict, col))
             )
 
         if mask:
             #append None as a placeholder; overwrite if attr exists
             attrs.append(default_value)
-            for a in spec_dict['columns'][col]:
+            for a in spec_dict["columns"][col]:
                 if a == attr:
-                    attrs[-1] = attrTuple(col, spec_dict['columns'][col][attr])
+                    attrs[-1] = attrTuple(col, spec_dict["columns"][col][attr])
 
     if col_names:
         return attrs
@@ -255,9 +258,11 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired
 
 def generate_table_id():
     '''
-    Generate a 5-digit pseudo-unique ID based on current time
+    Generate a 5-character pseudo-unique ID based on current time, prefixed with
+    t to a) indicate it's a table, b) avoid '' around the id in YAML when the
+    first character is a digit.
     '''
-    new_id = str(hex(int(datetime.datetime.now().timestamp()*10))[6:])
+    new_id = "t" + str(hex(int(datetime.datetime.now().timestamp()*10))[6:])
 
     return new_id
 
@@ -269,8 +274,8 @@ def exceeds_ct(spec_dict, col):
     exceeds category threshold parameter given at spec generation
     '''
     result = (
-        spec_dict['columns'][col]['uniques'] > 
-        spec_dict['metadata']['category_threshold']
+        spec_dict["columns"][col]["uniques"] > 
+        spec_dict["metadata"]["category_threshold"]
     )
 
     return result
@@ -305,18 +310,18 @@ def count_core_rows(spec_dict):
         spec_dict,
         "cross_join_all_unique_values",
         col_names=True, 
-        types=['categorical', 'date']) if v}
+        types=["categorical", "date"]) if v}
 
     paired_cols = {c for c, v in get_attr_values(
         spec_dict,
         "original_values",
         col_names=True, 
-        types=['categorical']) if str(v) == 'See paired column'}
+        types=["categorical"]) if str(v) == ORIGINAL_VALUES_PAIRED}
 
     target_cols = complete_cols - paired_cols
 
     complete_uniques = [
-        v['uniques'] for c, v in spec_dict['columns'].items()
+        v["uniques"] for c, v in spec_dict["columns"].items()
         if c in target_cols
         ]
     
@@ -326,11 +331,11 @@ def count_core_rows(spec_dict):
 
     complete_count = reduce(mul, complete_uniques)
 
-    core_rows = int(spec_dict['metadata']['number_of_rows'] / complete_count)
+    core_rows = int(spec_dict["metadata"]["number_of_rows"] / complete_count)
 
     #print a warning if number of rows will be different from the spec.
     #max difference either way is the size of complete count
-    if core_rows * complete_count != spec_dict['metadata']['number_of_rows']:
+    if core_rows * complete_count != spec_dict["metadata"]["number_of_rows"]:
         print("WARNING: Number of demo rows doesn't match the spec due to rounding")
 
     return core_rows
@@ -357,12 +362,12 @@ def is_paired(spec_dict, col_name):
     Only categorical columns can be paired
     '''
     
-    if spec_dict['columns'][col_name]['type'] != "categorical":
+    if spec_dict["columns"][col_name]["type"] != "categorical":
         return False
 
-    orig_vals = spec_dict['columns'][col_name]['original_values']
+    orig_vals = spec_dict["columns"][col_name]["original_values"]
     
-    if isinstance(orig_vals, str) and orig_vals == 'See paired column':
+    if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_PAIRED:
         return True
     return False
 

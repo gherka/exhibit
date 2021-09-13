@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
-from .formatters import parse_original_values
 from .specs import newSpec
+from .formatters import parse_original_values
 from .validator import newValidator
 from .constraints import ConstraintHandler
 from .utils import (
@@ -70,54 +70,54 @@ class newExhibit:
             )
 
         parser.add_argument(
-            'command',
-            type=str, choices=['fromdata', 'fromspec'],
-            help=textwrap.dedent('''\
+            "command",
+            type=str, choices=["fromdata", "fromspec"],
+            help=textwrap.dedent("""\
             fromdata:
             Use the source data to generate specification\n
             fromspec:
             Use the source specification to generate anonymised data\n
-            '''),
-            metavar='command'
+            """),
+            metavar="command"
             )
 
         parser.add_argument(
-            'source',
+            "source",
             type=path_checker,
-            help='path to source file for processing'
+            help="path to source file for processing"
             )
 
         parser.add_argument(
-            '--verbose', '-v',
+            "--verbose", "-v",
             default=False,
-            action='store_true',
-            help='control traceback length for debugging errors',
+            action="store_true",
+            help="control traceback length for debugging errors",
             )
 
         parser.add_argument(
-            '--category_threshold', '-ct',
+            "--category_threshold", "-ct",
             type=int,
             default=30,
-            help='maximum number of categories to include in .yml for manual editing',
+            help="maximum number of categories to include in .yml for manual editing",
             )
 
         parser.add_argument(
-            '--output', '-o',
-            help='output the generated spec to a given file name',
+            "--output", "-o",
+            help="output the generated spec to a given file name",
             )
 
         parser.add_argument(
-            '--skip_columns', '-skip',
+            "--skip_columns", "-skip",
             default=[],
-            nargs='+',
-            help='list of columns to skip when reading in data',
+            nargs="+",
+            help="list of columns to skip when reading in data",
             )
         
         parser.add_argument(
-            '--equal_weights', '-ew',
+            "--equal_weights", "-ew",
             default=False,
-            action='store_true',
-            help='use equal weights and probabilities for all printed column values',
+            action="store_true",
+            help="use equal weights and probabilities for all printed column values",
             )
  
         self._args = parser.parse_args(sys.argv[1:])
@@ -192,20 +192,20 @@ class newExhibit:
         so that we can amend the dataframe in-place when using
         anonymised values from anon db in the generation process.
         '''
-        if self._args.source.suffix == '.yml':
+        if self._args.source.suffix == ".yml":
             with open(self._args.source) as f:
                 self.spec_dict = yaml.safe_load(f)
         else: #pragma: no cover
-            raise TypeError('Specification is not in .yml format')
+            raise TypeError("Specification is not in .yml format")
 
 
-        for col in self.spec_dict['metadata']['categorical_columns']:
+        for col in self.spec_dict["metadata"]["categorical_columns"]:
 
-            original_values = self.spec_dict['columns'][col]['original_values']
+            original_values = self.spec_dict["columns"][col]["original_values"]
     
             parsed_values = parse_original_values(original_values)
 
-            self.spec_dict['columns'][col]['original_values'] = parsed_values
+            self.spec_dict["columns"][col]["original_values"] = parsed_values
 
     def validate_spec(self):
         '''
@@ -225,7 +225,7 @@ class newExhibit:
         '''
 
         #0) INITIALIZE THE RANDOM GENERATOR
-        seed=self.spec_dict['metadata']['random_seed']
+        seed=self.spec_dict["metadata"]["random_seed"]
         self.spec_dict["_rng"] = np.random.default_rng(seed=seed)
 
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
@@ -243,7 +243,7 @@ class newExhibit:
         # as required.
 
         #3) CHECK IF DUPLICATES ARE OK
-        if not self.spec_dict['constraints']['allow_duplicates']:
+        if not self.spec_dict["constraints"]["allow_duplicates"]:
             duplicated_idx = anon_df.duplicated()
             number_dropped = sum(duplicated_idx)
             if number_dropped > 0:
@@ -261,10 +261,10 @@ class newExhibit:
         self.spec_dict["weights_table"] = wt
         self.spec_dict["weights_table_target_cols"] = target_cols
 
-        for num_col in self.spec_dict['metadata']['numerical_columns']:
+        for num_col in self.spec_dict["metadata"]["numerical_columns"]:
             
             # skip derived columns; they need main columns (inc. nulls) generated first
-            if num_col in self.spec_dict['derived_columns']:
+            if num_col in self.spec_dict["derived_columns"]:
                 continue
 
             anon_df[num_col] = generate_continuous_column(
@@ -280,12 +280,12 @@ class newExhibit:
         #7) PROCESS BOOLEAN AND CONDITIONAL CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict)
         
-        for bool_constraint in self.spec_dict['constraints']['boolean_constraints']:
+        for bool_constraint in self.spec_dict["constraints"]["boolean_constraints"]:
 
             ch.adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
 
         #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
-        for name, calc in self.spec_dict['derived_columns'].items():
+        for name, calc in self.spec_dict["derived_columns"].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
             

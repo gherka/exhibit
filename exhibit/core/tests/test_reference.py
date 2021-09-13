@@ -20,6 +20,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import package_dir
 from exhibit.db import db_util
+from exhibit.core.specs import MISSING_DATA_STR
 from exhibit.sample.sample import (
     inpatients_spec, inpatients_anon)
 
@@ -52,6 +53,14 @@ class referenceTests(unittest.TestCase):
         '''
 
         cls._temp_tables = []
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+
+        db_util.drop_tables(cls._temp_tables)
 
     @staticmethod
     def temp_exhibit(
@@ -87,7 +96,7 @@ class referenceTests(unittest.TestCase):
 
             f_name = join(td, temp_name)
 
-            default_data_path = Path(package_dir('sample', '_data', filename))
+            default_data_path = Path(package_dir("sample", "_data", filename))
 
             fromdata_defaults = {
                 "command"           : "fromdata",
@@ -119,7 +128,7 @@ class referenceTests(unittest.TestCase):
                     category_threshold=fromdata_defaults["category_threshold"],
                     verbose=fromdata_defaults["verbose"],
                     output=fromdata_defaults["output"],
-                    skip_columns=fromdata_defaults['skip_columns'],
+                    skip_columns=fromdata_defaults["skip_columns"],
                     equal_weights=fromdata_defaults["equal_weights"]
 
                 )
@@ -192,34 +201,34 @@ class referenceTests(unittest.TestCase):
 
         expected_df = pd.read_csv(
             package_dir(
-                'core', 'tests', '_reference_data',
-                'prescribing_anon_non_linked.csv'),
-            parse_dates=['PaidDateMonth']
+                "core", "tests", "_reference_data",
+                "prescribing_anon_non_linked.csv"),
+            parse_dates=["PaidDateMonth"]
             )
         
         test_dict = {
-            'metadata':{'number_of_rows':1500},
-            'columns':{
-                'HB2014':{
-                    'cross_join_all_unique_values': True
+            "metadata":{"number_of_rows":1500},
+            "columns":{
+                "HB2014":{
+                    "cross_join_all_unique_values": True
                 },
-                'HB2014Name':{
-                    'cross_join_all_unique_values': True
+                "HB2014Name":{
+                    "cross_join_all_unique_values": True
                 },
-                'BNFItemCode':{'anonymising_set':'birds'},
-                'BNFItemDescription':{'anonymising_set':'birds'},
-                'GPPracticeName':{'anonymising_set':'random'}
+                "BNFItemCode":{"anonymising_set":"birds"},
+                "BNFItemDescription":{"anonymising_set":"birds"},
+                "GPPracticeName":{"anonymising_set":"random"}
             },
-            'linked_columns':[]
+            "linked_columns":[]
         }
 
         temp_spec, temp_df = self.temp_exhibit(
-            filename='prescribing.csv',
+            filename="prescribing.csv",
             test_spec_dict=test_dict
         )
 
         #save ID to tidy up temp columns created as part of testing
-        self._temp_tables.append(temp_spec['metadata']['id'])
+        self._temp_tables.append(temp_spec["metadata"]["id"])
 
         #sort column names to make sure they are the same
         temp_df.sort_index(axis=1, inplace=True)
@@ -244,27 +253,27 @@ class referenceTests(unittest.TestCase):
 
         expected_df = pd.read_csv(
             package_dir(
-                'core', 'tests', '_reference_data',
-                'prescribing_anon_mnt_linked.csv'),
-            parse_dates=['PaidDateMonth']
+                "core", "tests", "_reference_data",
+                "prescribing_anon_mnt_linked.csv"),
+            parse_dates=["PaidDateMonth"]
             )
 
         test_dict = {
-            'columns':{
-                'HB2014':{'anonymising_set':'mountains'},
-                'HB2014Name':{'anonymising_set':'mountains'},
-                'GPPracticeName':{'anonymising_set':'mountains'},
-                'NumberOfPaidItems':{"distribution":'normal'}
+            "columns":{
+                "HB2014":{"anonymising_set":"mountains"},
+                "HB2014Name":{"anonymising_set":"mountains"},
+                "GPPracticeName":{"anonymising_set":"mountains"},
+                "NumberOfPaidItems":{"distribution":"normal"}
             }
         }
 
         temp_spec, temp_df = self.temp_exhibit(
-            filename='prescribing.csv',
+            filename="prescribing.csv",
             test_spec_dict=test_dict
         )
 
         #save ID to tidy up temp columns created as part of testing
-        self._temp_tables.append(temp_spec['metadata']['id'])
+        self._temp_tables.append(temp_spec["metadata"]["id"])
 
         #sort column names to make sure they are the same
         temp_df.sort_index(axis=1, inplace=True)
@@ -294,11 +303,11 @@ class referenceTests(unittest.TestCase):
         BEFORE boolean constraints are adjusted.
         '''
 
-        with patch('argparse.ArgumentParser.parse_args') as mock_args:
+        with patch("argparse.ArgumentParser.parse_args") as mock_args:
 
             mock_args.return_value = argparse.Namespace(
                 command="fromspec",
-                source=Path(package_dir('sample', '_spec', 'inpatients_edited.yml')),
+                source=Path(package_dir("sample", "_spec", "inpatients_edited.yml")),
                 verbose=True,
                 skip_columns=[]
             )
@@ -308,7 +317,7 @@ class referenceTests(unittest.TestCase):
             if xA.validate_spec():
                 xA.execute_spec()
 
-        table_id = xA.spec_dict['metadata']['id']
+        table_id = xA.spec_dict["metadata"]["id"]
         
         #save ID to tidy up temp columns created as part of testing
         self._temp_tables.append(table_id)
@@ -336,11 +345,11 @@ class referenceTests(unittest.TestCase):
             - linked columns share missing categorical data
         '''
 
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
 
         test_dataframe = pd.read_csv(
             source_data_path,
-            parse_dates=['quarter_date'],
+            parse_dates=["quarter_date"],
             dayfirst=True
         )
 
@@ -352,7 +361,7 @@ class referenceTests(unittest.TestCase):
             size=500,
             replace=False)
 
-        linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
+        linked_cols = ["hb_code", "hb_name", "loc_code", "loc_name"]
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
         # Gives us ~10% chance of missing data
@@ -361,7 +370,7 @@ class referenceTests(unittest.TestCase):
             size=1000,
             replace=False)
 
-        na_cols = ['sex']
+        na_cols = ["sex"]
         test_dataframe.loc[rand_idx2, na_cols] = np.NaN
 
         # modify CLI namespace
@@ -383,13 +392,13 @@ class referenceTests(unittest.TestCase):
 
         inpatients_anon_ct10 = pd.read_csv(
             package_dir(
-                'core', 'tests', '_reference_data',
-                'inpatients_anon_rnd_ct10.csv'),
-                parse_dates=['quarter_date']
+                "core", "tests", "_reference_data",
+                "inpatients_anon_rnd_ct10.csv"),
+                parse_dates=["quarter_date"]
             )
 
         #save ID to tidy up temp columns created as part of testing
-        table_id = temp_spec['metadata']['id']
+        table_id = temp_spec["metadata"]["id"]
         self._temp_tables.append(table_id)
             
         assert_frame_equal(
@@ -410,11 +419,11 @@ class referenceTests(unittest.TestCase):
 
         rng = np.random.default_rng(seed=0)
 
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
 
         test_dataframe = pd.read_csv(
             source_data_path,
-            parse_dates=['quarter_date'],
+            parse_dates=["quarter_date"],
             dayfirst=True
         )
 
@@ -424,7 +433,7 @@ class referenceTests(unittest.TestCase):
             size=500,
             replace=False)
 
-        linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
+        linked_cols = ["hb_code", "hb_name", "loc_code", "loc_name"]
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
         # modify CLI namespace
@@ -437,7 +446,7 @@ class referenceTests(unittest.TestCase):
         test_spec_dict = {
             "metadata": {"number_of_rows": 2000},
             "columns" : {"quarter_date": 
-                    {"from" : '2018-01-01', "frequency": "M"}
+                    {"from" : "2018-01-01", "frequency": "M"}
                 }
             }
 
@@ -448,13 +457,13 @@ class referenceTests(unittest.TestCase):
 
         inpatients_anon_ct50 = pd.read_csv(
             package_dir(
-                'core', 'tests', '_reference_data',
-                'inpatients_anon_rnd_ct50.csv'),
-            parse_dates=['quarter_date']
+                "core", "tests", "_reference_data",
+                "inpatients_anon_rnd_ct50.csv"),
+            parse_dates=["quarter_date"]
             )
 
         #save ID to tidy up temp columns created as part of testing
-        table_id = temp_spec['metadata']['id']
+        table_id = temp_spec["metadata"]["id"]
         self._temp_tables.append(table_id)
             
         assert_frame_equal(
@@ -477,11 +486,11 @@ class referenceTests(unittest.TestCase):
             - avlos is not derived and is calculated "blindly"
         '''
 
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
 
         test_dataframe = pd.read_csv(
             source_data_path,
-            parse_dates=['quarter_date'],
+            parse_dates=["quarter_date"],
             dayfirst=True
         )
 
@@ -492,7 +501,7 @@ class referenceTests(unittest.TestCase):
             size=500,
             replace=False)
 
-        linked_cols = ['loc_code', 'loc_name']
+        linked_cols = ["loc_code", "loc_name"]
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN)
 
         # modify CLI namespace
@@ -533,13 +542,13 @@ class referenceTests(unittest.TestCase):
 
         inpatients_anon_mnt_ct10 = pd.read_csv(
             package_dir(
-                'core', 'tests', '_reference_data',
-                'inpatients_anon_mnt_ct10.csv'),
-            parse_dates=['quarter_date']
+                "core", "tests", "_reference_data",
+                "inpatients_anon_mnt_ct10.csv"),
+            parse_dates=["quarter_date"]
             )
 
         #save ID to tidy up temp columns created as part of testing
-        table_id = temp_spec['metadata']['id']
+        table_id = temp_spec["metadata"]["id"]
         self._temp_tables.append(table_id)
             
         assert_frame_equal(
@@ -557,11 +566,11 @@ class referenceTests(unittest.TestCase):
             - linked columns share missing categorical data
         '''
 
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
     
         test_dataframe = pd.read_csv(
             source_data_path,
-            parse_dates=['quarter_date'],
+            parse_dates=["quarter_date"],
             dayfirst=True
         )
 
@@ -572,7 +581,7 @@ class referenceTests(unittest.TestCase):
             size=500,
             replace=False)
 
-        linked_cols = ['hb_code', 'hb_name', 'loc_code', 'loc_name']
+        linked_cols = ["hb_code", "hb_name", "loc_code", "loc_name"]
         test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
 
         # modify CLI namespace
@@ -607,13 +616,13 @@ class referenceTests(unittest.TestCase):
 
         inpatients_anon_mnt_ct50 = pd.read_csv(
             package_dir(
-                'core', 'tests', '_reference_data',
-                'inpatients_anon_mnt_ct50.csv'),
-            parse_dates=['quarter_date']
+                "core", "tests", "_reference_data",
+                "inpatients_anon_mnt_ct50.csv"),
+            parse_dates=["quarter_date"]
             )
 
         #save ID to tidy up temp columns created as part of testing
-        table_id = temp_spec['metadata']['id']
+        table_id = temp_spec["metadata"]["id"]
         self._temp_tables.append(table_id)
 
         assert_frame_equal(
@@ -631,11 +640,11 @@ class referenceTests(unittest.TestCase):
          - number of linked columns in spec is less than in original SQL
         '''
 
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
 
         test_dataframe = pd.read_csv(
             source_data_path,
-            parse_dates=['quarter_date'],
+            parse_dates=["quarter_date"],
             dayfirst=True
         )
 
@@ -651,8 +660,8 @@ class referenceTests(unittest.TestCase):
                 "hb_name" : {
                     "uniques" : 2,
                     "original_values" : pd.DataFrame(data={
-                        "hb_name": ["PHS Ayrshire & Arran", "NHS Borders", "Missing data"],
-                        "paired_hb_code": ["S08000015", "S08000016", "Missing data"],
+                        "hb_name": ["PHS A&A", "NHS Borders", MISSING_DATA_STR],
+                        "paired_hb_code": ["S08000015", "S08000016", MISSING_DATA_STR],
                         "probability_vector" : [0.5, 0.5, 0],
                         "avlos": [0.5, 0.5, 0],
                         "los": [0.5, 0.5, 0],
@@ -667,12 +676,12 @@ class referenceTests(unittest.TestCase):
             )
        
         #save ID to tidy up temp columns created as part of testing
-        table_id = temp_spec['metadata']['id']
+        table_id = temp_spec["metadata"]["id"]
         self._temp_tables.append(table_id)
 
         self.assertCountEqual(
             temp_df["hb_name"].unique(),
-            ["PHS Ayrshire & Arran", "NHS Borders"])
+            ["PHS A&A", "NHS Borders"])
 
     def test_reference_inpatient_modified_linked_columns_scenario_3(self):
         '''
@@ -682,11 +691,11 @@ class referenceTests(unittest.TestCase):
          - number of linked columns in spec is less than in original SQL
         '''
 
-        source_data_path = Path(package_dir('sample', '_data', 'inpatients.csv'))
+        source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
 
         test_dataframe = pd.read_csv(
             source_data_path,
-            parse_dates=['quarter_date'],
+            parse_dates=["quarter_date"],
             dayfirst=True
         )
 
@@ -703,8 +712,8 @@ class referenceTests(unittest.TestCase):
                 "loc_name" : {
                     "uniques" : 5,
                     "original_values" : pd.DataFrame(data={
-                        "loc_name": list("ABCDE") + ["Missing data"],
-                        "paired_loc_code": list("ABCDE") + ["Missing data"],
+                        "loc_name": list("ABCDE") + [MISSING_DATA_STR],
+                        "paired_loc_code": list("ABCDE") + [MISSING_DATA_STR],
                         "probability_vector" : [0.2] * 5 + [0],
                         "avlos": [0.2] * 5 + [0],
                         "los": [0.2] * 5 + [0],
@@ -719,20 +728,12 @@ class referenceTests(unittest.TestCase):
             )
        
         #save ID to tidy up temp columns created as part of testing
-        table_id = temp_spec['metadata']['id']
+        table_id = temp_spec["metadata"]["id"]
         self._temp_tables.append(table_id)
 
         self.assertCountEqual(temp_df["loc_name"].unique(), list("ABCDE"))
 
-    @classmethod
-    def tearDownClass(cls):
-        '''
-        Clean up anon.db from temp tables
-        '''
-        
-        db_util.drop_tables(cls._temp_tables)
-
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

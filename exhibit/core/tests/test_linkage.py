@@ -15,6 +15,7 @@ from pandas.testing import assert_frame_equal
 
 # Exibit imports
 from exhibit.core.sql import create_temp_table, query_anon_database
+from exhibit.core.specs import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 from exhibit.db import db_util
 
 # Module under test
@@ -79,7 +80,7 @@ class linkageTests(unittest.TestCase):
                     "original_values":"Dataframe"
                 },
                 "C3": {
-                    "original_values":"See paired column"
+                    "original_values":ORIGINAL_VALUES_PAIRED
                 },
                 "C4": {
                     "original_values":"Dataframe"
@@ -154,18 +155,18 @@ class linkageTests(unittest.TestCase):
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
         test_dict = {
-            'columns': {
+            "columns": {
                 "C1" : {
                     "anonymising_set": "random",
                     "original_values": pd.DataFrame(data={
-                        "C1":["repl_A", "B", "Missing data"]
+                        "C1":["repl_A", "B", MISSING_DATA_STR]
                         }),
                     "paired_columns" : []
                 },
                 "C2" : {
                     "anonymising_set": "random",
                     "original_values": pd.DataFrame(data={
-                        "C2":["eggs", "spam", "Missing data"]
+                        "C2":["eggs", "spam", MISSING_DATA_STR]
                         }),
                     "paired_columns" : []
                 },
@@ -254,7 +255,7 @@ class linkageTests(unittest.TestCase):
                     "uniques": 5,
                     "original_values":
                         pd.DataFrame(data={
-                            "A": [f"A{i}" for i in range(5)] + ["Missing data"],
+                            "A": [f"A{i}" for i in range(5)] + [MISSING_DATA_STR],
                             "probability_vector": [0.1, 0.1, 0.1, 0.1, 0.6, 0]
                         })
                 },
@@ -328,7 +329,7 @@ class linkageTests(unittest.TestCase):
                     "uniques": 2,
                     "original_values":
                         pd.DataFrame(data={
-                            "A": [f"A{i}" for i in range(2)] + ["Missing data"],
+                            "A": [f"A{i}" for i in range(2)] + [MISSING_DATA_STR],
                             "probability_vector": [0.2, 0.8, 0]
                         })
                 },
@@ -336,7 +337,7 @@ class linkageTests(unittest.TestCase):
                     "uniques": 4,
                     "original_values":
                         pd.DataFrame(data={
-                            "B": [f"B{i}" for i in range(4)] + ["Missing data"],
+                            "B": [f"B{i}" for i in range(4)] + [MISSING_DATA_STR],
                             "probability_vector": [0.1, 0.1, 0.4, 0.4, 0]
                         })
                 },
@@ -406,7 +407,7 @@ class linkageTests(unittest.TestCase):
                     "uniques": 5,
                     "original_values":
                         pd.DataFrame(data={
-                            "A": [f"A{i}" for i in range(5)] + ["Missing Data"],
+                            "A": [f"A{i}" for i in range(5)] + [MISSING_DATA_STR],
                             "probability_vector": [0.1, 0.1, 0.1, 0.1, 0.6, 0]
                         })
                 },
@@ -480,7 +481,7 @@ class linkageTests(unittest.TestCase):
                     "uniques" : 6,
                     "original_values":
                         pd.DataFrame(data={
-                            "B": [f"B{i}" for i in range(6)] + ["Missing data"],
+                            "B": [f"B{i}" for i in range(6)] + [MISSING_DATA_STR],
                             "probability_vector": [0.1, 0.1, 0.2, 0.2, 0.3, 0.1, 0]
                         })
 
@@ -539,7 +540,7 @@ class linkageTests(unittest.TestCase):
                     "uniques" : 6,
                     "original_values":
                         pd.DataFrame(data={
-                            "B": [f"B{i}" for i in range(6)] + ["Missing data"],
+                            "B": [f"B{i}" for i in range(6)] + [MISSING_DATA_STR],
                             "probability_vector": [0.1, 0.1, 0.2, 0.2, 0.3, 0.1, 0]
                         })
 
@@ -627,4 +628,4 @@ class linkageTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

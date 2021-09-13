@@ -37,7 +37,7 @@ class categoricalTests(unittest.TestCase):
                 "test_Time": {
                     "type": "date",
                     "cross_join_all_unique_values" : False,
-                    "from": '2018-03-31',
+                    "from": "2018-03-31",
                     "uniques": 4,
                     "frequency": "D"
                 }
@@ -142,7 +142,7 @@ class categoricalTests(unittest.TestCase):
             db_path = abspath(join(td, db_name))
 
             create_temp_table(
-                table_name='temp_1234_test_Root',
+                table_name="temp_1234_test_Root",
                 col_names=["test_Root", "test_C1"],
                 data=[("A ", "B"), ("A", "B")],
                 db_uri=db_path,
@@ -167,4 +167,4 @@ class categoricalTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

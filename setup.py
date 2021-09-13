@@ -9,10 +9,10 @@ don't delete exhibit.egg-info folder.
 
 from setuptools import setup, find_packages
 
-setup(name='exhibit',
-      version='0.1',
-      description='Command line tool for generating demonstrator data',
-      author='German Priks',
+setup(name="exhibit",
+      version="0.1",
+      description="Command line tool for generating demonstrator data",
+      author="German Priks",
       python_requires=">3.5",
       install_requires=[
         "pandas",
@@ -22,7 +22,7 @@ setup(name='exhibit',
       ],
       packages=find_packages(),
       entry_points={
-        'console_scripts': [
-            'exhibit = exhibit.command.bootstrap:main'
+        "console_scripts": [
+            "exhibit = exhibit.command.bootstrap:main"
         ]}
      )

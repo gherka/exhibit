@@ -24,14 +24,14 @@ class exhibitTests(unittest.TestCase):
     are mocked inside each test.
     '''
 
-    @patch('argparse.ArgumentParser.parse_args')
+    @patch("argparse.ArgumentParser.parse_args")
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
         '''
         Send "mock" command line arguments to parse_args function
         and assert that the program reads the same data as ref_df.
         '''
         mock_args.return_value = argparse.Namespace(
-            source=Path(package_dir('sample', '_data', 'inpatients.csv')),
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             skip_columns=[]
         )
@@ -41,7 +41,7 @@ class exhibitTests(unittest.TestCase):
         
         assert isinstance(xA.df, pd.DataFrame)
 
-    @patch('argparse.ArgumentParser.parse_args')
+    @patch("argparse.ArgumentParser.parse_args")
     def test_output_spec_creates_file_with_o_argument(self, mock_args):
         '''
         Testing code that itself has context managers (with) 
@@ -64,20 +64,20 @@ class exhibitTests(unittest.TestCase):
         '''
 
         mock_args.return_value = argparse.Namespace(
-            command='fromdata',
-            output='test.yml',
+            command="fromdata",
+            output="test.yml",
             verbose=True,
         )
 
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
            
             xA = tm.newExhibit()
-            xA.write_spec('hello')
+            xA.write_spec("hello")
 
-            mo.assert_called_with('test.yml', 'w')
-            mo.return_value.__enter__.return_value.write.assert_called_with('hello')
+            mo.assert_called_with("test.yml", "w")
+            mo.return_value.__enter__.return_value.write.assert_called_with("hello")
 
-    @patch('argparse.ArgumentParser.parse_args')
+    @patch("argparse.ArgumentParser.parse_args")
     def test_output_spec_creates_file_without_o_argument(self, mock_args):
         '''
         If no destination is set from the CLI, output the file
@@ -86,8 +86,8 @@ class exhibitTests(unittest.TestCase):
         '''
 
         mock_args.return_value = argparse.Namespace(
-            command='fromdata',
-            source=Path('source_dataset.csv'),
+            command="fromdata",
+            source=Path("source_dataset.csv"),
             output=None,
             verbose=True,
         )
@@ -95,19 +95,19 @@ class exhibitTests(unittest.TestCase):
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
                 
             xA = tm.newExhibit()
-            xA.write_spec('hello')
+            xA.write_spec("hello")
 
-            mo.assert_called_with('source_dataset_SPEC.yml', 'w')
-            mo.return_value.__enter__.return_value.write.assert_called_with('hello')
+            mo.assert_called_with("source_dataset_SPEC.yml", "w")
+            mo.return_value.__enter__.return_value.write.assert_called_with("hello")
     
-    @patch('argparse.ArgumentParser.parse_args')
+    @patch("argparse.ArgumentParser.parse_args")
     def test_output_spec_respectes_equal_weights_argument(self, mock_args):
         '''
         Doc string
         '''
 
         mock_args.return_value = argparse.Namespace(
-            source=Path(package_dir('sample', '_data', 'inpatients.csv')),
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             category_threshold=30,
             equal_weights=True,
@@ -118,7 +118,7 @@ class exhibitTests(unittest.TestCase):
         xA.read_data()
         xA.generate_spec()
 
-        expected = '10-19        | 0.100              | 0.100 | 0.100 | 0.100'
+        expected = "10-19        | 0.100              | 0.100 | 0.100 | 0.100"
         result = xA.spec_dict["columns"]["age"]["original_values"][2]
                 
         self.assertEqual(expected, result)
@@ -126,4 +126,4 @@ class exhibitTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

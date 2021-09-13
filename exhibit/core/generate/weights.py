@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit import
+from ..specs import MISSING_DATA_STR
 from ..utils import exceeds_ct, is_paired
 from ..sql import query_anon_database
 
@@ -43,13 +44,13 @@ def generate_weights_table(spec_dict, target_cols):
     Weights = namedtuple("Weights", ["weight", "equal_weight"])
     
     num_cols = (
-        set(spec_dict['metadata']['numerical_columns']) -
-        set(spec_dict.get('derived_columns', []))
+        set(spec_dict["metadata"]["numerical_columns"]) -
+        set(spec_dict.get("derived_columns", []))
     )
     
     for cat_col in target_cols:
 
-        val_count = spec_dict['columns'][cat_col]['uniques']
+        val_count = spec_dict["columns"][cat_col]["uniques"]
         equal_weight = 1 / val_count
         full_anon_flag = False
 
@@ -61,7 +62,7 @@ def generate_weights_table(spec_dict, target_cols):
             
         else:
             #meaning, there are original_values, including weights
-            ws_df = spec_dict['columns'][cat_col]['original_values']
+            ws_df = spec_dict["columns"][cat_col]["original_values"]
 
         #get weights and values, from whatever WS was created
         for num_col in num_cols:
@@ -81,12 +82,12 @@ def generate_weights_table(spec_dict, target_cols):
 
     #collect everything into output_df
     output_df = pd.DataFrame(tuple_list,
-                             columns=['num_col', 'cat_col', 'cat_value', 'weights'])
+                             columns=["num_col", "cat_col", "cat_value", "weights"])
 
     #move the indexed dataframe to dict for perfomance
     result = (
         output_df
-            .set_index(['num_col', 'cat_col', 'cat_value'])
+            .set_index(["num_col", "cat_col", "cat_value"])
             .to_dict(orient="index")
     )
 
@@ -113,27 +114,25 @@ def generate_weights(df, cat_col, num_col, ew=False):
     List of weights in ascending order of values rounded to 3 digits.
     '''
 
-    nan_placeholder = "Missing data"
-
     #min_count=1 ensures that [np.NaN, np.NaN] is summed to np.NaN and not zero
     weights = (
         df
-        .fillna({cat_col:nan_placeholder})
+        .fillna({cat_col:MISSING_DATA_STR})
         .groupby([cat_col])[num_col].sum(min_count=1)
     )
 
     temp_output = weights.sort_index(kind="mergesort")
 
-    if nan_placeholder not in temp_output:
+    if MISSING_DATA_STR not in temp_output:
         temp_output = temp_output.append(pd.Series(
-            index=[nan_placeholder],
+            index=[MISSING_DATA_STR],
             data=0
         ))
     
-    #pop and reinsert "Missing data" at the end of the list
+    #pop and reinsert missing data placeholder at the end of the list
     else:
-        cached = temp_output[temp_output.index.str.contains(nan_placeholder)]
-        temp_output = temp_output.drop(nan_placeholder)
+        cached = temp_output[temp_output.index.str.contains(MISSING_DATA_STR)]
+        temp_output = temp_output.drop(MISSING_DATA_STR)
         temp_output = temp_output.append(cached)
 
     #equalise the weights if equal_weights is True, except for Missing data
@@ -171,7 +170,7 @@ def target_columns_for_weights_table(spec_dict):
 
     fixed_sql_sets = ["random", "mountains", "birds", "patients"]
 
-    cat_cols = spec_dict['metadata']['categorical_columns'] #includes linked
+    cat_cols = spec_dict["metadata"]["categorical_columns"] #includes linked
     cat_cols_set = set(cat_cols)
 
     #drop paired columns and regex columns
@@ -203,10 +202,10 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
     '''
 
-    table_id = spec_dict['metadata']['id']
-    linked_groups = spec_dict.get('linked_columns', [])
-    anon_set = spec_dict['columns'][cat_col]['anonymising_set']
-    val_count = spec_dict['columns'][cat_col]['uniques']
+    table_id = spec_dict["metadata"]["id"]
+    linked_groups = spec_dict.get("linked_columns", [])
+    anon_set = spec_dict["columns"][cat_col]["anonymising_set"]
+    val_count = spec_dict["columns"][cat_col]["uniques"]
 
     #determine the source of the data (table_name and sql_column)
     if anon_set != "random":

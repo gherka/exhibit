@@ -174,7 +174,7 @@ class constraintsTests(unittest.TestCase):
                 "type": "continuous",
                 "distribution": "weighted_uniform",
                 "distribution_parameters": {
-                    "dispersion": 0
+                    "dispersion": 0.1
                 }
             },
             "B": {
@@ -195,13 +195,17 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df = test_df.copy()
+        result_df_gr = test_df.copy()
+        result_df_ls = test_df.copy()
 
-        constraint = "~A A~ > 30"
+        constraint_gr = "~A A~ > 30"
+        constraint_ls = "~A A~ < 30"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+        self.ch.adjust_dataframe_to_fit_constraint(result_df_gr, constraint_gr)
+        self.ch.adjust_dataframe_to_fit_constraint(result_df_ls, constraint_ls)
 
-        self.assertTrue(all(result_df["A A"].dropna() > 30))
+        self.assertTrue(all(result_df_gr["A A"].dropna() > 30))
+        self.assertTrue(all(result_df_ls["A A"].dropna() < 30))
 
     def test_adjust_value_to_constraint_scalar_normal(self):
         '''
@@ -406,4 +410,4 @@ class constraintsTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

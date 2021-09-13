@@ -11,7 +11,7 @@ from collections import namedtuple
 import pandas as pd
 from pandas.testing import assert_series_equal
 import numpy as np
-import scipy.stats as stats
+from scipy import stats
 
 # Module under test
 from exhibit.core.generate import continuous as tm

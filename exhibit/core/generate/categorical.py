@@ -15,6 +15,7 @@ import numpy as np
 from ..utils import get_attr_values, package_dir
 from ..sql import query_anon_database
 from ..linkage import generate_linked_anon_df
+from ..specs import ORIGINAL_VALUES_PAIRED
 from .regex import generate_regex_column
 
 # EXPORTABLE METHODS
@@ -58,7 +59,7 @@ class CategoricalDataGenerator:
         generated_dfs = []
 
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-        for linked_group in self.spec_dict['linked_columns']:
+        for linked_group in self.spec_dict["linked_columns"]:
             linked_df = generate_linked_anon_df(
                 spec_dict=self.spec_dict,
                 linked_group=linked_group,
@@ -90,7 +91,7 @@ class CategoricalDataGenerator:
                 complete_series.append(s)
         
         #5) OUTER JOIN
-        temp_anon_df['key'] = 1
+        temp_anon_df["key"] = 1
 
         for s in complete_series:
 
@@ -105,7 +106,7 @@ class CategoricalDataGenerator:
         # reset index and shuffle rows one last time
         anon_df = (
             temp_anon_df
-                .drop('key', axis=1)
+                .drop("key", axis=1)
                 .sample(frac=1, random_state=np.random.PCG64(0))
                 .reset_index(drop=True)
         )
@@ -130,9 +131,9 @@ class CategoricalDataGenerator:
         '''
 
         all_pos_dates = pd.date_range(
-            start=self.spec_dict['columns'][col_name]['from'],
-            periods=self.spec_dict['columns'][col_name]['uniques'],
-            freq=self.spec_dict['columns'][col_name]['frequency'],            
+            start=self.spec_dict["columns"][col_name]["from"],
+            periods=self.spec_dict["columns"][col_name]["uniques"],
+            freq=self.spec_dict["columns"][col_name]["frequency"],            
         )
 
         if complete:
@@ -167,19 +168,17 @@ class CategoricalDataGenerator:
         Pandas Series object or a Dataframe
         '''
 
-        col_type = self.spec_dict['columns'][col_name]['type']
-        col_attrs = self.spec_dict['columns'][col_name]
+        col_type = self.spec_dict["columns"][col_name]["type"]
+        col_attrs = self.spec_dict["columns"][col_name]
 
         if col_type == "date":
             
             return self._generate_timeseries(col_name, complete=False)  
         
         #capture categorical-only information
-        uniques = col_attrs['uniques']
-        paired_cols = col_attrs['paired_columns']
-        anon_set = col_attrs['anonymising_set']
+        paired_cols = col_attrs["paired_columns"]
+        anon_set = col_attrs["anonymising_set"]
         root_anon_set = anon_set.split(".")[0]
-        ct = self.spec_dict['metadata']['category_threshold']
 
         #special case if anonymising set isn't defined - assume regex
         if root_anon_set not in self.fixed_anon_sets:
@@ -190,13 +189,13 @@ class CategoricalDataGenerator:
             return generate_regex_column(anon_set, col_name, self.num_rows)  
 
         #values were stored in SQL; randomise based on uniform distribution
-        if uniques > ct:
+        if col_attrs["uniques"] > self.spec_dict["metadata"]["category_threshold"]:
             return self._generate_from_sql(col_name, col_attrs)
 
         #we have access to original_values and the paths are dependant on anon_set
         #take every row except last which is reserved for Missing data
-        col_df = col_attrs['original_values'].iloc[:-1, :]
-        col_prob = np.array(col_df['probability_vector'])
+        col_df = col_attrs["original_values"].iloc[:-1, :]
+        col_prob = np.array(col_df["probability_vector"])
 
         if anon_set == "random": 
 
@@ -209,7 +208,7 @@ class CategoricalDataGenerator:
             if paired_cols:
                 paired_df = (
                     col_df[[col_name] + [f"paired_{x}" for x in paired_cols]]
-                        .rename(columns=lambda x: x.replace('paired_', ''))
+                        .rename(columns=lambda x: x.replace("paired_", ""))
                 )
 
                 return pd.merge(original_series, paired_df, how="left", on=col_name)
@@ -226,12 +225,12 @@ class CategoricalDataGenerator:
         sql_df = self._generate_from_sql(col_name, col_attrs, complete=True)
 
         #includes Missing data row as opposed to col_df which doesn't
-        orig_df = col_attrs['original_values']
+        orig_df = col_attrs["original_values"]
 
         #missing data is the last row
         repl = sql_df[col_name].unique()
         aliased_df = orig_df.replace(orig_df[col_name].values[:-1], repl)
-        self.spec_dict['columns'][col_name]['original_values'] = aliased_df
+        self.spec_dict["columns"][col_name]["original_values"] = aliased_df
 
         #we ignore Missing Data probability when we originally create the variable
         idx = self.rng.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
@@ -315,9 +314,9 @@ class CategoricalDataGenerator:
         category threshold or if they are anonymised using a set from DB.
         '''
         
-        col_attrs = self.spec_dict['columns'][col_name]
+        col_attrs = self.spec_dict["columns"][col_name]
         
-        if col_attrs['type'] == "date":
+        if col_attrs["type"] == "date":
 
             return self._generate_timeseries(col_name, complete=True) 
         
@@ -326,25 +325,25 @@ class CategoricalDataGenerator:
             return None
 
         # if column has paired columns, return a dataframe with it + paired cols
-        paired_cols = col_attrs['paired_columns']
+        paired_cols = col_attrs["paired_columns"]
 
-        # all categorical columns have "Missing data" as -1 row so we exclude it
+        # all cat. columns have a missing data placeholder as -1 row so we exclude it
         if paired_cols:
             paired_complete_df = (
-                col_attrs['original_values'].iloc[:-1, 0:len(paired_cols)+1])
+                col_attrs["original_values"].iloc[:-1, 0:len(paired_cols)+1])
             paired_complete_df.rename(
-                columns=lambda x: x.replace('paired_', ''), inplace=True)
+                columns=lambda x: x.replace("paired_", ""), inplace=True)
 
             return paired_complete_df
 
-        return pd.Series(col_attrs['original_values'].iloc[:-1, 0], name=col_name)
+        return pd.Series(col_attrs["original_values"].iloc[:-1, 0], name=col_name)
 
     def _get_column_types(self):
         '''
         Convenience function to categorise columns into 4 types:
             - nested linked columns (generated separately as part of linkage.py)
             - complete columns - all values are used
-            - columns where original values = "See paired column"
+            - columns where original values are paired with a "main" column
 
         All of the above are treated in a special way either in a separate
         generation routine (like linked columns) or are generated as a
@@ -363,23 +362,23 @@ class CategoricalDataGenerator:
             self.spec_dict["metadata"]["date_columns"])
         
         nested_linked_cols = [
-            sublist for n, sublist in self.spec_dict['linked_columns']
+            sublist for n, sublist in self.spec_dict["linked_columns"]
             ]
 
         complete_cols = [c for c, v in get_attr_values(
             self.spec_dict,
             "cross_join_all_unique_values",
             col_names=True, 
-            types=['categorical', 'date']) if v]
+            types=["categorical", "date"]) if v]
 
         list_of_orig_val_tuples = get_attr_values(
             self.spec_dict,
-            'original_values',
+            "original_values",
             col_names=True,
-            types=['categorical', "date"])
+            types=["categorical", "date"])
 
         paired_cols = [
-            k for k, v in list_of_orig_val_tuples if str(v) == "See paired column"]
+            k for k, v in list_of_orig_val_tuples if str(v) == ORIGINAL_VALUES_PAIRED]
 
         skipped_cols = (
             list(chain.from_iterable(nested_linked_cols)) +

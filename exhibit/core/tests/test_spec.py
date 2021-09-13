@@ -35,11 +35,11 @@ class specsTests(unittest.TestCase):
         test_spec = tm.newSpec(ref_df, 140)
 
         expected_keys = [
-            'metadata',
-            'columns',
-            'constraints',
-            'linked_columns',
-            'derived_columns',
+            "metadata",
+            "columns",
+            "constraints",
+            "linked_columns",
+            "derived_columns",
             ]
 
         self.assertListEqual(
@@ -49,4 +49,4 @@ class specsTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

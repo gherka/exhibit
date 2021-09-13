@@ -24,14 +24,14 @@ class bootstrapTests(unittest.TestCase):
         it's being imported, not where it's created!
         '''
         
-        with patch('exhibit.command.bootstrap.newExhibit') as mockExhibit:
+        with patch("exhibit.command.bootstrap.newExhibit") as mockExhibit:
 
             mockExhibit.return_value.read_data = Mock()
             mockExhibit.return_value.generate_spec = Mock()
             mockExhibit.return_value.write_spec = Mock()
 
             mockExhibit.return_value._args = argparse.Namespace(
-                command='fromdata',
+                command="fromdata",
             )
             
             tm.main()
@@ -50,7 +50,7 @@ class bootstrapTests(unittest.TestCase):
         it's being imported, not where it's created!
         '''
         
-        with patch('exhibit.command.bootstrap.newExhibit') as mockExhibit:
+        with patch("exhibit.command.bootstrap.newExhibit") as mockExhibit:
 
             mockExhibit.return_value.read_spec = Mock()
             mockExhibit.return_value.validate_spec = Mock()
@@ -58,7 +58,7 @@ class bootstrapTests(unittest.TestCase):
             mockExhibit.return_value.write_data = Mock()
 
             mockExhibit.return_value.args = argparse.Namespace(
-                command='fromspec',
+                command="fromspec",
             )
             
             tm.main()

@@ -23,10 +23,13 @@
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=C0303, # trailing whitespace
-        C0330, # hanging indent
+        C0330, # hanging indent,
+        C0103, # invalid name - too many false positives
         E1136, # value is unsubscriptable
         W0212, # access to protected member
         E1130, # invalid unary operand (numpy)
+        R0201, # no self use - false positives in test modules
+        W0622, # redefine builtins - __package__
 
 
 [BASIC]
@@ -138,6 +141,7 @@ ignore-imports=no
 ignore-signatures=no
 
 # Minimum lines number of a similarity.
+# The analyzer isn't very configurable; review any warnings manually
 min-similarity-lines=4
 
 
@@ -179,7 +183,7 @@ ignore-on-opaque-inference=no
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
 # qualified names.
-ignored-classes=Namespace
+ignored-classes=Namespace,TextFileReader
 
 # List of module names for which member attributes should not be checked
 # (useful for modules/projects where namespaces are manipulated during runtime
@@ -197,6 +201,9 @@ missing-member-hint=no
 # Tells whether unused global variables should be treated as a violation.
 allow-global-unused-variables=yes
 
+# List of names allowed to shadow builtins
+allowed-redefined-builtins=__package__
+
 # A regular expression matching the name of dummy variables (i.e. expected to
 # not be used).
 dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
@@ -211,6 +218,7 @@ init-import=no
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
+
 
 
 [CLASSES]
@@ -228,10 +236,10 @@ valid-metaclass-classmethod-first-arg=cls
 [DESIGN]
 
 # Maximum number of arguments for function / method.
-max-args=5
+max-args=6
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=15
 
 # Maximum number of boolean expressions in an if statement (see R0916).
 max-bool-expr=5
@@ -240,7 +248,7 @@ max-bool-expr=5
 max-branches=12
 
 # Maximum number of locals for function / method body.
-max-locals=15
+max-locals=20
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7
@@ -255,7 +263,7 @@ max-returns=6
 max-statements=50
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods=2
+min-public-methods=1
 
 
 [IMPORTS]

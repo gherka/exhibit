@@ -9,6 +9,10 @@ import textwrap
 import pandas as pd
 import numpy as np
 
+# Exhibit imports
+from exhibit.core.specs import (
+    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR)
+
 def format_header(dataframe, series_name, prefix=None):
     '''
     Function to pad the header values based on the length
@@ -36,7 +40,7 @@ def format_header(dataframe, series_name, prefix=None):
         series_name = prefix + series_name
 
     longest = max(
-        len("Missing data"),
+        len(MISSING_DATA_STR),
         len(series_name),
         len(max(series, key=len))
     )
@@ -93,7 +97,7 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
         working_name = original_series_name
 
     #appending to a list is in place and returns None 
-    working_list.append("Missing data")
+    working_list.append(MISSING_DATA_STR)
 
     longest = max(len(working_name), len(max(working_list, key=len)))
 
@@ -127,21 +131,21 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
     total_count = len(original_series)
 
     temp_vectors = (original_series
-                     .fillna("Missing data")
+                     .fillna(MISSING_DATA_STR)
                      .value_counts()
                      .sort_index(kind="mergesort")
                      .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
     )
 
-    if "Missing data" not in temp_vectors:
+    if MISSING_DATA_STR not in temp_vectors:
         temp_vectors = temp_vectors.append(pd.Series(
-            index=["Missing data"],
+            index=[MISSING_DATA_STR],
             data=0
         ))
-    #pop and reinsert "Missing data" at the end of the list
+    #pop and reinsert missing data placeholder at the end of the list
     else:
-        cached = temp_vectors[temp_vectors.index.str.contains("Missing data")]
-        temp_vectors = temp_vectors.drop("Missing data")
+        cached = temp_vectors[temp_vectors.index.str.contains(MISSING_DATA_STR)]
+        temp_vectors = temp_vectors.drop(MISSING_DATA_STR)
         temp_vectors = temp_vectors.append(cached)
     
     #equalise the probability vectors if equal_weights is True, except Missing data
@@ -265,22 +269,22 @@ def parse_original_values(original_values):
     -------
     Pandas DataFrame or untouched string
     '''
-    if original_values == "Number of unique values is above category threshold":
+    if original_values == ORIGINAL_VALUES_DB:
         return original_values
 
-    if original_values == "See paired column":
+    if original_values == ORIGINAL_VALUES_PAIRED:
         return original_values
 
     df = pd.DataFrame(
         data=[
-            map(str.strip, x.split('|')) for x in original_values[1:]
+            map(str.strip, x.split("|")) for x in original_values[1:]
         ],
-        columns=[x.strip() for x in original_values[0].split('|')],
-        dtype='float'
+        columns=[x.strip() for x in original_values[0].split("|")],
+        dtype="float"
     )
 
-    # We exclude Missing data from the vector rescaling because it's handled separately
-    col_prob = np.array(df['probability_vector'][:-1])
+    # We exclude Missing data from the vector rescaling because it"s handled separately
+    col_prob = np.array(df["probability_vector"][:-1])
     col_name = df.columns[0]
 
     warning = textwrap.dedent(f"""

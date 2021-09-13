@@ -35,46 +35,46 @@ def main():
     )
 
     parser.add_argument(
-        '--purge',
+        "--purge",
         action="store_true",
         default=False,
-        help=textwrap.dedent('''\
+        help=textwrap.dedent("""\
         Remove all tables that start with "temp" prefix\n
-        ''')
+        """)
     )
 
     parser.add_argument(
-        '--list',
+        "--list",
         action="store_true",
         default=False,
-        help=textwrap.dedent('''\
+        help=textwrap.dedent("""\
         Print the list of all tables in the anon.db
-        ''')
+        """)
     )
 
     parser.add_argument(
-        '--info',
+        "--info",
         default=False,
-        help=textwrap.dedent('''\
+        help=textwrap.dedent("""\
         Print the contents and info of a given table
-        ''')
+        """)
     )
 
     parser.add_argument(
-        '--insert',
+        "--insert",
         default=False,
-        help=textwrap.dedent('''\
+        help=textwrap.dedent("""\
         Inserts the columns of a given .csv file into the DB
-        ''')
+        """)
     )
 
     parser.add_argument(
-        '--drop',
+        "--drop",
         default=[],
-        nargs='+',
-        help=textwrap.dedent('''\
+        nargs="+",
+        help=textwrap.dedent("""\
         Drop the given table(s) from the database
-        ''')
+        """)
     )
 
     args = parser.parse_args(sys.argv[1:])
@@ -122,7 +122,7 @@ def purge_temp_tables(db_uri=None):
         count = 0
 
         for table in table_names:
-            if 'temp' in table[0]:
+            if "temp" in table[0]:
                 c.execute(f"DROP TABLE {table[0]}")
                 count += 1
 

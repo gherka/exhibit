@@ -38,9 +38,9 @@ class sqlTests(unittest.TestCase):
         Test two modes for the function: full table or single column
         '''
 
-        output_1 = tm.query_anon_database('mountains', size=2)
-        output_2 = tm.query_anon_database('mountains', column="range", size=2)
-        output_3 = tm.query_anon_database('mountains', column=["peak"], size=2)
+        output_1 = tm.query_anon_database("mountains", size=2)
+        output_2 = tm.query_anon_database("mountains", column="range", size=2)
+        output_3 = tm.query_anon_database("mountains", column=["peak"], size=2)
 
         self.assertIsInstance(output_1, pd.DataFrame)
         self.assertIsInstance(output_2, pd.DataFrame)
@@ -57,8 +57,8 @@ class sqlTests(unittest.TestCase):
 
         expected = [("A", "B"), ("A", "B")]
         output = tm.create_temp_table(
-            table_name='test_table',
-            col_names=list('AB'),
+            table_name="test_table",
+            col_names=list("AB"),
             data=[("A ", "B"), ("A", "B")],
             db_uri="file:test_db?mode=memory",
             return_table=True)
@@ -98,4 +98,4 @@ class sqlTests(unittest.TestCase):
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
-    unittest.main(warnings='ignore')
+    unittest.main(warnings="ignore")

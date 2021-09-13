@@ -138,14 +138,12 @@ class ConstraintHandler:
 
     def generate_value_with_condition(self, x, y, op):
         '''
-        Comparisons where one of the values in NaN are not possible
+        Comparisons where one of the values is NaN are not possible
         so we return NaN if one of the comparison values in NaN
         '''
+        # pylint: disable=R0911
 
-        if pd.isnull(x):
-            return np.nan
-        
-        if pd.isnull(y):
+        if pd.isnull(x) or pd.isnull(y):
             return np.nan
 
         dependent_column = self.dependent_column.replace("__", " ")
@@ -156,33 +154,22 @@ class ConstraintHandler:
 
             offset = pd.tseries.frequencies.to_offset(root["frequency"])
 
-            if op.__name__ == 'less':
+            if op.__name__ == "less":
                 return y - 1 * offset
-            if op.__name__ == 'greater':
+            if op.__name__ == "greater":
                 return y + 1 * offset
             #covers ==, >=, <=
             return y #pragma: no cover
 
-        # all other columns have distrubution + parameters to guide us
-        dist = root["distribution"]
-
-        adj_factor = 0
-
-        # depending on the original distribution type, adjust the range        
-        if dist == "weighted_uniform":
-            
-            adj_factor = y * root["distribution_parameters"]["dispersion"]
-        
-        elif dist == "normal":
-
-            adj_factor = root["distribution_parameters"]["std"]
+        # adjust only if dispersion % is provided in the spec
+        adj_factor = y * root["distribution_parameters"].get("dispersion", 0)
 
         # if dispersion is zero, pick the next valid value
         if adj_factor == 0:
 
-            if op.__name__ == 'less':
+            if op.__name__ == "less":
                 return max(0, y - 1)
-            if op.__name__ == 'greater':
+            if op.__name__ == "greater":
                 return y + 1
             return y
 
@@ -196,7 +183,7 @@ class ConstraintHandler:
             new_x_max = y + adj_factor
             return self.recursive_randint(new_x_min, new_x_max, y, op)
         # only option left is constraint is x == y so we return y
-        return y
+        return y #pragma: no cover
         
 
     def recursive_randint(self, new_x_min, new_x_max, y, op):
@@ -219,9 +206,9 @@ class ConstraintHandler:
         
         except RecursionError:
 
-            if op.__name__ == 'less':
+            if op.__name__ == "less":
                 return max(0, y - 1)
-            if op.__name__ == 'greater':
+            if op.__name__ == "greater":
                 return y + 1
             return y
 
@@ -306,7 +293,7 @@ def clean_up_constraint(rule_string):
     for col_name in column_names:
         
         clean_col_name = re.sub(
-            '|'.join(repl_dict.keys()),
+            "|".join(repl_dict.keys()),
             lambda x: repl_dict[x.group()],
             col_name)
 

@@ -16,12 +16,12 @@ import yaml
 from exhibit.core.utils import package_dir
 
 #Load data
-inpatients_data = pd.read_csv(package_dir('sample', '_data', 'inpatients.csv'))
+inpatients_data = pd.read_csv(package_dir("sample", "_data", "inpatients.csv"))
 inpatients_anon = pd.read_csv(
-    package_dir('sample', '_data', 'inpatients_anon.csv'), parse_dates=['quarter_date'])
+    package_dir("sample", "_data", "inpatients_anon.csv"), parse_dates=["quarter_date"])
 
 prescribing_data = pd.read_csv(
-    package_dir('sample', '_data', 'prescribing.csv'), parse_dates=['PaidDateMonth'])
+    package_dir("sample", "_data", "prescribing.csv"), parse_dates=["PaidDateMonth"])
 
 #Load specs
 with open(package_dir("sample", "_spec", "inpatients.yml")) as f:
