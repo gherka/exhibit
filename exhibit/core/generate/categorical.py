@@ -195,7 +195,7 @@ class CategoricalDataGenerator:
         #we have access to original_values and the paths are dependant on anon_set
         #take every row except last which is reserved for Missing data
         col_df = col_attrs["original_values"].iloc[:-1, :]
-        col_prob = np.array(col_df["probability_vector"])
+        col_prob = np.array(col_df["probability_vector"]).astype(float)
 
         if anon_set == "random": 
 

@@ -11,7 +11,6 @@ from collections import namedtuple
 import pandas as pd
 from pandas.testing import assert_series_equal
 import numpy as np
-from scipy import stats
 
 # Module under test
 from exhibit.core.generate import continuous as tm
@@ -456,12 +455,17 @@ class continuousTests(unittest.TestCase):
         scaled_series = tm._scale_to_range(
             test_series, precision, test_min, test_max)
 
-        rescaled_series = scaled_series / float(sum(scaled_series)) * sum(test_series)
+        #chi square test to make sure the shape of distribution is generally the same
+        #using the 0.995 probability of null hypothesis at 6 degrees of freedom
+        a1 = test_series.values
+        a2 = scaled_series.values
 
-        self.assertGreaterEqual(
-            stats.chisquare(f_obs=test_series, f_exp=rescaled_series)[1],
-            0.95
-        )
+        a1e = (a1 + a2) / (a1 + a2).sum() * a1.sum()
+        a2e = (a1 + a2) / (a1 + a2).sum() * a2.sum()
+
+        x2 = (np.square(a1 - a1e) / a1e).sum() + (np.square(a2 - a2e) / a2e).sum()
+
+        self.assertLessEqual(x2, 0.676)
 
         self.assertEqual(scaled_series.min(), test_min)
         self.assertEqual(scaled_series.max(), test_max)

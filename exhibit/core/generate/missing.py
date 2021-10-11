@@ -9,9 +9,9 @@ from itertools import groupby
 import numpy as np
 import pandas as pd
 
-# Exhibit imports
+# Exhibit 
+from ..constants import MISSING_DATA_STR
 from ..constraints import clean_up_constraint
-from ..specs import MISSING_DATA_STR
 from ..utils import get_attr_values
 from .continuous import generate_cont_val, scale_continuous_column
 
@@ -154,14 +154,15 @@ class MissingDataGenerator:
             )
 
             # rescale the masked section, but make sure to change target_sum!
-            if dist_params.get("target_sum", None):
+            if dist_params.get("target_sum", None) is not None:
                 old_sum = self.nan_data.loc[~mask, num_col].sum()
-                dist_params["target_sum"] = dist_params["target_sum"] - old_sum
+                new_dist_params = dist_params.copy()
+                new_dist_params["target_sum"] = dist_params["target_sum"] - old_sum
 
             repl_s = scale_continuous_column(
                 series=self.nan_data.loc[mask, num_col],
                 precision=precision,
-                **dist_params
+                **new_dist_params
             )
 
             # for some reason assigning a series back, rather than values

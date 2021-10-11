@@ -23,8 +23,8 @@ class constraintsTests(unittest.TestCase):
         '''
         
         self.ch = tm.ConstraintHandler(
-            {  "_rng": np.random.default_rng(seed=0),
-            }
+            spec_dict={"_rng": np.random.default_rng(seed=0)},
+            anon_df=pd.DataFrame(),
         )
 
     def test_recursive_randint_error_handling(self):
@@ -155,11 +155,9 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df = test_df.copy()
-
         constraint = "A >= ~B B~"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint)
 
         self.assertTrue(all(result_df["A"] >= result_df["B B"]))
 
@@ -195,17 +193,14 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df_gr = test_df.copy()
-        result_df_ls = test_df.copy()
-
         constraint_gr = "~A A~ > 30"
         constraint_ls = "~A A~ < 30"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df_gr, constraint_gr)
-        self.ch.adjust_dataframe_to_fit_constraint(result_df_ls, constraint_ls)
+        result_gr = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_gr)
+        result_ls = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_ls)
 
-        self.assertTrue(all(result_df_gr["A A"].dropna() > 30))
-        self.assertTrue(all(result_df_ls["A A"].dropna() < 30))
+        self.assertTrue(all(result_gr["A A"].dropna() > 30))
+        self.assertTrue(all(result_ls["A A"].dropna() < 30))
 
     def test_adjust_value_to_constraint_scalar_normal(self):
         '''
@@ -218,8 +213,7 @@ class constraintsTests(unittest.TestCase):
                 "type": "continuous",
                 "distribution": "normal",
                 "distribution_parameters": {
-                    "mean": 30,
-                    "std": 5
+                    "dispersion": 0.5,
                 }
             }
         }
@@ -232,23 +226,20 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df = test_df.copy()
-
         constraint_1 = "A > 30"
         constraint_2 = "A < 30"
         constraint_3 = "A == 30"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint_1)
-        #99.7% of values should be within 3x std 
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_1)
+        #with dispersion of 0.5 the adjusted value will be within 30 - (30 + 30*0.5=)45
         self.assertTrue(all(result_df["A"] > 30))
-        self.assertTrue(all(result_df["A"] < 45))
+        self.assertTrue(all(result_df["A"] <= 45))
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint_2)
-        #99.7% of values should be within 3x std 
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_2)
+        #all values are already < 30
         self.assertTrue(all(result_df["A"] < 30))
-        self.assertTrue(all(result_df["A"] > 15))
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint_3)
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_3)
         self.assertTrue(all(result_df["A"] == 30))
 
 
@@ -295,11 +286,9 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df = test_df.copy()
-
         constraint = "C < A + B"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint)
 
         self.assertTrue(all(result_df["C"] < (result_df["A"] + result_df["B"])))
 
@@ -337,11 +326,9 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df = test_df.copy()
-
         constraint = "~arrival date~ < departure_date"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint)
 
         self.assertTrue(all(result_df["arrival date"] < (result_df["departure_date"])))
 
@@ -369,11 +356,9 @@ class constraintsTests(unittest.TestCase):
             }
         )
 
-        result_df = test_df.copy()
-
         constraint = "arrival_date > '2018-01-05'"
 
-        self.ch.adjust_dataframe_to_fit_constraint(result_df, constraint)
+        result_df = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint)
 
         self.assertTrue(all(result_df["arrival_date"] > datetime(2018, 1, 5)))
 
@@ -405,7 +390,101 @@ class constraintsTests(unittest.TestCase):
         self.assertEqual(
             tm.clean_up_constraint(c3),
             c3_expected
-        )     
+        )
+
+    def test_add_outliers_in_conditional_constraints_range(self):
+        '''
+        For conditional constraint, we only need to know about the
+        actual constraint (nested dictionary) and the source dataframe.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "B" : {
+                    "precision" : "integer",
+                    "distribution_parameters": {}
+                }
+            },
+            "constraints" : {
+                "conditional_constraints": {
+                    "A == 'spam'" : {        
+                        "B" : "add_outliers",
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["spam", "spam"] + ["eggs"] * 8,
+            "B" : [0] * 5 + [1]*5,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        self.assertTrue(all(result.query("A == 'spam'") == 3))
+
+    def test_add_outliers_in_conditional_constraints_uniform(self):
+        '''
+        Special case if all the values in the series are the same,
+        meaning IQR can't be calculated in a meaningful way so we take 30%
+        difference from the uniform value.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "B" : {
+                    "precision" : "integer",
+                    "distribution_parameters": {}
+                }
+            },
+            "constraints" : {
+                "conditional_constraints": {
+                    "A == 'spam'" : {        
+                        "B" : "add_outliers",
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["spam", "spam"] + ["eggs"] * 8,
+            "B" : [1] * 10,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        self.assertTrue(all(result.query("A == 'spam'") == 0.7))
+
+    def test_conditional_constraints_no_match(self):
+        '''
+        For conditional constraint, we only need to know about the
+        actual constraint (nested dictionary) and the source dataframe.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "constraints" : {
+                "conditional_constraints": {
+                    "A == 'spam'" : {        
+                        "B" : "add_outliers",
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["bacon"] * 10, 
+            "B" : [1] * 10
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        self.assertTrue(all(result["B"] == 1))
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

@@ -14,7 +14,7 @@ import numpy as np
 # Exhibit import
 from .utils import exceeds_ct
 from .sql import query_anon_database
-from .specs import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
+from .constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 
 # EXPORTABLE METHODS & CLASSES
 # ============================
@@ -597,7 +597,7 @@ class _LinkedDataGenerator:
 
         base_col_vals = None
         base_col_df = self.spec_dict["columns"][self.base_col]["original_values"][:-1]
-        base_col_prob = np.array(base_col_df["probability_vector"])
+        base_col_prob = np.array(base_col_df["probability_vector"]).astype(float)
 
         if self.anon_set != "random":
             #replace original_values with anonymised aliases for weights_table
@@ -659,7 +659,7 @@ class _LinkedDataGenerator:
 
         base_col_vals = None
         base_col_df = self.spec_dict["columns"][self.base_col]["original_values"][:-1]
-        base_col_prob = np.array(base_col_df["probability_vector"])
+        base_col_prob = np.array(base_col_df["probability_vector"]).astype(float)
 
         if self.anon_set != "random":
 

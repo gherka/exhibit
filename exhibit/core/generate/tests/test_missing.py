@@ -13,7 +13,7 @@ import numpy as np
 from pandas.testing import assert_frame_equal, assert_series_equal
 
 # Exhibit imports
-from exhibit.core.specs import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
+from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 
 # Module under test
 from exhibit.core.generate import missing as tm

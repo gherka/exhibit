@@ -11,6 +11,9 @@ import re
 import numpy as np
 import pandas as pd
 
+# Exibit import
+from .generate.continuous import scale_continuous_column
+
 class ConstraintHandler:
     '''
     Keep all internal constraint-handling methods in one place
@@ -22,7 +25,7 @@ class ConstraintHandler:
     go into this class rather than the MissingDataGenerator.
     '''
 
-    def __init__(self, spec_dict):
+    def __init__(self, spec_dict, anon_df):
         '''
         Doc string
         '''
@@ -31,19 +34,136 @@ class ConstraintHandler:
         self.rng = spec_dict["_rng"]
         self.dependent_column = None
         self.independent_expression = None
+        self.input = anon_df
+        self.output = None
+
+    def process_constraints(self):
+        '''
+        Doc string
+        '''
+
+        constraints = self.spec_dict["constraints"]
+
+        boolean_constraints = constraints.get("boolean_constraints", None)
+        conditional_constraints = constraints.get("conditional_constraints", None)
+
+        # hand over constraints dict / list to the responsible function
+        # the function is responsible for implementing the interface. The
+        # only restriction on the constraint handling function is that it
+        # returns a dataframe.
+        if boolean_constraints:
+            self.output = self.process_boolean_constraints(boolean_constraints)
+
+        if conditional_constraints:
+            self.output = self.process_conditional_constraints(conditional_constraints)
+
+        if isinstance(self.output, pd.DataFrame):
+            return self.output
+        
+        return self.input #pragma: no cover
+
+
+    def process_boolean_constraints(self, boolean_constraints):
+        """
+        Adjusts the anonymised dataframe to the boolean constraints specified by
+        providing a dependent (to be adjusted) column, an operator, and
+        an indepdenent expression (to be adjusted against).
+
+        Parameters
+        ----------
+        boolean_constraints : list
+            List of strings with column names escaped with a ~ character
+
+        Returns
+        -------
+        pd.DataFrame
+            Adjusted dataframe that satisfies the given constraints, although
+            not necessarily all of them as later constraints can conflict with
+            earlier constraints at the discretion of the user.
+        """
+
+        source = self.input if self.output is None else self.output
+
+        for constraint in boolean_constraints:
+            source = self.adjust_dataframe_to_fit_constraint(source, constraint)
+
+        return source
+
+    def process_conditional_constraints(self, conditional_constraints):
+        """
+        Adjusts the anonymised dataframe to the boolean constraints specified by
+        providing a dependent (to be adjusted) column, an operator, and
+        an indepdenent expression (to be adjusted against).
+
+        Parameters
+        ----------
+        conditional_constraints : list
+            List with dictionaries that follows the format of:
+                {
+                    Example condition: {
+                        Example column : Example action,
+                    }, 
+                }
+            Same conditions can affect multiple columns, but each column
+            can have only one action for ease of writing the YAML spec
+
+        Returns
+        -------
+        pd.DataFrame
+            Adjusted dataframe that satisfies the given constraints, although
+            not necessarily all of them as later constraints can conflict with
+            earlier constraints at the discretion of the user.
+        """
+
+        source = self.input if self.output is None else self.output
+        output_df = source.copy()
+
+        dispatch_dict = {
+            "add_outliers" : self.add_outliers
+        }
+
+        for rule, targets in conditional_constraints.items():
+            for target_col, action_str in targets.items():
+                if (action_func := dispatch_dict.get(action_str, None)):
+
+                    clean_rule = clean_up_constraint(rule)
+                    mask = (output_df
+                        .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                        .eval(clean_rule, engine="python")
+                    )
+
+                    #if masked dataframe is empty (no values to adjust), exit loop
+                    #remember that instead of adjusting TO the constraint, here the
+                    #boolean condition is a FILTER so row matching it must be adjusted
+                    if output_df[mask].empty:
+                        continue
+                    # overwrite the original target column with the adjusted one
+                    output_df[target_col] = action_func(mask, output_df[target_col])
+
+        
+        return output_df
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, bool_constraint):
         '''
-        Modifies anon_df in place at each function call!
+        Doc string
         '''
+
+        output_df = anon_df.copy()
 
         clean_rule = clean_up_constraint(bool_constraint)
         
         #only apply the adjustments to rows that DON'T already meet the constraint
-        mask = (anon_df
+        mask = (output_df
                     .rename(lambda x: x.replace(" ", "__"), axis="columns")
                     .eval(clean_rule, engine="python")
         )
+
+        #if masked dataframe is empty (no values to adjust), return early
+        #remember that for boolean constraints, we're adjusting rows TO MATCH
+        #the boolean condition, i.e. adjusting rows that DON'T ALREADY conform
+        #to the condition.
+        if output_df[~mask].empty:
+            return output_df
 
         #at this point, the tokeniser produces "safe" column names, with __
         (self.dependent_column,
@@ -54,12 +174,12 @@ class ConstraintHandler:
         #available in all apply calls. Maybe move to its own function
         if self.independent_expression.isdigit():
 
-            anon_df["test_expression"] = float(self.independent_expression)
+            output_df["test_expression"] = float(self.independent_expression)
 
         elif self.is_independent_expression_an_iso_date(self.independent_expression):
 
             iso_date = datetime.strptime(self.independent_expression, "'%Y-%m-%d'")
-            anon_df["test_expression"] = datetime(
+            output_df["test_expression"] = datetime(
                 year=iso_date.year,
                 month=iso_date.month,
                 day=iso_date.day
@@ -67,12 +187,12 @@ class ConstraintHandler:
 
         else:
 
-            anon_df["test_expression"] = (anon_df
+            output_df["test_expression"] = (output_df
                                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
                                 .eval(self.independent_expression, engine="python"))
 
-        anon_df.loc[~mask, self.dependent_column.replace("__", " ")] = (
-            anon_df[~mask]
+        output_df.loc[~mask, self.dependent_column.replace("__", " ")] = (
+            output_df[~mask]
                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
                 .apply(
                     self.adjust_value_to_constraint,
@@ -80,11 +200,13 @@ class ConstraintHandler:
                     args=(
                         self.dependent_column,
                         op)
-            )
+                )
         )
 
         #drop the test_expression column
-        del anon_df["test_expression"]
+        del output_df["test_expression"]
+
+        return output_df
 
     @staticmethod
     def is_independent_expression_an_iso_date(expr):
@@ -170,7 +292,7 @@ class ConstraintHandler:
             if op.__name__ == "less":
                 return max(0, y - 1)
             if op.__name__ == "greater":
-                return y + 1
+                return y + 1 #pragma: no cover
             return y
 
         # new x value is drawn from the dispersion-based interval around y
@@ -211,6 +333,56 @@ class ConstraintHandler:
             if op.__name__ == "greater":
                 return y + 1
             return y
+
+    # CONDITIONAL CONSTRAINT FUNCTIONS
+    # ================================
+    def add_outliers(self, mask, series, rescale=True):
+        """
+        Create outliers based on the boxplot methodology
+
+        Parameters
+        ----------
+        mask : boolean index
+            Filter the series to idx that need to be turned into outliers
+        series : pd.Series
+            Original series
+        rescale: boolean
+            Adding outliers can push the series ranges outside the specified bounds
+
+        Returns
+        -------
+        pd.Series
+            New series with outliers substituted for masked values
+        """
+
+        q25, q50, q75 = np.percentile(series, [25, 50, 75])
+        iqr = q75 - q25
+
+        if iqr == 0:
+
+            masked_series = np.where(
+                series[mask] % 2 == 0, series[mask] * 1.3,
+                series[mask] * 0.7
+            )
+
+        else:
+
+            masked_series = np.where(
+                series[mask] >= q50, (q75 + iqr * 3) + series[mask],
+                (q25 - iqr * 3) - series[mask]
+            )
+
+
+        result = series.copy()
+        result.loc[mask] = masked_series
+
+        if rescale:
+            col_data = self.spec_dict["columns"][series.name]
+            precision = col_data["precision"]
+            dist_params = col_data["distribution_parameters"]
+            result = scale_continuous_column(result, precision, **dist_params)
+
+        return result
 
 # EXPORTABLE METHODS
 # ==================

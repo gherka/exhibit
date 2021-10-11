@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.specs import (
+from exhibit.core.constants import (
     ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR)
 
 def format_header(dataframe, series_name, prefix=None):
@@ -280,11 +280,10 @@ def parse_original_values(original_values):
             map(str.strip, x.split("|")) for x in original_values[1:]
         ],
         columns=[x.strip() for x in original_values[0].split("|")],
-        dtype="float"
     )
 
     # We exclude Missing data from the vector rescaling because it"s handled separately
-    col_prob = np.array(df["probability_vector"][:-1])
+    col_prob = np.array(df["probability_vector"][:-1]).astype(float)
     col_name = df.columns[0]
 
     warning = textwrap.dedent(f"""

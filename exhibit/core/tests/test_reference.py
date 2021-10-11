@@ -20,7 +20,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.utils import package_dir
 from exhibit.db import db_util
-from exhibit.core.specs import MISSING_DATA_STR
+from exhibit.core.constants import MISSING_DATA_STR
 from exhibit.sample.sample import (
     inpatients_spec, inpatients_anon)
 

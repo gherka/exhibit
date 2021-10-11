@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit import
-from ..specs import MISSING_DATA_STR
+from ..constants import MISSING_DATA_STR
 from ..utils import exceeds_ct, is_paired
 from ..sql import query_anon_database
 
@@ -67,7 +67,7 @@ def generate_weights_table(spec_dict, target_cols):
         #get weights and values, from whatever WS was created
         for num_col in num_cols:
 
-            ws = ws_df[num_col]
+            ws = ws_df[num_col].astype(float)
             # because we might've taken the FULL anon_set (150 or more), 
             # we need to make sure the weights are correct!
             if not full_anon_flag:

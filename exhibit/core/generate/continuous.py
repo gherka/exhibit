@@ -75,13 +75,13 @@ def scale_continuous_column(series, precision, **dist_params):
     corresponding function.
     '''
 
-    if dist_params.get("target_sum", None):
+    if dist_params.get("target_sum", None) is not None:
         return _scale_to_target_sum(series, precision, **dist_params)
 
-    if dist_params.get("target_min", None) or dist_params.get("target_max", None):
+    if dist_params.get("target_min", None) or dist_params.get("target_max", None) is not None:
         return _scale_to_range(series, precision, **dist_params)
 
-    if dist_params.get("target_mean", None) or dist_params.get("target_std", None):
+    if dist_params.get("target_mean", None) or dist_params.get("target_std", None) is not None:
         return _scale_to_target_statistic(series, precision, **dist_params)
 
     # fallback is to return unscaled series

@@ -13,11 +13,10 @@ setup(name="exhibit",
       version="0.1",
       description="Command line tool for generating demonstrator data",
       author="German Priks",
-      python_requires=">3.5",
+      python_requires=">=3.8",
       install_requires=[
         "pandas",
         "numpy",
-        "scipy",
         "PyYAML"
       ],
       packages=find_packages(),

@@ -2,19 +2,12 @@
 Class encapsulating specificatons for a new exhibit
 '''
 
-# Constants for the spec; putting them at the top to avoid problems with 
-# partial / circular imports; if the list of constants grows, hive off into
-# a separate module to avoid this issue altogether (keep pylint warning)
-ORIGINAL_VALUES_DB = "Number of unique values is above category threshold"
-ORIGINAL_VALUES_PAIRED = "See paired column"
-MISSING_DATA_STR = "Missing data"
-
 # External imports
-# pylint: disable=wrong-import-position
 from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 import numpy as np
 
 # Exhibit imports
+from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
 from .constraints import find_boolean_columns
 from .utils import (
     guess_date_frequency, generate_table_id,

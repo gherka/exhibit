@@ -278,11 +278,8 @@ class newExhibit:
         anon_df = miss_gen.add_missing_data()
 
         #7) PROCESS BOOLEAN AND CONDITIONAL CONSTRAINTS (IF ANY)
-        ch = ConstraintHandler(self.spec_dict)
-        
-        for bool_constraint in self.spec_dict["constraints"]["boolean_constraints"]:
-
-            ch.adjust_dataframe_to_fit_constraint(anon_df, bool_constraint)
+        ch = ConstraintHandler(self.spec_dict, anon_df)
+        anon_df = ch.process_constraints()
 
         #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict["derived_columns"].items():

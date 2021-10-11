@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.specs import MISSING_DATA_STR
+from exhibit.core.constants import MISSING_DATA_STR
 from exhibit.core.utils import package_dir
 
 def query_anon_database(

@@ -11,7 +11,7 @@ import pandas as pd
 # Exhibit imports
 from exhibit.core.sql import create_temp_table
 from exhibit.db import db_util
-from exhibit.core.specs import (
+from exhibit.core.constants import (
     ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR)
 
 # Module under test

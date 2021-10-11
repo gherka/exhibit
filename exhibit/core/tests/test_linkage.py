@@ -15,7 +15,7 @@ from pandas.testing import assert_frame_equal
 
 # Exibit imports
 from exhibit.core.sql import create_temp_table, query_anon_database
-from exhibit.core.specs import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
+from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 from exhibit.db import db_util
 
 # Module under test

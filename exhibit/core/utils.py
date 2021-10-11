@@ -18,7 +18,7 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype
 
 # Exhibit imports
-from .specs import ORIGINAL_VALUES_PAIRED
+from .constants import ORIGINAL_VALUES_PAIRED
 
 def path_checker(path_string):
     '''
