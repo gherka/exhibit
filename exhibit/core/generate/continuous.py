@@ -79,14 +79,14 @@ def scale_continuous_column(series, precision, **dist_params):
         return _scale_to_target_sum(series, precision, **dist_params)
 
     if (
-        dist_params.get("target_min", None) or
-        dist_params.get("target_max", None) is not None
+        (dist_params.get("target_min", None) or
+        dist_params.get("target_max", None)) is not None
         ):
         return _scale_to_range(series, precision, **dist_params)
 
     if (
-        dist_params.get("target_mean", None) or
-        dist_params.get("target_std", None) is not None
+        (dist_params.get("target_mean", None) or
+        dist_params.get("target_std", None)) is not None
         ):
         return _scale_to_target_statistic(series, precision, **dist_params)
 
@@ -121,6 +121,11 @@ def generate_derived_column(anon_df, calculation, precision=2):
 
     safe_calculation = re.sub(r"\b\s\b", r"__", calculation)
     safe_df = anon_df.rename(columns=lambda x: x.replace(" ", "__"))
+
+    # some columns might come in as Int64 (Pandas dtype) which will fall over
+    # when trying to use in eval because it relies on numpy dtypes, not pandas'
+    numeric_cols = safe_df.select_dtypes(include=np.number).columns
+    safe_df[numeric_cols] = safe_df[numeric_cols].astype(float)
 
     if "groupby" in safe_calculation:
         #groupby requires pd.eval, not df.eval
@@ -270,11 +275,11 @@ def _scale_to_range(series, precision, target_min=None, target_max=None, **_kwar
         return X
     
     # adjust for potential negative signs!
-    if not target_min:
+    if target_min is None:
 
         target_min = target_max - abs(target_max) - abs(target_max * X.min() / X.max())
     
-    if not target_max:
+    if target_max is None:
 
         target_max = target_min + abs(target_min * X.max() / X.min()) - abs(target_min)
 
@@ -302,11 +307,12 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
     When scaling floats, round the results to the nearest 4 digits.
     '''
 
-    if series.isna().all(): #pragma: no cover
-        return series
-
     if any(series < 0):
         series = series + abs(series.min())
+
+    # can't scale all NAs or all zeroes
+    if series.isna().all() or series.dropna().sum() == 0: #pragma: no cover
+        return series
         
     scaling_factor = target_sum / series.dropna().sum()
 

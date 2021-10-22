@@ -143,7 +143,7 @@ class MissingDataGenerator:
             num_mask = self.nan_data[num_col].isna()
             mask = (cat_mask & ~num_mask)
 
-            self.nan_data.loc[mask, num_col] = self.nan_data.loc[mask].apply(
+            self.nan_data.loc[mask, num_col] = self.nan_data.loc[mask, cat_cols].apply(
                 func=generate_cont_val,
                 axis=1,
                 weights_table=self.wt,
@@ -154,9 +154,11 @@ class MissingDataGenerator:
             )
 
             # rescale the masked section, but make sure to change target_sum!
+            # take a copy of the dist_params as full target_sum is used elsewhere
+            new_dist_params = dist_params.copy()
+
             if dist_params.get("target_sum", None) is not None:
                 old_sum = self.nan_data.loc[~mask, num_col].sum()
-                new_dist_params = dist_params.copy()
                 new_dist_params["target_sum"] = dist_params["target_sum"] - old_sum
 
             repl_s = scale_continuous_column(

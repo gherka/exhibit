@@ -54,7 +54,9 @@ class continuousTests(unittest.TestCase):
 
         assert_series_equal(
             left=tm.generate_derived_column(test_df, calc),
-            right=expected)
+            right=expected,
+            check_dtype=False
+            )
 
     def test_apply_dispersion(self):
         '''
