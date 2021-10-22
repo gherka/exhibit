@@ -68,7 +68,7 @@ class categoricalTests(unittest.TestCase):
         '''
        
         test_dict = {
-            "metadata": {"category_threshold" : 10},
+            "metadata": {"inline_limit" : 10},
             "columns": {
                 "test_Unknown": {
                     "type": "categorical",
@@ -108,7 +108,7 @@ class categoricalTests(unittest.TestCase):
        
         test_dict = {
             "metadata": {
-                "category_threshold" : 5,
+                "inline_limit" : 5,
                 "id" : 1234
                 },
             "columns": {

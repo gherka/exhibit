@@ -29,7 +29,7 @@ class newSpec:
     ----------
     data : pd.DataFrame
         source dataframe
-    ct : int
+    inline_limit : int
         specifies the maximum number of unique values (categories) a column can
         have for them to be displayed in full for manual editing; default is 30.
         If the full list is too long to display, the values are put in a dedicated
@@ -46,7 +46,7 @@ class newSpec:
     ----------
     df : pd.DataFrame
         internal copy of the passed in dataframe
-    ct : int
+    inline_limit : int
         threshold for deciding the maximum number of unique values per column
     random_seed : int
         random seed to use; defaults to 0
@@ -65,10 +65,10 @@ class newSpec:
         processed specification
     '''
 
-    def __init__(self, data, ct, ew=False, random_seed=0):
+    def __init__(self, data, inline_limit, ew=False, random_seed=0):
 
         self.df = data.copy()
-        self.ct = ct
+        self.inline_limit = inline_limit
         self.ew = ew
         self.random_seed = random_seed
         self.id = generate_table_id()
@@ -87,7 +87,7 @@ class newSpec:
                 "categorical_columns": sorted(list(self.cat_cols)),
                 "numerical_columns": sorted(list(self.numerical_cols)),
                 "date_columns": sorted(list(self.date_cols)),
-                "category_threshold": self.ct,
+                "inline_limit": self.inline_limit,
                 "random_seed": self.random_seed,
                 "id": self.id
             },
@@ -136,7 +136,7 @@ class newSpec:
             if (col in pair) and (pair[0] != col):
                 return "paired"
 
-        if self.df[col].nunique() > self.ct:
+        if self.df[col].nunique() > self.inline_limit:
             return "long"
 
         return "normal"

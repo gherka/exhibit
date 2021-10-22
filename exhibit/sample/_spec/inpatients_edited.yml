@@ -20,7 +20,7 @@ metadata:
   - stays
   date_columns:
   - quarter_date
-  category_threshold: 150
+  inline_limit: 150
   random_seed: 0
   id: bc379
 #----------------------------------------------------------

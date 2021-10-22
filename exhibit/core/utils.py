@@ -266,7 +266,7 @@ def generate_table_id():
 
     return new_id
 
-def exceeds_ct(spec_dict, col):
+def exceeds_inline_limit(spec_dict, col):
     '''
     Tiny function to shorten the code
 
@@ -275,7 +275,7 @@ def exceeds_ct(spec_dict, col):
     '''
     result = (
         spec_dict["columns"][col]["uniques"] > 
-        spec_dict["metadata"]["category_threshold"]
+        spec_dict["metadata"]["inline_limit"]
     )
 
     return result

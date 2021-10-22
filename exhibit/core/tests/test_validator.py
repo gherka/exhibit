@@ -170,7 +170,7 @@ class validatorTests(unittest.TestCase):
 
         test_dict = {
             "metadata": {
-                "category_threshold": 30
+                "inline_limit": 30
             },
             "columns": {
                 "Board Code": {

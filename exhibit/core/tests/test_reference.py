@@ -101,7 +101,7 @@ class referenceTests(unittest.TestCase):
             fromdata_defaults = {
                 "command"           : "fromdata",
                 "source"            : default_data_path,
-                "category_threshold": 30,
+                "inline_limit": 30,
                 "verbose"           : True,
                 "output"            : f_name,
                 "skip_columns"      : [],
@@ -125,7 +125,7 @@ class referenceTests(unittest.TestCase):
                 mock_args.return_value = argparse.Namespace(
                     command=fromdata_defaults["command"],
                     source=fromdata_defaults["source"],
-                    category_threshold=fromdata_defaults["category_threshold"],
+                    inline_limit=fromdata_defaults["inline_limit"],
                     verbose=fromdata_defaults["verbose"],
                     output=fromdata_defaults["output"],
                     skip_columns=fromdata_defaults["skip_columns"],
@@ -171,7 +171,7 @@ class referenceTests(unittest.TestCase):
             mock_args.return_value = argparse.Namespace(
                 command="fromdata",
                 source=Path(package_dir("sample", "_data", "inpatients.csv")),
-                category_threshold=30,
+                inline_limit=30,
                 skip_columns=[],
                 equal_weights=False,
                 verbose=True,
@@ -336,10 +336,10 @@ class referenceTests(unittest.TestCase):
             check_dtype=False
         )
 
-    def test_reference_inpatient_ct10_random_data(self):
+    def test_reference_inpatient_il10_random_data(self):
         '''
         What this reference test is covering:
-            - number of unique values exceeds CT in all linked columns
+            - number of unique values exceeds inline limit in all linked columns
             - anonymisation method is "random"
             - non-linked categorical column (Sex) has missing data
             - linked columns share missing categorical data
@@ -376,7 +376,7 @@ class referenceTests(unittest.TestCase):
         # modify CLI namespace
         fromdata_namespace = {
             "source"            : test_dataframe,
-            "category_threshold": 10,
+            "inline_limit": 10,
         }
         
         # modify spec
@@ -390,10 +390,10 @@ class referenceTests(unittest.TestCase):
             test_spec_dict=test_spec_dict
             )
 
-        inpatients_anon_ct10 = pd.read_csv(
+        inpatients_anon_il10 = pd.read_csv(
             package_dir(
                 "core", "tests", "_reference_data",
-                "inpatients_anon_rnd_ct10.csv"),
+                "inpatients_anon_rnd_il10.csv"),
                 parse_dates=["quarter_date"]
             )
 
@@ -402,16 +402,16 @@ class referenceTests(unittest.TestCase):
         self._temp_tables.append(table_id)
             
         assert_frame_equal(
-            left=inpatients_anon_ct10,
+            left=inpatients_anon_il10,
             right=temp_df,
             check_exact=False,
             check_dtype=False
         )
 
-    def test_reference_inpatient_ct50_random_data(self):
+    def test_reference_inpatient_il50_random_data(self):
         '''
         What this reference test is covering:
-            - number of unique values is within CT in all columns
+            - number of unique values is within inline limit in all columns
             - anonymisation method is "random"
             - linked columns share missing categorical data
             - manually change date frequency from QS to M
@@ -439,7 +439,7 @@ class referenceTests(unittest.TestCase):
         # modify CLI namespace
         fromdata_namespace = {
             "source"            : test_dataframe,
-            "category_threshold": 50,
+            "inline_limit": 50,
         }
 
         # modify spec
@@ -455,10 +455,10 @@ class referenceTests(unittest.TestCase):
             test_spec_dict=test_spec_dict
             )
 
-        inpatients_anon_ct50 = pd.read_csv(
+        inpatients_anon_il50 = pd.read_csv(
             package_dir(
                 "core", "tests", "_reference_data",
-                "inpatients_anon_rnd_ct50.csv"),
+                "inpatients_anon_rnd_il50.csv"),
             parse_dates=["quarter_date"]
             )
 
@@ -467,16 +467,16 @@ class referenceTests(unittest.TestCase):
         self._temp_tables.append(table_id)
             
         assert_frame_equal(
-            left=inpatients_anon_ct50,
+            left=inpatients_anon_il50,
             right=temp_df,
             check_exact=False,
             check_dtype=False
         )
 
-    def test_reference_inpatient_ct10_mountains_data(self):
+    def test_reference_inpatient_il10_mountains_data(self):
         '''
         What this reference test is covering:
-            - number of unique values exceeds CT in all columns
+            - number of unique values exceeds inline limit in all columns
             - anonymisation method is hierarchical "mountains"
             - anon columns are specified using dot notation
             - sex is a "complete" categorical column, but there will be gaps
@@ -507,7 +507,7 @@ class referenceTests(unittest.TestCase):
         # modify CLI namespace
         fromdata_namespace = {
             "source"            : test_dataframe,
-            "category_threshold": 10,
+            "inline_limit": 10,
         }
 
         # Modify test_dataframe to suit test conditions
@@ -540,10 +540,10 @@ class referenceTests(unittest.TestCase):
             test_spec_dict=test_spec_dict
             )
 
-        inpatients_anon_mnt_ct10 = pd.read_csv(
+        inpatients_anon_mnt_il10 = pd.read_csv(
             package_dir(
                 "core", "tests", "_reference_data",
-                "inpatients_anon_mnt_ct10.csv"),
+                "inpatients_anon_mnt_il10.csv"),
             parse_dates=["quarter_date"]
             )
 
@@ -552,16 +552,16 @@ class referenceTests(unittest.TestCase):
         self._temp_tables.append(table_id)
             
         assert_frame_equal(
-            left=inpatients_anon_mnt_ct10,
+            left=inpatients_anon_mnt_il10,
             right=temp_df,
             check_exact=False,
             check_dtype=False
         )
 
-    def test_reference_inpatient_ct50_mountains_data(self):
+    def test_reference_inpatient_il50_mountains_data(self):
         '''
         What this reference test is covering:
-            - number of unique values is within CT in all columns
+            - number of unique values is within inline limit in all columns
             - anonymisation method is hierarchical "mountains"
             - linked columns share missing categorical data
         '''
@@ -587,7 +587,7 @@ class referenceTests(unittest.TestCase):
         # modify CLI namespace
         fromdata_namespace = {
             "source"            : test_dataframe,
-            "category_threshold": 50,
+            "inline_limit": 50,
         }
 
         # modify spec
@@ -614,10 +614,10 @@ class referenceTests(unittest.TestCase):
             test_spec_dict=test_spec_dict
             )
 
-        inpatients_anon_mnt_ct50 = pd.read_csv(
+        inpatients_anon_mnt_il50 = pd.read_csv(
             package_dir(
                 "core", "tests", "_reference_data",
-                "inpatients_anon_mnt_ct50.csv"),
+                "inpatients_anon_mnt_il50.csv"),
             parse_dates=["quarter_date"]
             )
 
@@ -626,7 +626,7 @@ class referenceTests(unittest.TestCase):
         self._temp_tables.append(table_id)
 
         assert_frame_equal(
-            left=inpatients_anon_mnt_ct50,
+            left=inpatients_anon_mnt_il50,
             right=temp_df,
             check_exact=False,
             check_dtype=False
@@ -702,7 +702,7 @@ class referenceTests(unittest.TestCase):
         # modify CLI namespace
         fromdata_namespace = {
             "source"            : test_dataframe,
-            "category_threshold": 50
+            "inline_limit": 50
         }
         
         # modify spec

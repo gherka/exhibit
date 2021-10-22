@@ -109,7 +109,7 @@ class exhibitTests(unittest.TestCase):
         mock_args.return_value = argparse.Namespace(
             source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
-            category_threshold=30,
+            inline_limit=30,
             equal_weights=True,
             skip_columns=[]
         )

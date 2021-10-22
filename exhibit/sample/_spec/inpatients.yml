@@ -22,7 +22,7 @@ metadata:
   - stays
   date_columns:
   - quarter_date
-  category_threshold: 30
+  inline_limit: 30
   random_seed: 0
   id: 16a82
 # ----------------------------------------------------------

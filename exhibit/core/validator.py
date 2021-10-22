@@ -32,7 +32,7 @@ class newValidator:
         '''
 
         self.spec_dict = spec_dict
-        self.ct = self.spec_dict["metadata"]["category_threshold"]
+        self.inline_limit = self.spec_dict["metadata"]["inline_limit"]
         self.fixed_sql_sets = ["mountains", "birds", "patients"]
         
     def run_validator(self):

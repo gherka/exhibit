@@ -73,7 +73,7 @@ class weightsTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
-    def test_equal_weight_for_single_column_exceeding_ct(self):
+    def test_equal_weight_for_single_column_exceeding_inline_limit(self):
         '''
         Missind data is a special value that might or might not appear
         in the actually generated data, hence when calculating equal
@@ -99,7 +99,7 @@ class weightsTests(unittest.TestCase):
         test_dict = {
             "metadata": {
                 "numerical_columns": ["NumC"],
-                "category_threshold": 1,
+                "inline_limit": 1,
                 "id": "test_id_weights"
             },
             "columns": {
@@ -137,7 +137,7 @@ class weightsTests(unittest.TestCase):
         test_dict = {
             "metadata": {
                 "numerical_columns": ["NumC"],
-                "category_threshold": 10,
+                "inline_limit": 10,
                 "id": "test_id_weights"
             },
             "columns": {
@@ -162,7 +162,7 @@ class weightsTests(unittest.TestCase):
         self.assertEqual(result_md, 0.0)
         self.assertEqual(result_col, 0.05)
 
-    def test_weights_for_linked_columns_with_mixed_ct(self):
+    def test_weights_for_linked_columns_with_mixed_inline_limits(self):
         '''
         Doc string
         '''
@@ -190,7 +190,7 @@ class weightsTests(unittest.TestCase):
         test_dict = {
             "metadata": {
                 "numerical_columns": ["NumC"],
-                "category_threshold": 3,
+                "inline_limit": 3,
                 "id": "test_id_weights"
             },
             "columns": {

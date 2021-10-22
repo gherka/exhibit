@@ -28,7 +28,7 @@ class CategoricalDataGenerator:
 
     One area that potentially needs looking at is if the user makes
     manual changes to column values that were initially put into SQL
-    (where uniques > CT) - for now, this works only for linked data.
+    (where uniques > inline_limit) - for now, this works only for linked data.
     '''
 
     def __init__(self, spec_dict, core_rows):
@@ -189,7 +189,7 @@ class CategoricalDataGenerator:
             return generate_regex_column(anon_set, col_name, self.num_rows)  
 
         #values were stored in SQL; randomise based on uniform distribution
-        if col_attrs["uniques"] > self.spec_dict["metadata"]["category_threshold"]:
+        if col_attrs["uniques"] > self.spec_dict["metadata"]["inline_limit"]:
             return self._generate_from_sql(col_name, col_attrs)
 
         #we have access to original_values and the paths are dependant on anon_set
@@ -242,7 +242,7 @@ class CategoricalDataGenerator:
     def _generate_from_sql(self, col_name, col_attrs, complete=False, db_uri=None):
         '''
         Whatever the anonymising method, if a column has more unique values than
-        allowed by the category_threshold parameter, it will be put into SQLite3 db.
+        allowed by the inline_limit parameter, it will be put into SQLite3 db.
         '''
 
         anon_set = col_attrs["anonymising_set"]

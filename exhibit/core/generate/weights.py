@@ -11,7 +11,7 @@ import numpy as np
 
 # Exhibit import
 from ..constants import MISSING_DATA_STR
-from ..utils import exceeds_ct, is_paired
+from ..utils import exceeds_inline_limit, is_paired
 from ..sql import query_anon_database
 
 # EXPORTABLE METHODS
@@ -55,7 +55,7 @@ def generate_weights_table(spec_dict, target_cols):
         full_anon_flag = False
 
         #if column is put into anon.db, weights are always uniform
-        if exceeds_ct(spec_dict, cat_col):
+        if exceeds_inline_limit(spec_dict, cat_col):
 
             full_anon_flag = True
             ws_df = _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols)

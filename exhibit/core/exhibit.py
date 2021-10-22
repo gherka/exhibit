@@ -95,11 +95,14 @@ class newExhibit:
             )
 
         parser.add_argument(
-            "--category_threshold", "-ct",
+            "--inline_limit", "-il",
             type=int,
             default=30,
-            help="maximum number of categories to include in .yml for manual editing",
-            )
+            help=(
+                "if the number of unique values in a categorical column exceeds \n"
+                "inline limit, the values will be saved in the anon.db database \n"
+                "and not listed in the .yml specification for manual editing."
+            ))
 
         parser.add_argument(
             "--output", "-o",
@@ -153,7 +156,7 @@ class newExhibit:
 
             new_spec = newSpec(
                 data=self.df,
-                ct=self._args.category_threshold,
+                inline_limit=self._args.inline_limit,
                 ew=self._args.equal_weights
                 )
 

@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit import
-from .utils import exceeds_ct
+from .utils import exceeds_inline_limit
 from .sql import query_anon_database
 from .constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 
@@ -390,11 +390,12 @@ class _LinkedDataGenerator:
         self.linked_df = None
 
         #find the FIRST "base_col" with weights, starting from the end of the list
-        #weights and probabilities are only there for columns whose unique count <= ct
-        ct = spec_dict["metadata"]["category_threshold"]
+        #weights and probabilities are only there for columns whose
+        #unique count <= inline limit
+        inline_limit = spec_dict["metadata"]["inline_limit"]
 
         for i, col_name in enumerate(reversed(self.linked_cols)):
-            if spec_dict["columns"][col_name]["uniques"] <= ct:
+            if spec_dict["columns"][col_name]["uniques"] <= inline_limit:
                 self.base_col = col_name
                 self.base_col_pos = len(self.linked_cols) - (i + 1)
                 self.base_col_unique_count = spec_dict["columns"][col_name]["uniques"]
@@ -816,7 +817,7 @@ def _create_paired_columns_lookup(spec_dict, base_column):
 
     if pairs:
         #check if paired column values live in SQL or are part of original_values
-        if exceeds_ct(spec_dict, base_column):
+        if exceeds_inline_limit(spec_dict, base_column):
 
             paired_df = query_anon_database(table_name=table_name)
             paired_df.rename(columns=lambda x: x.replace("paired_", ""), inplace=True)
