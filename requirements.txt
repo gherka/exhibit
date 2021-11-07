@@ -1,4 +1,4 @@
 python_version >= "3.8"
-pandas
-numpy
-PyYAML
+pandas == 1.2.4
+numpy == 1.20.1
+PyYAML == 5.4.1
