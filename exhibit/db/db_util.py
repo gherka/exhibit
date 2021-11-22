@@ -268,7 +268,7 @@ def drop_tables(table_names, db_uri=None):
     conn = sqlite3.connect(db_uri, uri=True)
 
     if not isinstance(table_names, list):
-        table_names = list(table_names)
+        table_names = [table_names]
  
     with closing(conn):
         c = conn.cursor()

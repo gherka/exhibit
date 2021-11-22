@@ -204,7 +204,11 @@ class MissingDataGenerator:
                 pairs.update([col] + attrs["paired_columns"])
 
             # linked groups
-            for _, linked_group in self.spec_dict["linked_columns"]:
+            for i, linked_group in self.spec_dict["linked_columns"]:
+                # zero numbered linked group is reserved for user defined linkage
+                if i == 0:
+                    continue
+
                 if col in linked_group:
                     pairs.update(linked_group)
 

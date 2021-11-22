@@ -14,7 +14,8 @@ import numpy as np
 # Exhibit imports
 from ..utils import get_attr_values, package_dir
 from ..sql import query_anon_database
-from ..linkage import generate_linked_anon_df
+from ..linkage.hierarchical import generate_linked_anon_df
+from ..linkage.matrix import generate_user_linked_anon_df
 from ..specs import ORIGINAL_VALUES_PAIRED
 from .regex import generate_regex_column
 
@@ -60,12 +61,26 @@ class CategoricalDataGenerator:
 
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
         for linked_group in self.spec_dict["linked_columns"]:
-            linked_df = generate_linked_anon_df(
-                spec_dict=self.spec_dict,
-                linked_group=linked_group,
-                num_rows=self.num_rows)
+            
+            # zero-numbered linked group is reserved for user-defined groupings
+            if linked_group[0] == 0:
 
-            generated_dfs.append(linked_df)
+                u_linked_df = generate_user_linked_anon_df(
+                    spec_dict=self.spec_dict,
+                    linked_group=linked_group,
+                    num_rows=self.num_rows
+                )
+
+                generated_dfs.append(u_linked_df)
+
+            else:
+
+                linked_df = generate_linked_anon_df(
+                    spec_dict=self.spec_dict,
+                    linked_group=linked_group,
+                    num_rows=self.num_rows)
+
+                generated_dfs.append(linked_df)
 
         #2) GENERATE NON-LINKED DFs
         for col in [col for col in self.all_cols if col not in self.skipped_cols]:

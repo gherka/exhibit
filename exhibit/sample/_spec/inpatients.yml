@@ -284,7 +284,7 @@ constraints:
 # from the metadata section and N is the group number.
 # ----------------------------------------------------------
 linked_columns:
-- - 0
+- - 1
   - - hb_name
     - loc_name
 # ----------------------------------------------------------

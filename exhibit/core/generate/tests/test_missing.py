@@ -155,8 +155,8 @@ class missingDataTests(unittest.TestCase):
                 "conditional_constraints" : {},
                 },
             "linked_columns" : [
-                (0, ["A", "B"]),
-                (1, ["C", "D"])
+                (1, ["A", "B"]),
+                (2, ["C", "D"])
                 ]
         }
 

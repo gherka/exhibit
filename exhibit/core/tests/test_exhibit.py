@@ -13,9 +13,10 @@ import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import package_dir
+from exhibit.db import db_util
 
 # Module under test
-from exhibit.core import exhibit  as tm
+from exhibit.core import exhibit as tm
 
 class exhibitTests(unittest.TestCase):
     '''
@@ -23,6 +24,22 @@ class exhibitTests(unittest.TestCase):
     via @patch decorator; internal intermediate functions
     are mocked inside each test.
     '''
+
+    @classmethod
+    def setUpClass(cls):
+        '''
+        Create a list of tables to drop after reference tests finish
+        '''
+
+        cls._temp_tables = []
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+
+        db_util.drop_tables(cls._temp_tables)
 
     @patch("argparse.ArgumentParser.parse_args")
     def test_read_data_func_reads_csv_from_source_path(self, mock_args):
@@ -120,8 +137,91 @@ class exhibitTests(unittest.TestCase):
 
         expected = "10-19        | 0.100              | 0.100 | 0.100 | 0.100"
         result = xA.spec_dict["columns"]["age"]["original_values"][2]
+
+        # save the spec ID to delete temp tables after tests finish
+        self._temp_tables.append(xA.spec_dict["metadata"]["id"])
                 
         self.assertEqual(expected, result)
+
+    @patch("argparse.ArgumentParser.parse_args")
+    def test_spec_generation_with_predefined_linked_columns(self, mock_args):
+        '''
+        User defined linked columns are always saved as 0-th element in the
+        linked columns list of the YAML specification.
+        '''
+
+        user_linked_cols = ["sex", "age"]
+
+        mock_args.return_value = argparse.Namespace(
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
+            verbose=True,
+            inline_limit=30,
+            equal_weights=True,
+            skip_columns=[],
+            linked_columns=user_linked_cols
+        )
+
+        xA = tm.newExhibit()
+        xA.read_data()
+        xA.generate_spec()
+
+        # save the spec ID to delete temp tables after tests finish
+        self._temp_tables.append(xA.spec_dict["metadata"]["id"])
+                
+        self.assertListEqual(xA.spec_dict["linked_columns"][0][1], user_linked_cols)
+
+    @patch("argparse.ArgumentParser.parse_args")
+    def test_overlapping_hierarchical_and_predefined_linked_columns(self, mock_args):
+        '''
+        When there is a conflict between a user defined and hierarchical linked
+        columns, user defined list wins which means that the columns that make up
+        the user defined list are excluded from consideration in the discovery phase
+        of the hierarchical linkage. Make sure you include hb_code as well, otherwise
+        hb_code will be linked to loc_name (correctly, but unexpectedly)
+        '''
+
+        user_linked_cols = ["hb_name", "hb_code", "age"]
+
+        mock_args.return_value = argparse.Namespace(
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
+            verbose=True,
+            inline_limit=30,
+            equal_weights=True,
+            skip_columns=[],
+            linked_columns=user_linked_cols
+        )
+
+        xA = tm.newExhibit()
+        xA.read_data()
+        xA.generate_spec()
+
+        # save the spec ID to delete temp tables after tests finish
+        self._temp_tables.append(xA.spec_dict["metadata"]["id"])
+                
+        self.assertEqual(len(xA.spec_dict["linked_columns"]), 1)
+        self.assertListEqual(xA.spec_dict["linked_columns"][0][1], user_linked_cols)
+
+    @patch("argparse.ArgumentParser.parse_args")
+    def test_less_than_two_predefined_linked_columns_raiser_error(self, mock_args):
+        '''
+        It only makes sense to have at least 2 linked columns
+        '''
+
+        user_linked_cols = ["hb_name"]
+
+        mock_args.return_value = argparse.Namespace(
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
+            verbose=True,
+            inline_limit=30,
+            equal_weights=True,
+            skip_columns=[],
+            linked_columns=user_linked_cols
+        )
+
+        with self.assertRaises(SystemExit) as cm:
+            tm.newExhibit()
+
+        self.assertNotEqual(cm.exception.code, 0)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

@@ -16,10 +16,12 @@ from .formatters import build_table_from_lists
 from .sql import create_temp_table
 from .generate.weights import generate_weights
 
-from .linkage import (
+from .linkage.hierarchical import (
             LinkedColumnsTree,
             find_hierarchically_linked_columns,
             find_pair_linked_columns)
+
+from .linkage.matrix import save_predefined_linked_cols_to_db
 
 class newSpec:
     '''
@@ -65,12 +67,13 @@ class newSpec:
         processed specification
     '''
 
-    def __init__(self, data, inline_limit, ew=False, random_seed=0):
+    def __init__(self, data, inline_limit, ew=False, random_seed=0, **kwargs):
 
         self.df = data.copy()
         self.inline_limit = inline_limit
         self.ew = ew
         self.random_seed = random_seed
+        self.user_linked_cols = kwargs.get("user_linked_cols")
         self.id = generate_table_id()
         self.numerical_cols = set(
             self.df.select_dtypes(include=np.number).columns.values)
@@ -79,7 +82,7 @@ class newSpec:
         self.cat_cols = (
             set(self.df.select_dtypes(exclude=np.number).columns.values) -
             self.date_cols)
-        self.paired_cols = find_pair_linked_columns(self.df)
+        self.paired_cols = find_pair_linked_columns(self.df, self.user_linked_cols)
 
         self.output = {
             "metadata": {
@@ -328,13 +331,24 @@ class newSpec:
         }
 
         # find and save linked columns
-        linked_cols = find_hierarchically_linked_columns(self.df, self.output)
+        h_linked_cols = find_hierarchically_linked_columns(
+            self.df, self.output, user_linked_cols=self.user_linked_cols)
 
-        if linked_cols:
+        # add the user defined linked columns first and then to anon.db
+        if self.user_linked_cols:
 
-            linked_tree = LinkedColumnsTree(linked_cols).tree
+            self.output["linked_columns"].extend([(0, self.user_linked_cols)])
 
-            self.output["linked_columns"] = linked_tree
+            save_predefined_linked_cols_to_db(
+                df=self.df[self.user_linked_cols],
+                id=self.id
+                )
+
+        if h_linked_cols:
+
+            linked_tree = LinkedColumnsTree(h_linked_cols).tree
+
+            self.output["linked_columns"].extend(linked_tree)
 
             # Add linked column values to the temp tables in anon.db
             # we drop the NAs from the data at this point because

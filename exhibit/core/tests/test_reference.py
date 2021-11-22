@@ -39,6 +39,113 @@ def replace_nested_dict_values(d1, d2):
             else:
                 d1[key2] = d2[key2]
 
+def temp_exhibit(
+    filename="inpatients.csv",
+    fromdata_namespace=None,
+    fromspec_namespace=None,
+    test_spec_dict=None,
+    return_df=True
+    ):
+    '''
+    A helper method to generate and read custom specifications 
+
+    Parameters
+    ----------
+    filename : str
+        the .csv to use as the base for spec / df generation
+    fromdata_namespace : dict
+        dictionary with testing values for creating a spec
+    fromspec_namespace : dict
+        dictionary with testing values for running generation command
+    test_spec_dict : dict
+        dictionary with testing values for user spec
+    return_df : boolean
+        sometimes you only want to generate a spec; if return_df is False
+        then the second element in the return tuple is None
+
+    Returns
+    -------
+    A named tuples with spec dict and the generated dataframe     
+    '''
+
+    returnTuple = namedtuple("TestRun", ["temp_spec", "temp_df"])
+    temp_spec = None
+    temp_df = None
+
+    temp_name = "_.yml"
+
+    with tempfile.TemporaryDirectory() as td:
+
+        f_name = join(td, temp_name)
+
+        default_data_path = Path(package_dir("sample", "_data", filename))
+
+        fromdata_defaults = {
+            "command"           : "fromdata",
+            "source"            : default_data_path,
+            "inline_limit"      : 30,
+            "verbose"           : True,
+            "output"            : f_name,
+            "skip_columns"      : [],
+            "equal_weights"     : False,
+            "linked_columns"    : None
+        }
+
+        fromspec_defaults = {
+            "command"           : "fromspec",
+            "source"            : Path(f_name),
+            "verbose"           : True,
+        }
+        
+        #Update namespaces
+        if fromdata_namespace:
+            fromdata_defaults.update(fromdata_namespace)
+        if fromspec_namespace:
+            fromspec_defaults.update(fromspec_namespace)
+
+        #Create and write a specification
+        with patch("argparse.ArgumentParser.parse_args") as mock_args:
+            mock_args.return_value = argparse.Namespace(
+                command=fromdata_defaults["command"],
+                source=fromdata_defaults["source"],
+                inline_limit=fromdata_defaults["inline_limit"],
+                verbose=fromdata_defaults["verbose"],
+                output=fromdata_defaults["output"],
+                skip_columns=fromdata_defaults["skip_columns"],
+                equal_weights=fromdata_defaults["equal_weights"],
+                linked_columns=fromdata_defaults["linked_columns"]
+
+            )
+            
+            xA = tm.newExhibit()
+            xA.read_data()
+            xA.generate_spec()
+            xA.write_spec()
+
+            temp_spec=xA.spec_dict
+
+        #Generate and return a dataframe
+        if return_df:
+            with patch("argparse.ArgumentParser.parse_args") as mock_args:
+                mock_args.return_value = argparse.Namespace(
+                    command=fromspec_defaults["command"],
+                    source=fromspec_defaults["source"],
+                    verbose=fromspec_defaults["verbose"],
+                )
+
+                xA = tm.newExhibit()
+                xA.read_spec()
+                
+                if test_spec_dict:
+                    replace_nested_dict_values(xA.spec_dict, test_spec_dict)
+
+                if xA.validate_spec():
+                    xA.execute_spec()
+                
+                temp_df = xA.anon_df
+
+    return returnTuple(temp_spec, temp_df)
+
 class referenceTests(unittest.TestCase):
     '''
     Main test suite; command line arguments are mocked
@@ -62,100 +169,6 @@ class referenceTests(unittest.TestCase):
 
         db_util.drop_tables(cls._temp_tables)
 
-    @staticmethod
-    def temp_exhibit(
-        filename="inpatients.csv",
-        fromdata_namespace=None,
-        fromspec_namespace=None,
-        test_spec_dict=None
-        ):
-        '''
-        A helper method to generate and read custom specifications 
-
-        Parameters
-        ----------
-        filename : str
-            the .csv to use as the base for spec / df generation
-        fromdata_namespace : dict
-            dictionary with testing values for creating a spec
-        fromspec_namespace : dict
-            dictionary with testing values for running generation command
-        test_spec_dict : dict
-            dictionary with testing values for user spec
-
-        Returns
-        -------
-        A named tuples with spec dict and the generated dataframe     
-        '''
-
-        returnTuple = namedtuple("TestRun", ["temp_spec", "temp_df"])
-
-        temp_name = "_.yml"
-
-        with tempfile.TemporaryDirectory() as td:
-
-            f_name = join(td, temp_name)
-
-            default_data_path = Path(package_dir("sample", "_data", filename))
-
-            fromdata_defaults = {
-                "command"           : "fromdata",
-                "source"            : default_data_path,
-                "inline_limit": 30,
-                "verbose"           : True,
-                "output"            : f_name,
-                "skip_columns"      : [],
-                "equal_weights"     : False
-            }
-
-            fromspec_defaults = {
-                "command"           : "fromspec",
-                "source"            : Path(f_name),
-                "verbose"           : True,
-            }
-            
-            #Update namespaces
-            if fromdata_namespace:
-                fromdata_defaults.update(fromdata_namespace)
-            if fromspec_namespace:
-                fromspec_defaults.update(fromspec_namespace)
-
-            #Create and write a specification
-            with patch("argparse.ArgumentParser.parse_args") as mock_args:
-                mock_args.return_value = argparse.Namespace(
-                    command=fromdata_defaults["command"],
-                    source=fromdata_defaults["source"],
-                    inline_limit=fromdata_defaults["inline_limit"],
-                    verbose=fromdata_defaults["verbose"],
-                    output=fromdata_defaults["output"],
-                    skip_columns=fromdata_defaults["skip_columns"],
-                    equal_weights=fromdata_defaults["equal_weights"]
-
-                )
-                
-                xA = tm.newExhibit()
-                xA.read_data()
-                xA.generate_spec()
-                xA.write_spec()
-
-            #Generate and return a dataframe
-            with patch("argparse.ArgumentParser.parse_args") as mock_args:
-                mock_args.return_value = argparse.Namespace(
-                    command=fromspec_defaults["command"],
-                    source=fromspec_defaults["source"],
-                    verbose=fromspec_defaults["verbose"],
-                )
-
-                xA = tm.newExhibit()
-                xA.read_spec()
-                
-                if test_spec_dict:
-                    replace_nested_dict_values(xA.spec_dict, test_spec_dict)
-
-                if xA.validate_spec():
-                    xA.execute_spec()
-
-        return returnTuple(xA.spec_dict, xA.anon_df)
 
     def test_reference_inpatients_spec(self):
         '''
@@ -222,7 +235,7 @@ class referenceTests(unittest.TestCase):
             "linked_columns":[]
         }
 
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             filename="prescribing.csv",
             test_spec_dict=test_dict
         )
@@ -267,7 +280,7 @@ class referenceTests(unittest.TestCase):
             }
         }
 
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             filename="prescribing.csv",
             test_spec_dict=test_dict
         )
@@ -385,7 +398,7 @@ class referenceTests(unittest.TestCase):
             "columns" : {"sex": {"cross_join_all_unique_values" : True}}
         }
 
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -450,7 +463,7 @@ class referenceTests(unittest.TestCase):
                 }
             }
 
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -535,7 +548,7 @@ class referenceTests(unittest.TestCase):
             }
         }
                  
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -609,7 +622,7 @@ class referenceTests(unittest.TestCase):
                 },
         }
                  
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict
             )
@@ -670,7 +683,7 @@ class referenceTests(unittest.TestCase):
             }
         }
 
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict,
             )
@@ -722,7 +735,7 @@ class referenceTests(unittest.TestCase):
             }
         }
 
-        temp_spec, temp_df = self.temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             fromdata_namespace=fromdata_namespace,
             test_spec_dict=test_spec_dict,
             )

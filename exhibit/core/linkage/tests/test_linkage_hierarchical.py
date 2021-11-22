@@ -1,7 +1,5 @@
 '''
-Unit and reference tests for helper functions
-Remember to add the location of the package to PYTHONPATH
-environment variable so that imports work correctly
+Unit and reference tests for hierarchical linkage
 '''
 
 # Standard library imports
@@ -19,7 +17,7 @@ from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 from exhibit.db import db_util
 
 # Module under test
-from exhibit.core import linkage as tm
+from exhibit.core.linkage import hierarchical as tm
 
 class linkageTests(unittest.TestCase):
     '''
@@ -97,6 +95,81 @@ class linkageTests(unittest.TestCase):
             [("C1", "C2")]
         )
 
+    def test_hierarchically_linked_columns_excl_user_linked(self):
+        '''
+        Doc string
+        '''
+
+        test_df = pd.DataFrame(
+            data=np.array([
+                [
+                "All Specialties",
+                "Medical",
+                "Medical", 
+                "Medical",
+                "Surgery",
+                "Surgery",
+                "Surgery",
+                "All Specialties"],
+                [
+                "All Specialties",
+                "General Medicine",
+                "Cardiology",
+                "Rheumatology",
+                "General Surgery",
+                "Anaesthetics",
+                "Cardiothoracic Surgery",
+                "All Specialties"
+                ],
+                [
+                "All",
+                "2",
+                "3",
+                "9",
+                "10",
+                "11",
+                "12",
+                "All"
+                ],
+                ["A", "A", "A", "B", "B", "B", "B", "B"],
+                ["C", "C", "C", "D", "D", "D", "D", "D",]]).T,
+            columns=[
+                "C1", "C2", "C3", "C4", "C5"]
+        )
+
+        test_spec = {
+            "metadata":{
+                "categorical_columns":["C1", "C2", "C3", "C4", "C5"]
+            },
+            "columns":
+            {
+                "C1": {
+                    "original_values":"Dataframe"
+                },
+                "C2": {
+                    "original_values":"Dataframe"
+                },
+                "C3": {
+                    "original_values":ORIGINAL_VALUES_PAIRED
+                },
+                "C4": {
+                    "original_values":"Dataframe"
+                },
+                "C5": {
+                    "original_values":"Dataframe"
+                }
+                
+            }
+        }
+
+        user_linked_cols = ["C1", "C3"]
+
+        self.assertListEqual(
+            tm.find_hierarchically_linked_columns(
+                test_df, test_spec, user_linked_cols=user_linked_cols),
+            []
+        )
+
     def test_1_to_1_linked_columns(self):
         '''
         Doc string
@@ -150,7 +223,9 @@ class linkageTests(unittest.TestCase):
         Doc string
         '''
         
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -221,7 +296,9 @@ class linkageTests(unittest.TestCase):
         })
 
         #we're bypassing __init__ and going straight to testing scenario code
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -272,7 +349,9 @@ class linkageTests(unittest.TestCase):
         })
 
         #we're bypassing __init__ and going straight to testing scenario code
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -358,7 +437,9 @@ class linkageTests(unittest.TestCase):
         })
 
         #we're bypassing __init__ and going straight to testing scenario code
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -425,7 +506,9 @@ class linkageTests(unittest.TestCase):
                         }))
 
         #we're bypassing __init__ and going straight to testing scenario code
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -495,7 +578,9 @@ class linkageTests(unittest.TestCase):
         })
 
         #we're bypassing __init__ and going straight to testing scenario code
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -554,7 +639,9 @@ class linkageTests(unittest.TestCase):
         })
 
         #we're bypassing __init__ and going straight to testing scenario code
-        with patch("exhibit.core.linkage._LinkedDataGenerator.__init__") as mock_init:
+        with patch(
+            "exhibit.core.linkage.hierarchical._LinkedDataGenerator.__init__"
+            ) as mock_init:
             mock_init.return_value = None
             test_LDG = tm._LinkedDataGenerator(Mock, Mock, Mock)
 
@@ -615,9 +702,9 @@ class linkageTests(unittest.TestCase):
         ]
 
         expected = [
-            (0, ["A", "B", "C", "D"]),
-            (1, ["E", "F", "G", "H"]),
-            (2, ["I", "J"])
+            (1, ["A", "B", "C", "D"]),
+            (2, ["E", "F", "G", "H"]),
+            (3, ["I", "J"])
         ]
 
         test_tree = tm.LinkedColumnsTree(test_connections)

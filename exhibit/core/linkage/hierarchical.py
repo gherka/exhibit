@@ -1,5 +1,8 @@
 '''
-Module isolating methods and classes to find, process and generate linked columns
+Module isolating methods and classes to find, process and generate
+hierarchically (one to many) linked columns. For user-defined linked
+columns where the relationships are coded in a lookup + matrix see
+the matrix module.
 '''
 
 # Standard library imports
@@ -12,9 +15,9 @@ import pandas as pd
 import numpy as np
 
 # Exhibit import
-from .utils import exceeds_inline_limit
-from .sql import query_anon_database
-from .constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
+from ..utils import exceeds_inline_limit
+from ..sql import query_anon_database
+from ..constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 
 # EXPORTABLE METHODS & CLASSES
 # ============================
@@ -36,9 +39,12 @@ class LinkedColumnsTree:
         as a list of tuples of the form:
         (linked columns group number,
         list of grouped columns)
+
+        chain counter starts from 1 because zero is reserved for user-defined
+        linked columns; there is only ever going to be one group of them.
         '''
 
-        self.chain_counter = 0
+        self.chain_counter = 1
         self.chains = self.process_nodes(connections)
         self.tree = list((i, l) for i, l in self.chains.items())
      
@@ -51,7 +57,7 @@ class LinkedColumnsTree:
 
         #initialise empty chains dictionary
         if chains is None:
-            chains = {0:[]}
+            chains = {1: []}
 
         #stop condition for recursion
         if not connections:
@@ -242,7 +248,7 @@ def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_
 
     return linked_df
 
-def find_hierarchically_linked_columns(df, spec):
+def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
     '''
     Given a dataframe df, return a list
     of tuples with column names where values in 
@@ -253,7 +259,7 @@ def find_hierarchically_linked_columns(df, spec):
     linked = []
     
     #single value and paired columns are ignored
-    cols = []
+    cols = set()
 
     for col in spec["metadata"]["categorical_columns"]:
         cond = (
@@ -262,7 +268,11 @@ def find_hierarchically_linked_columns(df, spec):
         )
 
         if cond:
-            cols.append(col)
+            cols.add(col)
+
+    # user defined linked columns take precedence over hierarchical
+    if user_linked_cols is not None:
+        cols = cols.difference(user_linked_cols)
 
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):
@@ -290,7 +300,7 @@ def find_hierarchically_linked_columns(df, spec):
 
     return linked
 
-def find_pair_linked_columns(df):
+def find_pair_linked_columns(df, ignore_cols=None):
     '''
     Given a dataframe df, return a list
     of tuples with column names where each value in 
@@ -308,9 +318,13 @@ def find_pair_linked_columns(df):
     '''
 
     linked = []
+    all_cols = set(df.columns)
+
+    if ignore_cols:
+        all_cols = all_cols - set(ignore_cols)
     
     #single value & numeric columns are ignored
-    cols = [col for col in df.columns if
+    cols = [col for col in all_cols if
     df[col].nunique() > 1 and col not in df.select_dtypes(include=np.number)
     ]
     

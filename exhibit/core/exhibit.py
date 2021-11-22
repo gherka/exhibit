@@ -122,8 +122,23 @@ class newExhibit:
             action="store_true",
             help="use equal weights and probabilities for all printed column values",
             )
+
+        parser.add_argument(
+            "--linked_columns", "-lc",
+            default=None,
+            nargs="*",
+            help="list of linked columns",
+            )
  
         self._args = parser.parse_args(sys.argv[1:])
+
+        # Error checking on args
+        if (
+            vars(self._args).get("linked_columns") is not None and
+            len(self._args.linked_columns) < 2
+            ):
+            parser.error("Please provide at least two linked columns")
+
         self.spec_dict = None
         self.df = None
         self.anon_df = None
@@ -157,7 +172,8 @@ class newExhibit:
             new_spec = newSpec(
                 data=self.df,
                 inline_limit=self._args.inline_limit,
-                ew=self._args.equal_weights
+                ew=self._args.equal_weights,
+                user_linked_cols=vars(self._args).get("linked_columns", None)
                 )
 
             self.spec_dict = new_spec.output_spec_dict()

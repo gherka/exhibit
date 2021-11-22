@@ -15,6 +15,10 @@ import numpy as np
 from exhibit.core.constants import MISSING_DATA_STR
 from exhibit.core.utils import package_dir
 
+# SQLite struggles with type conversion to int
+sqlite3.register_adapter(np.int64, int)
+sqlite3.register_adapter(np.int32, int)
+
 def query_anon_database(
     table_name, column=None, size=None,
     order="rowid", db_uri=None, exclude_missing=False):
@@ -84,7 +88,9 @@ def query_anon_database(
 
     return output
 
-def create_temp_table(table_name, col_names, data, db_uri=None, return_table=False):
+def create_temp_table(
+    table_name, col_names, data, strip_whitespace=True, db_uri=None, return_table=False
+    ):
     '''
     Create a lookup table in the anon.db SQLite3 database
 
@@ -96,6 +102,8 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
         column names also can't contain spaces
     data: list of tuples
         each tuple containting row's worth of data
+    strip_whitespace : bool
+        if the table is for user defined linked column, don't try to strip whitespace
     db_uri : str
         optional. During testing can pass an in-memory uri
     return_table : bool
@@ -125,7 +133,8 @@ def create_temp_table(table_name, col_names, data, db_uri=None, return_table=Fal
 
     #make sure data is stripped from extra whitespace to match the spec
     #as an extra precaution we're dropping any rows with np.NaN values in them
-    data = [tuple(y.strip() for y in x) for x in data if np.NaN not in x]
+    if strip_whitespace:
+        data = [tuple(y.strip() for y in x) for x in data if np.NaN not in x]
 
     if len(col_names) == 1:
         col_list = col_names[0]
