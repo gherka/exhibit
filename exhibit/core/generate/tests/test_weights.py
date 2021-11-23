@@ -177,7 +177,7 @@ class weightsTests(unittest.TestCase):
         ]
 
         create_temp_table(
-            table_name="temp_test_id_weights_0",
+            table_name="temp_test_id_weights_1",
             col_names=["LinkCat1", "LinkCat2"], data=data)
 
         self._temp_tables.append("temp_test_id_weights_0")
@@ -210,7 +210,7 @@ class weightsTests(unittest.TestCase):
                     "type": "continuous",
                 }
             },
-            "linked_columns": [(0, ["LinkCat1", "LinkCat2"])]
+            "linked_columns": [(1, ["LinkCat1", "LinkCat2"])]
         }
 
         test_cols = ["LinkCat1", "LinkCat2"]

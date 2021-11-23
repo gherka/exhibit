@@ -6,6 +6,7 @@ lookup + matrix. For hierarchical linkage see the hierarchical module,
 
 # Standard library imports
 import sys
+import textwrap
 from functools import partial
 from multiprocessing import Pool
 
@@ -14,6 +15,7 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
+from ..constants import MISSING_DATA_STR
 from ..sql import create_temp_table, query_anon_database
 
 def save_predefined_linked_cols_to_db(df, id):
@@ -42,14 +44,29 @@ def save_predefined_linked_cols_to_db(df, id):
 
     for col in prefixed_df.columns:
 
+        col_vals = sorted(prefixed_df[col].unique())
+
+        # add Missing data by hand if not already there OR
+        # pop and reinsert at the end to align with the spec!
+        # make sure the values are sorted AFTER we remove the existing
+        # Missing data, but BEFORE we reinsert it.
+        col_miss_val = f"{col}{sep}{MISSING_DATA_STR}"
+
+        # don't forget that we need to test equality element-wise, hence conversion
+        # to an array from; lists don't compare in the same way.
+        if col_miss_val in col_vals:
+            col_vals = sorted(np.delete(col_vals, np.array(col_vals) == col_miss_val))
+
+        col_vals = np.append(col_vals, col_miss_val)
+
         pos_labels_temp = [
-            f"{col}{sep}{x}" for x in range(len(prefixed_df[col].unique()))
+            f"{col}{sep}{x}" for x in range(len(col_vals))
             ]
 
         pos_labels_inc_column.extend(pos_labels_temp)
 
         orig_label_to_pos_label.update(
-            {k:v for v, k in zip(pos_labels_temp, sorted(prefixed_df[col].unique()))}
+            {k:v for v, k in zip(pos_labels_temp, col_vals)}
         )
 
     # age__0 : 0, etc.
@@ -99,7 +116,7 @@ def add_prefix(df, sep="__"):
     data_dict = {}
     
     for col in df.columns:
-        data_dict[col] = np.add(f"{col}{sep}", df[col].fillna("Missing data").values)
+        data_dict[col] = np.add(f"{col}{sep}", df[col].fillna(MISSING_DATA_STR).values)
         
     return pd.DataFrame(data_dict)
 
@@ -112,6 +129,7 @@ def generate_user_linked_anon_df(spec_dict, linked_group, num_rows):
     table_id = spec_dict["metadata"]["id"]
     rng = spec_dict["_rng"]
     lookup, matrix = get_lookup_and_matrix_from_db(table_id)
+    new_label_lookup, proba_lookup = build_new_lookups(spec_dict, linked_cols, lookup)
 
     # initialise the first column - investigate picking a specific column
     # rather than the first in the list - maybe by the number of u. values.
@@ -126,23 +144,21 @@ def generate_user_linked_anon_df(spec_dict, linked_group, num_rows):
         with Pool(processes=4) as pool:
 
             new_rows = pool.map(
-                partial(process_row, matrix, rng), init_col_vals
+                partial(process_row, matrix, proba_lookup, rng), init_col_vals
                 )
-    else:
+    else: #pragma: no cover
 
         new_rows = []
 
         for i in range(num_rows):
-            new_row = process_row(matrix, rng, init_col_vals[i])
+            new_row = process_row(matrix, proba_lookup, rng, init_col_vals[i])
             new_rows.append(new_row)
 
     new_matrix = np.stack(new_rows)
 
-    new_lookup = build_new_lookup(spec_dict, linked_cols, lookup)
-
     new_df = (
         pd.DataFrame(new_matrix, columns=linked_cols)
-            .replace(new_lookup)
+            .replace(new_label_lookup)
         )
 
     return new_df
@@ -158,7 +174,7 @@ def get_lookup_and_matrix_from_db(table_id):
 
     return lookup, matrix
 
-def process_row(label_matrix, rng, accumulated_array):
+def process_row(label_matrix, proba_lookup, rng, accumulated_array):
     '''
     Recursive function to generate new rows of data from the 
     existing linked matrix.
@@ -172,16 +188,25 @@ def process_row(label_matrix, rng, accumulated_array):
     mask = np.all(label_matrix[:, 0:arr_len] == accumulated_array, axis=1)
 
     valid_targets = np.unique(label_matrix[mask, arr_len])
+    target_proba = np.array([proba_lookup[x] for x in valid_targets])
+    # make sure the probabilities sum up to 1
+    target_proba = target_proba * (1 / sum(target_proba))
 
-    new_array = np.append(accumulated_array, rng.choice(valid_targets))
+    new_array = np.append(
+        accumulated_array,
+        rng.choice(a=valid_targets, p=target_proba, size=1)
+    )
     
-    return process_row(label_matrix, rng, new_array)
+    return process_row(label_matrix, proba_lookup, rng, new_array)
 
-def build_new_lookup(spec_dict, linked_cols, original_lookup):
+def build_new_lookups(spec_dict, linked_cols, original_lookup):
     '''
-    Build a lookup from the numerical id to its aliased value. Be mindful of all
-    the intermediate steps. The final lookup looks like this:
-        {0: 'hb_code__S08000015', ...}
+    Build two lookups: 
+        - from the numerical id to its aliased value. {0: 'hb_code__S08000015', ...}
+        - from the numerical id to the probability value {0: 0.5}
+         
+    Be mindful of all the intermediate steps. The intermediate lookup is created
+    with the numerical ID to a tuple and then split into two.
 
     original_lookup is a positional to numerical_id, like so:
         {'hb_code__0': 0} which is to say that the zero-th value in the list of
@@ -192,26 +217,46 @@ def build_new_lookup(spec_dict, linked_cols, original_lookup):
     '''
 
     pos_labels_inc_column = []   # age__0, age__1, etc.
-    pos_label_to_orig_label = {} # age__0: age__0-9, etc.
+    pos_label_to_orig_tuple = {} # age__0: (age__0-9, 0.5), etc.
 
     for col in linked_cols:
         
         orig_vals = spec_dict["columns"][col]["original_values"]
+        prob_vector = None
+
+        if not isinstance(orig_vals, pd.DataFrame):
+
+            table_id = spec_dict["metadata"]["id"]
+            orig_vals = query_anon_database(table_name=f"temp_{table_id}_{col}")
+            prob_vector = [1 / orig_vals.shape[0]] * orig_vals.shape[0]
+
+        if not prob_vector:
+            prob_vector = orig_vals["probability_vector"].values
         
-        if isinstance(orig_vals, pd.DataFrame):
-
-            pos_labels_temp = [f"{col}__{x}" for x in range(len(orig_vals[col].unique()))]
-            pos_labels_inc_column.extend(pos_labels_temp)
-            pos_label_to_orig_label.update(
-                dict(zip(pos_labels_temp, sorted(orig_vals[col].unique())))
-            )
-
-        #TODO if original values are in DB
+        pos_labels_temp = [f"{col}__{x}" for x in range(len(orig_vals[col].values))]
+        pos_labels_inc_column.extend(pos_labels_temp)
+        pos_label_to_orig_tuple.update(
+            dict(zip(
+                pos_labels_temp, tuple(zip(orig_vals[col].values, prob_vector))
+            ))
+        )
 
     # 0: age__0, etc. using the ORIGINAL lookup which has all the relationships
     id_to_pos_label = {v:k for k, v in original_lookup.items()}
 
-    # 0: 'hb_code__aliased_code'
-    rev_labels = {k: pos_label_to_orig_label[v] for k, v in id_to_pos_label.items()}
+    # if we don't check for the user removed values here, the next line
+    # will error out with an obscure Key not found message. 
+    if len(original_lookup) != len(pos_label_to_orig_tuple):
+        raise ValueError(textwrap.dedent("""
+        The number of values in user linked columns doesn't match original data.
+        If you would like to remove values, set their probability to zero.
+        """))
 
-    return rev_labels
+    # 0: 'hb_code__aliased_code'
+    rev_labels = {k: pos_label_to_orig_tuple[v] for k, v in id_to_pos_label.items()}
+
+    # finally, split the tuple dictionary into two separate ones:
+    label_lookup = {k:v[0] for k, v in rev_labels.items()}
+    proba_lookup = {k:v[1] for k, v in rev_labels.items()}
+
+    return label_lookup, proba_lookup

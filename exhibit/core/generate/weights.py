@@ -248,6 +248,10 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
         for linked_group in linked_groups:
 
+            # skip the zero-th linked group reserved for user defined linkage
+            if linked_group[0] == 0:
+                continue
+
             if cat_col in linked_group[1]:
 
                 table_name = f"temp_{table_id}_{linked_group[0]}"

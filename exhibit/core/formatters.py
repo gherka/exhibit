@@ -282,6 +282,8 @@ def parse_original_values(original_values):
         columns=[x.strip() for x in original_values[0].split("|")],
     )
 
+    df.loc[:, "probability_vector"] = df["probability_vector"].astype(float)
+
     # We exclude Missing data from the vector rescaling because it"s handled separately
     col_prob = np.array(df["probability_vector"][:-1]).astype(float)
     col_name = df.columns[0]

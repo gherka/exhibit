@@ -44,7 +44,8 @@ def temp_exhibit(
     fromdata_namespace=None,
     fromspec_namespace=None,
     test_spec_dict=None,
-    return_df=True
+    return_spec=True,
+    return_df=True,
     ):
     '''
     A helper method to generate and read custom specifications 
@@ -102,27 +103,28 @@ def temp_exhibit(
             fromdata_defaults.update(fromdata_namespace)
         if fromspec_namespace:
             fromspec_defaults.update(fromspec_namespace)
+        
+        if return_spec:
+            #Create and write a specification
+            with patch("argparse.ArgumentParser.parse_args") as mock_args:
+                mock_args.return_value = argparse.Namespace(
+                    command=fromdata_defaults["command"],
+                    source=fromdata_defaults["source"],
+                    inline_limit=fromdata_defaults["inline_limit"],
+                    verbose=fromdata_defaults["verbose"],
+                    output=fromdata_defaults["output"],
+                    skip_columns=fromdata_defaults["skip_columns"],
+                    equal_weights=fromdata_defaults["equal_weights"],
+                    linked_columns=fromdata_defaults["linked_columns"]
 
-        #Create and write a specification
-        with patch("argparse.ArgumentParser.parse_args") as mock_args:
-            mock_args.return_value = argparse.Namespace(
-                command=fromdata_defaults["command"],
-                source=fromdata_defaults["source"],
-                inline_limit=fromdata_defaults["inline_limit"],
-                verbose=fromdata_defaults["verbose"],
-                output=fromdata_defaults["output"],
-                skip_columns=fromdata_defaults["skip_columns"],
-                equal_weights=fromdata_defaults["equal_weights"],
-                linked_columns=fromdata_defaults["linked_columns"]
+                )
+                
+                xA = tm.newExhibit()
+                xA.read_data()
+                xA.generate_spec()
+                xA.write_spec()
 
-            )
-            
-            xA = tm.newExhibit()
-            xA.read_data()
-            xA.generate_spec()
-            xA.write_spec()
-
-            temp_spec=xA.spec_dict
+                temp_spec=xA.spec_dict
 
         #Generate and return a dataframe
         if return_df:
