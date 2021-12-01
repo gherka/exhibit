@@ -38,7 +38,7 @@ def generate_YAML_string(spec_dict):
     #
     # This specification describes the dataset in great detail.
     # In order to vary the degree to which it is anonymised,
-    # please review each section and make necessary adjustments
+    # please review each section and make necessary adjustments.
     # ----------------------------------------------------------
     """)
 
@@ -49,8 +49,8 @@ def generate_YAML_string(spec_dict):
     # COLUMN DETAILS
     # ==============
     #
-    # Dataset columns can be one of the three types: 
-    # Categorical | Continuous | Timeseries
+    # Dataset columns are categorised into one of the three types: 
+    # Categorical | Continuous | Date
     #
     # Column type determines what parameters are included in the
     # specification. When making changes to the values, please
@@ -68,6 +68,12 @@ def generate_YAML_string(spec_dict):
     # The tool comes with a number of sample anonymising sets
     # (see documentation). To use just one column from a set,
     # add a dot separator like so mountains.range
+    #
+    # Depending on the number of unique values in a column,
+    # its original values can either be listed in the spec,
+    # put in the anon.db database or, if the values follow a
+    # one to one relationship with another column, be listed
+    # as part of that column's section.
     # ----------------------------------------------------------
     """)
 
@@ -81,7 +87,7 @@ def generate_YAML_string(spec_dict):
     # columns with discrete data, covert them to categorical or make
     # sure that the precision parameter is set to integer.
     # 
-    # For Continuous columns you have two options:
+    # To generate Continuous columns you have two distribution options:
     #
     # - weighted_uniform
     # - normal
@@ -122,14 +128,14 @@ def generate_YAML_string(spec_dict):
     # Exhibit will try to determine date columns automatically, but
     # you can also add them manually, providing the following paramters:
     #   type: date
-    #   cross_join_all_unique_values: true
-    #   miss_probability: 0.0
-    #   from: '2018-03-31'
+    #   cross_join_all_unique_values: true | false
+    #   miss_probability: between 0 and 1
+    #   from: 'yyyy-mm-dd'
     #   uniques: 4
     #   frequency: QS
     # 
     # Frequency is based on the frequency strings of DateOffsets.
-    # See Pandas documention for more details.
+    # See Pandas documention for more details. Times are not supported.
     # ----------------------------------------------------------
     """)
 
@@ -152,7 +158,7 @@ def generate_YAML_string(spec_dict):
     # - conditional
     # 
     # Boolean constraints take the form of a simple statement of the
-    # form dependent_column operator expression / indepedent_column.
+    # form [dependent_column] [operator] [expression / indepedent_column].
     # The tool will try to guess these relationships when creating a
     # spec. You can also force a column to be always smaller / larger
     # than a scalar value. Note that adding a boolean contraint between
@@ -160,10 +166,10 @@ def generate_YAML_string(spec_dict):
     # target sum as these are designed to work with a single column.
     #
     # Conditional constraints are more flexible and can target specific
-    # columns with different actions. For now, only "make_nan" and
-    # "no_nan" are supported. This is for cases where generating a value
-    # in one column, like Readmissions Within 28 days necessitates
-    # a valid value in Readmissions Within 7 days.
+    # subsets of values with different actions. There are three options:
+    # "make_nan", "no_nan" and "add_outliers". Adding or banning nulls is
+    # useful when a value in one column, like Readmissions Within 28 days,
+    # necessitates a valid value in another, like Readmissions Within 7 days.
     #
     # If a column name has spaces, make sure to surround it with
     # the tilde character ~. When comapring a date column against a
@@ -179,15 +185,21 @@ def generate_YAML_string(spec_dict):
     # LINKED COLUMNS
     # ===============
     #
-    # Groups of columns where values follow a one-to-many relationship
-    # (many hospitals sharing a single health board) are captured in
-    # this part of the specification. Linked column groups are created
-    # at spec generation and are saved in the anon.db SQLite database.
+    # There are two types of linked groups - those manually defined using
+    # the --linked_columns (or -lc) command line parameter and automatically
+    # detected groups where columns follow a hierarchical (one to many)
+    # relationship. User defined linked columns are always put under the
+    # zero indexed group.
+    #
+    # Groups of hierarchically linked columns are listed together under the 
+    # index starting from 1. Their details are saved in the bundled anon.db
+    # SQLite database. 
+    #
     # The specification format is as follows:
-    # - - 0
+    # - - 1
     #   - - Parent column
     #   - - Child column
-    # - - 1
+    # - - 2
     #   - - ...etc.
     # It's possible to add a linked columns group manually by adding 
     # a table to anon.db with the hierarchicaly relationships. The name
