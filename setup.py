@@ -9,22 +9,5 @@ Dependency versions are pinned to Anaconda Windows defaults:
 https://docs.anaconda.com/anaconda/packages/py3.8_win-64/
 '''
 
-
-from setuptools import setup, find_packages
-
-setup(name="exhibit",
-      version="0.1",
-      description="Command line tool for generating demonstrator data",
-      author="German Priks",
-      python_requires=">=3.8",
-      install_requires=[
-        "pandas",
-        "numpy",
-        "PyYAML"
-      ],
-      packages=find_packages(),
-      entry_points={
-        "console_scripts": [
-            "exhibit = exhibit.command.bootstrap:main"
-        ]}
-     )
+from setuptools import setup
+setup()

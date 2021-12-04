@@ -1,0 +1,3 @@
+recursive-include exhibit/sample *.csv *.yml
+recursive-include exhibit/db *.py *.db
+recursive-include exhibit/core/tests/_reference_data *
