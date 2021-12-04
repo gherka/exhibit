@@ -4,16 +4,14 @@
 #
 # This specification describes the dataset in great detail.
 # In order to vary the degree to which it is anonymised,
-# please review each section and make necessary adjustments
+# please review each section and make necessary adjustments.
 # ----------------------------------------------------------
 metadata:
-  number_of_rows: 10225
+  number_of_rows: 2000
   categorical_columns:
   - age
   - hb_code
   - hb_name
-  - loc_code
-  - loc_name
   - measure
   - sex
   numerical_columns:
@@ -22,15 +20,15 @@ metadata:
   - stays
   date_columns:
   - quarter_date
-  inline_limit: 30
+  inline_limit: 150
   random_seed: 0
-  id: 16a82
+  id: demo
 # ----------------------------------------------------------
 # COLUMN DETAILS
 # ==============
 #
-# Dataset columns can be one of the three types: 
-# Categorical | Continuous | Timeseries
+# Dataset columns are categorised into one of the three types: 
+# Categorical | Continuous | Date
 #
 # Column type determines what parameters are included in the
 # specification. When making changes to the values, please
@@ -48,6 +46,18 @@ metadata:
 # The tool comes with a number of sample anonymising sets
 # (see documentation). To use just one column from a set,
 # add a dot separator like so mountains.range
+# 
+# You can also use a subset of regular expression patterns 
+# to generate aliasing values in non-linked columns. For example,
+# if your confidential data had Consultant GMC numbers, you can
+# anonymise them using a regex pattern GMC[0-9]{5}[XY] which
+# will generate values like GMC00000X.
+#
+# Depending on the number of unique values in a column,
+# its original values can either be listed in the spec,
+# put in the anon.db database or, if the values follow a
+# one to one relationship with another column, be listed
+# as part of that column's section.
 # ----------------------------------------------------------
 columns:
   age:
@@ -83,7 +93,7 @@ columns:
     type: categorical
     paired_columns:
     - hb_code
-    uniques: 14
+    uniques: 13
     original_values:
     - hb_name                     | paired_hb_code | probability_vector | avlos | los   | stays
     - NHS Ayrshire & Arran        | S08000015      | 0.071              | 0.069 | 0.053 | 0.051
@@ -99,26 +109,7 @@ columns:
     - NHS Orkney                  | S08000025      | 0.041              | 0.033 | 0.002 | 0.003
     - NHS Shetland                | S08000026      | 0.042              | 0.031 | 0.002 | 0.003
     - NHS Tayside                 | S08000030      | 0.083              | 0.075 | 0.052 | 0.039
-    - Scotland                    | scot           | 0.023              | 0.028 | 0.339 | 0.346
     - Missing data                | Missing data   | 0.000              | 0.000 | 0.000 | 0.000
-    cross_join_all_unique_values: false
-    miss_probability: 0.0
-    anonymising_set: random
-  loc_code:
-    type: categorical
-    paired_columns:
-    - loc_name
-    uniques: 48
-    original_values: See paired column
-    cross_join_all_unique_values: false
-    miss_probability: 0.0
-    anonymising_set: random
-  loc_name:
-    type: categorical
-    paired_columns:
-    - loc_code
-    uniques: 48
-    original_values: Number of unique values is above category threshold
     cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
@@ -141,61 +132,50 @@ columns:
     uniques: 2
     original_values:
     - sex          | probability_vector | avlos | los   | stays
-    - Female       | 0.500              | 0.514 | 0.533 | 0.514
-    - Male         | 0.500              | 0.486 | 0.467 | 0.486
+    - A            | 0.500              | 0.514 | 0.533 | 0.514
+    - B            | 0.500              | 0.486 | 0.467 | 0.486
     - Missing data | 0.000              | 0.000 | 0.000 | 0.000
     cross_join_all_unique_values: false
     miss_probability: 0.0
     anonymising_set: random
+# ----------------------------------------------------------
 # NUMERICAL COLUMNS
 # ----------
 # Currently, only continuous data is supported. To use numerical
 # columns with discrete data, covert them to categorical or make
 # sure that the precision parameter is set to integer.
 # 
-# For Continuous columns you have two options, each with
-# their own set of distinct parameters:
+# To generate Continuous columns you have two distribution options:
 #
 # - weighted_uniform
 # - normal
 #
-# The first option will generate the column by appling weights
-# to the uniform_base_value parameter and optionally perturb it
+# The first option will generate the column by applying weights
+# to a fixed value before scaling it and optionally perturb it
 # within the dispersion percentage. With dispersion set to zero,
 # you can generate identical values for any given combination of
 # categorical values on the row.
 # 
-# A normal distribution will respect categorical weights by shifting
-# the mean accordingly. You can vary the "spread" by adjusting the 
-# std parameter.
+# A normal distribution will respect categorical weights by
+# shifting the mean accordingly. If dispersion is greater than
+# zero, the value before scaling is perturbed within the 
+# dispersion percentage.
 # 
-# You can also set parameters for scaling the values in continous
-# columns. The options are target_sum or range. Note that if you
-# include certain constraints, the final scaling can be affected.
+# You can also control how values are scaled by setting the
+# distribution target parameters. You must include at least one of
+# target_min, target_max, target_sum, target_mean or target_std.
+#  
+# Note that if you include certain constraints, like ensuring values
+# in one column are always greater than values in another column,
+# the final scaling of the column being adjusted will be affected.
 # ----------------------------------------------------------
-  avlos:
-    type: continuous
-    precision: float
-    distribution: weighted_uniform
-    distribution_parameters:
-      dispersion: 0.1
-      target_sum: 28258.35
-      target_min: 0.0
-      target_max: 74.8
-      target_mean: 2.96
-      target_std: 4.1
-    miss_probability: 0.065
   los:
     type: continuous
     precision: integer
     distribution: weighted_uniform
     distribution_parameters:
       dispersion: 0.1
-      target_sum: 12441120.0
-      target_min: 0.0
-      target_max: 176849.0
-      target_mean: 1216.74
-      target_std: 6263.69
+      target_sum: 200_000
     miss_probability: 0.0
   stays:
     type: continuous
@@ -203,25 +183,22 @@ columns:
     distribution: weighted_uniform
     distribution_parameters:
       dispersion: 0.1
-      target_sum: 3034766.0
-      target_min: 0.0
-      target_max: 12888.0
-      target_mean: 296.8
-      target_std: 941.18
+      target_sum: 100_000
     miss_probability: 0.0
+# ----------------------------------------------------------
 # DATE COLUMNS
 # ----------
 # Exhibit will try to determine date columns automatically, but
-# you can also add them manually, providing the following paramters:
+# you can also add them manually, providing the following parameters:
 #   type: date
-#   cross_join_all_unique_values: true
-#   miss_probability: 0.0
-#   from: '2018-03-31'
+#   cross_join_all_unique_values: true | false
+#   miss_probability: between 0 and 1
+#   from: 'yyyy-mm-dd'
 #   uniques: 4
 #   frequency: QS
 # 
 # Frequency is based on the frequency strings of DateOffsets.
-# See Pandas documention for more details.
+# See Pandas documentation for more details. Times are not supported.
 # ----------------------------------------------------------
   quarter_date:
     type: date
@@ -235,32 +212,32 @@ columns:
 # ===========
 #
 # There are two types of constraints you can impose of the data:
-# - boolean (working title)
+# - boolean
 # - conditional
 # 
 # Boolean constraints take the form of a simple statement of the
-# form dependent_column operator expression / indepedent_column.
+# form [dependent_column] [operator] [expression / independent_column].
 # The tool will try to guess these relationships when creating a
 # spec. You can also force a column to be always smaller / larger
-# than a scalar value. Note that adding a boolean contraint between
+# than a scalar value. Note that adding a boolean constraint between
 # two columns will affect the distribution of weights and also the
 # target sum as these are designed to work with a single column.
 #
 # Conditional constraints are more flexible and can target specific
-# columns with different actions. For now, only "make_nan" and
-# "no_nan" are supported. This is for cases where generating a value
-# in one column, like Readmissions Within 28 days necessitates
-# a value in Readmissions Within 7 days.
+# subsets of values with different actions. There are three options:
+# "make_nan", "no_nan" and "add_outliers". Adding or banning nulls is
+# useful when a value in one column, like Readmissions Within 28 days,
+# necessitates a valid value in another, like Readmissions Within 7 days.
 #
 # If a column name has spaces, make sure to surround it with
-# the tilde character ~. When comapring a date column against a
+# the tilde character ~. When comparing a date column against a
 # fixed date, make sure it's in an ISO format and is enclosed in
-# single quites like so '2018-12-01'.
+# single quotation marks like so '2018-12-01'.
 # ----------------------------------------------------------
 constraints:
   allow_duplicates: false
   boolean_constraints:
-  - los >= avlos
+  - los >= stays
   conditional_constraints:
     Example condition:
       Example column: Example action
@@ -268,25 +245,28 @@ constraints:
 # LINKED COLUMNS
 # ===============
 #
-# Groups of columns where values follow a one-to-many relationship
-# (many hospitals sharing a single health board) are captured in
-# this part of the specification. Linked column groups are created
-# at spec generation and are saved in the anon.db SQLite database.
+# There are two types of linked groups - those manually defined using
+# the --linked_columns (or -lc) command line parameter and automatically
+# detected groups where columns follow a hierarchical (one to many)
+# relationship. User defined linked columns are always put under the
+# zero indexed group.
+#
+# Groups of hierarchically linked columns are listed together under the 
+# index starting from 1. Their details are saved in the bundled anon.db
+# SQLite database. 
+#
 # The specification format is as follows:
-# - - 0
+# - - 1
 #   - - Parent column
 #   - - Child column
-# - - 1
+# - - 2
 #   - - ...etc.
 # It's possible to add a linked columns group manually by adding 
-# a table to anon.db with the hierarchicaly relationships. The name
+# a table to anon.db with the hierarchical relationships. The name
 # of this table must follow the format: id_N  where id is taken 
 # from the metadata section and N is the group number.
 # ----------------------------------------------------------
-linked_columns:
-- - 1
-  - - hb_name
-    - loc_name
+linked_columns: []
 # ----------------------------------------------------------
 # DERIVED COLUMNS
 # ===============
@@ -297,8 +277,8 @@ linked_columns:
 # The calculation should be in a format that Pandas' eval()
 # method can parse and understand. 
 #
-# For examle, assuming you have Numerator column A and
-# Denomininator column B, you would write Rate: (A / B)
+# For example, assuming you have Numerator column A and
+# Denominator column B, you would write Rate: (A / B)
 # ----------------------------------------------------------
 derived_columns:
-  Example column: Example calculation
+  avlos: (los / stays)

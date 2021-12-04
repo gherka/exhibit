@@ -68,6 +68,12 @@ def generate_YAML_string(spec_dict):
     # The tool comes with a number of sample anonymising sets
     # (see documentation). To use just one column from a set,
     # add a dot separator like so mountains.range
+    # 
+    # You can also use a subset of regular expression patterns 
+    # to generate aliasing values in non-linked columns. For example,
+    # if your confidential data had Consultant GMC numbers, you can
+    # anonymise them using a regex pattern GMC[0-9]{5}[XY] which
+    # will generate values like GMC00000X.
     #
     # Depending on the number of unique values in a column,
     # its original values can either be listed in the spec,
@@ -81,6 +87,7 @@ def generate_YAML_string(spec_dict):
         c2a + yaml.safe_dump(yaml_list[1], sort_keys=False, width=1000))
 
     c2b = textwrap.dedent("""\
+    # ----------------------------------------------------------
     # NUMERICAL COLUMNS
     # ----------
     # Currently, only continuous data is supported. To use numerical
@@ -92,7 +99,7 @@ def generate_YAML_string(spec_dict):
     # - weighted_uniform
     # - normal
     #
-    # The first option will generate the column by appling weights
+    # The first option will generate the column by applying weights
     # to a fixed value before scaling it and optionally perturb it
     # within the dispersion percentage. With dispersion set to zero,
     # you can generate identical values for any given combination of
@@ -123,10 +130,11 @@ def generate_YAML_string(spec_dict):
         )
 
     c2c = textwrap.dedent("""\
+    # ----------------------------------------------------------
     # DATE COLUMNS
     # ----------
     # Exhibit will try to determine date columns automatically, but
-    # you can also add them manually, providing the following paramters:
+    # you can also add them manually, providing the following parameters:
     #   type: date
     #   cross_join_all_unique_values: true | false
     #   miss_probability: between 0 and 1
@@ -135,7 +143,7 @@ def generate_YAML_string(spec_dict):
     #   frequency: QS
     # 
     # Frequency is based on the frequency strings of DateOffsets.
-    # See Pandas documention for more details. Times are not supported.
+    # See Pandas documentation for more details. Times are not supported.
     # ----------------------------------------------------------
     """)
 
@@ -158,10 +166,10 @@ def generate_YAML_string(spec_dict):
     # - conditional
     # 
     # Boolean constraints take the form of a simple statement of the
-    # form [dependent_column] [operator] [expression / indepedent_column].
+    # form [dependent_column] [operator] [expression / independent_column].
     # The tool will try to guess these relationships when creating a
     # spec. You can also force a column to be always smaller / larger
-    # than a scalar value. Note that adding a boolean contraint between
+    # than a scalar value. Note that adding a boolean constraint between
     # two columns will affect the distribution of weights and also the
     # target sum as these are designed to work with a single column.
     #
@@ -172,9 +180,9 @@ def generate_YAML_string(spec_dict):
     # necessitates a valid value in another, like Readmissions Within 7 days.
     #
     # If a column name has spaces, make sure to surround it with
-    # the tilde character ~. When comapring a date column against a
+    # the tilde character ~. When comparing a date column against a
     # fixed date, make sure it's in an ISO format and is enclosed in
-    # single quites like so '2018-12-01'.
+    # single quotation marks like so '2018-12-01'.
     # ----------------------------------------------------------
     """)
 
@@ -202,7 +210,7 @@ def generate_YAML_string(spec_dict):
     # - - 2
     #   - - ...etc.
     # It's possible to add a linked columns group manually by adding 
-    # a table to anon.db with the hierarchicaly relationships. The name
+    # a table to anon.db with the hierarchical relationships. The name
     # of this table must follow the format: id_N  where id is taken 
     # from the metadata section and N is the group number.
     # ----------------------------------------------------------
@@ -221,8 +229,8 @@ def generate_YAML_string(spec_dict):
     # The calculation should be in a format that Pandas' eval()
     # method can parse and understand. 
     #
-    # For examle, assuming you have Numerator column A and
-    # Denomininator column B, you would write Rate: (A / B)
+    # For example, assuming you have Numerator column A and
+    # Denominator column B, you would write Rate: (A / B)
     # ----------------------------------------------------------
     """)
 

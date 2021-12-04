@@ -107,9 +107,9 @@ class utilsTests(unittest.TestCase):
         
         test_spec = inpatients_spec
 
-        #there are 7 categorical columns in the inpatients spec
+        #there are 5 categorical columns in the inpatients spec
         test_list = tm.get_attr_values(test_spec, "uniques", types=["categorical"])
-        self.assertEqual(len(test_list), 7)
+        self.assertEqual(len(test_list), 5)
 
         #non-existant attributes are saved as None values; no error
         test_list = tm.get_attr_values(test_spec, "spam")
@@ -118,7 +118,7 @@ class utilsTests(unittest.TestCase):
         #paired columns can be ignored
         test_list = tm.get_attr_values(
             test_spec, "uniques", include_paired=False, types=["categorical"])
-        expected = [10, 14, 48, 3, 2] #two paired columns skipped
+        expected = [10, 13, 3, 2] #paired hb_code columns skipped
         self.assertEqual(test_list, expected)
 
     def test_count_core_rows(self):

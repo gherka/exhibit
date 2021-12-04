@@ -170,41 +170,6 @@ class referenceTests(unittest.TestCase):
         '''
 
         db_util.drop_tables(cls._temp_tables)
-
-
-    def test_reference_inpatients_spec(self):
-        '''
-        The reference test mirrors the logic of the bootstrap.main()
-
-        The round-trip from YAML string into dictionary loses some type
-        information so the two dictionaries are not exactly the same,
-        but if we serialise them as strings using JSON module, the results
-        should be identical.
-        '''
-
-        with patch("argparse.ArgumentParser.parse_args") as mock_args:
-            mock_args.return_value = argparse.Namespace(
-                command="fromdata",
-                source=Path(package_dir("sample", "_data", "inpatients.csv")),
-                inline_limit=30,
-                skip_columns=[],
-                equal_weights=False,
-                verbose=True,
-            )
-
-            xA = tm.newExhibit()
-            xA.read_data()
-            xA.generate_spec()
-
-        table_id = xA.spec_dict["metadata"]["id"]
-
-        #overwrite ID in reference spec with a newly generated one to match
-        inpatients_spec["metadata"]["id"] = table_id
-
-        #save ID to tidy up temp columns created as part of testing
-        self._temp_tables.append(table_id)
-
-        assert json.dumps(inpatients_spec) == json.dumps(xA.spec_dict)
     
     def test_reference_prescribing_non_linked_anon_data(self):
         '''
@@ -322,7 +287,7 @@ class referenceTests(unittest.TestCase):
 
             mock_args.return_value = argparse.Namespace(
                 command="fromspec",
-                source=Path(package_dir("sample", "_spec", "inpatients_edited.yml")),
+                source=Path(package_dir("sample", "_spec", "inpatients_demo.yml")),
                 verbose=True,
                 skip_columns=[]
             )
