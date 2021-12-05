@@ -18,6 +18,7 @@ from exhibit.core.utils import package_dir
 # SQLite struggles with type conversion to int
 sqlite3.register_adapter(np.int64, int)
 sqlite3.register_adapter(np.int32, int)
+sqlite3.register_adapter(np.intc, int)
 
 def query_anon_database(
     table_name, column=None, size=None,
