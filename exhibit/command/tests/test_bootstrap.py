@@ -4,7 +4,7 @@ Unit and reference tests for the Exhibit package
 
 # Standard library imports
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 import argparse
 
 # Module under test
@@ -15,7 +15,38 @@ class bootstrapTests(unittest.TestCase):
     Test command line arguments and running logic of Exhibit
     '''
 
-    def test_sequence_was_called_when_command_is_set_to_fromdata(self):
+    @patch("argparse.ArgumentParser.parse_args")
+    @patch("exhibit.command.bootstrap.newExhibit.write_spec")
+    @patch("exhibit.command.bootstrap.newExhibit.generate_spec")
+    @patch("exhibit.command.bootstrap.newExhibit.read_data")
+    def test_sequence_was_called_when_command_is_set_to_fromdata(
+        self, mock_read, mock_generate, mock_write, mock_args):
+        '''
+        Mocked functions are set on the instance of mockExhibit,
+        not on the class itself.
+
+        Don't forget that you need to patch the class where
+        it's being imported, not where it's created!
+        '''
+
+        mock_args.return_value = argparse.Namespace(
+            command="fromdata",
+            source="mock.csv"
+        )
+       
+        tm.main()
+        
+        mock_read.assert_called()
+        mock_write.assert_called()
+        mock_generate.assert_called()
+
+    @patch("argparse.ArgumentParser.parse_args")
+    @patch("exhibit.command.bootstrap.newExhibit.write_data")
+    @patch("exhibit.command.bootstrap.newExhibit.execute_spec")
+    @patch("exhibit.command.bootstrap.newExhibit.validate_spec")
+    @patch("exhibit.command.bootstrap.newExhibit.read_spec")
+    def test_sequence_was_called_when_command_is_set_to_fromspec(
+        self, mock_read, mock_validate, mock_execute, mock_write, mock_args):
         '''
         Mocked functions are set on the instance of mockExhibit,
         not on the class itself.
@@ -24,46 +55,14 @@ class bootstrapTests(unittest.TestCase):
         it's being imported, not where it's created!
         '''
         
-        with patch("exhibit.command.bootstrap.newExhibit") as mockExhibit:
+        mock_args.return_value = argparse.Namespace(
+            command="fromspec",
+            source="mock.yml"
+        )
 
-            mockExhibit.return_value.read_data = Mock()
-            mockExhibit.return_value.generate_spec = Mock()
-            mockExhibit.return_value.write_spec = Mock()
-
-            mockExhibit.return_value._args = argparse.Namespace(
-                command="fromdata",
-            )
-            
-            tm.main()
-            
-            mockExhibit.return_value.read_data.assert_called()
-            mockExhibit.return_value.generate_spec.assert_called()
-            mockExhibit.return_value.write_spec.assert_called()
-
-
-    def test_sequence_was_called_when_command_is_set_to_fromspec(self):
-        '''
-        Mocked functions are set on the instance of mockExhibit,
-        not on the class itself.
-
-        Don't forget that you need to patch the class where
-        it's being imported, not where it's created!
-        '''
+        tm.main()
         
-        with patch("exhibit.command.bootstrap.newExhibit") as mockExhibit:
-
-            mockExhibit.return_value.read_spec = Mock()
-            mockExhibit.return_value.validate_spec = Mock()
-            mockExhibit.return_value.execute_spec = Mock()
-            mockExhibit.return_value.write_data = Mock()
-
-            mockExhibit.return_value.args = argparse.Namespace(
-                command="fromspec",
-            )
-            
-            tm.main()
-            
-            mockExhibit.return_value.read_spec.assert_called()
-            mockExhibit.return_value.validate_spec.assert_called()
-            mockExhibit.return_value.execute_spec.assert_called()
-            mockExhibit.return_value.write_data.assert_called()
+        mock_read.assert_called()
+        mock_validate.assert_called()
+        mock_execute.assert_called()
+        mock_write.assert_called()

@@ -41,25 +41,24 @@ class exhibitTests(unittest.TestCase):
 
         db_util.drop_tables(cls._temp_tables)
 
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_read_data_func_reads_csv_from_source_path(self, mock_args):
+    def test_read_data_func_reads_csv_from_source_path(self):
         '''
         Send "mock" command line arguments to parse_args function
         and assert that the program reads the same data as ref_df.
         '''
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
+            command="fromdata",
             source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             skip_columns=[]
         )
 
-        xA = tm.newExhibit()
+        xA = tm.newExhibit(**args)
         xA.read_data()
         
         assert isinstance(xA.df, pd.DataFrame)
 
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_output_spec_creates_file_with_o_argument(self, mock_args):
+    def test_output_spec_creates_file_with_o_argument(self):
         '''
         Testing code that itself has context managers (with) 
         is not very straightforward.
@@ -80,29 +79,29 @@ class exhibitTests(unittest.TestCase):
         advantage of its methods that mimick the open() builtin
         '''
 
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
             command="fromdata",
+            source="dummy.csv",
             output="test.yml",
             verbose=True,
         )
 
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
            
-            xA = tm.newExhibit()
+            xA = tm.newExhibit(**args)
             xA.write_spec("hello")
 
             mo.assert_called_with("test.yml", "w")
             mo.return_value.__enter__.return_value.write.assert_called_with("hello")
 
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_output_spec_creates_file_without_o_argument(self, mock_args):
+    def test_output_spec_creates_file_without_o_argument(self):
         '''
         If no destination is set from the CLI, output the file
         in the current working directory, with a suffix based on
         the command: fromdata or fromspec.
         '''
 
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
             command="fromdata",
             source=Path("source_dataset.csv"),
             output=None,
@@ -111,19 +110,19 @@ class exhibitTests(unittest.TestCase):
         
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
                 
-            xA = tm.newExhibit()
+            xA = tm.newExhibit(**args)
             xA.write_spec("hello")
 
             mo.assert_called_with("source_dataset_SPEC.yml", "w")
             mo.return_value.__enter__.return_value.write.assert_called_with("hello")
     
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_output_spec_respectes_equal_weights_argument(self, mock_args):
+    def test_output_spec_respectes_equal_weights_argument(self):
         '''
         Doc string
         '''
 
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
+            command="fromdata",
             source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             inline_limit=30,
@@ -131,7 +130,7 @@ class exhibitTests(unittest.TestCase):
             skip_columns=[]
         )
 
-        xA = tm.newExhibit()
+        xA = tm.newExhibit(**args)
         xA.read_data()
         xA.generate_spec()
 
@@ -143,8 +142,7 @@ class exhibitTests(unittest.TestCase):
                 
         self.assertEqual(expected, result)
 
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_spec_generation_with_predefined_linked_columns(self, mock_args):
+    def test_spec_generation_with_predefined_linked_columns(self):
         '''
         User defined linked columns are always saved as 0-th element in the
         linked columns list of the YAML specification.
@@ -152,7 +150,8 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["sex", "age"]
 
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
+            command="fromdata",
             source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             inline_limit=30,
@@ -161,7 +160,7 @@ class exhibitTests(unittest.TestCase):
             linked_columns=user_linked_cols
         )
 
-        xA = tm.newExhibit()
+        xA = tm.newExhibit(**args)
         xA.read_data()
         xA.generate_spec()
 
@@ -170,8 +169,7 @@ class exhibitTests(unittest.TestCase):
                 
         self.assertListEqual(xA.spec_dict["linked_columns"][0][1], user_linked_cols)
 
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_overlapping_hierarchical_and_predefined_linked_columns(self, mock_args):
+    def test_overlapping_hierarchical_and_predefined_linked_columns(self):
         '''
         When there is a conflict between a user defined and hierarchical linked
         columns, user defined list wins which means that the columns that make up
@@ -182,7 +180,8 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["hb_name", "hb_code", "age"]
 
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
+            command="fromdata",
             source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             inline_limit=30,
@@ -191,7 +190,7 @@ class exhibitTests(unittest.TestCase):
             linked_columns=user_linked_cols
         )
 
-        xA = tm.newExhibit()
+        xA = tm.newExhibit(**args)
         xA.read_data()
         xA.generate_spec()
 
@@ -201,15 +200,15 @@ class exhibitTests(unittest.TestCase):
         self.assertEqual(len(xA.spec_dict["linked_columns"]), 1)
         self.assertListEqual(xA.spec_dict["linked_columns"][0][1], user_linked_cols)
 
-    @patch("argparse.ArgumentParser.parse_args")
-    def test_less_than_two_predefined_linked_columns_raiser_error(self, mock_args):
+    def test_less_than_two_predefined_linked_columns_raiser_error(self):
         '''
         It only makes sense to have at least 2 linked columns
         '''
 
         user_linked_cols = ["hb_name"]
 
-        mock_args.return_value = argparse.Namespace(
+        args = dict(
+            command="fromdata",
             source=Path(package_dir("sample", "_data", "inpatients.csv")),
             verbose=True,
             inline_limit=30,
@@ -218,10 +217,7 @@ class exhibitTests(unittest.TestCase):
             linked_columns=user_linked_cols
         )
 
-        with self.assertRaises(SystemExit) as cm:
-            tm.newExhibit()
-
-        self.assertNotEqual(cm.exception.code, 0)
+        self.assertRaises(Exception, tm.newExhibit, **args)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

@@ -5,9 +5,9 @@ Main Exhibit class
 '''
 
 # Standard library imports
-import argparse
-import textwrap
 import sys
+from collections import UserDict
+from pathlib import Path
 
 # External library imports
 import yaml
@@ -19,9 +19,7 @@ from .specs import newSpec
 from .formatters import parse_original_values
 from .validator import newValidator
 from .constraints import ConstraintHandler
-from .utils import (
-                    path_checker, read_with_date_parser,
-                    count_core_rows)
+from .utils import (path_checker, read_with_date_parser, count_core_rows)
 
 from .generate.missing import MissingDataGenerator
 from .generate.categorical import CategoricalDataGenerator
@@ -39,200 +37,111 @@ class newExhibit:
     '''
     The main class encapsulating the demonstrator
     
-    Attributes
+    Parameters
+    ----------
+    command        : str
+        can be either "fromdata" or "fromspec". Required.
+    source         : str | pd.DataFrame
+        path to either a .yml or .csv file for processing. When used with "fromdata"
+        can also accept a Pandas DataFrame directly. Required.
+    output         : str
+        filename of the final output. Normally, optional but if using a DataFrame
+        as source, then required. 
+        Can take two special values: "dataframe" and "specification".
+        If used with "fromspec", "dataframe" will return the demonstrator dataframe
+        rather than write it to a .csv.
+        If used with "fromdata", "specification" will return a dictionary-like object
+        that lets you modify the specification before writing it out to a .yml file.
+    inline_limit   : int
+        If the number of unique values in a categorical column exceeds inline limit,
+        the values will be saved in the anon.db database and not listed in the .yml
+        specification for manual editing. Default is 30.
+    equal_weights  : bool
+        Use equal weights and probabilities for all printed column values. Default
+        is False.
+    skip_columns   : list
+        List of columns to skip when reading in the data.
+    linked_columns : list
+        List of columns linked with non-hierarchical relationships.
+    verbose        : bool
+        Increased verbosity of error messages. Default is False.
+
+
+    Internal attributes
     ----------
     spec_dict : dict
         complete specification of the source dataframe which serves
-        as the final output when tool is used with "fromdata" command
-    df : pd.DataFrame
+        as the final output when the class is used with "fromdata" command
+    df        : pd.DataFrame
         source dataframe
-    anon_df : pd.DataFrame
+    anon_df   : pd.DataFrame
         generated anonymised dataframe which serves as the final
-        output when the tool is used with "fromspec" command    
+        output when the class is used with "fromspec" command
     '''
 
-    def __init__(self):
+    def __init__(
+        self, command, source, output=None,
+        inline_limit=30, equal_weights=False,
+        skip_columns=None, linked_columns=None, verbose=False):
         '''
-        Set up the tool to parse command line arguments
+        Initialise either from the CLI or by instantiating directly
         '''
 
-        less_indent_formatter = lambda prog: argparse.RawTextHelpFormatter(
-            prog, max_help_position=0, indent_increment=0
-        )
-
-        arg_separator = f"\n{'-' * 42}\n\n"
-
-        desc = textwrap.dedent('''\
-            ----------------------------------------
-            Exhibit: Demonstrator data fit for a museum \n
-            Generate custom anonymised datasets from
-            scratch or from confidential source data.
-            ----------------------------------------
-            '''
-        )
-
-        parser = argparse.ArgumentParser(
-            description=desc,
-            formatter_class=less_indent_formatter,
-            add_help=False
-        )
-
-        parser.add_argument(
-            "command",
-            type=str, choices=["fromdata", "fromspec"],
-            metavar="command",
-            help=
-            "\nChoose whether to create a specification summarizing the data "
-            "for subsequent anonymisation or generate anonymised data from "
-            "an existing specification.\n\n"
-            "\tfromdata:\n"
-            "\t\tUse the source data to generate specification\n"
-            "\t\tExample: exhibit fromdata secret_data.csv -o secret_spec.yml -ew\n"
-            "\tfromspec:\n"
-            "\t\tUse the source specification to generate anonymised data\n"
-            "\t\tExample: exhibit fromspec secret_spec.yml -o anon_data.csv"
-            f"{arg_separator}"
-        )
-
-        parser.add_argument(
-            "source",
-            type=path_checker,
-            help=
-            "\nPath to the source file for processing. Could be either a .csv file "
-            "for extracting the specification used in the fromdata command or a .yml "
-            "file for generating the anonymised dataset using the fromspec command."
-            f"{arg_separator}"
-        )
+        # Basic error checking on the arguments
+        if linked_columns is not None and len(linked_columns) < 2:
+            raise Exception("Please provide at least two linked columns")
         
-        parser.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS,
-            help=
-            "\nShow this help message and exit."
-            f"{arg_separator}"
-        )
-
-        parser.add_argument(
-            "--output", "-o",
-            help=
-            "\nSave the generated output under the appropriate name. If omitted, "
-            "will save the specification using the original file name suffixed "
-            "with _SPEC.yml and the anonymised dataset - suffixed with _DEMO.csv."
-            f"{arg_separator}"
-        )
-
-        parser.add_argument(
-            "--inline_limit", "-il",
-            type=int,
-            default=30,
-            help=
-            "\nIf the number of unique values in a categorical column exceeds "
-            "inline limit, the values will be saved in the anon.db database "
-            "and not listed in the .yml specification for manual editing. "
-            "Only used with the fromdata command. Default is 30.\n"
-            "Example: exhibit fromdata secret_data.csv -il 10"
-            f"{arg_separator}"
-        )
-        
-        parser.add_argument(
-            "--equal_weights", "-ew",
-            default=False,
-            action="store_true",
-            help=
-            "\nUse equal weights and probabilities for all printed column values. "
-            "This option will effectively erase any information about true "
-            "distributions of values in columns, making the process of anonymisation "
-            "easier for large datasets. Only used with the fromdata command."
-            f"{arg_separator}"
-        )
-
-        parser.add_argument(
-            "--skip_columns", "-skip",
-            default=[],
-            nargs="+",
-            metavar="",
-            help=
-            "\nList of columns to skip when reading in the data. Only affects the "
-            "generation of the specification using the fromdata command. Only used "
-            "with the fromdata command.\n"
-            "Example: exhibit fromdata secret_data.csv -skip age location"
-            f"{arg_separator}",
-        )
-
-        parser.add_argument(
-            "--linked_columns", "-lc",
-            default=None,
-            nargs="+",
-            metavar="",
-            help=
-            "\nManually define columns that have important relationships you want to "
-            "preserve in the subsequent generation of the anonymised datasets. "
-            "For example, you might want to make sure that certain specialties only "
-            "occur for certain age groups. Note that Exhibit will guess hierarchical "
-            "relationships automatically. Only use this option for columns whose "
-            "values are not easily categorized into one to many relationships as "
-            "preserving the combinations of all values across multiple columns slows "
-            " down the generation process, particularly on Windows machines. Only "
-            "used with the fromdata command.\n"
-            "Example: exhibit fromdata secret_data.csv -lc age location"
-            f"{arg_separator}"
-        )
-        
-        parser.add_argument(
-            "--verbose", "-v",
-            default=False,
-            action="store_true",
-            help=
-            "\nControl traceback length for debugging errors. Be default only the last "
-            "line of the error message is shown."
-            f"{arg_separator}"
-        )  
- 
-        self._args = parser.parse_args(sys.argv[1:])
-
-        # Error checking on args
-        if (
-            vars(self._args).get("linked_columns") is not None and
-            len(self._args.linked_columns) < 2
-            ):
-            parser.error("Please provide at least two linked columns")
+        self.command = command
+        self.source = source
+        self.output = output
+        self.inline_limit = inline_limit
+        self.equal_weights = equal_weights
+        self.skip_columns = skip_columns
+        self.linked_columns= linked_columns
+        self.verbose = verbose
 
         self.spec_dict = None
         self.df = None
         self.anon_df = None
         
         #Default verbosity is set in the boostrap.py to 0
-        if self._args.verbose:
+        if self.verbose:
             sys.tracebacklimit = 1000
 
     def read_data(self):
         '''
         Attempt to read the .csv from source path.
 
-        As part of reference tests, we can short-circuit
-        the reading in of data and pass in a dataframe directly.
+        Alternatively, try to read the source as a dataframe directly.
         '''
 
-        if isinstance(self._args.source, pd.DataFrame):
-            self.df = self._args.source
+        if isinstance(self.source, pd.DataFrame):
+            self.df = self.source
         else:
             self.df = read_with_date_parser(
-                path=self._args.source,
-                skip_columns=self._args.skip_columns)
+                path=self.source,
+                skip_columns=self.skip_columns)
+
+        return self
 
     def generate_spec(self):
         '''
         Generating a spec requires a dataframe so this function should
         only be run after read_data()
         '''
+
         if not self.df is None:
 
             new_spec = newSpec(
                 data=self.df,
-                inline_limit=self._args.inline_limit,
-                ew=self._args.equal_weights,
-                user_linked_cols=vars(self._args).get("linked_columns", None)
+                inline_limit=self.inline_limit,
+                ew=self.equal_weights,
+                user_linked_cols=self.linked_columns
                 )
 
             self.spec_dict = new_spec.output_spec_dict()
+
+        return self
             
     def write_spec(self, spec_yaml=None):
         '''
@@ -243,10 +152,10 @@ class newExhibit:
         if spec_yaml is None:
             spec_yaml = generate_YAML_string(self.spec_dict)
 
-        if self._args.output is None:
-            output_path = self._args.source.stem + "_SPEC" + ".yml"
+        if self.output is None:
+            output_path = self.source.stem + "_SPEC" + ".yml"
         else:
-            output_path = self._args.output
+            output_path = self.output
 
         with open(output_path, "w") as f:
             f.write(spec_yaml)
@@ -267,8 +176,12 @@ class newExhibit:
         so that we can amend the dataframe in-place when using
         anonymised values from anon db in the generation process.
         '''
-        if self._args.source.suffix == ".yml":
-            with open(self._args.source) as f:
+
+        if not isinstance(self.source, Path): #pragma: no cover
+            self.source = path_checker(self.source)
+
+        if self.source.suffix == ".yml":
+            with open(self.source) as f:
                 self.spec_dict = yaml.safe_load(f)
         else: #pragma: no cover
             raise TypeError("Specification is not in .yml format")
@@ -282,6 +195,8 @@ class newExhibit:
 
             self.spec_dict["columns"][col]["original_values"] = parsed_values
 
+        return self
+
     def validate_spec(self):
         '''
         Users can (and are encouraged to) alter the spec to suit their requirements
@@ -292,6 +207,7 @@ class newExhibit:
 
         If validation passes, returns True, else returns False with helpful messages
         '''
+
         return newValidator(self.spec_dict).run_validator()
 
     def execute_spec(self):
@@ -352,16 +268,16 @@ class newExhibit:
         miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
         anon_df = miss_gen.add_missing_data()
 
-        #7) PROCESS BOOLEAN AND CONDITIONAL CONSTRAINTS (IF ANY)
+        #6) PROCESS BOOLEAN AND CONDITIONAL CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
 
-        #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict["derived_columns"].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
             
-        #9) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #8) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self): # pragma: no cover
@@ -369,11 +285,56 @@ class newExhibit:
         Save the generated anonymised dataset to .csv
         '''
 
-        if self._args.output is None:
-            output_path = self._args.source.stem + "_DEMO" + ".csv"
+        if self.output is None:
+            output_path = self.source.stem + "_DEMO" + ".csv"
         else:
-            output_path = self._args.output
+            output_path = self.output
 
         self.anon_df.to_csv(output_path, index=False)
 
         print("Exhibit ready to view")
+
+    def generate(self):
+        '''
+        Public method for generating either the data or the specification
+        depending on how the newExhibit class was instantiated.
+        '''
+
+        if self.command == "fromdata":
+            self.read_data()
+            self.generate_spec()
+
+            # special case for when user wants to edit demo spec before saving it
+            if self.output == "specification": #pragma: no cover
+                return Specification(self.spec_dict)
+            self.write_spec()
+
+        else:
+            self.read_spec()
+            if self.validate_spec():
+                self.execute_spec()
+                # special case for when user wants to edit demo data before saving it
+                if self.output == "dataframe": #pragma: no cover
+                    return self.anon_df
+                self.write_data()
+
+class Specification(UserDict): #pragma: no cover
+    '''
+    A dictionary adapter class to make editing the specification easier. In addition
+    to the standard dictionary behaviour it implements a single public method called
+    write_spec which will transform the underlying dictionary into a YAML string and
+    write it to the file path provided.
+    '''
+    def write_spec(self, path):
+        '''
+        Save the dictionary to a YAML file
+
+        Parameters:
+          path : str
+            Valid path where the YAML specification should be saved    
+        '''
+
+        spec_yaml = generate_YAML_string(self.data)
+
+        with open(path, "w") as f:
+            f.write(spec_yaml)

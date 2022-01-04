@@ -4,10 +4,7 @@ Reference tests for the Exhibit package
 
 # Standard library imports
 import unittest
-from unittest.mock import patch
 from pathlib import Path
-import argparse
-import json
 import tempfile
 from os.path import join
 from collections import namedtuple
@@ -21,8 +18,7 @@ import numpy as np
 from exhibit.core.utils import package_dir
 from exhibit.db import db_util
 from exhibit.core.constants import MISSING_DATA_STR
-from exhibit.sample.sample import (
-    inpatients_spec, inpatients_anon)
+from exhibit.sample.sample import inpatients_anon
 
 # Module under test
 from exhibit.core import exhibit  as tm
@@ -105,46 +101,24 @@ def temp_exhibit(
             fromspec_defaults.update(fromspec_namespace)
         
         if return_spec:
-            #Create and write a specification
-            with patch("argparse.ArgumentParser.parse_args") as mock_args:
-                mock_args.return_value = argparse.Namespace(
-                    command=fromdata_defaults["command"],
-                    source=fromdata_defaults["source"],
-                    inline_limit=fromdata_defaults["inline_limit"],
-                    verbose=fromdata_defaults["verbose"],
-                    output=fromdata_defaults["output"],
-                    skip_columns=fromdata_defaults["skip_columns"],
-                    equal_weights=fromdata_defaults["equal_weights"],
-                    linked_columns=fromdata_defaults["linked_columns"]
+            xA = tm.newExhibit(**fromdata_defaults)
+            xA.read_data()
+            xA.generate_spec()
+            xA.write_spec()
 
-                )
-                
-                xA = tm.newExhibit()
-                xA.read_data()
-                xA.generate_spec()
-                xA.write_spec()
+            temp_spec=xA.spec_dict
 
-                temp_spec=xA.spec_dict
-
-        #Generate and return a dataframe
         if return_df:
-            with patch("argparse.ArgumentParser.parse_args") as mock_args:
-                mock_args.return_value = argparse.Namespace(
-                    command=fromspec_defaults["command"],
-                    source=fromspec_defaults["source"],
-                    verbose=fromspec_defaults["verbose"],
-                )
+            xA = tm.newExhibit(**fromspec_defaults)
+            xA.read_spec()
+            
+            if test_spec_dict:
+                replace_nested_dict_values(xA.spec_dict, test_spec_dict)
 
-                xA = tm.newExhibit()
-                xA.read_spec()
-                
-                if test_spec_dict:
-                    replace_nested_dict_values(xA.spec_dict, test_spec_dict)
-
-                if xA.validate_spec():
-                    xA.execute_spec()
-                
-                temp_df = xA.anon_df
+            if xA.validate_spec():
+                xA.execute_spec()
+            
+            temp_df = xA.anon_df
 
     return returnTuple(temp_spec, temp_df)
 
@@ -283,19 +257,18 @@ class referenceTests(unittest.TestCase):
         BEFORE boolean constraints are adjusted.
         '''
 
-        with patch("argparse.ArgumentParser.parse_args") as mock_args:
 
-            mock_args.return_value = argparse.Namespace(
+        args = dict(
                 command="fromspec",
                 source=Path(package_dir("sample", "_spec", "inpatients_demo.yml")),
                 verbose=True,
                 skip_columns=[]
             )
 
-            xA = tm.newExhibit()
-            xA.read_spec()
-            if xA.validate_spec():
-                xA.execute_spec()
+        xA = tm.newExhibit(**args)
+        xA.read_spec()
+        if xA.validate_spec():
+            xA.execute_spec()
 
         table_id = xA.spec_dict["metadata"]["id"]
         
