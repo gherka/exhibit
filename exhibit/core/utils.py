@@ -15,7 +15,7 @@ import dateutil
 
 # External library imports
 import pandas as pd
-from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype
+from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype, is_bool_dtype
 
 # Exhibit imports
 from .constants import ORIGINAL_VALUES_PAIRED
@@ -381,9 +381,11 @@ def sort_columns_by_dtype_az(dtypes):
         '''
         Helper function to take care of float and ints
         or various date time formats. Categorical columns
-        always go first, then numerical and finally dates.
+        including boolean, always go first, then numerical
+        and finally dates.
         '''
-    
+        if is_bool_dtype(dtype):
+            return 1
         if is_numeric_dtype(dtype):
             return 2
         if is_datetime64_any_dtype(dtype):

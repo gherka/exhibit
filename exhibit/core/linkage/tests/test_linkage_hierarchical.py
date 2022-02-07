@@ -170,6 +170,53 @@ class linkageTests(unittest.TestCase):
             []
         )
 
+    def test_hierarchically_linked_columns_with_missing_data(self):
+        '''
+        Check that if there are null rows in pair-wise columns even
+        after checking for nulls in all of the DF.
+
+        C1 and C2 would've been valid, but once rows with nulls in
+        ANY one of two columns are removed, C2 becomes a single value
+        column.
+        '''
+
+        test_df = pd.DataFrame(
+            data=np.array([
+                ["A", "A", "A", "B", None],
+                ["C1", "C1", "C1", "C1", "C2"],
+                ["D", "E", "D", "E", "E"],
+                ["G1", "H1", "G2", "H2", "H2"]]).T,
+            columns=[
+                "C1", "C2", "C3", "C4"]
+        )
+
+        test_spec = {
+            "metadata":{
+                "categorical_columns":["C1", "C2", "C3", "C4"]
+            },
+            "columns":
+            {
+                "C1": {
+                    "original_values":"Dataframe"
+                },
+                "C2": {
+                    "original_values":"Dataframe"
+                },
+                "C3": {
+                    "original_values":"Dataframe"
+                },
+                "C4": {
+                    "original_values":"Dataframe"
+                },
+                
+            }
+        }
+        # lists with equal elements, ignoring order
+        self.assertCountEqual(
+            tm.find_hierarchically_linked_columns(test_df, test_spec),
+            [('C1', 'C4'), ("C3", "C4")]
+        )
+
     def test_1_to_1_linked_columns(self):
         '''
         Doc string

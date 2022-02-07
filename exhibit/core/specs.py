@@ -3,7 +3,7 @@ Class encapsulating specificatons for a new exhibit
 '''
 
 # External imports
-from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
+from pandas.api.types import is_numeric_dtype, is_datetime64_dtype, is_bool_dtype
 import numpy as np
 
 # Exhibit imports
@@ -311,6 +311,9 @@ class newSpec:
 
             if is_datetime64_dtype(self.df.dtypes[col]):
                 self.output["columns"][col] = self.time_dict(col)
+            # special case for columns with TRUE/FALSE values
+            elif is_bool_dtype(self.df.dtypes[col]):
+                self.output["columns"][col] = self.categorical_dict(col)
             elif is_numeric_dtype(self.df.dtypes[col]):
                 self.output["columns"][col] = self.continuous_dict(col)
             else:

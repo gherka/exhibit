@@ -7,6 +7,7 @@ import unittest
 
 # External library imports
 import pandas as pd
+import numpy as np
 
 # Module under test
 from exhibit.core import specs as tm
@@ -45,6 +46,28 @@ class specsTests(unittest.TestCase):
         self.assertListEqual(
             sorted(test_spec.output.keys()),
             sorted(expected_keys))
+
+    def test_column_order_in_spec_is_correctly_based_on_types(self):
+        '''
+        Make sure all data types, int, float, string, date, boolean, etc.
+        are handled gracefully by exhibit and a spec is outputted.
+        '''
+
+        test_df = pd.DataFrame(data={
+            "ints"  : range(5),
+            "floats": np.linspace(0, 1, num=5),
+            "bools" : [True, True, True, True, False],
+            "dates" : pd.date_range(start="1/1/2018", periods=5, freq="M"),
+            "cats"  : list("ABCDE")
+        })
+
+        test_spec = tm.newSpec(test_df, 10)
+
+        expected_col_order = ["bools", "cats", "floats", "ints", "dates"]
+
+        test_col_order = list(test_spec.output_spec_dict()["columns"].keys())
+
+        self.assertListEqual(expected_col_order, test_col_order)
             
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

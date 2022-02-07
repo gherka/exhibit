@@ -308,7 +308,7 @@ class ConstraintHandler:
         return y #pragma: no cover
         
 
-    def recursive_randint(self, new_x_min, new_x_max, y, op):
+    def recursive_randint(self, new_x_min, new_x_max, y, op, n=100):
         '''
         Helper function to generate a random integer that conforms
         to the given constraint.
@@ -320,19 +320,19 @@ class ConstraintHandler:
         '''
 
         new_x = round(self.rng.uniform(new_x_min, new_x_max))
+        n = n - 1
 
-        try:
+        if n > 0:        
+
             if op(new_x, y):
                 return new_x
-            return self.recursive_randint(new_x_min, new_x_max, y, op)
-        
-        except RecursionError:
-
-            if op.__name__ == "less":
-                return max(0, y - 1)
-            if op.__name__ == "greater":
-                return y + 1
-            return y
+            return self.recursive_randint(new_x_min, new_x_max, y, op, n)
+    
+        if op.__name__ == "less":
+            return max(0, y - 1)
+        if op.__name__ == "greater":
+            return y + 1
+        return y
 
     # CONDITIONAL CONSTRAINT FUNCTIONS
     # ================================

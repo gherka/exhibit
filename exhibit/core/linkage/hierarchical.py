@@ -280,6 +280,10 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
         #that columns that are normally linked, won't be (Missing data will
         #appear for multiple "parent" columns) 
         pair_df = df[[col1, col2]].dropna()
+
+        #check again if after dropping NAs, the result is a single value column
+        if pair_df[col1].nunique() == 1 or pair_df[col2].nunique() == 1:
+            continue
         
         #1:many relationship exists for one of two columns
         if (( 
