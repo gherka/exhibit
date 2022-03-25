@@ -43,15 +43,20 @@ class missingDataTests(unittest.TestCase):
 
     def test_never_null_indices_are_identified(self):
         '''
-        Some cells can't ever have nulls due to conditional constraints
+        Some cells can't ever have nulls due to custom constraints.
+        Filter and Partition fields are optional when defining custom
+        constraints.
         '''
 
         test_dict = {
             "constraints" : {
-                "conditional_constraints": {
-                    "Test == Test" : {    # what to do with non-null rows
-                        "Num" : "no_nan", # ensure a valid value is generated
-                    }
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "~Test.isna()",
+                        "targets" : {
+                            "Num" : "no_nan"
+                        }
+                    },
                 }
             }
         }
@@ -104,7 +109,7 @@ class missingDataTests(unittest.TestCase):
                 }
             },
             "constraints" : {
-                "conditional_constraints" : {},
+                "custom_constraints" : {},
                 
                 },
             "linked_columns" : []
@@ -152,7 +157,7 @@ class missingDataTests(unittest.TestCase):
                     }
             },
             "constraints" : {
-                "conditional_constraints" : {},
+                "custom_constraints" : {},
                 },
             "linked_columns" : [
                 (1, ["A", "B"]),
@@ -196,7 +201,7 @@ class missingDataTests(unittest.TestCase):
                     }
             },
             "constraints" : {
-                "conditional_constraints" : {},
+                "custom_constraints" : {},
                 },
             "linked_columns" : [
                 (0, ["A", "C"]),
@@ -275,9 +280,12 @@ class missingDataTests(unittest.TestCase):
 
             },
             "constraints" : {
-                "conditional_constraints": {
-                    "A == 'spam'" : {        
-                        "B" : "make_nan",
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "A == 'spam'",
+                        "targets" : {
+                            "B" : "make_nan"
+                        }
                     }
                 }
             },
@@ -331,9 +339,12 @@ class missingDataTests(unittest.TestCase):
                 }
             },
             "constraints" : {
-                "conditional_constraints": {
-                    "C == C" : {        # what to do with non-null rows
-                        "D" : "no_nan", # ensure a valid value is generated
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "~C.isna()",
+                        "targets" : {
+                            "D" : "no_nan"
+                        }
                     }
                 }
             },
@@ -380,7 +391,7 @@ class missingDataTests(unittest.TestCase):
                 },
             },
             "constraints" : {
-                "conditional_constraints" : {},
+                "custom_constraints" : {},
             },
             "linked_columns" : [],
         }
@@ -424,7 +435,7 @@ class missingDataTests(unittest.TestCase):
                 },
             },
             "constraints" : {
-                "conditional_constraints" : {}
+                "custom_constraints" : {}
             },
             "linked_columns" : [],
         }
@@ -504,7 +515,7 @@ class missingDataTests(unittest.TestCase):
                 },
             },
             "constraints" : {
-                "conditional_constraints" : {}
+                "custom_constraints" : {}
             },
             "linked_columns" : [],
             "weights_table" : weights,

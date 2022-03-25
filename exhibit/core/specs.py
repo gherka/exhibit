@@ -8,7 +8,7 @@ import numpy as np
 
 # Exhibit imports
 from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
-from .constraints import find_boolean_columns
+from .constraints import find_basic_constraint_columns
 from .utils import (
     guess_date_frequency, generate_table_id,
     float_or_int, sort_columns_by_dtype_az)
@@ -324,14 +324,12 @@ class newSpec:
             self.df.select_dtypes(exclude=np.number).duplicated())
 
         # add numerical column pairs where all values can described by
-        # boolean logic, e.g. A > B or A < 100
-        bool_constraints = find_boolean_columns(self.df)
-        self.output["constraints"]["boolean_constraints"] = bool_constraints
+        # basic boolean logic, e.g. A > B or A < 100
+        basic_constraints = find_basic_constraint_columns(self.df)
+        self.output["constraints"]["basic_constraints"] = basic_constraints
 
-        # add conditional constraints placeholder
-        self.output["constraints"]["conditional_constraints"] = {
-            "Example condition" : {"Example column" : "Example action"}
-        }
+        # add conditional constraints placeholder; see YAML comments for example format
+        self.output["constraints"]["custom_constraints"] = "empty_placeholder"
 
         # find and save linked columns
         h_linked_cols = find_hierarchically_linked_columns(

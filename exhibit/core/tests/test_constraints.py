@@ -1,5 +1,5 @@
 '''
-Test the code for parsing and enforcing boolean constraints
+Test the code for parsing and enforcing constraints
 '''
 
 # Standard library imports
@@ -46,7 +46,7 @@ class constraintsTests(unittest.TestCase):
 
         self.assertCountEqual(result, expected)
 
-    def test_boolean_columns_identified(self):
+    def test_basic_constraint_columns_identified(self):
         '''
         When a relationship exists between two numerical columns,
         add the pair to the spec, in a format that Pandas understands
@@ -72,13 +72,13 @@ class constraintsTests(unittest.TestCase):
         lt_expected = ["A < ~B B~"]
         ge_expected = ["~A A~ > B", "~A A~ >= C"]
 
-        lt_result = tm.find_boolean_columns(lt_df)
-        ge_result = tm.find_boolean_columns(ge_df)
+        lt_result = tm.find_basic_constraint_columns(lt_df)
+        ge_result = tm.find_basic_constraint_columns(ge_df)
 
         self.assertEqual(lt_expected, lt_result)
         self.assertEqual(ge_expected, ge_result)
 
-    def test_boolean_columns_with_nulls_identified(self):
+    def test_basic_constraint_columns_with_nulls_identified(self):
         '''
         When a relationship exists between two numerical columns,
         add the pair to the spec, in a format that Pandas understand
@@ -95,7 +95,7 @@ class constraintsTests(unittest.TestCase):
 
         expected = ["A < B"]
 
-        result = tm.find_boolean_columns(test_df)
+        result = tm.find_basic_constraint_columns(test_df)
 
         self.assertEqual(expected, result)
 
@@ -392,7 +392,7 @@ class constraintsTests(unittest.TestCase):
             c3_expected
         )
 
-    def test_add_outliers_in_conditional_constraints_range(self):
+    def test_add_outliers_in_custom_constraints_range(self):
         '''
         For conditional constraint, we only need to know about the
         actual constraint (nested dictionary) and the source dataframe.
@@ -407,9 +407,12 @@ class constraintsTests(unittest.TestCase):
                 }
             },
             "constraints" : {
-                "conditional_constraints": {
-                    "A == 'spam'" : {        
-                        "B" : "add_outliers",
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "A == 'spam'",
+                        "targets" : {
+                            "B" : "add_outliers"
+                        }
                     }
                 }
             },
@@ -425,7 +428,7 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result.query("A == 'spam'") == 3))
 
-    def test_add_outliers_in_conditional_constraints_uniform(self):
+    def test_add_outliers_in_custom_constraints_uniform(self):
         '''
         Special case if all the values in the series are the same,
         meaning IQR can't be calculated in a meaningful way so we take 30%
@@ -441,9 +444,12 @@ class constraintsTests(unittest.TestCase):
                 }
             },
             "constraints" : {
-                "conditional_constraints": {
-                    "A == 'spam'" : {        
-                        "B" : "add_outliers",
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter" : "A == 'spam'",
+                        "targets" : {
+                            "B" : "add_outliers"
+                        }
                     }
                 }
             },
@@ -459,7 +465,7 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result.query("A == 'spam'") == 0.7))
 
-    def test_conditional_constraints_no_match(self):
+    def test_custom_constraints_no_match(self):
         '''
         For conditional constraint, we only need to know about the
         actual constraint (nested dictionary) and the source dataframe.
@@ -468,9 +474,12 @@ class constraintsTests(unittest.TestCase):
         test_dict = {
             "_rng" : np.random.default_rng(seed=0),
             "constraints" : {
-                "conditional_constraints": {
-                    "A == 'spam'" : {        
-                        "B" : "add_outliers",
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "A == 'spam'",
+                        "targets" : {
+                            "B" : "add_outliers"
+                        }
                     }
                 }
             },
@@ -485,6 +494,40 @@ class constraintsTests(unittest.TestCase):
         result = test_gen.process_constraints()
 
         self.assertTrue(all(result["B"] == 1))
+
+    def test_custom_constraints_no_filter(self):
+        '''
+        Filter is optional and not set the action will be applied to the entire column
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "B" : {
+                    "precision" : "integer",
+                    "distribution_parameters": {}
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "targets" : {
+                            "B" : "add_outliers"
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["spam", "spam"] + ["eggs"] * 8,
+            "B" : [1] * 10,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        self.assertTrue(all(result["B"] == 0.7))
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

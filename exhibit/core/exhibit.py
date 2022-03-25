@@ -268,7 +268,7 @@ class newExhibit:
         miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
         anon_df = miss_gen.add_missing_data()
 
-        #6) PROCESS BOOLEAN AND CONDITIONAL CONSTRAINTS (IF ANY)
+        #6) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
 

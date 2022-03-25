@@ -251,9 +251,9 @@ class newValidator:
                         return False
         return True
     
-    def validate_boolean_constraints(self, spec_dict=None):
+    def validate_basic_constraints(self, spec_dict=None):
         '''
-        User can enter boolean constraints linking two numerical columns
+        User can enter basic constraints linking two numerical columns
         or a single column and a scalar value, like Column A < 100.
 
         Each constraint must yield 3-element tuple: Column A, operator
@@ -267,9 +267,9 @@ class newValidator:
         VALIDATION FAIL: Tokenisation failed for %s
         """)
 
-        if spec_dict["constraints"]["boolean_constraints"]:
+        if spec_dict["constraints"]["basic_constraints"]:
 
-            for constraint in spec_dict["constraints"]["boolean_constraints"]:
+            for constraint in spec_dict["constraints"]["basic_constraints"]:
                 
                 # tokenise without cleaning up - as user has entered them
                 tcon = tokenise_constraint(constraint)

@@ -249,12 +249,12 @@ class referenceTests(unittest.TestCase):
             - removed linked columns from spec
             - removed Scotland from HBs and deleted loc columns
             - changed the totals for stays (100 000) and los (200 000)
-            - changed boolean constraint to los >= stays
+            - changed basic constraint to los >= stays
             - DB is not used at all so no need for ID
 
-        Note that when boolean constraints are added, generated totals can
+        Note that when basic constraints are added, generated totals can
         be different from those set in the spec as target sum is enforced
-        BEFORE boolean constraints are adjusted.
+        BEFORE basic constraints are adjusted.
         '''
 
 
@@ -484,7 +484,7 @@ class referenceTests(unittest.TestCase):
                     {"anonymising_set":"mountains.peak"}
                 },
             "constraints": {
-                "boolean_constraints" : {}
+                "basic_constraints" : {}
             }
         }
                  

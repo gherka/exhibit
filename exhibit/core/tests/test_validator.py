@@ -211,9 +211,9 @@ class validatorTests(unittest.TestCase):
             tm.validate_anonymising_set_width(validatorMock, spec_dict=test_dict)
             )
 
-    def test_boolean_constraints(self):
+    def test_basic_constraints(self):
         '''
-        Boolean constraints are only valid if they can be tokenised into 3 elements
+        Basic constraints are only valid if they can be tokenised into 3 elements
         '''
 
         validatorMock = Mock()
@@ -228,7 +228,7 @@ class validatorTests(unittest.TestCase):
                 ]
             },
             "constraints": {
-                "boolean_constraints": [
+                "basic_constraints": [
                     "Spam Eggs > Spam",
                     ] 
             }
@@ -246,18 +246,18 @@ class validatorTests(unittest.TestCase):
                 ]
             },
             "constraints": {
-                "boolean_constraints": [
+                "basic_constraints": [
                     "Bacon > Spam",
                     ] 
             }
         }
 
         self.assertFalse(
-            tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict_1)
+            tm.validate_basic_constraints(validatorMock, spec_dict=test_dict_1)
             )
 
         self.assertFalse(
-            tm.validate_boolean_constraints(validatorMock, spec_dict=test_dict_2)
+            tm.validate_basic_constraints(validatorMock, spec_dict=test_dict_2)
             )
 
     def test_distribution_parameters(self):

@@ -162,22 +162,30 @@ def generate_YAML_string(spec_dict):
     # ===========
     #
     # There are two types of constraints you can impose of the data:
-    # - boolean
-    # - conditional
+    # - basic
+    # - custom
     # 
-    # Boolean constraints take the form of a simple statement of the
+    # Basic constraints take the form of a simple statement of the
     # form [dependent_column] [operator] [expression / independent_column].
     # The tool will try to guess these relationships when creating a
     # spec. You can also force a column to be always smaller / larger
-    # than a scalar value. Note that adding a boolean constraint between
+    # than a scalar value. Note that adding a basic constraint between
     # two columns will affect the distribution of weights and also the
     # target sum as these are designed to work with a single column.
     #
-    # Conditional constraints are more flexible and can target specific
+    # Custom constraints are more flexible and can target specific
     # subsets of values with different actions. There are three options:
     # "make_nan", "no_nan" and "add_outliers". Adding or banning nulls is
     # useful when a value in one column, like Readmissions Within 28 days,
     # necessitates a valid value in another, like Readmissions Within 7 days.
+    # 
+    # The format for custom constraints is as follows:
+    #
+    # demo_constraint_name:
+    #   filter: (los > 2)
+    #   partition: (age, sex)
+    #   targets:
+    #     taget_column: target_action
     #
     # If a column name has spaces, make sure to surround it with
     # the tilde character ~. When comparing a date column against a
@@ -186,7 +194,11 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_constraints = yaml.safe_dump(yaml_list[2], sort_keys=False, width=1000)
+    yaml_constraints = (
+        yaml
+        .safe_dump(yaml_list[2], sort_keys=False, width=1000)
+        .replace("empty_placeholder", "")
+    )
 
     c4 = textwrap.dedent("""\
     # ----------------------------------------------------------

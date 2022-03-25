@@ -37,7 +37,7 @@ class MissingDataGenerator:
         # only copy the data if there are conditional constraints meaning
         # we can't be sure the required columns HADN'T HAD data already made
         # missing in an earlier step.s
-        if spec_dict["constraints"]["conditional_constraints"]:
+        if spec_dict["constraints"]["custom_constraints"]:
             self.nan_data = data.copy()
 
     def add_missing_data(self):
@@ -100,7 +100,7 @@ class MissingDataGenerator:
                 self.nan_data.loc[:, cols]
             )
 
-        #3) Generate nulls in indices explicitly defined in conditional_constraints
+        #3) Generate nulls in indices explicitly defined in custom_constraints
         make_nan_idx = self._find_make_nan_idx()
 
         for idx, col_name in make_nan_idx:
@@ -237,15 +237,17 @@ class MissingDataGenerator:
         original data passed in to the generator.
         '''
         
-        cc = self.spec_dict["constraints"]["conditional_constraints"]
+        cc = self.spec_dict["constraints"]["custom_constraints"] or dict()
 
         make_nan_idx = []
         
-        for condition, targets in cc.items():
+        for _, constraint in cc.items():
 
-            clean_condition = clean_up_constraint(condition)
+            cc_filter = constraint.get("filter", None)
+            cc_targets = constraint.get("targets", dict())
+            clean_filter = clean_up_constraint(cc_filter)
 
-            for target, action in targets.items():
+            for target, action in cc_targets.items():
 
                 if action == "make_nan":
 
@@ -253,7 +255,7 @@ class MissingDataGenerator:
                         (
                         self.nan_data
                             .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                            .query(clean_condition).index,
+                            .query(clean_filter).index,
                         target
                         )
                     )    
@@ -265,15 +267,17 @@ class MissingDataGenerator:
         Doc string
         '''
         
-        cc = self.spec_dict["constraints"]["conditional_constraints"]
+        cc = self.spec_dict["constraints"]["custom_constraints"] or dict()
 
         no_nan_idx = []
             
-        for condition, targets in cc.items():
+        for _, constraint in cc.items():
 
-            clean_condition = clean_up_constraint(condition)
+            cc_filter = constraint.get("filter", None)
+            cc_targets = constraint.get("targets", dict())
+            clean_filter = clean_up_constraint(cc_filter)
 
-            for target, action in targets.items():
+            for target, action in cc_targets.items():
 
                 if action == "no_nan":
 
@@ -281,7 +285,7 @@ class MissingDataGenerator:
                         (
                         self.nan_data
                             .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                            .query(clean_condition).index,
+                            .query(clean_filter).index,
                         target
                         )
                     )

@@ -39,39 +39,39 @@ class ConstraintHandler:
 
     def process_constraints(self):
         '''
-        Doc string
+        Main function to process constraints. Note that constraints dealing with
+        missing data are handled separately in the missng.py module.
         '''
 
         constraints = self.spec_dict["constraints"]
 
-        boolean_constraints = constraints.get("boolean_constraints", None)
-        conditional_constraints = constraints.get("conditional_constraints", None)
+        basic_constraints = constraints.get("basic_constraints", None)
+        custom_constraints = constraints.get("custom_constraints", None)
 
         # hand over constraints dict / list to the responsible function
         # the function is responsible for implementing the interface. The
         # only restriction on the constraint handling function is that it
         # returns a dataframe.
-        if boolean_constraints:
-            self.output = self.process_boolean_constraints(boolean_constraints)
+        if basic_constraints:
+            self.output = self.process_basic_constraints(basic_constraints)
 
-        if conditional_constraints:
-            self.output = self.process_conditional_constraints(conditional_constraints)
+        if custom_constraints:
+            self.output = self.process_custom_constraints(custom_constraints)
 
         if isinstance(self.output, pd.DataFrame):
             return self.output
         
         return self.input #pragma: no cover
 
-
-    def process_boolean_constraints(self, boolean_constraints):
+    def process_basic_constraints(self, basic_constraints):
         """
-        Adjusts the anonymised dataframe to the boolean constraints specified by
+        Adjusts the anonymised dataframe to the basic boolean constraints specified by
         providing a dependent (to be adjusted) column, an operator, and
         an indepdenent expression (to be adjusted against).
 
         Parameters
         ----------
-        boolean_constraints : list
+        basic_constraints : list
             List of strings with column names escaped with a ~ character
 
         Returns
@@ -84,27 +84,38 @@ class ConstraintHandler:
 
         source = self.input if self.output is None else self.output
 
-        for constraint in boolean_constraints:
+        for constraint in basic_constraints:
             source = self.adjust_dataframe_to_fit_constraint(source, constraint)
 
         return source
 
-    def process_conditional_constraints(self, conditional_constraints):
+    def process_custom_constraints(self, custom_constraints):
         """
-        Adjusts the anonymised dataframe to the boolean constraints specified by
-        providing a dependent (to be adjusted) column, an operator, and
-        an indepdenent expression (to be adjusted against).
+        Handle constraints that are specified in a more flexible way,
+        allowing for targeting specific subsets of data and partitioning
+        the data to enable patterns of seasonality or category-specific 
+        outliers.
+
+        Note that the order of columns specified in the partion section
+        is important and will affect the end result.
+
+        Each custom condition must have a name, but how it's called is not
+        important.
 
         Parameters
         ----------
-        conditional_constraints : list
+        custom_constraints : list
             List with dictionaries that follows the format of:
                 {
-                    Example condition: {
-                        Example column : Example action,
+                    Condition name: {
+                        filter         : A valid pd.eval expression,
+                        partition      : Columns by which to group
+                        targets        : {
+                            Target column : Target action,
+                            }
                     }, 
                 }
-            Same conditions can affect multiple columns, but each column
+            Same action can affect multiple columns, but each column
             can have only one action for ease of writing the YAML spec
 
         Returns
@@ -122,23 +133,31 @@ class ConstraintHandler:
             "add_outliers" : self.add_outliers
         }
 
-        for rule, targets in conditional_constraints.items():
-            for target_col, action_str in targets.items():
+        for _, constraint in custom_constraints.items():
+
+            cc_filter = constraint.get("filter", None)
+            cc_partitions = constraint.get("partition", None)
+            cc_targets = constraint.get("targets", dict())
+
+            clean_filter = clean_up_constraint(cc_filter)
+
+            cc_filter_mask = (output_df
+                    .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                    .eval(clean_filter, engine="python"))
+            cc_filter_idx = output_df[cc_filter_mask].index
+
+            # if masked dataframe is empty (no values to adjust), exit loop
+            #remember that instead of adjusting TO the constraint, here the
+            #boolean condition is a FILTER so row matching it must be adjusted
+            if output_df[cc_filter_mask].empty:
+                continue
+
+            for target_col, action_str in cc_targets.items():
                 if (action_func := dispatch_dict.get(action_str, None)):
 
-                    clean_rule = clean_up_constraint(rule)
-                    mask = (output_df
-                        .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                        .eval(clean_rule, engine="python")
-                    )
-
-                    #if masked dataframe is empty (no values to adjust), exit loop
-                    #remember that instead of adjusting TO the constraint, here the
-                    #boolean condition is a FILTER so row matching it must be adjusted
-                    if output_df[mask].empty:
-                        continue
                     # overwrite the original target column with the adjusted one
-                    output_df[target_col] = action_func(mask, output_df[target_col])
+                    output_df.loc[cc_filter_idx, target_col] = action_func(
+                        output_df, cc_filter_idx, target_col, cc_partitions)
 
         
         return output_df
@@ -336,7 +355,8 @@ class ConstraintHandler:
 
     # CONDITIONAL CONSTRAINT FUNCTIONS
     # ================================
-    def add_outliers(self, mask, series, rescale=True):
+    # Every custom function MUST implement the same call signature
+    def add_outliers(self, df, filter_idx, target_col, partition_cols, rescale=True):
         """
         Create outliers based on the boxplot methodology
 
@@ -355,26 +375,27 @@ class ConstraintHandler:
             New series with outliers substituted for masked values
         """
 
+        series = df[target_col]
+
         q25, q50, q75 = np.percentile(series, [25, 50, 75])
         iqr = q75 - q25
 
         if iqr == 0:
 
             masked_series = np.where(
-                series[mask] % 2 == 0, series[mask] * 1.3,
-                series[mask] * 0.7
+                series.loc[filter_idx] % 2 == 0, series.loc[filter_idx] * 1.3,
+                series.loc[filter_idx] * 0.7
             )
 
         else:
 
             masked_series = np.where(
-                series[mask] >= q50, (q75 + iqr * 3) + series[mask],
-                (q25 - iqr * 3) - series[mask]
+                series.loc[filter_idx] >= q50, (q75 + iqr * 3) + series.loc[filter_idx],
+                (q25 - iqr * 3) - series.loc[filter_idx]
             )
 
-
         result = series.copy()
-        result.loc[mask] = masked_series
+        result.loc[filter_idx] = masked_series
 
         if rescale:
             col_data = self.spec_dict["columns"][series.name]
@@ -386,7 +407,7 @@ class ConstraintHandler:
 
 # EXPORTABLE METHODS
 # ==================
-def find_boolean_columns(df):
+def find_basic_constraint_columns(df):
     '''
     Given a Pandas dataframe, find all numerical column pairs
     that have a relationship that can be described using standard
@@ -457,6 +478,11 @@ def clean_up_constraint(rule_string):
     The solution is to process the constraint first, before passing it to eval,
     not forgetting to rename the dataframe columns with a __ instead of a whitespace
     '''
+
+    # index is always available when doing df.eval or df.query 
+    # and returns a boolean array of True values for each row
+    if rule_string is None:
+        return "index == index"
     
     column_names = re.findall(r"~.*?~", rule_string)
     repl_dict = {"~": "", " ": "__"}
