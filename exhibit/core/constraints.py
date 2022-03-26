@@ -19,10 +19,9 @@ class ConstraintHandler:
     Keep all internal constraint-handling methods in one place
     with the added bonus of a shared spec_dict object
 
-    Currently, conditional constraints are limited to handling
-    just the na values - "make_nan" and "no_nan". In future, might
-    add more and the code for specific conditional "actions" will
-    go into this class rather than the MissingDataGenerator.
+    Custom constraints are implemented using dedicated functions
+    inside this class, except "make_null" and "make_not_null" which
+    are implemented in the MissingDataGenerator.
     '''
 
     def __init__(self, spec_dict, anon_df):
@@ -130,7 +129,7 @@ class ConstraintHandler:
         output_df = source.copy()
 
         dispatch_dict = {
-            "add_outliers" : self.add_outliers
+            "make_outlier" : self.make_outlier
         }
 
         for _, constraint in custom_constraints.items():
@@ -356,9 +355,10 @@ class ConstraintHandler:
     # CONDITIONAL CONSTRAINT FUNCTIONS
     # ================================
     # Every custom function MUST implement the same call signature
-    def add_outliers(self, df, filter_idx, target_col, partition_cols, rescale=True):
+    def make_outlier(self, df, filter_idx, target_col, partition_cols, rescale=True):
         """
-        Create outliers based on the boxplot methodology
+        Make filtered data slice an outlier compared to the rest of the data
+        included in the partition (or entire dataset) using boxplot methodology
 
         Parameters
         ----------

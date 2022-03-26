@@ -54,7 +54,7 @@ class missingDataTests(unittest.TestCase):
                     "cc1" : {
                         "filter"  : "~Test.isna()",
                         "targets" : {
-                            "Num" : "no_nan"
+                            "Num" : "make_not_null"
                         }
                     },
                 }
@@ -68,9 +68,9 @@ class missingDataTests(unittest.TestCase):
 
         test_gen = tm.MissingDataGenerator(test_dict, test_data)
 
-        no_nan_idx = test_gen._find_no_nan_idx()
+        not_null_idx = test_gen._find_not_null_idx()
 
-        result = no_nan_idx[0]
+        result = not_null_idx[0]
 
         assert_series_equal(
             test_data.loc[result],
@@ -217,11 +217,11 @@ class missingDataTests(unittest.TestCase):
 
         self.assertTrue(expected[0], result[0])      
         
-    def test_make_nans_in_columns(self):
+    def test_make_null_constraint_in_columns(self):
         '''
-        When we're adding NANs to categorical columns, the non-null 
+        When we're adding nulls to categorical columns, the non-null 
         numerical values must be re-calulcated and re-scaled because
-        Missing data (NANs identifier in categorical columns) can have
+        Missing data (null identifier in categorical columns) can have
         vastly different weights compared to the old values. However,
         we shouldn't rescaled the whole column anew, just the added values.
         '''
@@ -284,7 +284,7 @@ class missingDataTests(unittest.TestCase):
                     "cc1" : {
                         "filter"  : "A == 'spam'",
                         "targets" : {
-                            "B" : "make_nan"
+                            "B" : "make_null"
                         }
                     }
                 }
@@ -311,7 +311,7 @@ class missingDataTests(unittest.TestCase):
 
         assert_frame_equal(result, expected, check_dtype=False)
 
-    def test_no_nans_in_columns(self):
+    def test_not_null_constraint_in_columns(self):
         '''
         Doc string
         '''
@@ -343,7 +343,7 @@ class missingDataTests(unittest.TestCase):
                     "cc1" : {
                         "filter"  : "~C.isna()",
                         "targets" : {
-                            "D" : "no_nan"
+                            "D" : "make_not_null"
                         }
                     }
                 }

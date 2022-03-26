@@ -392,7 +392,7 @@ class constraintsTests(unittest.TestCase):
             c3_expected
         )
 
-    def test_add_outliers_in_custom_constraints_range(self):
+    def test_make_outlier_in_custom_constraints_range(self):
         '''
         For conditional constraint, we only need to know about the
         actual constraint (nested dictionary) and the source dataframe.
@@ -411,7 +411,7 @@ class constraintsTests(unittest.TestCase):
                     "cc1" : {
                         "filter"  : "A == 'spam'",
                         "targets" : {
-                            "B" : "add_outliers"
+                            "B" : "make_outlier"
                         }
                     }
                 }
@@ -428,7 +428,7 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result.query("A == 'spam'") == 3))
 
-    def test_add_outliers_in_custom_constraints_uniform(self):
+    def test_make_outlier_in_custom_constraints_uniform(self):
         '''
         Special case if all the values in the series are the same,
         meaning IQR can't be calculated in a meaningful way so we take 30%
@@ -448,7 +448,7 @@ class constraintsTests(unittest.TestCase):
                     "cc1" : {
                         "filter" : "A == 'spam'",
                         "targets" : {
-                            "B" : "add_outliers"
+                            "B" : "make_outlier"
                         }
                     }
                 }
@@ -478,7 +478,7 @@ class constraintsTests(unittest.TestCase):
                     "cc1" : {
                         "filter"  : "A == 'spam'",
                         "targets" : {
-                            "B" : "add_outliers"
+                            "B" : "make_outlier"
                         }
                     }
                 }
@@ -512,7 +512,7 @@ class constraintsTests(unittest.TestCase):
                 "custom_constraints": {
                     "cc1" : {
                         "targets" : {
-                            "B" : "add_outliers"
+                            "B" : "make_outlier"
                         }
                     }
                 }

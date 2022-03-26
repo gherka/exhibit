@@ -224,10 +224,18 @@ columns:
 # target sum as these are designed to work with a single column.
 #
 # Custom constraints are more flexible and can target specific
-# subsets of values with different actions. There are three options:
-# "make_nan", "no_nan" and "add_outliers". Adding or banning nulls is
-# useful when a value in one column, like Readmissions Within 28 days,
-# necessitates a valid value in another, like Readmissions Within 7 days.
+# subsets of values with different actions. Currently the following
+# actions are supported:
+#
+# - "make_null"
+# - "make_not_null"
+# - "make_outlier"
+# - "sort_ascending"
+# - "sort_descending"
+#
+# Adding or banning nulls is useful when a value in one column, 
+# like Readmissions Within 28 days, necessitates a valid value in
+# another, like Readmissions Within 7 days.
 # 
 # The format for custom constraints is as follows:
 #

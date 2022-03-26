@@ -101,14 +101,14 @@ class MissingDataGenerator:
             )
 
         #3) Generate nulls in indices explicitly defined in custom_constraints
-        make_nan_idx = self._find_make_nan_idx()
+        make_null_idx = self._find_make_null_idx()
 
-        for idx, col_name in make_nan_idx:
+        for idx, col_name in make_null_idx:
             self.nan_data.loc[idx, col_name] = np.NaN
 
         #4) Re-introduce the saved no_nulls rows from the original data
-        no_null_idx = self._find_no_nan_idx()
-        for idx, col_name in no_null_idx:
+        not_null_idx = self._find_not_null_idx()
+        for idx, col_name in not_null_idx:
             self.nan_data.loc[idx, col_name] = self.data.loc[idx, col_name]
 
         #5) Replace np.nan with missing data placeholder for categorical columns and
@@ -228,10 +228,10 @@ class MissingDataGenerator:
         return result
 
 
-    def _find_make_nan_idx(self):
+    def _find_make_null_idx(self):
         '''
-        The reason for keeping this and _find_no_nan_idx separate is that
-        they are needed at different points in time - no_nan_idx happens AFTER
+        The reason for keeping this and _find_not_null_idx separate is that
+        they are needed at different points in time - not_null_idx happens AFTER
         all other sources of nan-generation have been exhausted and we're using
         the data WITH nans to determine indices to pick up real values from the
         original data passed in to the generator.
@@ -239,7 +239,7 @@ class MissingDataGenerator:
         
         cc = self.spec_dict["constraints"]["custom_constraints"] or dict()
 
-        make_nan_idx = []
+        make_null_idx = []
         
         for _, constraint in cc.items():
 
@@ -249,9 +249,9 @@ class MissingDataGenerator:
 
             for target, action in cc_targets.items():
 
-                if action == "make_nan":
+                if action == "make_null":
 
-                    make_nan_idx.append(
+                    make_null_idx.append(
                         (
                         self.nan_data
                             .rename(lambda x: x.replace(" ", "__"), axis="columns")
@@ -260,16 +260,16 @@ class MissingDataGenerator:
                         )
                     )    
 
-        return make_nan_idx
+        return make_null_idx
 
-    def _find_no_nan_idx(self):
+    def _find_not_null_idx(self):
         '''
         Doc string
         '''
         
         cc = self.spec_dict["constraints"]["custom_constraints"] or dict()
 
-        no_nan_idx = []
+        not_null_idx = []
             
         for _, constraint in cc.items():
 
@@ -279,9 +279,9 @@ class MissingDataGenerator:
 
             for target, action in cc_targets.items():
 
-                if action == "no_nan":
+                if action == "make_not_null":
 
-                    no_nan_idx.append(
+                    not_null_idx.append(
                         (
                         self.nan_data
                             .rename(lambda x: x.replace(" ", "__"), axis="columns")
@@ -290,4 +290,4 @@ class MissingDataGenerator:
                         )
                     )
 
-        return no_nan_idx
+        return not_null_idx
