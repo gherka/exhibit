@@ -428,6 +428,48 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result.query("A == 'spam'") == 3))
 
+    def test_make_outlier_in_custom_constraints_range_with_partition(self):
+        '''
+        For conditional constraint, we only need to know about the
+        actual constraint (nested dictionary) and the source dataframe.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "C" : {
+                    "precision" : "integer",
+                    "distribution_parameters": {}
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter" : "B == 'A'",
+                        "partition": "A",
+                        "targets" : {
+                            "C" : "make_outlier"
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["spam"] * 5 + ["bacon"] * 5,
+            "B" : list("ABCDE") * 2,
+            "C" : [1,2,3,4,5] + [10,20,30,40,50]
+            
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()["C"].to_list()
+        # 1st partition: IQR=2 => 1-2*3=-5
+        # 2nd partition: IQR=20 => 50+20*3=110
+        expected = [-5,2,3,4,5,110,20,30,40,50]
+
+        self.assertListEqual(expected, result)
+
     def test_make_outlier_in_custom_constraints_uniform(self):
         '''
         Special case if all the values in the series are the same,
@@ -465,6 +507,48 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result.query("A == 'spam'") == 0.7))
 
+
+    def test_make_outlier_in_custom_constraints_uniform_with_partition(self):
+        '''
+        Special case if all the values in the series are the same,
+        meaning IQR can't be calculated in a meaningful way so we take 30%
+        difference from the uniform value.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "C" : {
+                    "precision" : "integer",
+                    "distribution_parameters": {}
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter" : "B == 'A'",
+                        "partition" : "A",
+                        "targets" : {
+                            "C" : "make_outlier"
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["spam", "spam"] + ["eggs"] * 8,
+            "B" : list("ABCDE") * 2,
+            "C" : [1] * 2 + [10] * 8
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+
+        expected = [0.7, 1, 10, 10, 10, 13, 10, 10, 10, 10]
+        result = test_gen.process_constraints()["C"].to_list()
+
+        self.assertListEqual(expected, result)
+
     def test_custom_constraints_no_match(self):
         '''
         For conditional constraint, we only need to know about the
@@ -495,9 +579,10 @@ class constraintsTests(unittest.TestCase):
 
         self.assertTrue(all(result["B"] == 1))
 
-    def test_custom_constraints_no_filter(self):
+    def test_custom_constraints_no_filter_no_partition(self):
         '''
-        Filter is optional and not set the action will be applied to the entire column
+        Filter is optional (same as partition) and if not set the action
+        will be applied to the entire target column.
         '''
 
         test_dict = {
@@ -512,7 +597,8 @@ class constraintsTests(unittest.TestCase):
                 "custom_constraints": {
                     "cc1" : {
                         "targets" : {
-                            "B" : "make_outlier"
+                            "B" : "make_outlier",
+                            "C" : "sort_descending"
                         }
                     }
                 }
@@ -522,12 +608,60 @@ class constraintsTests(unittest.TestCase):
         test_data = pd.DataFrame(data={
             "A" : ["spam", "spam"] + ["eggs"] * 8,
             "B" : [1] * 10,
+            "C" : range(10)
         })
 
         test_gen = tm.ConstraintHandler(test_dict, test_data)
         result = test_gen.process_constraints()
 
         self.assertTrue(all(result["B"] == 0.7))
+        self.assertListEqual(result["C"].to_list(), sorted(range(10), reverse=True))
+
+    def test_custom_constraints_sort_partition(self):
+        '''
+        Apply sort in a kind of nested way using groupby as a generalisable
+        principle.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "B" : {
+                    "precision" : "integer",
+                    "distribution_parameters": {}
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "partition" : "B",
+                        "targets" : {
+                            "C" : "sort_ascending",
+                            "D" : "sort_descending"
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 2,
+            "B" : ["spam", "spam"] + ["eggs"] * 8,
+            "C" : [2, 1, 2, 3, 4, 5, 1, 6, 8, 7],
+            "D" : [1, 2, 2, 3, 4, 5, 1, 6, 8, 7]
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        
+        expected_c = [1, 2, 1, 2, 3, 4, 5, 6, 7, 8]
+        expected_d = [2, 1, 8, 7, 6, 5, 4, 3, 2, 1]
+
+        result = test_gen.process_constraints()
+        result_c = result["C"].to_list()
+        result_d = result["D"].to_list()
+
+        self.assertListEqual(result_c, expected_c)
+        self.assertListEqual(result_d, expected_d)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

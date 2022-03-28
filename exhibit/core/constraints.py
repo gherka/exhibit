@@ -4,6 +4,7 @@ Module for various derived and user-set constraints
 # Standard library imports
 from collections import namedtuple
 from datetime import datetime
+from functools import partial
 import itertools as it
 import re
 
@@ -129,7 +130,9 @@ class ConstraintHandler:
         output_df = source.copy()
 
         dispatch_dict = {
-            "make_outlier" : self.make_outlier
+            "make_outlier"    : self.make_outlier,
+            "sort_ascending"  : partial(self.sort_values, ascending=True),
+            "sort_descending" : partial(self.sort_values, ascending=False),
         }
 
         for _, constraint in custom_constraints.items():
@@ -355,53 +358,148 @@ class ConstraintHandler:
     # CONDITIONAL CONSTRAINT FUNCTIONS
     # ================================
     # Every custom function MUST implement the same call signature
-    def make_outlier(self, df, filter_idx, target_col, partition_cols, rescale=True):
-        """
+    # If adding a new function, don't forget to add it to the dispatch dict as well
+    # Each function should also handle missing data and partitioning logic
+    def make_outlier(
+        self, df, filter_idx, target_col, partition_cols=None, rescale=True):
+        '''
         Make filtered data slice an outlier compared to the rest of the data
         included in the partition (or entire dataset) using boxplot methodology
 
         Parameters
         ----------
-        mask : boolean index
-            Filter the series to idx that need to be turned into outliers
-        series : pd.Series
-            Original series
-        rescale: boolean
-            Adding outliers can push the series ranges outside the specified bounds
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_col     : str
+            Column where user wants to add outliers
+        partition_cols : list
+            Columns to group by before computing IQR ranges and outliers
+        rescale        : boolean
+            If true, the whole series including outliers will be rescaled because
+            adding outliers can push the series ranges outside the specified bounds
 
         Returns
         -------
         pd.Series
             New series with outliers substituted for masked values
-        """
+        '''
 
-        series = df[target_col]
+        def _within_group_outliers(series):
+            '''
+            Helper function to create outliers within groups - 
+            every value in the new series is an outlier compared
+            to the whole of the group. Watch out for NAs
 
-        q25, q50, q75 = np.percentile(series, [25, 50, 75])
-        iqr = q75 - q25
+            Outliers are made in one or the other direction based on
+            whether the value is divisible by 2 without remainder.
+            '''
 
-        if iqr == 0:
+            q25, q50, q75 = np.percentile(series, [25, 50, 75])
+            iqr = q75 - q25
 
-            masked_series = np.where(
-                series.loc[filter_idx] % 2 == 0, series.loc[filter_idx] * 1.3,
-                series.loc[filter_idx] * 0.7
-            )
+            if iqr == 0:
+
+                outlier_series = np.where(
+                    series % 2 == 0, series * 1.3,
+                    series * 0.7
+                )
+
+            else:
+
+                outlier_series = np.where(
+                    series % 2 == 0, (q75 + iqr * 3) + series,
+                    (q25 - iqr * 3) - series
+                )
+
+            return outlier_series
+
+        series = df[target_col].dropna()
+        # make sure that original filtered index reflects the non-null series
+        filter_idx = series.index.intersection(filter_idx)
+
+        if partition_cols is not None:
+
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+            grouped_series = df.dropna(subset=[target_col]).groupby(partition_cols)[target_col]
+            outlier_series = grouped_series.transform(_within_group_outliers)
+            result = series.copy()
+            result.loc[filter_idx] = outlier_series.loc[filter_idx]
 
         else:
 
-            masked_series = np.where(
-                series.loc[filter_idx] >= q50, (q75 + iqr * 3) + series.loc[filter_idx],
-                (q25 - iqr * 3) - series.loc[filter_idx]
-            )
+            q25, q50, q75 = np.percentile(series, [25, 50, 75])
+            iqr = q75 - q25
 
-        result = series.copy()
-        result.loc[filter_idx] = masked_series
+            if iqr == 0:
+
+                masked_series = np.where(
+                    series.loc[filter_idx] % 2 == 0,
+                    series.loc[filter_idx] * 1.3,
+                    series.loc[filter_idx] * 0.7
+                )
+
+            else:
+                # make outliers in the same direction as original values
+                masked_series = np.where(
+                    series.loc[filter_idx] >= q50,
+                    (q75 + iqr * 3) + series.loc[filter_idx],
+                    (q25 - iqr * 3) - series.loc[filter_idx]
+                )
+
+            result = series.copy()
+            result.loc[filter_idx] = masked_series
 
         if rescale:
             col_data = self.spec_dict["columns"][series.name]
             precision = col_data["precision"]
             dist_params = col_data["distribution_parameters"]
             result = scale_continuous_column(result, precision, **dist_params)
+
+        return result
+
+    def sort_values(
+        self, df, filter_idx, target_col, partition_cols=None, ascending=True):
+        '''
+        Sort filtered data slice with optional nesting achieved by group by
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_col     : str
+            Column where user wants to add outliers
+        partition_cols : list
+            Columns to group by before computing IQR ranges and outliers
+        rescale        : boolean
+            If true, the whole series including outliers will be rescaled because
+            adding outliers can push the series ranges outside the specified bounds
+
+        Returns
+        -------
+        pd.Series
+            Only the filtered and sorted data slice is returned, not the whole series
+        '''
+
+        if partition_cols is None:
+            
+            new_sorted_series = df.loc[filter_idx, target_col].sort_values(ascending=ascending)
+            new_sorted_series.index = filter_idx
+            return new_sorted_series
+
+        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+        # remember that sorted() defaults to reverse=False so
+        # sorted(False) = ascending; df.sort_values(False) = descending
+        # meaning for sorted() we have to reverse the boolean parameter
+        result = (df
+            .groupby(partition_cols)[target_col]
+            .transform(sorted, reverse=not ascending)
+            .loc[filter_idx]
+        )
 
         return result
 
