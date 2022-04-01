@@ -10,6 +10,11 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
+# Exhibit imports
+from exhibit.core.constants import ORIGINAL_VALUES_DB
+from exhibit.core.sql import create_temp_table
+from exhibit.db import db_util
+
 # Module under test
 from exhibit.core import constraints as tm
 
@@ -662,6 +667,155 @@ class constraintsTests(unittest.TestCase):
 
         self.assertListEqual(result_c, expected_c)
         self.assertListEqual(result_d, expected_d)
+
+    def test_custom_constraints_make_distinct_with_available_values(self):
+        '''
+        Ensure filtered values in the target column are distinct from 
+        each other within range allowed by the spec_dict. Take care to
+        include test cases for when the column is filtered to a single
+        value or when there aren't enough distinct unique values to 
+        choose from - use nulls instead. Other complications are such
+        that if the target column values are in the DB, you have to 
+        get them out of there first.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "partition" : "C",
+                        "targets" : {
+                            "A" : "make_distinct",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 4,
+            "B" : ["spam", "spam", "ham", "ham", "ham"] * 4,
+            "C" : [True, False] * 10,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+        
+        self.assertFalse(result.query("B=='spam' & C == True")["A"].duplicated().any())
+        self.assertFalse(result.query("B=='spam' & C == False")["A"].duplicated().any())
+
+    def test_custom_constraints_make_distinct_no_partition(self):
+        '''
+        If there aren't enough original values to make distinct, then the remainder
+        will be made null. Duplicate nulls are still duplicates according to Pandas
+        so we need to drop na first before asserting. Also tests the pass-through of
+        columns which already have all distinct values.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
+                },
+                "C" : {
+                    "uniques" : 20,
+                    "original_values": pd.DataFrame(
+                        data={"C": [str(x) for x in range(20)]})
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "targets" : {
+                            "A" : "make_distinct",
+                        }
+                    },
+                    "cc2" : {
+                        "targets" : {
+                            "C" : "make_distinct"
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 4,
+            "B" : ["spam", "spam", "ham", "ham", "ham"] * 4,
+            "C" : [str(x) for x in range(20)]
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+        
+        self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
+
+
+    def test_custom_constraints_make_distinct_with_db_values(self):
+        '''
+        Rather than writing setup and teardown classes for all tests,
+        we just use try, finally to drop the temp table.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata" : {
+                "id" : "test"
+            },
+            "columns" : {
+                "A" : {
+                    "uniques" : 5,
+                    "original_values" : ORIGINAL_VALUES_DB
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "targets" : {
+                            "A" : "make_distinct",
+                        }
+                    }
+                }
+            },
+        }
+
+        table_name = "temp_test_A"
+
+        try:
+            create_temp_table(
+                table_name=table_name,
+                col_names="A",
+                data=[(x, ) for x in "ABCDE"],
+            )
+
+            test_data = pd.DataFrame(data={
+                "A" : list("ABCDE") * 2,
+                "B" : ["spam", "spam", "ham", "ham", "ham"] * 2,
+            })
+
+            test_gen = tm.ConstraintHandler(test_dict, test_data)
+            result = test_gen.process_constraints()
+
+            self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
+
+        finally:
+            # clean up table name
+            db_util.drop_tables(table_name)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

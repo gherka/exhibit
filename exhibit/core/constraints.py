@@ -12,8 +12,10 @@ import re
 import numpy as np
 import pandas as pd
 
-# Exibit import
+# Exibit imports
+from .sql import query_anon_database
 from .generate.continuous import scale_continuous_column
+from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED
 
 class ConstraintHandler:
     '''
@@ -133,6 +135,7 @@ class ConstraintHandler:
             "make_outlier"    : self.make_outlier,
             "sort_ascending"  : partial(self.sort_values, ascending=True),
             "sort_descending" : partial(self.sort_values, ascending=False),
+            "make_distinct"   : self.make_distinct,
         }
 
         for _, constraint in custom_constraints.items():
@@ -462,7 +465,7 @@ class ConstraintHandler:
     def sort_values(
         self, df, filter_idx, target_col, partition_cols=None, ascending=True):
         '''
-        Sort filtered data slice with optional nesting achieved by group by
+        Sort filtered data slice with optional nesting achieved by partitioning
 
         Parameters
         ----------
@@ -473,10 +476,9 @@ class ConstraintHandler:
         target_col     : str
             Column where user wants to add outliers
         partition_cols : list
-            Columns to group by before computing IQR ranges and outliers
-        rescale        : boolean
-            If true, the whole series including outliers will be rescaled because
-            adding outliers can push the series ranges outside the specified bounds
+            Columns to group by to achieve nested sort
+        ascending        : boolean
+            Direction of sorting
 
         Returns
         -------
@@ -499,6 +501,91 @@ class ConstraintHandler:
             .groupby(partition_cols)[target_col]
             .transform(sorted, reverse=not ascending)
             .loc[filter_idx]
+        )
+
+        return result
+
+    def make_distinct(self, df, filter_idx, target_col, partition_cols=None):
+        '''
+        Ensure the filtered data slice has distinct values within the specified
+        partition. Paired columns are not supported yet.
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_col     : str
+            Column where user wants to add outliers
+        partition_cols : list
+            Columns to group by before computing IQR ranges and outliers
+
+        Returns
+        -------
+        pd.Series
+            Only the filtered and sorted data slice is returned, not the whole series
+        '''
+
+        def _make_distinct_within_group(group, original_uniques):
+            '''
+            Helper function with ugly logic
+            '''
+            # each pass over a group requires a fresh list of uniques to check against
+            # we reverse it because list().pop() works from the end of the list
+            temp_uniques = list(reversed(original_uniques))
+
+            running_set = set()
+            new_group = []
+
+            if not group.duplicated().any():
+                return group
+
+            for x in group:
+                if x not in running_set:
+                    running_set.add(x)
+                    new_group.append(x)
+                    temp_uniques.remove(x)
+                else:
+                    if temp_uniques:
+                        running_set.add(x)
+                        new_group.append(temp_uniques.pop())
+                    else:
+                        new_group.append(np.nan)
+
+            return new_group
+
+        orig_vals_in_spec = self.spec_dict["columns"][target_col]["original_values"]
+
+        if isinstance(orig_vals_in_spec, pd.DataFrame):
+            original_uniques = (
+                orig_vals_in_spec[target_col].values
+            )
+
+        elif orig_vals_in_spec == ORIGINAL_VALUES_DB:
+
+            table_name = f'temp_{self.spec_dict["metadata"]["id"]}_{target_col}'
+            original_uniques = query_anon_database(
+                table_name=table_name,
+                column=target_col,
+            )[target_col].values
+
+        elif orig_vals_in_spec == ORIGINAL_VALUES_PAIRED: #pragma: no cover
+            raise ValueError("make_distinct action not supported for paired columns")
+
+                 
+        if partition_cols is None:
+            
+            filtered_series = df.loc[filter_idx, target_col]
+            result = _make_distinct_within_group(filtered_series, original_uniques)
+            return result
+
+        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+        result = (df
+            .loc[filter_idx]
+            .groupby(partition_cols)[target_col]
+            .transform(_make_distinct_within_group, original_uniques)
         )
 
         return result

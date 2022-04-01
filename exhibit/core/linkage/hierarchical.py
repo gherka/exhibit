@@ -282,8 +282,10 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
         pair_df = df[[col1, col2]].dropna()
 
         #check again if after dropping NAs, the result is a single value column
+        #even though there is a test that fails without this line, 286 is still
+        #reported as not being covered so there is a pragma to get 100% coverage
         if pair_df[col1].nunique() == 1 or pair_df[col2].nunique() == 1:
-            continue
+            continue # pragma: no cover
         
         #1:many relationship exists for one of two columns
         if (( 
@@ -459,7 +461,7 @@ class _LinkedDataGenerator:
                 col_anon_set = self.spec_dict["columns"][col]["anonymising_set"]
                 
                 #spec column has a dot notation to reference a specific SQL column
-                if not col_anon_set == self.anon_set:
+                if col_anon_set != self.anon_set:
                     filter_cols.append(col_anon_set.split(".")[1])
             
             if filter_cols:
@@ -742,7 +744,7 @@ class _LinkedDataGenerator:
 
             paired_columns_lookup = _create_paired_columns_lookup(self.spec_dict, c)
 
-            if not paired_columns_lookup is None:
+            if paired_columns_lookup is not None:
 
                 linked_df = pd.merge(
                     left=linked_df,
