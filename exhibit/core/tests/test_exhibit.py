@@ -12,7 +12,7 @@ import argparse
 import pandas as pd
 
 # Exhibit imports
-from exhibit.core.utils import package_dir
+from exhibit.core.utils import package_dir, get_attr_values
 from exhibit.db import db_util
 
 # Module under test
@@ -218,6 +218,72 @@ class exhibitTests(unittest.TestCase):
         )
 
         self.assertRaises(Exception, tm.newExhibit, **args)
+
+    def test_output_spec_always_includes_uuid_column_type(self):
+        '''
+        Make sure the generated spec has at least one column of the type uuid.
+        '''
+
+        args = dict(
+            command="fromdata",
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
+            verbose=True,
+            inline_limit=30,
+            equal_weights=True,
+            skip_columns=[]
+        )
+
+        xA = tm.newExhibit(**args)
+        xA.read_data()
+        xA.generate_spec()
+
+        # save the spec ID to delete temp tables after tests finish
+        self._temp_tables.append(xA.spec_dict["metadata"]["id"])
+
+        result = get_attr_values(xA.spec_dict, "type")                
+        self.assertTrue("uuid" in result)
+
+    def test_uuid_columns_are_never_duplicated_in_other_column_types(self):
+        '''
+        If a column is marked as uuid in CLI, it should be taken out of
+        consideration for other column types, like categorical, time and
+        numerical.
+        '''
+
+        uuid_columns = {"hb_name", "quarter_date", "stays"}
+
+        args = dict(
+            command="fromdata",
+            source=Path(package_dir("sample", "_data", "inpatients.csv")),
+            verbose=True,
+            inline_limit=30,
+            equal_weights=True,
+            skip_columns={},
+            uuid_columns=uuid_columns
+        )
+
+        xA = tm.newExhibit(**args)
+        xA.read_data()
+        xA.generate_spec()
+
+        # save the spec ID to delete temp tables after tests finish
+        self._temp_tables.append(xA.spec_dict["metadata"]["id"])
+
+        metadata_uuid_columns = xA.spec_dict["metadata"]["uuid_columns"]
+
+        col_names_and_types = [
+            x for x in get_attr_values(xA.spec_dict, "type", col_names=True)]
+
+        not_expected = []
+        for col_name, col_type in col_names_and_types:
+            test = (col_name in uuid_columns) and (col_type != "uuid")
+            not_expected.append(test)
+
+        # make sure no uuid column is saved with an incorrect type
+        self.assertFalse(any(not_expected))
+    
+        # uuid columns are correctly placed in metadata section
+        self.assertCountEqual(uuid_columns, metadata_uuid_columns)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

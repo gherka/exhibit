@@ -8,6 +8,8 @@
 # ----------------------------------------------------------
 metadata:
   number_of_rows: 2000
+  uuid_columns:
+  - uuid_placeholder
   categorical_columns:
   - age
   - hb_code
@@ -60,6 +62,13 @@ metadata:
 # as part of that column's section.
 # ----------------------------------------------------------
 columns:
+  uuid_placeholder:
+    type: uuid
+    frequency_distribution:
+    - frequency | probability_vector
+    - 1         | 1
+    miss_probability: 0.0
+    anonymising_set: uuid
   age:
     type: categorical
     paired_columns: []

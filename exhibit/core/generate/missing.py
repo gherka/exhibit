@@ -60,7 +60,8 @@ class MissingDataGenerator:
         standalone_cols = (
             set(self.spec_dict["columns"].keys()) - 
             {col for col_set in missing_link_cols for col in col_set} -
-            set(self.spec_dict.get("derived_columns", {}).keys())
+            set(self.spec_dict.get("derived_columns", {}).keys()) -
+            set(self.spec_dict["metadata"].get("uuid_columns", set()))
         )
 
         #1) Generate nulls in standalone columns, including continuous

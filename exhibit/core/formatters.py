@@ -4,6 +4,7 @@ and reading back user specification
 '''
 # Standard library imports
 import textwrap
+from collections import Counter
 
 # External library imports
 import pandas as pd
@@ -300,3 +301,37 @@ def parse_original_values(original_values):
         df.loc[df.index[:-1], "probability_vector"] = col_prob
 
     return df
+
+def build_list_of_uuid_frequencies(df, target_col):
+    '''
+    Similar to how we build original_values string, here we are composing 
+    a list with a header row and then rows of frequencies and their probability
+    of occuring. Thus, for example "ABCDEE" has frequencies of 1 and 2 so the
+    generated uuids will have 0.8 probability to never repeat and 0.2 probability
+    to be repeated once. Padding is automatically adjusted by ljust even if the
+    frequency goes into double-digits.
+    '''
+
+    header = ["frequency | probability_vector"]
+
+    if target_col not in df.columns:
+        return header 
+        
+    counts = Counter(df[target_col].value_counts())
+
+    freq_df = pd.DataFrame(
+        [(frequency, count) for frequency, count in counts.items()],
+        columns=["frequency", "count"]
+    ).sort_values("frequency")
+
+    freq_df["pct"] = freq_df["count"] / freq_df["count"].sum()
+
+    freq_list = (
+        freq_df["frequency"].astype(str).str.ljust(9)
+        .str.cat(freq_df["pct"].transform(lambda x: "{0:.3f}".format(x)), sep=' | ')
+        .tolist()
+    )
+
+    result = header + freq_list
+    
+    return result

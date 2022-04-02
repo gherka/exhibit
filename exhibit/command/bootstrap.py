@@ -11,6 +11,7 @@ import textwrap
 import sys
 
 # Exhibit imports
+from exhibit.core.constants import UUID_PLACEHOLDER
 from exhibit.core.exhibit import newExhibit
 from exhibit.core.utils import path_checker
 
@@ -138,9 +139,24 @@ def main():
         "relationships automatically. Only use this option for columns whose "
         "values are not easily categorized into one to many relationships as "
         "preserving the combinations of all values across multiple columns slows "
-        " down the generation process, particularly on Windows machines. Only "
+        "down the generation process, particularly on Windows machines. Only "
         "used with the fromdata command.\n"
         "Example: exhibit fromdata secret_data.csv -lc age location"
+        f"{arg_separator}"
+    )
+
+    parser.add_argument(
+        "--uuid_columns", "-uuid",
+        default={UUID_PLACEHOLDER},
+        nargs="+",
+        metavar="",
+        help=
+        "\nManually define columns that serve as unique record identifiers, "
+        "for example CHI or UPI numbers for EPRs. When columns are marked as "
+        "having uuids in this way, they are taken out of usual processing and "
+        "handled separately, vastly speeding up the generation of the spec."
+        "Only used with the fromdata command.\n"
+        "Example: exhibit fromdata secret_data.csv -uuid CHI_number"
         f"{arg_separator}"
     )
     
@@ -155,6 +171,9 @@ def main():
     )  
 
     args_dict = vars(parser.parse_args(sys.argv[1:]))
+
+    #Add any special processing rules (to facilitate testing, for example)
+    args_dict["uuid_columns"] = set(args_dict.get("uuid_columns", {UUID_PLACEHOLDER}))
     
     #New instance has access to all command line parameters
     exhibit = newExhibit(**args_dict)

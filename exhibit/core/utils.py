@@ -227,7 +227,7 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired
     '''
     
     if types is None:
-        types = ["categorical", "date", "continuous"]
+        types = ["uuid", "categorical", "date", "continuous"]
     
     if not isinstance(types, list): #pragma: no cover
         types = [types]

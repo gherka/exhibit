@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
+from .constants import UUID_PLACEHOLDER
 from .specs import newSpec
 from .formatters import parse_original_values
 from .validator import newValidator
@@ -32,6 +33,8 @@ from .generate.weights import (
 from .generate.continuous import (
                     generate_continuous_column,
                     generate_derived_column)
+
+from .generate.uuids import generate_uuid_column
 
 class newExhibit:
     '''
@@ -59,10 +62,12 @@ class newExhibit:
     equal_weights  : bool
         Use equal weights and probabilities for all printed column values. Default
         is False.
-    skip_columns   : list
-        List of columns to skip when reading in the data.
-    linked_columns : list
-        List of columns linked with non-hierarchical relationships.
+    skip_columns   : set
+        Set of columns to skip when reading in the data.
+    linked_columns : set
+        Set of columns linked with non-hierarchical relationships.
+    uuid_columns : set
+        Set of columns to treat as having record identifiers.
     verbose        : bool
         Increased verbosity of error messages. Default is False.
 
@@ -82,7 +87,8 @@ class newExhibit:
     def __init__(
         self, command, source, output=None,
         inline_limit=30, equal_weights=False,
-        skip_columns=None, linked_columns=None, verbose=False):
+        skip_columns=None, linked_columns=None, 
+        uuid_columns=None, verbose=False):
         '''
         Initialise either from the CLI or by instantiating directly
         '''
@@ -96,8 +102,9 @@ class newExhibit:
         self.output = output
         self.inline_limit = inline_limit
         self.equal_weights = equal_weights
-        self.skip_columns = skip_columns
-        self.linked_columns= linked_columns
+        self.skip_columns = skip_columns or set()
+        self.linked_columns= linked_columns or set()
+        self.uuid_columns= uuid_columns or {UUID_PLACEHOLDER}
         self.verbose = verbose
 
         self.spec_dict = None
@@ -136,7 +143,8 @@ class newExhibit:
                 data=self.df,
                 inline_limit=self.inline_limit,
                 ew=self.equal_weights,
-                user_linked_cols=self.linked_columns
+                user_linked_cols=self.linked_columns,
+                uuid_cols=self.uuid_columns,
                 )
 
             self.spec_dict = new_spec.output_spec_dict()
@@ -268,16 +276,35 @@ class newExhibit:
         miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
         anon_df = miss_gen.add_missing_data()
 
-        #6) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
+        #6) GENERATE UUID COLUMNS
+        for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"]:
+
+            dist = self.spec_dict["columns"][uuid_col_name]["frequency_distribution"]
+            
+            # only header included as a placeholder; skip if no frequency information
+            if len(dist) == 1:
+                continue
+
+            uuid_col = generate_uuid_column(
+                uuid_col_name,
+                self.spec_dict["metadata"]["number_of_rows"],
+                self.spec_dict["columns"][uuid_col_name]["miss_probability"],
+                dist,
+                self.spec_dict["metadata"]["random_seed"]
+            )
+
+            anon_df.insert(0, uuid_col_name, uuid_col)
+
+        #7) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
 
-        #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict["derived_columns"].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
             
-        #8) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #9) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self): # pragma: no cover

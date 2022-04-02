@@ -7,12 +7,13 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype, is_bool_dtyp
 import numpy as np
 
 # Exhibit imports
-from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
+from .constants import (
+    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR, UUID_PLACEHOLDER)
 from .constraints import find_basic_constraint_columns
 from .utils import (
     guess_date_frequency, generate_table_id,
     float_or_int, sort_columns_by_dtype_az)
-from .formatters import build_table_from_lists
+from .formatters import build_table_from_lists, build_list_of_uuid_frequencies
 from .sql import create_temp_table
 from .generate.weights import generate_weights
 
@@ -73,26 +74,39 @@ class newSpec:
         self.inline_limit = inline_limit
         self.ew = ew
         self.random_seed = random_seed
-        self.user_linked_cols = kwargs.get("user_linked_cols")
+        self.user_linked_cols = kwargs.get("user_linked_cols", set())
+        self.uuid_cols = kwargs.get("uuid_cols", {UUID_PLACEHOLDER})
         self.id = generate_table_id()
-        self.numerical_cols = set(
-            self.df.select_dtypes(include=np.number).columns.values)
-        self.date_cols = {col for col in self.df.columns.values
-                         if is_datetime64_dtype(self.df.dtypes[col])}
+        
+        self.numerical_cols = (
+            set(self.df.select_dtypes(include=np.number).columns.values) -
+            self.uuid_cols
+        )
+        self.date_cols = (
+            {col for col in self.df.columns.values
+            if is_datetime64_dtype(self.df.dtypes[col])} -
+            self.uuid_cols
+        )
         self.cat_cols = (
             set(self.df.select_dtypes(exclude=np.number).columns.values) -
-            self.date_cols)
-        self.paired_cols = find_pair_linked_columns(self.df, self.user_linked_cols)
+            self.date_cols -
+            self.uuid_cols
+        )
+        self.paired_cols = find_pair_linked_columns(
+            df=self.df,
+            ignore_cols=set((self.user_linked_cols or set())) | self.uuid_cols
+        )
 
         self.output = {
             "metadata": {
-                "number_of_rows": self.df.shape[0],
-                "categorical_columns": sorted(list(self.cat_cols)),
-                "numerical_columns": sorted(list(self.numerical_cols)),
-                "date_columns": sorted(list(self.date_cols)),
-                "inline_limit": self.inline_limit,
-                "random_seed": self.random_seed,
-                "id": self.id
+                "number_of_rows"      : self.df.shape[0],
+                "uuid_columns"        : sorted(list(self.uuid_cols)),
+                "categorical_columns" : sorted(list(self.cat_cols)),
+                "numerical_columns"   : sorted(list(self.numerical_cols)),
+                "date_columns"        : sorted(list(self.date_cols)),
+                "inline_limit"        : self.inline_limit,
+                "random_seed"         : self.random_seed,
+                "id"                  : self.id
             },
             "columns": {},
             "constraints": {},
@@ -102,8 +116,14 @@ class newSpec:
 
     def missing_data_chance(self, col):
         '''
-        Doc string
+        Helper function to calculate % of null rows in a given column.
+        Special case for placeholder columns (uuid) that are not in the
+        original dataframe.
         '''
+        
+        if col not in self.df.columns:
+            return 0
+
         result = round(sum(self.df[col].isna()) / self.df.shape[0], 3)
 
         return result
@@ -217,6 +237,20 @@ class newSpec:
         #if path is something else, raise exception
         raise ValueError("Incorrect %s" % path) # pragma: no cover
 
+    def uuid_dict(self, col):
+        '''
+        Placeholder
+        '''
+
+        result = {
+            "type"                   : "uuid",
+            "frequency_distribution" : build_list_of_uuid_frequencies(self.df, col),
+            "miss_probability"       : self.missing_data_chance(col),
+            "anonymising_set"        : "uuid"
+        }
+
+        return result
+
     def categorical_dict(self, col):
         '''
         Create a dictionary with information summarising
@@ -303,6 +337,17 @@ class newSpec:
         as part of the __init__ so here's we're just
         populating it with df-specific values.
         '''
+
+        # first thing we do is handle uuid columns; if any of the
+        # uuid columns are from the DF, we need to drop them after
+        # saving frequency info to avoid confusing downstream processing
+
+        for col in self.uuid_cols:
+            self.output["columns"][col] = self.uuid_dict(col)
+
+            # drop the uuid columns from DF to avoid complications down the line
+            if col in self.df.columns:
+                self.df.drop(columns=col, inplace=True)
 
         # sort columns by their dtype
         sorted_col_names = sort_columns_by_dtype_az(self.df.dtypes)

@@ -9,9 +9,13 @@ import unittest
 import pandas as pd
 import numpy as np
 
+# Exhibit imports
+from exhibit.core.constants import UUID_PLACEHOLDER
+from exhibit.sample.sample import prescribing_data as ref_df
+
 # Module under test
 from exhibit.core import specs as tm
-from exhibit.sample.sample import prescribing_data as ref_df
+
 
 class specsTests(unittest.TestCase):
     '''
@@ -51,6 +55,9 @@ class specsTests(unittest.TestCase):
         '''
         Make sure all data types, int, float, string, date, boolean, etc.
         are handled gracefully by exhibit and a spec is outputted.
+
+        Remember that uuid column placeholder is always included in the spec
+        before all other column types, regardless of CLI options.
         '''
 
         test_df = pd.DataFrame(data={
@@ -63,7 +70,8 @@ class specsTests(unittest.TestCase):
 
         test_spec = tm.newSpec(test_df, 10)
 
-        expected_col_order = ["bools", "cats", "floats", "ints", "dates"]
+        expected_col_order = [
+            UUID_PLACEHOLDER, "bools", "cats", "floats", "ints", "dates"]
 
         test_col_order = list(test_spec.output_spec_dict()["columns"].keys())
 
