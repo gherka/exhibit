@@ -15,7 +15,7 @@ import pandas as pd
 # Exibit imports
 from .sql import query_anon_database
 from .generate.continuous import scale_continuous_column
-from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED
+from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
 
 class ConstraintHandler:
     '''
@@ -136,6 +136,7 @@ class ConstraintHandler:
             "sort_ascending"  : partial(self.sort_values, ascending=True),
             "sort_descending" : partial(self.sort_values, ascending=False),
             "make_distinct"   : self.make_distinct,
+            "make_same"       : self.make_same,
         }
 
         for _, constraint in custom_constraints.items():
@@ -529,7 +530,11 @@ class ConstraintHandler:
 
         def _make_distinct_within_group(group, original_uniques):
             '''
-            Helper function with ugly logic
+            Helper function with ugly logic. It's possible to assign a distinct value
+            to a duplicate meaning the original value will have to be re-assigned, like
+            in a group A,A,C with uniques A,B,C the first A will stay as A, second A
+            will need a replacement (which comes from the end of the uniques) so gets
+            assigned to C and then C is not in temp_uniques so can't be removed from it.
             '''
             # each pass over a group requires a fresh list of uniques to check against
             # we reverse it because list().pop() works from the end of the list
@@ -548,8 +553,9 @@ class ConstraintHandler:
                     temp_uniques.remove(x)
                 else:
                     if temp_uniques:
-                        running_set.add(x)
-                        new_group.append(temp_uniques.pop())
+                        new_unique = temp_uniques.pop()
+                        running_set.add(new_unique)
+                        new_group.append(new_unique)
                     else:
                         new_group.append(np.nan)
 
@@ -559,7 +565,7 @@ class ConstraintHandler:
 
         if isinstance(orig_vals_in_spec, pd.DataFrame):
             original_uniques = (
-                orig_vals_in_spec[target_col].values
+                orig_vals_in_spec[target_col].tolist()
             )
 
         elif orig_vals_in_spec == ORIGINAL_VALUES_DB:
@@ -568,11 +574,13 @@ class ConstraintHandler:
             original_uniques = query_anon_database(
                 table_name=table_name,
                 column=target_col,
-            )[target_col].values
+            )[target_col].tolist()
 
         elif orig_vals_in_spec == ORIGINAL_VALUES_PAIRED: #pragma: no cover
             raise ValueError("make_distinct action not supported for paired columns")
 
+        if MISSING_DATA_STR in original_uniques:
+            original_uniques.remove(MISSING_DATA_STR)
                  
         if partition_cols is None:
             
@@ -586,6 +594,45 @@ class ConstraintHandler:
             .loc[filter_idx]
             .groupby(partition_cols)[target_col]
             .transform(_make_distinct_within_group, original_uniques)
+        )
+
+        return result
+
+    def make_same(
+        self, df, filter_idx, target_col, partition_cols=None):
+        '''
+        Force all values in the partition to be the same as the first
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_col     : str
+            Column where user wants to add outliers
+        partition_cols : list
+            Columns to group by to achieve nested sort
+
+        Returns
+        -------
+        pd.Series
+            Only the filtered data slice with identicl values is returned,
+            not the whole series
+        '''
+
+        if partition_cols is None:
+            
+            repl = df.loc[filter_idx[0], target_col]
+            new_same_series = df.loc[filter_idx, target_col].transform(lambda x: repl)
+            return new_same_series
+
+        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+        result = (df
+            .groupby(partition_cols)[target_col]
+            .transform(lambda x: x.iloc[0])
+            .loc[filter_idx]
         )
 
         return result

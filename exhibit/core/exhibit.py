@@ -241,15 +241,7 @@ class newExhibit:
         # without regard for weights for Missing data which are later adjusted
         # as required.
 
-        #3) CHECK IF DUPLICATES ARE OK
-        if not self.spec_dict["constraints"]["allow_duplicates"]:
-            duplicated_idx = anon_df.duplicated()
-            number_dropped = sum(duplicated_idx)
-            if number_dropped > 0:
-                print(f"WARNING: Deleted {number_dropped} duplicates.")
-                anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
-
-        #4) ADD CONTINUOUS VARIABLES TO ANON DF
+        #3) ADD CONTINUOUS VARIABLES TO ANON DF
         # at this point, we don't have any Missing data placeholders (or actual nans)
         # these are added after this step when we can properly account for conditional
         # constraints and other inter-dependencies
@@ -272,11 +264,11 @@ class newExhibit:
                                                     col_name=num_col
             )
 
-        #5) GENERATE MISSING DATA IN ALL COLUMNS
+        #4) GENERATE MISSING DATA IN ALL COLUMNS
         miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
         anon_df = miss_gen.add_missing_data()
 
-        #6) GENERATE UUID COLUMNS
+        #5) GENERATE UUID COLUMNS
         for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"]:
 
             dist = self.spec_dict["columns"][uuid_col_name]["frequency_distribution"]
@@ -295,14 +287,53 @@ class newExhibit:
 
             anon_df.insert(0, uuid_col_name, uuid_col)
 
-        #7) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
+        #6) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
+        # if there are any constraints that affect categorical columns, we need to
+        # re-run the generation of numerical columns because the constraints will
+        # rearrange (sort, make distinct or same) the categorical values leaving
+        # the original numerical values that don't correspond to correct weights
+        constraint_targets = []
+        cat_cols_set = set(self.spec_dict["metadata"]["categorical_columns"])
 
-        #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        if (ccs:=self.spec_dict["constraints"]["custom_constraints"]):
+            
+            for _, cc in ccs.items():
+                constraint_targets.extend(cc["targets"].keys())
+
+        # check if there are common columns between constraint targets and cat_cols
+        if cat_cols_set & set(constraint_targets):
+
+            for num_col in self.spec_dict["metadata"]["numerical_columns"]:
+                
+                # derived columns won't have weight so we ignore them
+                if num_col in self.spec_dict["derived_columns"]: # pragma: no cover
+                    continue
+
+                anon_df[num_col] = generate_continuous_column(
+                                                        spec_dict=self.spec_dict,
+                                                        anon_df=anon_df,
+                                                        col_name=num_col
+                )
+
+        #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict["derived_columns"].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
+
+        #8) CHECK IF DUPLICATES ARE OK
+        # only consider categorical columns (+uuid) for potential duplicates
+        if not self.spec_dict["constraints"]["allow_duplicates"]:
+            
+            num_cols = self.spec_dict["metadata"]["numerical_columns"]
+            dup_cols = [x for x in anon_df.columns if x not in num_cols]
+
+            duplicated_idx = anon_df.duplicated(subset=dup_cols)
+            number_dropped = sum(duplicated_idx)
+            if number_dropped > 0:
+                print(f"WARNING: Deleted {number_dropped} duplicates.")
+                anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
             
         #9) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df

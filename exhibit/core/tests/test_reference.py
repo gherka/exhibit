@@ -18,7 +18,7 @@ import numpy as np
 from exhibit.core.utils import package_dir
 from exhibit.db import db_util
 from exhibit.core.constants import MISSING_DATA_STR
-from exhibit.sample.sample import inpatients_anon
+from exhibit.sample.sample import inpatients_anon, uuid_anon
 
 # Module under test
 from exhibit.core import exhibit  as tm
@@ -685,6 +685,40 @@ class referenceTests(unittest.TestCase):
         self._temp_tables.append(table_id)
 
         self.assertCountEqual(temp_df["loc_name"].unique(), list("ABCDE"))
+
+    def test_reference_uuid_data(self):
+        '''
+        What this reference test is covering:
+            - uuid column type
+            - make_distinct, make_same and sorting custom actions
+            - no db
+        '''
+        
+        args = dict(
+                command="fromspec",
+                source=Path(package_dir("sample", "_spec", "uuid_demo.yml")),
+                verbose=True,
+                skip_columns=[]
+            )
+
+        xA = tm.newExhibit(**args)
+        xA.read_spec()
+        if xA.validate_spec():
+            xA.execute_spec()
+
+        #sort column names to make sure they are the same
+        uuid_anon.sort_index(axis=1, inplace=True)
+        xA.anon_df.sort_index(axis=1, inplace=True)
+
+        # there is a quirk of how int is cast on Windows and Unix: int32 vs int64
+        # see SO answer:
+        # Why do Pandas integer `dtypes` not behave the same on Unix and Windows?
+        assert_frame_equal(
+            left=uuid_anon,
+            right=xA.anon_df,
+            check_exact=False,
+            check_dtype=False
+        )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

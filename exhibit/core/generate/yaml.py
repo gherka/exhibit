@@ -182,6 +182,8 @@ def generate_YAML_string(spec_dict):
     # - "make_outlier"
     # - "sort_ascending"
     # - "sort_descending"
+    # - "make_distinct"
+    # - "make_same"
     #
     # Adding or banning nulls is useful when a value in one column, 
     # like Readmissions Within 28 days, necessitates a valid value in
@@ -191,9 +193,12 @@ def generate_YAML_string(spec_dict):
     #
     # demo_constraint_name:
     #   filter: (los > 2)
-    #   partition: (age, sex)
+    #   partition: age, sex
     #   targets:
     #     taget_column: target_action
+    #
+    # Custom constraints can target multiple columns, but each column can
+    # appear only once in each custom constraint.
     #
     # If a column name has spaces, make sure to surround it with
     # the tilde character ~. When comparing a date column against a

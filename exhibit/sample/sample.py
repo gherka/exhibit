@@ -21,6 +21,10 @@ inpatients_anon = pd.read_csv(
     package_dir("sample", "_data", "inpatients_anon.csv"),
     parse_dates=["quarter_date"])
 
+uuid_anon = pd.read_csv(
+    package_dir("sample", "_data", "uuid_anon.csv"),
+    parse_dates=["vacc_date"])
+
 prescribing_data = pd.read_csv(
     package_dir("sample", "_data", "prescribing.csv"), parse_dates=["PaidDateMonth"])
 

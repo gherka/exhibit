@@ -817,6 +817,88 @@ class constraintsTests(unittest.TestCase):
             # clean up table name
             db_util.drop_tables(table_name)
 
+    def test_custom_constraints_make_same_no_partition(self):
+        '''
+        Without partition, the target value is taken from the first
+        idx of the filtered slice.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
+                },
+                "C" : {
+                    "uniques" : 20,
+                    "original_values": pd.DataFrame(
+                        data={"C": [str(x) for x in range(20)]})
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "targets" : {
+                            "A" : "make_same",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 4,
+            "B" : ["spam", "spam", "ham", "ham", "ham"] * 4,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+        
+        self.assertTrue((result.query("B=='spam'")["A"] == "A").all())
+
+    def test_custom_constraints_make_same_with_available_values(self):
+        '''
+        We use the first value in the partition as target value for all
+        other rows in the partition.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "partition" : "C",
+                        "targets" : {
+                            "A" : "make_same",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : ["A"] * 10 + ["B"] * 10,
+            "B" : ["spam", "spam", "ham", "ham", "ham"] * 4,
+            "C" : [True] * 10 + [False] * 10,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+        
+        self.assertTrue((result.query("B=='spam' & C == True")["A"] == "A").all())
+        self.assertTrue((result.query("B=='spam' & C == False")["A"] == "B").all())
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
