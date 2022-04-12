@@ -174,6 +174,7 @@ def main():
 
     #Add any special processing rules (to facilitate testing, for example)
     args_dict["uuid_columns"] = set(args_dict.get("uuid_columns", {UUID_PLACEHOLDER}))
+    args_dict["skip_columns"] = set(args_dict.get("skip_columns", set()))
     
     #New instance has access to all command line parameters
     exhibit = newExhibit(**args_dict)

@@ -5,6 +5,7 @@ and reading back user specification
 # Standard library imports
 import textwrap
 from collections import Counter
+from itertools import zip_longest
 
 # External library imports
 import pandas as pd
@@ -102,7 +103,7 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
 
     longest = max(len(working_name), len(max(working_list, key=len)))
 
-    padded_values = [x.ljust(longest + 1) for x in working_list]
+    padded_values = [x.ljust(longest) for x in working_list]
 
     return padded_values
 
@@ -155,7 +156,7 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
     
     vectors = temp_vectors.values.tolist()
 
-    string_vectors = ["{0:.3f}".format(x).ljust(len(HEADER) + 1) for x in vectors]
+    string_vectors = ["{0:.3f}".format(x).ljust(len(HEADER)) for x in vectors]
 
     return string_vectors
 
@@ -241,10 +242,10 @@ def build_table_from_lists(
         [x.ljust(5) for x in sorted(numerical_cols)]
     )
 
-    header = [" | ".join(header_cols).rstrip()]
+    header = [" | ".join(header_cols) + " |".rstrip()]
 
-    final = header + ["| ".join(x) for x in zip(c1, *pairs, p, w)]
-
+    final = header + [
+        " | ".join(filter(None, x)) + " |" for x in zip_longest(c1, *pairs, p, w)]
     return final
 
 def parse_original_values(original_values):

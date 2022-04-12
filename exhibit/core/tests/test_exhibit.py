@@ -134,7 +134,7 @@ class exhibitTests(unittest.TestCase):
         xA.read_data()
         xA.generate_spec()
 
-        expected = "10-19        | 0.100              | 0.100 | 0.100 | 0.100"
+        expected = "10-19        | 0.100              | 0.100 | 0.100 | 0.100 |"
         result = xA.spec_dict["columns"]["age"]["original_values"][2]
 
         # save the spec ID to delete temp tables after tests finish
