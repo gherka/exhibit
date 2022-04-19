@@ -88,7 +88,8 @@ class newExhibit:
         self, command, source, output=None,
         inline_limit=30, equal_weights=False,
         skip_columns=None, linked_columns=None, 
-        uuid_columns=None, verbose=False):
+        uuid_columns=None, discrete_columns=None, 
+        verbose=False):
         '''
         Initialise either from the CLI or by instantiating directly
         '''
@@ -105,6 +106,7 @@ class newExhibit:
         self.skip_columns = skip_columns or set()
         self.linked_columns= linked_columns or set()
         self.uuid_columns= uuid_columns or {UUID_PLACEHOLDER}
+        self.discrete_columns = discrete_columns or set()
         self.verbose = verbose
 
         self.spec_dict = None
@@ -127,7 +129,9 @@ class newExhibit:
         else:
             self.df = read_with_date_parser(
                 path=self.source,
-                skip_columns=self.skip_columns)
+                skip_columns=self.skip_columns,
+                discrete_columns=self.discrete_columns,
+                )
 
         return self
 
@@ -137,7 +141,7 @@ class newExhibit:
         only be run after read_data()
         '''
 
-        if not self.df is None:
+        if self.df is not None:
 
             new_spec = newSpec(
                 data=self.df,

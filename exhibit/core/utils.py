@@ -121,14 +121,15 @@ def read_with_date_parser(path, **kwargs):
     if path.suffix in [".csv",]:
 
         skipped_cols = kwargs.get("skip_columns", [])
+        discrete_cols = kwargs.get("discrete_columns", [])
     
-        df = pd.read_csv(path)
+        df = pd.read_csv(path, dtype={c:str for c in discrete_cols})
 
         df = df[[x for x in df.columns if x not in skipped_cols]]
 
         for x in df.loc[0, :].iteritems():
             date_col = date_parser(x)
-            if not date_col is None:
+            if date_col is not None:
                 df[date_col] = pd.to_datetime(df[date_col], dayfirst=True)
 
         return df

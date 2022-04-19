@@ -159,6 +159,17 @@ def main():
         "Example: exhibit fromdata secret_data.csv -uuid CHI_number"
         f"{arg_separator}"
     )
+
+    parser.add_argument(
+        "--discrete_columns", "-d",
+        default=[],
+        nargs="+",
+        metavar="",
+        help=
+        "\nManually define numerical columns that should behave as categorical.\n"
+        "Example: exhibit fromdata secret_data.csv -d age"
+        f"{arg_separator}"
+    )
     
     parser.add_argument(
         "--verbose", "-v",
@@ -175,6 +186,7 @@ def main():
     #Add any special processing rules (to facilitate testing, for example)
     args_dict["uuid_columns"] = set(args_dict.get("uuid_columns", {UUID_PLACEHOLDER}))
     args_dict["skip_columns"] = set(args_dict.get("skip_columns", set()))
+    args_dict["discrete_columns"] = set(args_dict.get("discrete_columns", set()))
     
     #New instance has access to all command line parameters
     exhibit = newExhibit(**args_dict)
