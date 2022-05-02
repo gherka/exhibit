@@ -205,7 +205,7 @@ constraints:
     multi_dose:
       partition: record_chi
       targets:
-        dose_number : make_distinct
+        dose_number : generate_as_sequence
     chronology:
       partition: record_chi
       targets:

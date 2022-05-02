@@ -2,7 +2,7 @@
 Module for various derived and user-set constraints
 '''
 # Standard library imports
-from collections import namedtuple
+from collections import namedtuple, Counter
 from datetime import datetime
 from functools import partial
 import itertools as it
@@ -137,6 +137,7 @@ class ConstraintHandler:
             "sort_descending" : partial(self.sort_values, ascending=False),
             "make_distinct"   : self.make_distinct,
             "make_same"       : self.make_same,
+            "generate_as_sequence" : self.generate_as_sequence,
         }
 
         for _, constraint in custom_constraints.items():
@@ -528,37 +529,20 @@ class ConstraintHandler:
             Only the filtered and sorted data slice is returned, not the whole series
         '''
 
-        def _make_distinct_within_group(group, original_uniques):
+        def _make_distinct_within_group(group):
             '''
-            Helper function with ugly logic. It's possible to assign a distinct value
-            to a duplicate meaning the original value will have to be re-assigned, like
-            in a group A,A,C with uniques A,B,C the first A will stay as A, second A
-            will need a replacement (which comes from the end of the uniques) so gets
-            assigned to C and then C is not in temp_uniques so can't be removed from it.
+            Rather than trying to substitute duplicates with distinct values,
+            we're simply dropping the duplicates and replacing them with a blank
+            string. This way the distribution of generated values is closer to
+            the original probability vectors and allows mixing in other custom
+            constraints, like generating values in a particular sequence.
             '''
-            # each pass over a group requires a fresh list of uniques to check against
-            # we reverse it because list().pop() works from the end of the list
-            temp_uniques = list(reversed(original_uniques))
-
-            running_set = set()
-            new_group = []
 
             if not group.duplicated().any():
                 return group
 
-            for x in group:
-                if x not in running_set:
-                    running_set.add(x)
-                    new_group.append(x)
-                    temp_uniques.remove(x)
-                else:
-                    if temp_uniques:
-                        new_unique = temp_uniques.pop()
-                        running_set.add(new_unique)
-                        new_group.append(new_unique)
-                    else:
-                        new_group.append(np.nan)
-
+            new_group = group.where(~group.duplicated(), "").tolist()
+            
             return new_group
 
         orig_vals_in_spec = self.spec_dict["columns"][target_col]["original_values"]
@@ -585,7 +569,7 @@ class ConstraintHandler:
         if partition_cols is None:
             
             filtered_series = df.loc[filter_idx, target_col]
-            result = _make_distinct_within_group(filtered_series, original_uniques)
+            result = _make_distinct_within_group(filtered_series)
             return result
 
         partition_cols = [x.strip() for x in partition_cols.split(",") if x]
@@ -593,7 +577,7 @@ class ConstraintHandler:
         result = (df
             .loc[filter_idx]
             .groupby(partition_cols)[target_col]
-            .transform(_make_distinct_within_group, original_uniques)
+            .transform(_make_distinct_within_group)
         )
 
         return result
@@ -632,6 +616,115 @@ class ConstraintHandler:
         result = (df
             .groupby(partition_cols)[target_col]
             .transform(lambda x: x.iloc[0])
+            .loc[filter_idx]
+        )
+
+        return result
+
+    def generate_as_sequence(
+        self, df, filter_idx, target_col, partition_cols=None):
+        '''
+        This custom constraint is only valid if the original values of the target
+        column are below the in-line limit and appear in the spec. Taking them from
+        the DB won't work because the order is not guaranteed.
+
+        Because the first value in the spec order is guaranteed to be included, you
+        should compensate for it in the probabilities of other values. For example,
+        if generating a patient record that has 3 rows, 1st row will always take the
+        1st value in the spec and if the 2nd value has low probability, the sequence
+        resets and the 1st value will be picked up again, etc.
+
+        As a special case to ignore probabilities and generate values from the sequence
+        naively, set the probabilities for all values in the sequence to be equal
+        to each other. This way, if the number of rows in the subset is more than the
+        number of unique values, these rows will be padded with blank values.
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_col     : str
+            Column where user wants to add outliers
+        partition_cols : list
+            Columns to group by
+
+        Returns
+        -------
+        pd.Series
+            Only the filtered data slice is returned not the whole series
+        '''
+
+        orig_vals = self.spec_dict["columns"][target_col]["original_values"]
+
+        if not isinstance(orig_vals, pd.DataFrame): #pragma: no cover
+            print("WARNING: Values are missing from the spec.")
+            return df.loc[filter_idx, target_col]
+
+        ordered_list = orig_vals[target_col].tolist()
+        ordered_probs = orig_vals["probability_vector"].tolist()
+
+        def _generate_ordered_values(target_sequence, ordered_list, ordered_probs):
+            '''
+            Helper function to deal with padding; returns a list
+            One of the values must be the seed value that starts the sequence.
+            It doesn't necessarily have to be the first. Ignore missing data for now.
+            '''
+
+            if MISSING_DATA_STR in ordered_list:
+                ordered_list = ordered_list[:-1]
+                ordered_probs = ordered_probs[:-1]
+
+            n = len(target_sequence)
+            m = len(ordered_list)
+            unordered_result = []
+            pointer = 0
+            
+            # special case; ignore probabilities
+            if len(set(ordered_probs)) == 1:
+                
+                # more rows than available values
+                if (diff := n - m) > 0:
+                    return ordered_list + [""] * diff
+
+                return ordered_list[:n]
+                
+            while n > 0:
+
+                if pointer == 0:
+                    unordered_result.append(ordered_list[0])
+                    pointer = pointer + 1 if pointer + 1 < m else 0
+                    n = n - 1
+                    continue
+
+                if self.rng.random() < ordered_probs[pointer]:
+                    unordered_result.append(ordered_list[pointer])
+                    pointer = pointer + 1 if pointer + 1 < m else 0
+                    n = n - 1
+
+                # reset the pointer back to the initial value
+                else:
+                    pointer = 0
+
+            result = sorted(unordered_result, key=lambda x: ordered_list.index(x))
+
+            return result            
+
+        if partition_cols is None:
+            
+            new_vals = _generate_ordered_values(filter_idx, ordered_list, ordered_probs)
+            return pd.Series(new_vals, index=filter_idx)
+
+        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+        result = (df
+            .groupby(partition_cols)[target_col]
+            .transform(
+                _generate_ordered_values,
+                ordered_list=ordered_list,
+                ordered_probs=ordered_probs,
+            )
             .loc[filter_idx]
         )
 

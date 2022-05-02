@@ -267,6 +267,12 @@ def parse_original_values(original_values):
     The only types we're likely to encounter in the original_table
     are strings and floats.
 
+    Importantly, we don't rescale the probabilities at this point and delegate it
+    to where we're actually calling rng.choice() where probabilties MUST sum up to 1.
+
+    The reason for it is some custom actions, like generate_as_sequence, use
+    probabilities in a different way to normal generation (combined probabilities).
+
     Returns
     -------
     Pandas DataFrame or untouched string
@@ -285,21 +291,6 @@ def parse_original_values(original_values):
     )
 
     df.loc[:, "probability_vector"] = df["probability_vector"].astype(float)
-
-    # We exclude Missing data from the vector rescaling because it"s handled separately
-    col_prob = np.array(df["probability_vector"][:-1]).astype(float)
-    col_name = df.columns[0]
-
-    warning = textwrap.dedent(f"""
-        VALIDATION WARNING: The probability vector of {col_name} doesn't
-        sum up to 1 and will be rescaled.
-        """)
-
-    # Don't forget to assign back to [:-1], excluding Missing data
-    if col_prob.sum() != 1:
-        if abs(col_prob.sum() - 1) > 0.05: print(warning)
-        col_prob /= col_prob.sum()
-        df.loc[df.index[:-1], "probability_vector"] = col_prob
 
     return df
 

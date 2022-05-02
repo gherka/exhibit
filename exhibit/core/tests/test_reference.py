@@ -690,7 +690,7 @@ class referenceTests(unittest.TestCase):
         '''
         What this reference test is covering:
             - uuid column type
-            - make_distinct, make_same and sorting custom actions
+            - generate_as_sequence, make_same and sorting custom actions
             - no db
         '''
         

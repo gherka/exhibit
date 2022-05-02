@@ -79,10 +79,13 @@ def save_predefined_linked_cols_to_db(df, id):
     temp_df = prefixed_df.replace(orig_label_to_pos_label).replace(pos_label_to_id)
     label_matrix = np.unique(temp_df.values, axis=0).astype(np.intc)
 
+    # make sure column names don't have spaces
+    col_names = [x.replace(" ", "$") for x in prefixed_df.columns]
+
     # save the label matrix to SQLite db
     create_temp_table(
         table_name=f"temp_{id}_matrix",
-        col_names=prefixed_df.columns,
+        col_names=col_names,
         data=label_matrix,
         strip_whitespace=False
     )
@@ -226,8 +229,14 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
 
         if not isinstance(orig_vals, pd.DataFrame):
 
+            safe_col = col.replace(" ", "$")
             table_id = spec_dict["metadata"]["id"]
-            orig_vals = query_anon_database(table_name=f"temp_{table_id}_{col}")
+            orig_vals_db = query_anon_database(table_name=f"temp_{table_id}_{safe_col}")
+            orig_vals_sorted = (
+                sorted([x for x in orig_vals_db[col] if x != MISSING_DATA_STR]) + 
+                [MISSING_DATA_STR]
+            )
+            orig_vals = pd.DataFrame(data={col:orig_vals_sorted})
             prob_vector = [1 / orig_vals.shape[0]] * orig_vals.shape[0]
 
         if not prob_vector:

@@ -21,27 +21,6 @@ class formattersTests(unittest.TestCase):
     only a few features are included here for peace of mind.
     '''
 
-    def test_parse_values_handles_zero_probability(self):
-        '''
-        To make sure that if user changes the probability of a column,
-        including user-linked columns, to zero, the rescaling respects
-        that.
-        '''
-
-        test_vals = [
-            "A | probability_vector | B",
-            "spam | 0.5 | 0.5",
-            "eggs | 0 | 0.5",
-            "ham | 0.5 | 0.5",
-            "bacon | 0.5 | 0.5",
-            "Missing data | 0 | 0"
-        ]
-
-        parsed_df = tm.parse_original_values(test_vals)
-
-        self.assertEqual(parsed_df["probability_vector"].sum(), 1)
-        self.assertEqual(parsed_df.set_index("A").at["eggs", "probability_vector"], 0)  
-
     def test_uuid_frequency_list_generation(self):
         '''
         Although similar to original_values, the uuid frequency doesn't fit

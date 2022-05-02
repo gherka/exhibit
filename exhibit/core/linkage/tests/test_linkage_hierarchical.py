@@ -464,7 +464,7 @@ class linkageTests(unittest.TestCase):
                     "original_values":
                         pd.DataFrame(data={
                             "B": [f"B{i}" for i in range(4)] + [MISSING_DATA_STR],
-                            "probability_vector": [0.1, 0.1, 0.4, 0.4, 0]
+                            "probability_vector": [0.101, 0.101, 0.4, 0.4, 0]
                         })
                 },
                 "C": {

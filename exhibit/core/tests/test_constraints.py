@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.constants import ORIGINAL_VALUES_DB
+from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_DB
 from exhibit.core.sql import create_temp_table
 from exhibit.db import db_util
 
@@ -708,7 +708,8 @@ class constraintsTests(unittest.TestCase):
         })
 
         test_gen = tm.ConstraintHandler(test_dict, test_data)
-        result = test_gen.process_constraints()
+        # remember for make_distinct we're replacing duplicates with an empty string
+        result = test_gen.process_constraints().replace({"":np.nan}).dropna()
         
         self.assertFalse(result.query("B=='spam' & C == True")["A"].duplicated().any())
         self.assertFalse(result.query("B=='spam' & C == False")["A"].duplicated().any())
@@ -727,7 +728,9 @@ class constraintsTests(unittest.TestCase):
             "columns" : {
                 "A" : {
                     "uniques" : 5,
-                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
+                    "original_values" : pd.DataFrame(data={
+                        "A": list("ABCDE") + [MISSING_DATA_STR]
+                        })
                 },
                 "C" : {
                     "uniques" : 20,
@@ -759,7 +762,8 @@ class constraintsTests(unittest.TestCase):
         })
 
         test_gen = tm.ConstraintHandler(test_dict, test_data)
-        result = test_gen.process_constraints()
+        # remember for make_distinct we're replacing duplicates with an empty string
+        result = test_gen.process_constraints().replace({"":np.nan}).dropna()
         
         self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
 
@@ -809,7 +813,8 @@ class constraintsTests(unittest.TestCase):
             })
 
             test_gen = tm.ConstraintHandler(test_dict, test_data)
-            result = test_gen.process_constraints()
+            # remember for make_distinct we're replacing duplicates with an empty string
+            result = test_gen.process_constraints().replace({"":np.nan}).dropna()
 
             self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
 
@@ -898,6 +903,129 @@ class constraintsTests(unittest.TestCase):
         
         self.assertTrue((result.query("B=='spam' & C == True")["A"] == "A").all())
         self.assertTrue((result.query("B=='spam' & C == False")["A"] == "B").all())
+
+    def test_custom_constraints_generate_as_sequence(self):
+        '''
+        Doc string
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=3),
+            "columns" : {
+                "A" : {
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={
+                        "A": list("ABCD"),
+                        "probability_vector": [0.25, 0.25, 0.25, 0.25]
+                        })
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "targets" : {
+                            "A" : "generate_as_sequence",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDA") * 2,
+            "B" : ["spam", "spam", "ham", "ham", "ham"] * 2,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        anon_df = test_gen.process_constraints()
+        
+        self.assertTrue(anon_df.query("B=='spam'")["A"].is_monotonic_increasing)
+
+    def test_custom_constraints_generate_as_sequence_with_partition(self):
+        '''
+        Doc string
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 4,
+                    "original_values" : pd.DataFrame(data={
+                        "A": list("ABCD"),
+                        "probability_vector": [0.1, 0.5, 0.4, 0.3]
+                        })
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "partition" : "B",
+                        "targets" : {
+                            "A" : "generate_as_sequence",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDA") * 2,
+            "B" : ["padded"] * 5 + ["complete"] * 4 + ["incomplete"] * 1
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        anon_df = test_gen.process_constraints()
+        
+        self.assertTrue(anon_df.query("B=='padded'")["A"].is_monotonic_increasing)
+        self.assertTrue(anon_df.query("B=='complete'")["A"].is_monotonic_increasing)
+        self.assertTrue(anon_df.query("B=='incomplete'")["A"].is_monotonic_increasing)
+
+
+    def test_custom_constraints_generate_as_sequence_with_partition_equal_probs(self):
+        '''
+        Doc string
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 4,
+                    "original_values" : pd.DataFrame(data={
+                        "A": list("ABCD"),
+                        "probability_vector": [0.25, 0.25, 0.25, 0.25]
+                        })
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "partition" : "B",
+                        "targets" : {
+                            "A" : "generate_as_sequence",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDA") * 2,
+            "B" : ["padded"] * 5 + ["complete"] * 4 + ["incomplete"] * 1
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        anon_df = test_gen.process_constraints()
+        
+        expected = ["A","B","C","D","","A","B","C","D","A"]
+        result = anon_df["A"].tolist()
+
+        self.assertListEqual(expected, result)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

@@ -184,6 +184,7 @@ def generate_YAML_string(spec_dict):
     # - "sort_descending"
     # - "make_distinct"
     # - "make_same"
+    # - "generate_as_sequence"
     #
     # Adding or banning nulls is useful when a value in one column, 
     # like Readmissions Within 28 days, necessitates a valid value in

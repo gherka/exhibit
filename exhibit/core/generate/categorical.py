@@ -212,6 +212,9 @@ class CategoricalDataGenerator:
         col_df = col_attrs["original_values"].iloc[:-1, :]
         col_prob = np.array(col_df["probability_vector"]).astype(float)
 
+        if col_prob.sum() != 1:
+            col_prob /= col_prob.sum()
+
         if anon_set == "random": 
 
             col_values = col_df[col_name].to_list()
