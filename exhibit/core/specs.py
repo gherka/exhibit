@@ -272,6 +272,7 @@ class newSpec:
             "cross_join_all_unique_values": False,
             "miss_probability": self.missing_data_chance(col),
             "anonymising_set":"random",
+            "dispersion" : 0,
         }
 
         return categorical_d

@@ -125,7 +125,20 @@ def add_prefix(df, sep="__"):
 
 def generate_user_linked_anon_df(spec_dict, linked_group, num_rows):
     '''
-    There is only one user defined linked group, numbered zero.
+    Main function to generated user-defined linked columns.
+
+    Parameters
+    ----------
+    spec_dict    : dictionary
+        specification plus internal keys, like _rng
+    linked_group : tuple
+        there can be only one user-linked group (0, [linked_col_1, linked_col_2, ])
+    num_rows     : int
+        number of rows to generate
+
+    Returns
+    -------
+    Data Frame with linked columns
     '''
     
     linked_cols = linked_group[1]
@@ -133,12 +146,20 @@ def generate_user_linked_anon_df(spec_dict, linked_group, num_rows):
     rng = spec_dict["_rng"]
     lookup, matrix = get_lookup_and_matrix_from_db(table_id)
     new_label_lookup, proba_lookup = build_new_lookups(spec_dict, linked_cols, lookup)
+    # linked columns dispersion list
+    lcd = [spec_dict["columns"][col]["dispersion"] for col in linked_cols]
 
-    # initialise the first column - investigate picking a specific column
-    # rather than the first in the list - maybe by the number of u. values.
+    # initialise the first column without regard to dispersion value; the initial column
+    # uses exact probabilities as defined in the spec / equalised if taken from DB
+
+    init_probs = np.array([proba_lookup[x] for x in np.unique(matrix[:, 0])])
+    # make sure probs are normalized
+    if init_probs.sum() != 1:
+            init_probs /= init_probs.sum()
+
     init_col_vals = (
             rng
-                .choice(a=np.unique(matrix[:, 0]), size=num_rows)
+                .choice(a=np.unique(matrix[:, 0]), p=init_probs, size=num_rows)
                 .reshape(-1, 1)
     )
 
@@ -147,22 +168,19 @@ def generate_user_linked_anon_df(spec_dict, linked_group, num_rows):
         with Pool(processes=4) as pool:
 
             new_rows = pool.map(
-                partial(process_row, matrix, proba_lookup, rng), init_col_vals
+                partial(process_row, matrix, proba_lookup, lcd, rng), init_col_vals
                 )
     else: #pragma: no cover
 
         new_rows = []
 
         for i in range(num_rows):
-            new_row = process_row(matrix, proba_lookup, rng, init_col_vals[i])
+            new_row = process_row(matrix, proba_lookup, lcd, rng, init_col_vals[i])
             new_rows.append(new_row)
 
     new_matrix = np.stack(new_rows)
 
-    new_df = (
-        pd.DataFrame(new_matrix, columns=linked_cols)
-            .replace(new_label_lookup)
-        )
+    new_df = pd.DataFrame(new_matrix, columns=linked_cols).replace(new_label_lookup)
 
     return new_df
 
@@ -177,30 +195,81 @@ def get_lookup_and_matrix_from_db(table_id):
 
     return lookup, matrix
 
-def process_row(label_matrix, proba_lookup, rng, accumulated_array):
+def process_row(label_matrix, proba_lookup, lcd, rng, accumulated_array, i=0):
     '''
     Recursive function to generate new rows of data from the 
-    existing linked matrix.
+    existing linked matrix. It's possible the function will be 
+    called multiple times to generate a column value if there
+    are no valid values that follow on from earlier values in the sequence.
+
+    For example, if A => A1 => A11 and B => B2 => B12 then if the second
+    column has dispersion set to > 0, the row generation might go like this:
+    A => B2 (due to dispersion) => B12 (falling back to a valid 2-member sequence 
+    rather than generating a random value because there isn't a A => B2 predefined
+    in the linkage matrix taken from the original data).
+
+    Parameters
+    ----------
+    label_matrix      : np.array
+        array where shape[0] is the number_unique_combinations_of_all_linked_col_values
+        and shape[1] is the number of linked columns
+    proba_lookup      : dictionary
+        dictionary where keys are encoded original values (0, 1, 2, etc.) and values
+        are their probabilities taken either from the specification or equalised from db
+    lcd               : list
+        list with dispersion values for each column in linked_columns
+    rng               : np.rng
+        shared RNG generator
+    accumulated_array : np.array
+        array of encoded values that make up a single row of the linked data
+    i                 : integer
+        a counter in case we need to reduce the sequence size to check for valid
+        combinations to determine the next valid value 
+
+    Returns
+    -------
+    np.array of a single row with encoded column values
     '''
-       
+      
     arr_len = accumulated_array.shape[0]
     
     if arr_len == label_matrix.shape[1]:
         return accumulated_array
 
-    mask = np.all(label_matrix[:, 0:arr_len] == accumulated_array, axis=1)
+    # if there are no valid targets due to dispersion throwing in a non-valid target,
+    # rather than continue checking the full array (which will always fail to produce
+    # a valid next value), change the first position of the array being checked from 0
+    # to counter i and increase until you exhaust the prior possibilities. The fallback
+    # is that there will always be valid targets for previous sequence length = 1 aka
+    # from one column to the next.
+
+    mask = np.all(label_matrix[:, i:arr_len] == accumulated_array[i:], axis=1)
 
     valid_targets = np.unique(label_matrix[mask, arr_len])
+    all_targets = np.unique(label_matrix[:, arr_len])
+
+    if len(valid_targets) == 0:
+
+        i = i + 1
+        return process_row(label_matrix, proba_lookup, lcd, rng, accumulated_array, i)
+        
     target_proba = np.array([proba_lookup[x] for x in valid_targets])
     # make sure the probabilities sum up to 1
     target_proba = target_proba * (1 / sum(target_proba))
 
-    new_array = np.append(
-        accumulated_array,
-        rng.choice(a=valid_targets, p=target_proba, size=1)
-    )
+    # optional dispersion; add noise by including non-valid targets (if exist)
+    non_valid_targets = np.setdiff1d(all_targets, valid_targets)
+    # take dispersion from the spec
+    dispersion = lcd[arr_len]
+
+    if len(non_valid_targets) > 0 and rng.random() < dispersion:
+        next_val = rng.choice(a=non_valid_targets, size=1)
+    else:
+        next_val = rng.choice(a=valid_targets, p=target_proba, size=1)
     
-    return process_row(label_matrix, proba_lookup, rng, new_array)
+    new_array = np.append(accumulated_array, next_val)
+    
+    return process_row(label_matrix, proba_lookup, lcd, rng, new_array)
 
 def build_new_lookups(spec_dict, linked_cols, original_lookup):
     '''

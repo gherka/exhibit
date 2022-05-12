@@ -110,10 +110,11 @@ class exhibitTests(unittest.TestCase):
         }
 
         initial_arr = np.array([1, ])
+        lcd = [0, 0, 0]
 
         # for the same seed, results should match
         expected = np.array([1, 3, 6])
-        result = tm.process_row(label_matrix, proba_lookup, rng, initial_arr)
+        result = tm.process_row(label_matrix, proba_lookup, lcd, rng, initial_arr)
         # order is important!
         assert_array_equal(expected, result)
 
@@ -132,6 +133,38 @@ class exhibitTests(unittest.TestCase):
 
         assert isinstance(temp_df, pd.DataFrame)
 
+    def test_user_defined_linked_columns_are_generated_with_dispersion(self):
+        '''
+        Test the you can selectively break the linkages between columns using dispersion
+
+        Western General Hospital is linked with NHS Lothian and doesn't have any 0-9 age
+        groups. By adding dispersion to loc_name we're allowing loc_name to be freely
+        associated with hb_names other than the original, but age should still be 
+        constrained to the loc_name.
+        '''
+
+        user_linked_cols = ["hb_name", "loc_name", "age"]
+
+        test_spec_dict = {
+            "metadata" : {"seed" : 0}, 
+            "columns" : {
+                "hb_name" : { "dispersion" : 0 },
+                "loc_name" : { "dispersion" : 0.9 },
+                "age" : { "dispersion" : 0 },
+            }
+        }
+
+        _, temp_df = temp_exhibit(
+            fromdata_namespace={"linked_columns":user_linked_cols},
+            test_spec_dict=test_spec_dict,
+        )
+
+        self.assertFalse(temp_df.query(
+            "loc_name == 'Western General Hospital' & hb_name != 'NHS Lothian'").empty)
+
+        self.assertTrue(temp_df.query(
+            "loc_name == 'Western General Hospital' & age == '0-9'").empty)
+
     def test_user_defined_linked_columns_are_generated_from_db(self):
         '''
         User defined linked columns have a reserved zero indexed group
@@ -149,6 +182,48 @@ class exhibitTests(unittest.TestCase):
         )
 
         assert isinstance(temp_df, pd.DataFrame)
+
+    def test_process_row_with_deadends(self):
+        '''
+        Where the full accumulated array doesn't have the next valid value in the
+        matrix, we look for N:, N+1: until only 1 column is left to decide the next
+        valid value. This very function-level test is required when codebase is tested
+        with multiprocessing support.
+        '''
+
+        rng = np.random.default_rng(seed=0)
+
+        test_matrix = np.array([
+            [0, 5, 10, 14],
+            [0, 5, 11, 15],
+            [1, 6, 12, 16],
+            [1, 6, 13, 17],
+        ])
+
+        test_probas = {
+            0: 0.5,
+            1: 0.5,
+            5: 0.5,
+            6: 0.5,
+            10: 0.25,
+            11: 0.25,
+            12: 0.25,
+            13: 0.25,
+            14: 0.25,
+            15: 0.25,
+            16: 0.25,
+            17: 0.25,
+        }
+
+        lcd = [0, 1, 0, 0]
+
+        init_arr = np.array([0, ])
+
+        result = list(tm.process_row(test_matrix, test_probas, lcd, rng, init_arr))
+
+        expected = [0, 6, 12, 16]
+
+        self.assertListEqual(result, expected)
 
     def test_get_lookup_and_matrix_from_db(self):
         '''

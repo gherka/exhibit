@@ -243,9 +243,24 @@ def build_table_from_lists(
     )
 
     header = [" | ".join(header_cols) + " |".rstrip()]
+    row_cols = []
 
-    final = header + [
-        " | ".join(filter(None, x)) + " |" for x in zip_longest(c1, *pairs, p, w)]
+    # 3 is another "magic number" to get the alignment of the last | separator right
+    for x in zip_longest(c1, *pairs, p, w):
+
+        if numerical_cols:
+            last_num_col_len = len(list(sorted(numerical_cols))[-1]) - 3
+        # none of the test datasets have only categorical columns (for now)
+        else: # pragma: no cover
+            last_num_col_len = 0
+
+        row_cols.append(
+            " | ".join(filter(None, x)) +
+            " |".rjust(last_num_col_len)
+        )
+    
+    final = header + row_cols
+
     return final
 
 def parse_original_values(original_values):
