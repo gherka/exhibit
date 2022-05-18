@@ -134,6 +134,7 @@ class constraintsTests(unittest.TestCase):
         an operator OR a column name, try to parse it as a scalar
         '''
 
+        self.ch.spec_dict["metadata"] = {"numerical_columns": ["A", "B B"]}
         self.ch.spec_dict["columns"] = {
             "A": {
                 "type": "continuous",
@@ -172,6 +173,7 @@ class constraintsTests(unittest.TestCase):
         using weighted uniform parameters (dispersion)
         '''
 
+        self.ch.spec_dict["metadata"] = {"numerical_columns": ["A A", "B"]}
         self.ch.spec_dict["columns"] = {
             "A A": {
                 "type": "continuous",
@@ -193,7 +195,7 @@ class constraintsTests(unittest.TestCase):
 
         test_df = pd.DataFrame(
             data={
-                "A A":[np.NaN, 0, 20, 2, 50],
+                "A A":[pd.NA, 0, 20, 2, 50],
                 "B":[1, 5, 21, 1, 1000]
             }
         )
@@ -213,6 +215,7 @@ class constraintsTests(unittest.TestCase):
         using normal distribution parameters (mean and std)
         '''
 
+        self.ch.spec_dict["metadata"] = {"numerical_columns": ["A"]}
         self.ch.spec_dict["columns"] = {
             "A": {
                 "type": "continuous",
@@ -257,6 +260,7 @@ class constraintsTests(unittest.TestCase):
         modifies the passed-in dataframe in-place.
         '''
 
+        self.ch.spec_dict["metadata"] = {"numerical_columns": ["A", "B", "C"]}
         self.ch.spec_dict["columns"] = {
             "A": {
                 "type": "continuous",
@@ -303,6 +307,7 @@ class constraintsTests(unittest.TestCase):
         involving timeseries column.
         '''
 
+        self.ch.spec_dict["metadata"] = {"numerical_columns": []}
         self.ch.spec_dict["columns"] = {
             "arrival date": {
                 "type": "date",
@@ -342,6 +347,7 @@ class constraintsTests(unittest.TestCase):
         Constraint dependent column values to a date string
         '''
 
+        self.ch.spec_dict["metadata"] = {"numerical_columns": []}
         self.ch.spec_dict["columns"] = {
             "arrival_date": {
                 "type": "date",
@@ -709,7 +715,7 @@ class constraintsTests(unittest.TestCase):
 
         test_gen = tm.ConstraintHandler(test_dict, test_data)
         # remember for make_distinct we're replacing duplicates with an empty string
-        result = test_gen.process_constraints().replace({"":np.nan}).dropna()
+        result = test_gen.process_constraints().replace({"":pd.NA}).dropna()
         
         self.assertFalse(result.query("B=='spam' & C == True")["A"].duplicated().any())
         self.assertFalse(result.query("B=='spam' & C == False")["A"].duplicated().any())
@@ -763,7 +769,7 @@ class constraintsTests(unittest.TestCase):
 
         test_gen = tm.ConstraintHandler(test_dict, test_data)
         # remember for make_distinct we're replacing duplicates with an empty string
-        result = test_gen.process_constraints().replace({"":np.nan}).dropna()
+        result = test_gen.process_constraints().replace({"":pd.NA}).dropna()
         
         self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
 
@@ -814,7 +820,7 @@ class constraintsTests(unittest.TestCase):
 
             test_gen = tm.ConstraintHandler(test_dict, test_data)
             # remember for make_distinct we're replacing duplicates with an empty string
-            result = test_gen.process_constraints().replace({"":np.nan}).dropna()
+            result = test_gen.process_constraints().replace({"":pd.NA}).dropna()
 
             self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
 

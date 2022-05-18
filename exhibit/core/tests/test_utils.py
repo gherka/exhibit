@@ -145,7 +145,7 @@ class utilsTests(unittest.TestCase):
         '''
 
         test_series_1 = pd.Series([1, 2, 3, 4, 5, 0.0])
-        test_series_2 = pd.Series([1, np.nan, 2, 3])
+        test_series_2 = pd.Series([1, pd.NA, 2, 3])
         test_series_3 = pd.Series([0.1, 0.2, 3, 4])
 
         self.assertTrue(tm.float_or_int(test_series_1), "integer")

@@ -133,9 +133,8 @@ def create_temp_table(
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
     #make sure data is stripped from extra whitespace to match the spec
-    #as an extra precaution we're dropping any rows with np.NaN values in them
     if strip_whitespace:
-        data = [tuple(str(y).strip() for y in x) for x in data if np.NaN not in x]
+        data = [tuple(str(y).strip() for y in x) for x in data]
 
     if len(col_names) == 1:
         col_list = col_names[0]

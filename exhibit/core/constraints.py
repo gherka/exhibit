@@ -171,10 +171,21 @@ class ConstraintHandler:
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, bool_constraint):
         '''
-        Doc string
+        Because by this point the anonymised dataset is complete, some numerical
+        column might have been cast to nullable Int64. This will cause issues with
+        the eval() function which doesn't know how to handle them. So when we
+        take the copy of the anon_df, we cast those columns to floats - if the
+        columns' precision is set to integer in the spec, we'll cast them back to
+        Int64 at the end.
         '''
 
         output_df = anon_df.copy()
+        num_cols = self.spec_dict["metadata"]["numerical_columns"]
+        for num_col in num_cols:
+            # derived columns are in metadata, but are generated AFTER constraints
+            if num_col in output_df.columns:
+                output_df[num_col] = pd.to_numeric(
+                    output_df[num_col], errors="coerce").astype("float64")
 
         clean_rule = clean_up_constraint(bool_constraint)
         
@@ -228,6 +239,13 @@ class ConstraintHandler:
                         op)
                 )
         )
+
+        target_col = self.dependent_column.replace("__", " ")
+
+        precision = self.spec_dict["columns"][target_col].get("precision", None)
+        
+        if precision == 'integer':
+            output_df[target_col] = output_df[target_col].round().astype("Int64")
 
         #drop the test_expression column
         del output_df["test_expression"]

@@ -594,10 +594,12 @@ class _LinkedDataGenerator:
 
     def scenario_1(self):
         '''
-        Values in all linked columns are drawn from a uniform distribution
+        Values in all linked columns are drawn from a uniform distribution,
+        excluding Missing data which is in SQL DB, last. Potentially need to
+        pop it and reinsert since order isn't always guaranteed.
         '''
 
-        idx = self.rng.choice(len(self.sql_df), self.num_rows)
+        idx = self.rng.choice(len(self.sql_df) - 1, self.num_rows)
 
         anon_list = [self.sql_df.iloc[x, :].values for x in idx]
 

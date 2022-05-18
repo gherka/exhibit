@@ -308,17 +308,22 @@ class newExhibit:
 
         # check if there are common columns between constraint targets and cat_cols
         if cat_cols_set & set(constraint_targets):
-
-            for num_col in self.spec_dict["metadata"]["numerical_columns"]:
+            
+            num_cols = self.spec_dict["metadata"]["numerical_columns"]
+            for num_col in num_cols:
                 
                 # derived columns won't have weight so we ignore them
                 if num_col in self.spec_dict["derived_columns"]: # pragma: no cover
                     continue
 
-                anon_df[num_col] = generate_continuous_column(
-                                                        spec_dict=self.spec_dict,
-                                                        anon_df=anon_df,
-                                                        col_name=num_col
+                # now, we'll regenerated continuous columns (in case constraints altered
+                # the row weights), but we don't want to erase all the missing values so
+                # only do it for the masked portion of anon_df that DOESN'T have NA.
+                num_col_na_mask = anon_df[num_col].isna()
+                anon_df.loc[~num_col_na_mask, num_col] = generate_continuous_column(
+                    spec_dict=self.spec_dict,
+                    anon_df=anon_df.loc[~num_col_na_mask],
+                    col_name=num_col
                 )
 
         #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED

@@ -75,20 +75,25 @@ def scale_continuous_column(series, precision, **dist_params):
     corresponding function.
     '''
 
+    temp_series = series.dropna().astype(float)
+
+    if len(series) == 0: #pragma: no cover
+        return series
+
     if dist_params.get("target_sum", None) is not None:
-        return _scale_to_target_sum(series, precision, **dist_params)
+        return _scale_to_target_sum(temp_series, precision, **dist_params)
 
     if (
         (dist_params.get("target_min", None) or
         dist_params.get("target_max", None)) is not None
         ):
-        return _scale_to_range(series, precision, **dist_params)
+        return _scale_to_range(temp_series, precision, **dist_params)
 
     if (
         (dist_params.get("target_mean", None) or
         dist_params.get("target_std", None)) is not None
         ):
-        return _scale_to_target_statistic(series, precision, **dist_params)
+        return _scale_to_target_statistic(temp_series, precision, **dist_params)
 
     # fallback is to return unscaled series
     return series
@@ -343,7 +348,7 @@ def _scale_to_target_statistic(
     result = target_mean + (series - series.mean()) * target_std / series.std()
     
     if precision == "integer":
-        result = result.round() #pragma: no cover
+        result = result.round().astype("Int64") #pragma: no cover
     
     return result
 
@@ -380,7 +385,7 @@ def _conditional_rounding(series, target_sum):
         np.where(
             series + row_diff >= 0,
             series + row_diff,
-            np.where(pd.isnull(series), np.NaN, 0)
+            np.where(pd.isnull(series), pd.NA, 0)
             )
     )
     
@@ -432,11 +437,11 @@ def _apply_dispersion(value, dispersion_pct, rng):
     if dispersion_pct == 0:
         return value
     
+    if pd.isna(value):
+        return pd.NA
+
     if value == np.inf: #pragma: no cover
         return 0
-    
-    if np.isnan(value):
-        return np.NaN
 
     d = value * dispersion_pct
 

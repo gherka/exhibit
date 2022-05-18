@@ -202,7 +202,9 @@ def generate_YAML_string(spec_dict):
     # appear only once in each custom constraint.
     #
     # If a column name has spaces, make sure to surround it with
-    # the tilde character ~. When comparing a date column against a
+    # the tilde character ~. This rule only applies when columns are used
+    # in basic constraints or filters. Targets for custom constraints must 
+    # use column names as they are. When comparing a date column against a
     # fixed date, make sure it's in an ISO format and is enclosed in
     # single quotation marks like so '2018-12-01'.
     # ----------------------------------------------------------

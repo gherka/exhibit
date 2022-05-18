@@ -66,7 +66,7 @@ class exhibitTests(unittest.TestCase):
 
         test_df = pd.DataFrame(
             data={
-                "A":["spam", "eggs", np.nan, "spam"],
+                "A":["spam", "eggs", pd.NA, "spam"],
                 "B":["ham", "bacon", "spamspam", "bacon"]
             }
         )

@@ -296,6 +296,10 @@ class referenceTests(unittest.TestCase):
             - anonymisation method is "random"
             - non-linked categorical column (Sex) has missing data
             - linked columns share missing categorical data
+
+        Because by default the spec includes the basic constraints of los >= avlos,
+        if avlos is null (0.065 probability in source data) then los will also be null
+        in ~130 records.
         '''
 
         source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))

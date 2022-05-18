@@ -31,7 +31,7 @@ class formattersTests(unittest.TestCase):
         '''
 
         test_df = pd.DataFrame(data={
-            "id" : list("ABCDEE") + [np.nan],
+            "id" : list("ABCDEE") + [pd.NA],
             "value" : range(7)
         })
 
@@ -54,7 +54,7 @@ class formattersTests(unittest.TestCase):
         '''
 
         test_df = pd.DataFrame(data={
-            "id" : list("ABCDEE") + [np.nan],
+            "id" : list("ABCDEE") + [pd.NA],
             "value" : range(7)
         })
 

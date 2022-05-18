@@ -65,10 +65,13 @@ class MissingDataGenerator:
         )
 
         #1) Generate nulls in standalone columns, including continuous
-        for col_name in standalone_cols:
+        # make sure to change the seed for each standalone column to avoid creating
+        # relationships where NA in Column A is also NA is column B if both have the
+        # same miss_probability.
+        for i, col_name in enumerate(sorted(standalone_cols)):
             
             # reset the generator for each column
-            rng = np.random.default_rng(seed=0)
+            rng = np.random.default_rng(seed=i)
 
             miss_pct = self.spec_dict["columns"][col_name]["miss_probability"]
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
@@ -84,10 +87,16 @@ class MissingDataGenerator:
                 rands < miss_pct,
                 miss_value, repl_column)
 
+            if col_type == "continuous":
+                precision = self.spec_dict["columns"][col_name].get("precision", None)
+                if precision == "integer":
+                    self.nan_data[col_name] = (
+                        self.nan_data[col_name].round().astype("Int64"))
+
         #2) Generate nulls in linked and paired columns
         for cols in missing_link_cols:
             
-            # reset the generator for each column
+            # reset the generator for each column (keeping the seed to maintain links)
             rng = np.random.default_rng(seed=0)
          
             # miss probability will be the same for all columns in cols
@@ -112,7 +121,7 @@ class MissingDataGenerator:
         for idx, col_name in not_null_idx:
             self.nan_data.loc[idx, col_name] = self.data.loc[idx, col_name]
 
-        #5) Replace np.nan with missing data placeholder for categorical columns and
+        #5) Replace NA with missing data placeholder for categorical columns and
         # re-generate continuous variables for those rows according to proper weights
         # only go through this step if there are nulls in categorical columns
         # and the spec_dict includes numerical columns that would be affected
@@ -144,7 +153,10 @@ class MissingDataGenerator:
             num_mask = self.nan_data[num_col].isna()
             mask = (cat_mask & ~num_mask)
 
-            self.nan_data.loc[mask, num_col] = self.nan_data.loc[mask, cat_cols].apply(
+            # it's possible to have the left side be Int64 type and the right side
+            # to be float64 (newly generated, unscaled); assigning different types
+            # doesn't work so we'll delay assignment and scale / cast type first!
+            unscaled_new_series = self.nan_data.loc[mask, cat_cols].apply(
                 func=generate_cont_val,
                 axis=1,
                 weights_table=self.wt,
@@ -162,15 +174,15 @@ class MissingDataGenerator:
                 old_sum = self.nan_data.loc[~mask, num_col].sum()
                 new_dist_params["target_sum"] = dist_params["target_sum"] - old_sum
 
-            repl_s = scale_continuous_column(
-                series=self.nan_data.loc[mask, num_col],
+            scaled_new_series = scale_continuous_column(
+                series=unscaled_new_series,
                 precision=precision,
                 **new_dist_params
             )
 
             # for some reason assigning a series back, rather than values
             # creates nulls in certain rows, but not others; maybe Pandas bug.
-            self.nan_data.loc[mask, num_col] = repl_s.values
+            self.nan_data.loc[mask, num_col] = scaled_new_series.values
 
         # replace Missing data back with np.nan
         self.nan_data.replace({MISSING_DATA_STR : np.nan}, inplace=True)

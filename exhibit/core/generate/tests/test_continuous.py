@@ -79,8 +79,8 @@ class continuousTests(unittest.TestCase):
         expected_3 = (0 <= test_case_3 <= 2)
 
         #na returns na
-        test_case_4 = tm._apply_dispersion(np.NaN, 0.2, rng)
-        expected_4 = np.isnan(test_case_4)
+        test_case_4 = tm._apply_dispersion(pd.NA, 0.2, rng)
+        expected_4 = pd.isna(test_case_4)
 
         self.assertTrue(expected_1)
         self.assertTrue(expected_2)
@@ -480,7 +480,7 @@ class continuousTests(unittest.TestCase):
         The scales of transformed values aren't the same as the originals, 
         but the ratios hold (just with a different interval) so whereas in
         the original 4 is twice as big as 2, in the transformed, 28 has double
-        the interval (15/91 * 6) than 16.
+        the interval (15/91 * 6) than 16. Only convert to Int64 at the end!
         '''
 
         test_series = pd.Series(
