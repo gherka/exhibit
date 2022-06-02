@@ -124,16 +124,16 @@ def generate_weights(df, cat_col, num_col, ew=False):
     temp_output = weights.sort_index(kind="mergesort")
 
     if MISSING_DATA_STR not in temp_output:
-        temp_output = temp_output.append(pd.Series(
+        temp_output = pd.concat([temp_output, pd.Series(
             index=[MISSING_DATA_STR],
             data=0
-        ))
+        )])
     
     #pop and reinsert missing data placeholder at the end of the list
     else:
         cached = temp_output[temp_output.index.str.contains(MISSING_DATA_STR)]
         temp_output = temp_output.drop(MISSING_DATA_STR)
-        temp_output = temp_output.append(cached)
+        temp_output = pd.concat([temp_output, cached])
 
     #equalise the weights if equal_weights is True, except for Missing data
 

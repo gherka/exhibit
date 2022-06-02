@@ -141,15 +141,15 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
     )
 
     if MISSING_DATA_STR not in temp_vectors:
-        temp_vectors = temp_vectors.append(pd.Series(
+        temp_vectors = pd.concat([temp_vectors, pd.Series(
             index=[MISSING_DATA_STR],
             data=0
-        ))
+        )])
     #pop and reinsert missing data placeholder at the end of the list
     else:
         cached = temp_vectors[temp_vectors.index.str.contains(MISSING_DATA_STR)]
         temp_vectors = temp_vectors.drop(MISSING_DATA_STR)
-        temp_vectors = temp_vectors.append(cached)
+        temp_vectors = pd.concat([temp_vectors, cached])
     
     #equalise the probability vectors if equal_weights is True, except Missing data
     if ew:

@@ -396,7 +396,7 @@ class newSpec:
             # Add linked column values to the temp tables in anon.db
             # we drop the NAs from the data at this point because
             # we don't want to add Missing data twice.
-            linked_temp_df = self.df[self.cat_cols]
+            linked_temp_df = self.df[list(self.cat_cols)]
 
             for linked_group_tuple in linked_tree:
 

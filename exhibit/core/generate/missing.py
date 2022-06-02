@@ -108,10 +108,10 @@ class MissingDataGenerator:
             # rands is shared for all columns in cols
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
 
-            self.nan_data.loc[:, cols] = np.where(
+            self.nan_data.loc[:, list(cols)] = np.where(
                 (rands < miss_pct)[..., None],
                 (np.NaN, ) * len(cols),
-                self.nan_data.loc[:, cols]
+                self.nan_data.loc[:, list(cols)]
             )
 
         #3) Generate nulls in geospacial columns (lat / long)

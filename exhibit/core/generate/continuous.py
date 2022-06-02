@@ -3,6 +3,7 @@ Methods to generate continuous columns / values
 '''
 
 # Standard library imports
+from multiprocessing.sharedctypes import Value
 import re
 
 # External library imports
@@ -50,7 +51,7 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     # of if fit is set to distribution, draw from a normal distribution
     # taking into account values' weights and column mean & standard deviation
 
-    new_series = anon_df.loc[:, target_cols].apply(
+    new_series = anon_df.loc[:, list(target_cols)].apply(
         func=generate_cont_val,
         axis=1,
         weights_table=wt,
@@ -428,10 +429,8 @@ def _apply_dispersion(value, dispersion_pct, rng):
     -------
     Noisy value
 
-    If dispersion_pct is set to 0 then original value is returned
-    For now, expects data with positive values. If source data is expected
-    to have negative values that you need to anonymise, we'll need to
-    add a flag to the spec generation
+    If dispersion_pct is set to 0 then original value is returned. Since
+    the dispersion is followed by scaling, it's OK to return negative values.
     '''
 
     if dispersion_pct == 0:
@@ -445,7 +444,9 @@ def _apply_dispersion(value, dispersion_pct, rng):
 
     d = value * dispersion_pct
 
-    #to avoid negative rmin, include max(0, n) check
-    rmin, rmax = (max(0, (value - d)), (value + d))
+    if d < 0:
+        rmax, rmin = (value - d), (value + d)
+    else:
+        rmin, rmax = (value - d), (value + d)
 
     return rng.uniform(rmin, rmax)

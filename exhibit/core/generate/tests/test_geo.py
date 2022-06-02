@@ -35,7 +35,7 @@ class geoTests(unittest.TestCase):
         '''
         Clean up anon.db from temp tables
         '''
-        print(cls._temp_tables)
+
         db_util.drop_tables(cls._temp_tables)
     
 
