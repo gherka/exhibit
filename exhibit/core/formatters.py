@@ -13,7 +13,8 @@ import numpy as np
 
 # Exhibit imports
 from exhibit.core.constants import (
-    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR)
+    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED,
+    ORIGINAL_VALUES_REGEX, MISSING_DATA_STR)
 
 def format_header(dataframe, series_name, prefix=None):
     '''
@@ -296,6 +297,9 @@ def parse_original_values(original_values):
         return original_values
 
     if original_values == ORIGINAL_VALUES_PAIRED:
+        return original_values
+
+    if original_values == ORIGINAL_VALUES_REGEX:
         return original_values
 
     df = pd.DataFrame(

@@ -7,8 +7,7 @@ from pandas.api.types import is_numeric_dtype, is_datetime64_dtype, is_bool_dtyp
 import numpy as np
 
 # Exhibit imports
-from .constants import (
-    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR, UUID_PLACEHOLDER)
+from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
 from .constraints import find_basic_constraint_columns
 from .utils import (
     guess_date_frequency, generate_table_id,
@@ -75,7 +74,7 @@ class newSpec:
         self.ew = ew
         self.random_seed = random_seed
         self.user_linked_cols = kwargs.get("user_linked_cols", set())
-        self.uuid_cols = kwargs.get("uuid_cols", {UUID_PLACEHOLDER})
+        self.uuid_cols = kwargs.get("uuid_cols", set())
         self.id = generate_table_id()
         
         self.numerical_cols = (
@@ -104,6 +103,7 @@ class newSpec:
                 "categorical_columns" : sorted(list(self.cat_cols)),
                 "numerical_columns"   : sorted(list(self.numerical_cols)),
                 "date_columns"        : sorted(list(self.date_cols)),
+                "geospatial_columns"  : list(), # empty list to be replaced with a blank
                 "inline_limit"        : self.inline_limit,
                 "random_seed"         : self.random_seed,
                 "id"                  : self.id
@@ -117,13 +117,8 @@ class newSpec:
     def missing_data_chance(self, col):
         '''
         Helper function to calculate % of null rows in a given column.
-        Special case for placeholder columns (uuid) that are not in the
-        original dataframe.
         '''
         
-        if col not in self.df.columns:
-            return 0
-
         result = round(sum(self.df[col].isna()) / self.df.shape[0], 3)
 
         return result
@@ -374,8 +369,9 @@ class newSpec:
         basic_constraints = find_basic_constraint_columns(self.df)
         self.output["constraints"]["basic_constraints"] = basic_constraints
 
-        # add conditional constraints placeholder; see YAML comments for example format
-        self.output["constraints"]["custom_constraints"] = "empty_placeholder"
+        # add conditional constraints placeholder; instructions on adding constraints
+        # are in the YAML comments; empty list placeholder is replaced with blank.
+        self.output["constraints"]["custom_constraints"] = list()
 
         # find and save linked columns
         h_linked_cols = find_hierarchically_linked_columns(

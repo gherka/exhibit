@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.constants import UUID_PLACEHOLDER
+from exhibit.core.constants import ORIGINAL_VALUES_REGEX
 
 # Module under test
 import exhibit.core.formatters as tm
@@ -20,6 +20,14 @@ class formattersTests(unittest.TestCase):
     Most of the formatting functionality is covered elsewhere so
     only a few features are included here for peace of mind.
     '''
+
+    def test_parse_original_values(self):
+        '''
+        This is parsing purely for formatting purposes; majority of paths
+        of this function are tested elsewhere in the testing suite.
+        '''
+
+        self.assertTrue(tm.parse_original_values(ORIGINAL_VALUES_REGEX))       
 
     def test_uuid_frequency_list_generation(self):
         '''

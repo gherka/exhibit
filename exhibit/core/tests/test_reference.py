@@ -26,6 +26,7 @@ from exhibit.core import exhibit  as tm
 def replace_nested_dict_values(d1, d2):
     '''
     Recursive replacement of dictionary values in matching keys
+    or adding new ones.
     '''
 
     for key2 in d2:
@@ -34,6 +35,8 @@ def replace_nested_dict_values(d1, d2):
                 replace_nested_dict_values(d1[key2], d2[key2])
             else:
                 d1[key2] = d2[key2]
+        else:
+            d1[key2] = d2[key2]
 
 def temp_exhibit(
     filename="inpatients.csv",

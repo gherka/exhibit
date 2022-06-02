@@ -21,7 +21,7 @@ sqlite3.register_adapter(np.int32, int)
 sqlite3.register_adapter(np.intc, int)
 
 def query_anon_database(
-    table_name, column=None, size=None,
+    table_name, column=None, size=None, distinct=True,
     order="rowid", db_uri=None, exclude_missing=False):
     '''
     Query anon.db and return a nice dataframe or series
@@ -36,6 +36,9 @@ def query_anon_database(
         optional. Single column to be extracted from the given table
     size : int
         optional. The parameter to go into LIMIT statement
+    distinct : boolean
+        optional. In some cases, like probabilities, you want to return all
+        values, even if they are duplicates.
     order : str
         optional. The column to order the results by; defaults to rowid
     db_uri : str
@@ -59,6 +62,7 @@ def query_anon_database(
         column = column[0]
 
     #build the sql string:
+    distinct_sql = f"DISTINCT" if distinct else ""
     order_sql = f"ORDER BY {order}"
     size_sql = f"LIMIT {size}" if size else ""
     where_sql = (
@@ -66,7 +70,7 @@ def query_anon_database(
         if (column and exclude_missing) else "")
     
     sql = f"""
-    SELECT DISTINCT {str(column or '*')}
+    SELECT {distinct_sql} {str(column or '*')}
     FROM {table_name}
     {where_sql}
     {order_sql}

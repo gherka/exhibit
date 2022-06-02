@@ -16,6 +16,7 @@ import pandas as pd
 from .sql import query_anon_database
 from .generate.continuous import scale_continuous_column
 from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
+from .generate.geo import geo_make_regions
 
 class ConstraintHandler:
     '''
@@ -138,6 +139,11 @@ class ConstraintHandler:
             "make_distinct"   : self.make_distinct,
             "make_same"       : self.make_same,
             "generate_as_sequence" : self.generate_as_sequence,
+            "geo_make_regions" : geo_make_regions,
+        }
+
+        kwargs_dict = {
+            "geo_make_regions" : {"spec_dict" : self.spec_dict},
         }
 
         for _, constraint in custom_constraints.items():
@@ -162,9 +168,17 @@ class ConstraintHandler:
             for target_col, action_str in cc_targets.items():
                 if (action_func := dispatch_dict.get(action_str, None)):
 
+                    _kwargs = kwargs_dict.get(action_str, {})
+
+                    # geospatial constaints act on two columns (latitude and longitude)
+                    if action_str[:3] == "geo":
+                        output_df = action_func(
+                        output_df, cc_filter_idx, target_col, cc_partitions, **_kwargs)
+                        continue
+
                     # overwrite the original target column with the adjusted one
                     output_df.loc[cc_filter_idx, target_col] = action_func(
-                        output_df, cc_filter_idx, target_col, cc_partitions)
+                        output_df, cc_filter_idx, target_col, cc_partitions, **_kwargs)
 
         
         return output_df
@@ -603,7 +617,10 @@ class ConstraintHandler:
     def make_same(
         self, df, filter_idx, target_col, partition_cols=None):
         '''
-        Force all values in the partition to be the same as the first
+        Force all values in the partition to be the same as the first.
+        Remember that groubpy doesn't sort the observations within groups
+        so the original order is preserved, meaning the choice of the first
+        value in group is driven by the original probabilities.
 
         Parameters
         ----------

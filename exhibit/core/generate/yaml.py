@@ -42,7 +42,10 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_meta = yaml.safe_dump(yaml_list[0], sort_keys=False, width=1000)
+    yaml_meta = (
+        yaml
+        .safe_dump(yaml_list[0], sort_keys=False, width=1000)
+    )
 
     c2a = textwrap.dedent("""\
     # ----------------------------------------------------------
@@ -80,6 +83,26 @@ def generate_YAML_string(spec_dict):
     # put in the anon.db database or, if the values follow a
     # one to one relationship with another column, be listed
     # as part of that column's section.
+    #
+    # UUID COLUMNS
+    # -----------
+    # UUID columns are a special case for categorical column where
+    # each value is unique, but can appear multiple times depending
+    # on the frequency distribution set by the user. You can add UUID
+    # columns manually or infer them from the source data. If adding a
+    # UUID column manually, don't forget to add it in the metadata section.
+    #
+    # The format of a UUID column in the specification is as follows:
+    # 
+    # record_chi:
+    #  type: uuid
+    #  frequency_distribution:
+    #  - frequency | probability_vector
+    #  - 1         | 0.5
+    #  - 2         | 0.3
+    #  - 3         | 0.2
+    #  miss_probability: 0.0
+    #  anonymising_set: uuid
     # ----------------------------------------------------------
     """)
 
@@ -147,12 +170,38 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
+    c_geo = textwrap.dedent("""\
+    # GEOSPATIAL COLUMNS
+    # ----------
+    #
+    # Geospatial columns are special in that they are not inferred
+    # from source data and can only be added manually. The format 
+    # of each column is as follows:
+    #
+    # clinic_coords:
+    #    type: geospatial
+    #    h3_table: geo_scotland_dz_h3_8
+    #    distribution: uniform
+    #    miss_probability: 0
+    #
+    # h3_table referrs to H3 hexagon IDs stored in anon.db. exhibit
+    # doesn't come with any geospatial lookups by default, but there
+    # is a recipe explaining how to create one. The format of the table
+    # is that it has to have a column named "h3" with h3 ids. 
+    # 
+    # For distribution, you can either pick uniform to sample points
+    # from all hexagons at random or use column weights in the h3_table,
+    # like population counts.
+    # ----------------------------------------------------------
+    """
+    )
+
     first_date_col = next(iter(spec_dict["metadata"]["date_columns"]), None)
 
     if first_date_col:
         date_col_in = yaml_columns_all.find(f"  {first_date_col}:\n    type: date")
         yaml_columns_all = (
-            yaml_columns_all[:date_col_in] + c2c + 
+            yaml_columns_all[:date_col_in] + c2c + c_geo +
             yaml_columns_all[date_col_in:]
         )
 
@@ -185,6 +234,7 @@ def generate_YAML_string(spec_dict):
     # - "make_distinct"
     # - "make_same"
     # - "generate_as_sequence"
+    # - "geo_make_regions
     #
     # Adding or banning nulls is useful when a value in one column, 
     # like Readmissions Within 28 days, necessitates a valid value in
@@ -213,7 +263,6 @@ def generate_YAML_string(spec_dict):
     yaml_constraints = (
         yaml
         .safe_dump(yaml_list[2], sort_keys=False, width=1000)
-        .replace("empty_placeholder", "")
     )
 
     c4 = textwrap.dedent("""\
@@ -267,5 +316,8 @@ def generate_YAML_string(spec_dict):
     spec_yaml = (
         c1 + yaml_meta + yaml_columns_all + c3 + yaml_constraints +
         c4 + yaml_linked + c5 + yaml_derived)
+
+    # replace empty lists with a blank
+    spec_yaml = spec_yaml.replace(" []", "")
 
     return spec_yaml

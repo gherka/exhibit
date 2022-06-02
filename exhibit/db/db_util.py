@@ -221,7 +221,12 @@ def insert_table(file_path, table_name=None, db_uri=None):
     if db_uri is None:
         db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
 
-    if path_checker(file_path):
+    # used internally in Exhibit for testing
+    if isinstance(file_path, pd.DataFrame):
+        table_df = file_path
+        table_name = "temp" if table_name is None else table_name
+
+    elif path_checker(file_path):
 
         if table_name is None:
 
@@ -279,7 +284,7 @@ def drop_tables(table_names, db_uri=None):
             
             for source_table in source_tables:
 
-                if re.search(table_name, source_table):
+                if table_name == source_table:
 
                     c.execute(f"DROP TABLE {source_table}")
                     conn.execute("VACUUM")

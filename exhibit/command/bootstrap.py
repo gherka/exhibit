@@ -11,7 +11,6 @@ import textwrap
 import sys
 
 # Exhibit imports
-from exhibit.core.constants import UUID_PLACEHOLDER
 from exhibit.core.exhibit import newExhibit
 from exhibit.core.utils import path_checker
 
@@ -128,7 +127,7 @@ def main():
 
     parser.add_argument(
         "--linked_columns", "-lc",
-        default=None,
+        default=[],
         nargs="+",
         metavar="",
         help=
@@ -147,7 +146,7 @@ def main():
 
     parser.add_argument(
         "--uuid_columns", "-uuid",
-        default={UUID_PLACEHOLDER},
+        default=[],
         nargs="+",
         metavar="",
         help=
@@ -184,7 +183,7 @@ def main():
     args_dict = vars(parser.parse_args(sys.argv[1:]))
 
     #Add any special processing rules (to facilitate testing, for example)
-    args_dict["uuid_columns"] = set(args_dict.get("uuid_columns", {UUID_PLACEHOLDER}))
+    args_dict["uuid_columns"] = set(args_dict.get("uuid_columns", set()))
     args_dict["skip_columns"] = set(args_dict.get("skip_columns", set()))
     args_dict["discrete_columns"] = set(args_dict.get("discrete_columns", set()))
     

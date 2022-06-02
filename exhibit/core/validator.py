@@ -126,7 +126,7 @@ class newValidator:
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
         """)
 
-        for linked_col_group in spec_dict["linked_columns"]:
+        for linked_col_group in spec_dict["linked_columns"] or list():
             #linked_columns[0] is the index of linked group; actual columns are [1] 
             linked_cols = linked_col_group[1]
 
@@ -341,7 +341,7 @@ class newValidator:
         VALIDATION FAIL: Duplicate column(s) in linked groups
         """)
 
-        nested_list = spec_dict["linked_columns"]
+        nested_list = spec_dict["linked_columns"] or list()
         flat_list = list(chain(*[sublist for _, sublist in nested_list]))
         flat_set = set(flat_list)
 

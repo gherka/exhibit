@@ -15,12 +15,13 @@ import numpy as np
 import pandas as pd
 
 # Exhibit imports
-from .constants import UUID_PLACEHOLDER
 from .specs import newSpec
 from .formatters import parse_original_values
 from .validator import newValidator
 from .constraints import ConstraintHandler
-from .utils import (path_checker, read_with_date_parser, count_core_rows)
+from .utils import (
+    path_checker, read_with_date_parser, count_core_rows,
+    get_attr_values)
 
 from .generate.missing import MissingDataGenerator
 from .generate.categorical import CategoricalDataGenerator
@@ -35,6 +36,8 @@ from .generate.continuous import (
                     generate_derived_column)
 
 from .generate.uuids import generate_uuid_column
+from .generate.geo import generate_geospatial_column
+from .sql import query_anon_database
 
 class newExhibit:
     '''
@@ -105,7 +108,7 @@ class newExhibit:
         self.equal_weights = equal_weights
         self.skip_columns = skip_columns or set()
         self.linked_columns= linked_columns or set()
-        self.uuid_columns= uuid_columns or {UUID_PLACEHOLDER}
+        self.uuid_columns= uuid_columns or set()
         self.discrete_columns = discrete_columns or set()
         self.verbose = verbose
 
@@ -238,13 +241,6 @@ class newExhibit:
         cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows)
         anon_df = cat_gen.generate()
 
-        # Missing data can only be added after all categorical columns
-        # and all continous columns have been generated. This is because
-        # a categorical column might have a conditional contraint depending
-        # on a continous column or vice versa. So initial values are generated
-        # without regard for weights for Missing data which are later adjusted
-        # as required.
-
         #3) ADD CONTINUOUS VARIABLES TO ANON DF
         # at this point, we don't have any Missing data placeholders (or actual nans)
         # these are added after this step when we can properly account for conditional
@@ -268,18 +264,10 @@ class newExhibit:
                                                     col_name=num_col
             )
 
-        #4) GENERATE MISSING DATA IN ALL COLUMNS
-        miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
-        anon_df = miss_gen.add_missing_data()
-
-        #5) GENERATE UUID COLUMNS
-        for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"]:
+        #4) GENERATE UUID COLUMNS
+        for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"] or set():
 
             dist = self.spec_dict["columns"][uuid_col_name]["frequency_distribution"]
-            
-            # only header included as a placeholder; skip if no frequency information
-            if len(dist) == 1:
-                continue
 
             uuid_col = generate_uuid_column(
                 uuid_col_name,
@@ -291,7 +279,64 @@ class newExhibit:
 
             anon_df.insert(0, uuid_col_name, uuid_col)
 
-        #6) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
+        #5) GENERATE GEOSPATIAL COLUMNS
+        geospatial_cols = [c for c, _ in get_attr_values(
+        self.spec_dict, "type", col_names=True, types=["geospatial"])]
+        num_rows = self.spec_dict["metadata"]["number_of_rows"]
+        rng = self.spec_dict["_rng"]
+
+        for col in geospatial_cols:
+
+            # check if the column is the target of one of the "geo" custom actions
+            # to avoid generating the data twice
+            geo_action_targets = []
+            custom_constraints = self.spec_dict["constraints"].get(
+                "custom_constraints", None)
+            
+            if custom_constraints:
+                for _, cc in custom_constraints.items():
+                    cc_targets = cc["targets"]
+                    for target_col, target_action in cc_targets.items():
+                        if target_action[:3] == "geo":
+                            geo_action_targets.append(target_col)
+            
+            if col in geo_action_targets:
+                # add placeholders to avoid errors when generating missing data
+                geo_cols = [f"{col}_latitude", f"{col}_longitude"]
+                anon_df[geo_cols] = 0
+                continue
+
+            h3_table_name = self.spec_dict["columns"][col]["h3_table"]
+            dist = self.spec_dict["columns"][col]["distribution"]
+            h3_ids = (
+                query_anon_database(table_name=h3_table_name, column="h3", order="h3")
+                .values.ravel())
+
+            # pick the hex weights from the DB table, if any
+            if dist== "uniform":
+                h3_probs = None
+            else:
+                prob_col = query_anon_database(
+                    table_name=h3_table_name, column=dist, order="h3", distinct=False)
+                h3_probs = (prob_col / prob_col.sum()).values.ravel()
+
+            geo_df = generate_geospatial_column(col, h3_ids, h3_probs, num_rows, rng)
+            # due to rounding, the number of rows in anon_df can be smaller than 
+            # the number_of_rows specified in the metadata
+            anon_df = pd.concat([anon_df, geo_df.iloc[:anon_df.shape[0], :]], axis=1)
+        
+        # Missing data can only be added after all categorical columns
+        # and all continous columns have been generated. This is because
+        # a categorical column might have a conditional constraint depending
+        # on a continous column or vice versa. So initial values are generated
+        # without regard for weights for Missing data which are later adjusted
+        # as required.
+
+        #6) GENERATE MISSING DATA IN ALL COLUMNS
+        miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
+        anon_df = miss_gen.add_missing_data()
+
+        #7) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
         # if there are any constraints that affect categorical columns, we need to
@@ -326,12 +371,12 @@ class newExhibit:
                     col_name=num_col
                 )
 
-        #7) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict["derived_columns"].items():
             if "Example" not in name:
                 anon_df[name] = generate_derived_column(anon_df, calc)
 
-        #8) CHECK IF DUPLICATES ARE OK
+        #9) CHECK IF DUPLICATES ARE OK
         # only consider categorical columns (+uuid) for potential duplicates
         if not self.spec_dict["constraints"]["allow_duplicates"]:
             
@@ -344,7 +389,7 @@ class newExhibit:
                 print(f"WARNING: Deleted {number_dropped} duplicates.")
                 anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
             
-        #9) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #10) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self): # pragma: no cover

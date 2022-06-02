@@ -219,30 +219,6 @@ class exhibitTests(unittest.TestCase):
 
         self.assertRaises(Exception, tm.newExhibit, **args)
 
-    def test_output_spec_always_includes_uuid_column_type(self):
-        '''
-        Make sure the generated spec has at least one column of the type uuid.
-        '''
-
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            inline_limit=30,
-            equal_weights=True,
-            skip_columns=[]
-        )
-
-        xA = tm.newExhibit(**args)
-        xA.read_data()
-        xA.generate_spec()
-
-        # save the spec ID to delete temp tables after tests finish
-        self._temp_tables.append(xA.spec_dict["metadata"]["id"])
-
-        result = get_attr_values(xA.spec_dict, "type")                
-        self.assertTrue("uuid" in result)
-
     def test_uuid_columns_are_never_duplicated_in_other_column_types(self):
         '''
         If a column is marked as uuid in CLI, it should be taken out of

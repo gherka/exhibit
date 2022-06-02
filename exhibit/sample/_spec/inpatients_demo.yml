@@ -9,7 +9,6 @@
 metadata:
   number_of_rows: 2000
   uuid_columns:
-  - uuid_placeholder
   categorical_columns:
   - age
   - hb_code
@@ -22,6 +21,7 @@ metadata:
   - stays
   date_columns:
   - quarter_date
+  geospatial_columns:
   inline_limit: 150
   random_seed: 0
   id: demo
@@ -60,17 +60,31 @@ metadata:
 # put in the anon.db database or, if the values follow a
 # one to one relationship with another column, be listed
 # as part of that column's section.
+#
+# UUID COLUMNS
+# -----------
+# UUID columns are a special case for categorical column where
+# each value is unique, but can appear multiple times depending
+# on the frequency distribution set by the user. You can add UUID
+# columns manually or infer them from the source data. If adding a
+# UUID column manually, don't forget to add it in the metadata section.
+#
+# The format of a UUID column in the specification is as follows:
+# 
+# record_chi:
+#  type: uuid
+#  frequency_distribution:
+#  - frequency | probability_vector
+#  - 1         | 0.5
+#  - 2         | 0.3
+#  - 3         | 0.2
+#  miss_probability: 0.0
+#  anonymising_set: uuid
 # ----------------------------------------------------------
 columns:
-  uuid_placeholder:
-    type: uuid
-    frequency_distribution:
-    - frequency | probability_vector
-    miss_probability: 0.0
-    anonymising_set: uuid
   age:
     type: categorical
-    paired_columns: []
+    paired_columns:
     uniques: 10
     original_values:
     - age          | probability_vector | avlos | los   | stays
@@ -123,7 +137,7 @@ columns:
     anonymising_set: random
   measure:
     type: categorical
-    paired_columns: []
+    paired_columns:
     uniques: 3
     original_values:
     - measure              | probability_vector | avlos | los   | stays
@@ -136,7 +150,7 @@ columns:
     anonymising_set: random
   sex:
     type: categorical
-    paired_columns: []
+    paired_columns:
     uniques: 2
     original_values:
     - sex          | probability_vector | avlos | los   | stays
@@ -208,6 +222,28 @@ columns:
 # Frequency is based on the frequency strings of DateOffsets.
 # See Pandas documentation for more details. Times are not supported.
 # ----------------------------------------------------------
+# GEOSPATIAL COLUMNS
+# ----------
+#
+# Geospatial columns are special in that they are not inferred
+# from source data and can only be added manually. The format 
+# of each column is as follows:
+#
+# clinic_coords:
+#    type: geospatial
+#    h3_table: geo_scotland_dz_h3_8
+#    distribution: uniform
+#    miss_probability: 0
+#
+# h3_table referrs to H3 hexagon IDs stored in anon.db. exhibit
+# doesn't come with any geospatial lookups by default, but there
+# is a recipe explaining how to create one. The format of the table
+# is that it has to have a column named "h3" with h3 ids. 
+# 
+# For distribution, you can either pick uniform to sample points
+# from all hexagons at random or use column weights in the h3_table,
+# like population counts.
+# ----------------------------------------------------------
   quarter_date:
     type: date
     cross_join_all_unique_values: true
@@ -220,8 +256,8 @@ columns:
 # ===========
 #
 # There are two types of constraints you can impose of the data:
-# - boolean
-# - conditional
+# - basic
+# - custom
 # 
 # Boolean constraints take the form of a simple statement of the
 # form [dependent_column] [operator] [expression / independent_column].
@@ -242,6 +278,8 @@ columns:
 # - "sort_descending"
 # - "make_distinct"
 # - "make_same"
+# - "generate_as_sequence"
+# - "geo_make_regions
 #
 # Adding or banning nulls is useful when a value in one column, 
 # like Readmissions Within 28 days, necessitates a valid value in
@@ -256,7 +294,9 @@ columns:
 #     taget_column: target_action
 #
 # If a column name has spaces, make sure to surround it with
-# the tilde character ~. When comparing a date column against a
+# the tilde character ~. This rule only applies when columns are used
+# in basic constraints or filters. Targets for custom constraints must 
+# use column names as they are. When comparing a date column against a
 # fixed date, make sure it's in an ISO format and is enclosed in
 # single quotation marks like so '2018-12-01'.
 # ----------------------------------------------------------
@@ -290,7 +330,7 @@ constraints:
 # of this table must follow the format: id_N  where id is taken 
 # from the metadata section and N is the group number.
 # ----------------------------------------------------------
-linked_columns: []
+linked_columns:
 # ----------------------------------------------------------
 # DERIVED COLUMNS
 # ===============

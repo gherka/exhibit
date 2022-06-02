@@ -36,7 +36,7 @@ class MissingDataGenerator:
 
         # only copy the data if there are conditional constraints meaning
         # we can't be sure the required columns HADN'T HAD data already made
-        # missing in an earlier step.s
+        # missing in an earlier step.
         if spec_dict["constraints"]["custom_constraints"]:
             self.nan_data = data.copy()
 
@@ -57,11 +57,15 @@ class MissingDataGenerator:
         '''
 
         missing_link_cols = self._find_columns_with_linked_missing_data()
+        geospatial_cols = [c for c, _ in get_attr_values(
+        self.spec_dict, "type", col_names=True, types=["geospatial"])]
+
         standalone_cols = (
             set(self.spec_dict["columns"].keys()) - 
             {col for col_set in missing_link_cols for col in col_set} -
             set(self.spec_dict.get("derived_columns", {}).keys()) -
-            set(self.spec_dict["metadata"].get("uuid_columns", set()))
+            set(self.spec_dict["metadata"].get("uuid_columns", set()) or set()) -
+            set(geospatial_cols)
         )
 
         #1) Generate nulls in standalone columns, including continuous
@@ -91,7 +95,7 @@ class MissingDataGenerator:
                 precision = self.spec_dict["columns"][col_name].get("precision", None)
                 if precision == "integer":
                     self.nan_data[col_name] = (
-                        self.nan_data[col_name].round().astype("Int64"))
+                        self.nan_data[col_name].astype("float").round().astype("Int64"))
 
         #2) Generate nulls in linked and paired columns
         for cols in missing_link_cols:
@@ -110,18 +114,34 @@ class MissingDataGenerator:
                 self.nan_data.loc[:, cols]
             )
 
-        #3) Generate nulls in indices explicitly defined in custom_constraints
+        #3) Generate nulls in geospacial columns (lat / long)
+        # Similar to linked / paired, keeping the random seed the same between
+        # lat and long, only changing if more than one column to generate.
+
+        for col in geospatial_cols:
+            geo_cols = [f"{col}_latitude", f"{col}_longitude"]
+            rng = np.random.default_rng(seed=0)
+            miss_pct = self.spec_dict["columns"][col]["miss_probability"]
+            rands = rng.random(size=self.nan_data.shape[0])
+
+            self.nan_data.loc[:, geo_cols] = np.where(
+                (rands < miss_pct)[..., None],
+                (np.NaN, ) * len(geo_cols),
+                self.nan_data.loc[:, geo_cols]
+            )
+            
+        #4) Generate nulls in indices explicitly defined in custom_constraints
         make_null_idx = self._find_make_null_idx()
 
         for idx, col_name in make_null_idx:
             self.nan_data.loc[idx, col_name] = np.NaN
 
-        #4) Re-introduce the saved no_nulls rows from the original data
+        #5) Re-introduce the saved no_nulls rows from the original data
         not_null_idx = self._find_not_null_idx()
         for idx, col_name in not_null_idx:
             self.nan_data.loc[idx, col_name] = self.data.loc[idx, col_name]
 
-        #5) Replace NA with missing data placeholder for categorical columns and
+        #6) Replace NA with missing data placeholder for categorical columns and
         # re-generate continuous variables for those rows according to proper weights
         # only go through this step if there are nulls in categorical columns
         # and the spec_dict includes numerical columns that would be affected
@@ -217,7 +237,7 @@ class MissingDataGenerator:
                 pairs.update([col] + attrs["paired_columns"])
 
             # linked groups
-            for i, linked_group in self.spec_dict["linked_columns"]:
+            for i, linked_group in (self.spec_dict["linked_columns"] or list()):
                 # zero numbered linked group is reserved for user defined linkage
                 if i == 0:
                     continue

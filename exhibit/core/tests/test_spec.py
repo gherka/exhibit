@@ -10,7 +10,6 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.constants import UUID_PLACEHOLDER
 from exhibit.sample.sample import prescribing_data as ref_df
 
 # Module under test
@@ -71,7 +70,7 @@ class specsTests(unittest.TestCase):
         test_spec = tm.newSpec(test_df, 10)
 
         expected_col_order = [
-            UUID_PLACEHOLDER, "bools", "cats", "floats", "ints", "dates"]
+            "bools", "cats", "floats", "ints", "dates"]
 
         test_col_order = list(test_spec.output_spec_dict()["columns"].keys())
 

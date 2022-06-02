@@ -18,6 +18,9 @@ def generate_regex_column(anon_pattern, name, size):
     #3) find dynamic random parts, replace in original string with placeholders
     #4) slice together in a vectorised way
 
+    There is an issue that a pattern A[1-9][1-9] will result in duplicate characters
+    A11, A22 rather than unique so for now, use A[1-9]{2} which avoids this issue.
+
     Returns pd.Series
     '''
     

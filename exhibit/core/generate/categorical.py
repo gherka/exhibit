@@ -60,7 +60,7 @@ class CategoricalDataGenerator:
         generated_dfs = []
 
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-        for linked_group in self.spec_dict["linked_columns"]:
+        for linked_group in (self.spec_dict["linked_columns"] or list()):
             
             # zero-numbered linked group is reserved for user-defined groupings
             if linked_group[0] == 0:
@@ -265,7 +265,7 @@ class CategoricalDataGenerator:
 
         anon_set = col_attrs["anonymising_set"]
         uniques = col_attrs["uniques"]
-        paired_cols = col_attrs["paired_columns"]
+        paired_cols = col_attrs["paired_columns"] or list()
 
         if db_uri is None:
             db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
@@ -376,11 +376,11 @@ class CategoricalDataGenerator:
         Columns = namedtuple("Columns", ["all", "complete", "paired", "skipped"])
 
         all_cols = (
-            self.spec_dict["metadata"]["categorical_columns"] +
-            self.spec_dict["metadata"]["date_columns"])
+            (self.spec_dict["metadata"]["categorical_columns"] or list()) +
+            (self.spec_dict["metadata"]["date_columns"] or list()))
         
         nested_linked_cols = [
-            sublist for n, sublist in self.spec_dict["linked_columns"]
+            sublist for n, sublist in (self.spec_dict["linked_columns"] or list())
             ]
 
         complete_cols = [c for c, v in get_attr_values(

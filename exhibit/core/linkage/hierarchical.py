@@ -737,7 +737,7 @@ class _LinkedDataGenerator:
             for c in self.linked_cols:
                 
                 #just generate a DF with duplicate paired columns
-                for pair in self.spec_dict["columns"][c]["paired_columns"]:
+                for pair in self.spec_dict["columns"][c]["paired_columns"] or list():
 
                     #overwrite linked_df
                     linked_df = pd.concat(
