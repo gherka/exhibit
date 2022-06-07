@@ -32,7 +32,7 @@ class constraintsTests(unittest.TestCase):
             anon_df=pd.DataFrame(),
         )
 
-    def test_recursive_randint_error_handling(self):
+    def test_random_value_from_interval_error_handling(self):
         '''
         Return a matching value given left side, right side and operator
         '''
@@ -46,7 +46,7 @@ class constraintsTests(unittest.TestCase):
         for op, val in zip(ops, target_vals):
         
             result.append(
-                self.ch.recursive_randint(0, 10000, val, op)
+                self.ch._random_value_from_interval(0, 10000, val, op)
             )
 
         self.assertCountEqual(result, expected)
@@ -170,7 +170,9 @@ class constraintsTests(unittest.TestCase):
     def test_adjust_value_to_constraint_scalar_uniform(self):
         '''
         The column that is being adjusted to a scalar is generated
-        using weighted uniform parameters (dispersion)
+        using weighted uniform parameters (dispersion). Note that with
+        dispersion set to zero the floating number column will simply have
+        target - 1 value.
         '''
 
         self.ch.spec_dict["metadata"] = {"numerical_columns": ["A A", "B"]}
@@ -184,6 +186,7 @@ class constraintsTests(unittest.TestCase):
             },
             "B": {
                 "type": "continuous",
+                "precision" : "float",
                 "distribution": "weighted_uniform",
                 "distribution_parameters": {
                     "dispersion": 0
@@ -191,23 +194,24 @@ class constraintsTests(unittest.TestCase):
             },
             }
 
-        self.ch.dependent_column = "A"
-
         test_df = pd.DataFrame(
             data={
-                "A A":[pd.NA, 0, 20, 2, 50],
-                "B":[1, 5, 21, 1, 1000]
+                "A A":[np.nan, 0, 20, 2, 50],
+                "B":[0.5, 1.6, 1.2, 1.5, 0.1]
             }
         )
 
-        constraint_gr = "~A A~ > 30"
-        constraint_ls = "~A A~ < 30"
+        int_gr = "~A A~ > 30"
+        int_ls = "~A A~ < 30"
+        float_ls = "B < 1.5"
 
-        result_gr = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_gr)
-        result_ls = self.ch.adjust_dataframe_to_fit_constraint(test_df, constraint_ls)
+        result_int_gr = self.ch.adjust_dataframe_to_fit_constraint(test_df, int_gr)
+        result_int_ls = self.ch.adjust_dataframe_to_fit_constraint(test_df, int_ls)
+        result_float_ls = self.ch.adjust_dataframe_to_fit_constraint(test_df, float_ls)
 
-        self.assertTrue(all(result_gr["A A"].dropna() > 30))
-        self.assertTrue(all(result_ls["A A"].dropna() < 30))
+        self.assertTrue(all(result_int_gr["A A"].dropna() > 30))
+        self.assertTrue(all(result_int_ls["A A"].dropna() < 30))
+        self.assertTrue(all(result_float_ls["B"].dropna() < 1.5))
 
     def test_adjust_value_to_constraint_scalar_normal(self):
         '''

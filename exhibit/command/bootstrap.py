@@ -127,7 +127,7 @@ def main():
 
     parser.add_argument(
         "--linked_columns", "-lc",
-        default=[],
+        default=None,
         nargs="+",
         metavar="",
         help=

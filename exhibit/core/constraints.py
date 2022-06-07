@@ -194,12 +194,6 @@ class ConstraintHandler:
         '''
 
         output_df = anon_df.copy()
-        num_cols = self.spec_dict["metadata"]["numerical_columns"]
-        for num_col in num_cols:
-            # derived columns are in metadata, but are generated AFTER constraints
-            if num_col in output_df.columns:
-                output_df[num_col] = pd.to_numeric(
-                    output_df[num_col], errors="coerce").astype("float64")
 
         clean_rule = clean_up_constraint(bool_constraint)
         
@@ -220,11 +214,16 @@ class ConstraintHandler:
         (self.dependent_column,
         op,
         self.independent_expression) = tokenise_constraint(clean_rule)
+
+        target_col = self.dependent_column.replace("__", " ")
         
         #add the expression we're adjusting TO to the dataframe so that it is
         #available in all apply calls. Maybe move to its own function
         if self.independent_expression.isdigit():
 
+            output_df["test_expression"] = int(self.independent_expression)
+
+        elif self.independent_expression.replace(",","").replace(".","").isdigit():
             output_df["test_expression"] = float(self.independent_expression)
 
         elif self.is_independent_expression_an_iso_date(self.independent_expression):
@@ -240,25 +239,21 @@ class ConstraintHandler:
 
             output_df["test_expression"] = (output_df
                                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                                .eval(self.independent_expression, engine="python"))
+                                .eval(self.independent_expression, engine="python")
+                                )
 
-        output_df.loc[~mask, self.dependent_column.replace("__", " ")] = (
+        output_df.loc[~mask, target_col] = (
             output_df[~mask]
-                .rename(lambda x: x.replace(" ", "__"), axis="columns")
                 .apply(
                     self.adjust_value_to_constraint,
                     axis=1,
-                    args=(
-                        self.dependent_column,
-                        op)
+                    args=(target_col, op)
                 )
         )
 
-        target_col = self.dependent_column.replace("__", " ")
-
         precision = self.spec_dict["columns"][target_col].get("precision", None)
         
-        if precision == 'integer':
+        if precision == "integer":
             output_df[target_col] = output_df[target_col].round().astype("Int64")
 
         #drop the test_expression column
@@ -343,32 +338,35 @@ class ConstraintHandler:
 
         # adjust only if dispersion % is provided in the spec
         adj_factor = y * root["distribution_parameters"].get("dispersion", 0)
+        int_precision = root.get("precision", "integer") == "integer"
 
         # if dispersion is zero, pick the next valid value
         if adj_factor == 0:
 
             if op.__name__ == "less":
-                return max(0, y - 1)
+                return np.floor(max(0, y - 1)) if int_precision else max(0, y - 1)
             if op.__name__ == "greater":
-                return y + 1 #pragma: no cover
+                return np.ceil(y + 1) if int_precision else y + 1 #pragma: no cover
             return y
 
         # new x value is drawn from the dispersion-based interval around y
         if "less" in op.__name__:
             new_x_max = y
             new_x_min = max(0, y - adj_factor)
-            return self.recursive_randint(new_x_min, new_x_max, y, op)
+            result = self._random_value_from_interval(new_x_min, new_x_max, y, op)
+            return np.floor(result) if int_precision else result
         if "greater" in op.__name__:
             new_x_min = y
             new_x_max = y + adj_factor
-            return self.recursive_randint(new_x_min, new_x_max, y, op)
+            result = self._random_value_from_interval(new_x_min, new_x_max, y, op)
+            return np.ceil(result) if int_precision else result
         # only option left is constraint is x == y so we return y
         return y #pragma: no cover
         
 
-    def recursive_randint(self, new_x_min, new_x_max, y, op, n=100):
+    def _random_value_from_interval(self, new_x_min, new_x_max, y, op, n=100):
         '''
-        Helper function to generate a random integer that conforms
+        Helper function to generate a random value that conforms
         to the given constraint.
 
         Occasionally, you might get into a situation when determining
@@ -377,14 +375,14 @@ class ConstraintHandler:
         the constraint operator.
         '''
 
-        new_x = round(self.rng.uniform(new_x_min, new_x_max))
+        new_x = self.rng.uniform(new_x_min, new_x_max)
         n = n - 1
 
-        if n > 0:        
+        if n > 0:
 
             if op(new_x, y):
                 return new_x
-            return self.recursive_randint(new_x_min, new_x_max, y, op, n)
+            return self._random_value_from_interval(new_x_min, new_x_max, y, op, n)
     
         if op.__name__ == "less":
             return max(0, y - 1)

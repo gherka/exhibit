@@ -130,6 +130,8 @@ def generate_derived_column(anon_df, calculation, precision=2):
 
     # some columns might come in as Int64 (Pandas dtype) which will fall over
     # when trying to use in eval because it relies on numpy dtypes, not pandas'
+    # this means that it's safer to let the dtype fall down to float even though
+    # it might be the result of running an operation between two INT columns.
     numeric_cols = safe_df.select_dtypes(include=np.number).columns
     safe_df[numeric_cols] = safe_df[numeric_cols].astype(float)
 
