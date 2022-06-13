@@ -296,9 +296,11 @@ class newExhibit:
             if custom_constraints:
                 for _, cc in custom_constraints.items():
                     cc_targets = cc["targets"]
-                    for target_col, target_action in cc_targets.items():
+                    for target_str, target_action in cc_targets.items():
                         if target_action[:3] == "geo":
-                            geo_action_targets.append(target_col)
+                            geo_action_targets.extend(
+                                [x.strip() for x in target_str.split(",")]
+                            )
             
             if col in geo_action_targets:
                 # add placeholders to avoid errors when generating missing data
@@ -349,12 +351,18 @@ class newExhibit:
         if (ccs:=self.spec_dict["constraints"]["custom_constraints"]):
             
             for _, cc in ccs.items():
-                constraint_targets.extend(cc["targets"].keys())
+                for targets_string in cc["targets"].keys():
+                    constraint_targets.extend(
+                        [x.strip() for x in targets_string.split(",")])
 
         # check if there are common columns between constraint targets and cat_cols
         if cat_cols_set & set(constraint_targets):
             
-            num_cols = self.spec_dict["metadata"]["numerical_columns"]
+            # we don't want to re-create continuous columns that were subject of a cc
+            num_cols = (
+                set(self.spec_dict["metadata"]["numerical_columns"]) -
+                set(constraint_targets)
+            )
             for num_col in num_cols:
                 
                 # derived columns won't have weight so we ignore them

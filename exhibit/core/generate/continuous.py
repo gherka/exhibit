@@ -329,7 +329,7 @@ def _scale_to_target_sum(series, precision, target_sum, **_kwargs):
     if precision == "integer":
 
         rounded_scaled_series = _conditional_rounding(scaled_series, target_sum)
-        return rounded_scaled_series
+        return rounded_scaled_series.astype("Int64")
     
     return round(scaled_series, 4)
 

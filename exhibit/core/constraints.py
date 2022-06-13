@@ -164,23 +164,25 @@ class ConstraintHandler:
             #boolean condition is a FILTER so row matching it must be adjusted
             if output_df[cc_filter_mask].empty:
                 continue
+            
+            # target_str can either be a single column or a comma separater list
+            # each action_func decides how it wants to handle the targets: either
+            # act on both at the same time or sequentially, one at a time.
+            for target_str, action_str in cc_targets.items():
 
-            for target_col, action_str in cc_targets.items():
-                if (action_func := dispatch_dict.get(action_str, None)):
+                actions = [x.strip() for x in action_str.split(",")]
+                
+                for action in actions:
 
-                    _kwargs = kwargs_dict.get(action_str, {})
+                    if (action_func := dispatch_dict.get(action, None)):
 
-                    # geospatial constaints act on two columns (latitude and longitude)
-                    if action_str[:3] == "geo":
-                        output_df = action_func(
-                        output_df, cc_filter_idx, target_col, cc_partitions, **_kwargs)
-                        continue
+                        _kwargs = kwargs_dict.get(action, {})
 
-                    # overwrite the original target column with the adjusted one
-                    output_df.loc[cc_filter_idx, target_col] = action_func(
-                        output_df, cc_filter_idx, target_col, cc_partitions, **_kwargs)
+                        # overwrite the original DF row IDs with the adjusted ones
+                        output_df.loc[cc_filter_idx] = action_func(
+                            output_df, cc_filter_idx, target_str,
+                            cc_partitions, **_kwargs)
 
-        
         return output_df
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, bool_constraint):
@@ -392,11 +394,17 @@ class ConstraintHandler:
 
     # CONDITIONAL CONSTRAINT FUNCTIONS
     # ================================
-    # Every custom function MUST implement the same call signature
+    # Every custom function MUST implement the same call signature and return a DF
     # If adding a new function, don't forget to add it to the dispatch dict as well
     # Each function should also handle missing data and partitioning logic
+
+    # since process_constraints doesn't know about what the action function wants to
+    # do with the target_cols - whether columns will be operated at together or in 
+    # turn, whether one column will be returned or multiple (like in the case of geo
+    # spatial actions returning lat / long columns - so it expects all columns at
+    # filter_idx to be returned.
     def make_outlier(
-        self, df, filter_idx, target_col, partition_cols=None, rescale=True):
+        self, df, filter_idx, target_str, partition_cols=None, rescale=True):
         '''
         Make filtered data slice an outlier compared to the rest of the data
         included in the partition (or entire dataset) using boxplot methodology
@@ -407,8 +415,8 @@ class ConstraintHandler:
             Unmodified dataframe
         filter_idx     : pd.Index
             Index of rows to be modified by the function
-        target_col     : str
-            Column where user wants to add outliers
+        target_str     : str
+            Column(s) where user wants to add outliers
         partition_cols : list
             Columns to group by before computing IQR ranges and outliers
         rescale        : boolean
@@ -417,8 +425,8 @@ class ConstraintHandler:
 
         Returns
         -------
-        pd.Series
-            New series with outliers substituted for masked values
+        pd.DataFrame
+            New DF with 1 or more columns with outliers substituted for masked values
         '''
 
         def _within_group_outliers(series):
@@ -450,52 +458,66 @@ class ConstraintHandler:
 
             return outlier_series
 
-        series = df[target_col].dropna()
-        # make sure that original filtered index reflects the non-null series
-        filter_idx = series.index.intersection(filter_idx)
+        final_result = []
+        target_cols = [x.strip() for x in target_str.split(",")]
 
-        if partition_cols is not None:
+        for target_col in target_cols:
+        
+            series = df[target_col].dropna()
+            # make sure that original filtered index reflects the non-null series
+            filter_idx = series.index.intersection(filter_idx)
 
-            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
-            grouped_series = df.dropna(subset=[target_col]).groupby(partition_cols)[target_col]
-            outlier_series = grouped_series.transform(_within_group_outliers)
-            result = series.copy()
-            result.loc[filter_idx] = outlier_series.loc[filter_idx]
+            if partition_cols is not None:
 
-        else:
-
-            q25, q50, q75 = np.percentile(series, [25, 50, 75])
-            iqr = q75 - q25
-
-            if iqr == 0:
-
-                masked_series = np.where(
-                    series.loc[filter_idx] % 2 == 0,
-                    series.loc[filter_idx] * 1.3,
-                    series.loc[filter_idx] * 0.7
-                )
+                partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+                grouped_series = df.dropna(subset=[target_col]).groupby(partition_cols)[target_col]
+                outlier_series = grouped_series.transform(_within_group_outliers)
+                result = series.copy()
+                result.loc[filter_idx] = outlier_series.loc[filter_idx]
 
             else:
-                # make outliers in the same direction as original values
-                masked_series = np.where(
-                    series.loc[filter_idx] >= q50,
-                    (q75 + iqr * 3) + series.loc[filter_idx],
-                    (q25 - iqr * 3) - series.loc[filter_idx]
-                )
 
-            result = series.copy()
-            result.loc[filter_idx] = masked_series
+                q25, q50, q75 = np.percentile(series, [25, 50, 75])
+                iqr = q75 - q25
 
-        if rescale:
-            col_data = self.spec_dict["columns"][series.name]
-            precision = col_data["precision"]
-            dist_params = col_data["distribution_parameters"]
-            result = scale_continuous_column(result, precision, **dist_params)
+                if iqr == 0:
 
-        return result
+                    masked_series = np.where(
+                        series.loc[filter_idx] % 2 == 0,
+                        series.loc[filter_idx] * 1.3,
+                        series.loc[filter_idx] * 0.7
+                    )
+
+                else:
+                    # make outliers in the same direction as original values
+                    masked_series = np.where(
+                        series.loc[filter_idx] >= q50,
+                        (q75 + iqr * 3) + series.loc[filter_idx],
+                        (q25 - iqr * 3) - series.loc[filter_idx]
+                    )
+
+                result = series.copy()
+                result.loc[filter_idx] = masked_series
+
+            if rescale:
+                col_data = self.spec_dict["columns"][series.name]
+                precision = col_data["precision"]
+                dist_params = col_data["distribution_parameters"]
+                result = scale_continuous_column(result, precision, **dist_params)
+
+            final_result.append(result)
+
+        # return a new dataframe with amended target_cols, plus the unchanged rest
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
+        )
+
+        return new_df
 
     def sort_values(
-        self, df, filter_idx, target_col, partition_cols=None, ascending=True):
+        self, df, filter_idx, target_str, partition_cols=None, ascending=True):
         '''
         Sort filtered data slice with optional nesting achieved by partitioning
 
@@ -505,8 +527,8 @@ class ConstraintHandler:
             Unmodified dataframe
         filter_idx     : pd.Index
             Index of rows to be modified by the function
-        target_col     : str
-            Column where user wants to add outliers
+        target_str     : str
+            Column(s) where user wants to add outliers
         partition_cols : list
             Columns to group by to achieve nested sort
         ascending        : boolean
@@ -514,30 +536,45 @@ class ConstraintHandler:
 
         Returns
         -------
-        pd.Series
-            Only the filtered and sorted data slice is returned, not the whole series
+        pd.DataFrame
+            Only the filtered and sorted slice is returned
         '''
 
-        if partition_cols is None:
-            
-            new_sorted_series = df.loc[filter_idx, target_col].sort_values(ascending=ascending)
-            new_sorted_series.index = filter_idx
-            return new_sorted_series
+        final_result = []
+        target_cols = [x.strip() for x in target_str.split(",")]
 
-        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+        for target_col in target_cols:
 
-        # remember that sorted() defaults to reverse=False so
-        # sorted(False) = ascending; df.sort_values(False) = descending
-        # meaning for sorted() we have to reverse the boolean parameter
-        result = (df
-            .groupby(partition_cols)[target_col]
-            .transform(sorted, reverse=not ascending)
-            .loc[filter_idx]
+            if partition_cols is None:
+                
+                new_sorted_series = df.loc[filter_idx, target_col].sort_values(ascending=ascending)
+                new_sorted_series.index = filter_idx
+                final_result.append(new_sorted_series)
+                continue
+
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+            # remember that sorted() defaults to reverse=False so
+            # sorted(False) = ascending; df.sort_values(False) = descending
+            # meaning for sorted() we have to reverse the boolean parameter
+            result = (df
+                .groupby(partition_cols)[target_col]
+                .transform(sorted, reverse=not ascending)
+                .loc[filter_idx]
+            )
+
+            final_result.append(result)
+
+        # return a new dataframe with amended target_cols, plus the unchanged rest
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
         )
 
-        return result
+        return new_df
 
-    def make_distinct(self, df, filter_idx, target_col, partition_cols=None):
+    def make_distinct(self, df, filter_idx, target_str, partition_cols=None):
         '''
         Ensure the filtered data slice has distinct values within the specified
         partition. Paired columns are not supported yet.
@@ -548,8 +585,8 @@ class ConstraintHandler:
             Unmodified dataframe
         filter_idx     : pd.Index
             Index of rows to be modified by the function
-        target_col     : str
-            Column where user wants to add outliers
+        target_str     : str
+            Column(s) where user wants values to be distinct
         partition_cols : list
             Columns to group by before computing IQR ranges and outliers
 
@@ -573,47 +610,63 @@ class ConstraintHandler:
 
             new_group = group.where(~group.duplicated(), "").tolist()
             
-            return new_group
+            return pd.Series(new_group, name=target_col)
 
-        orig_vals_in_spec = self.spec_dict["columns"][target_col]["original_values"]
+        final_result = []
+        target_cols = [x.strip() for x in target_str.split(",")]
 
-        if isinstance(orig_vals_in_spec, pd.DataFrame):
-            original_uniques = (
-                orig_vals_in_spec[target_col].tolist()
+        # the section on orig_vals / orig_uniques is not needed
+        for target_col in target_cols:
+
+            orig_vals_in_spec = self.spec_dict["columns"][target_col]["original_values"]
+
+            if isinstance(orig_vals_in_spec, pd.DataFrame):
+                original_uniques = (
+                    orig_vals_in_spec[target_col].tolist()
+                )
+
+            elif orig_vals_in_spec == ORIGINAL_VALUES_DB:
+
+                table_name = f'temp_{self.spec_dict["metadata"]["id"]}_{target_col}'
+                original_uniques = query_anon_database(
+                    table_name=table_name,
+                    column=target_col,
+                )[target_col].tolist()
+
+            elif orig_vals_in_spec == ORIGINAL_VALUES_PAIRED: #pragma: no cover
+                raise ValueError("make_distinct action not supported for paired columns")
+
+            if MISSING_DATA_STR in original_uniques:
+                original_uniques.remove(MISSING_DATA_STR)
+                    
+            if partition_cols is None:
+                
+                filtered_series = df.loc[filter_idx, target_col]
+                result = _make_distinct_within_group(filtered_series)
+                final_result.append(result)
+                continue
+
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+            result = (df
+                .loc[filter_idx]
+                .groupby(partition_cols)[target_col]
+                .transform(_make_distinct_within_group)
             )
 
-        elif orig_vals_in_spec == ORIGINAL_VALUES_DB:
+            final_result.append(result)
 
-            table_name = f'temp_{self.spec_dict["metadata"]["id"]}_{target_col}'
-            original_uniques = query_anon_database(
-                table_name=table_name,
-                column=target_col,
-            )[target_col].tolist()
-
-        elif orig_vals_in_spec == ORIGINAL_VALUES_PAIRED: #pragma: no cover
-            raise ValueError("make_distinct action not supported for paired columns")
-
-        if MISSING_DATA_STR in original_uniques:
-            original_uniques.remove(MISSING_DATA_STR)
-                 
-        if partition_cols is None:
-            
-            filtered_series = df.loc[filter_idx, target_col]
-            result = _make_distinct_within_group(filtered_series)
-            return result
-
-        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
-
-        result = (df
-            .loc[filter_idx]
-            .groupby(partition_cols)[target_col]
-            .transform(_make_distinct_within_group)
+        # return a new dataframe with amended target_cols, plus the unchanged rest
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
         )
 
-        return result
+        return new_df
 
     def make_same(
-        self, df, filter_idx, target_col, partition_cols=None):
+        self, df, filter_idx, target_str, partition_cols=None):
         '''
         Force all values in the partition to be the same as the first.
         Remember that groubpy doesn't sort the observations within groups
@@ -626,40 +679,54 @@ class ConstraintHandler:
             Unmodified dataframe
         filter_idx     : pd.Index
             Index of rows to be modified by the function
-        target_col     : str
-            Column where user wants to add outliers
+        target_str     : str
+            Column(s) where user wants to make same
         partition_cols : list
             Columns to group by to achieve nested sort
 
         Returns
         -------
-        pd.Series
-            Only the filtered data slice with identicl values is returned,
-            not the whole series
+        pd.DataFrame
+            Only the filtered data slice with identical values is returned
         '''
+       
+        final_result = []
+        target_cols = [x.strip() for x in target_str.split(",")]
 
-        if partition_cols is None:
-            
-            repl = df.loc[filter_idx[0], target_col]
-            new_same_series = df.loc[filter_idx, target_col].transform(lambda x: repl)
-            return new_same_series
+        for target_col in target_cols:
 
-        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+            if partition_cols is None:
+                
+                repl = df.loc[filter_idx[0], target_col]
+                new_same_series = df.loc[filter_idx, target_col].transform(lambda x: repl)
+                final_result.append(new_same_series)
+                continue
 
-        result = (df
-            .groupby(partition_cols)[target_col]
-            .transform(lambda x: x.iloc[0])
-            .loc[filter_idx]
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+            temp_result = (df
+                .groupby(partition_cols)[target_col]
+                .transform(lambda x: x.iloc[0])
+                .loc[filter_idx]
+            )
+
+            final_result.append(temp_result)
+
+        # return a new dataframe with amended target_cols, plus the unchanged rest
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
         )
 
-        return result
+        return new_df
 
     def generate_as_sequence(
-        self, df, filter_idx, target_col, partition_cols=None):
+        self, df, filter_idx, target_str, partition_cols=None):
         '''
         This custom constraint is only valid if the original values of the target
         column are below the in-line limit and appear in the spec. Taking them from
-        the DB won't work because the order is not guaranteed.
+        the DB won't work because the order is not guaranteed, except if you sort.
 
         Because the first value in the spec order is guaranteed to be included, you
         should compensate for it in the probabilities of other values. For example,
@@ -678,8 +745,8 @@ class ConstraintHandler:
             Unmodified dataframe
         filter_idx     : pd.Index
             Index of rows to be modified by the function
-        target_col     : str
-            Column where user wants to add outliers
+        target_str     : str
+            Column where user wants values to follow the spec order
         partition_cols : list
             Columns to group by
 
@@ -688,15 +755,6 @@ class ConstraintHandler:
         pd.Series
             Only the filtered data slice is returned not the whole series
         '''
-
-        orig_vals = self.spec_dict["columns"][target_col]["original_values"]
-
-        if not isinstance(orig_vals, pd.DataFrame): #pragma: no cover
-            print("WARNING: Values are missing from the spec.")
-            return df.loc[filter_idx, target_col]
-
-        ordered_list = orig_vals[target_col].tolist()
-        ordered_probs = orig_vals["probability_vector"].tolist()
 
         def _generate_ordered_values(target_sequence, ordered_list, ordered_probs):
             '''
@@ -742,26 +800,51 @@ class ConstraintHandler:
 
             result = sorted(unordered_result, key=lambda x: ordered_list.index(x))
 
-            return result            
+            return result  
 
-        if partition_cols is None:
-            
-            new_vals = _generate_ordered_values(filter_idx, ordered_list, ordered_probs)
-            return pd.Series(new_vals, index=filter_idx)
+        final_result = []
+        target_cols = [x.strip() for x in target_str.split(",")]
 
-        partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+        for target_col in target_cols:
 
-        result = (df
-            .groupby(partition_cols)[target_col]
-            .transform(
-                _generate_ordered_values,
-                ordered_list=ordered_list,
-                ordered_probs=ordered_probs,
+            orig_vals = self.spec_dict["columns"][target_col]["original_values"]
+
+            if not isinstance(orig_vals, pd.DataFrame): #pragma: no cover
+                print("WARNING: Values are missing from the spec.")
+                final_result.append(df.loc[filter_idx, target_col])
+                continue
+
+            ordered_list = orig_vals[target_col].tolist()
+            ordered_probs = orig_vals["probability_vector"].tolist()
+
+            if partition_cols is None:
+                
+                new_vals = _generate_ordered_values(filter_idx, ordered_list, ordered_probs)
+                final_result.append(pd.Series(new_vals, index=filter_idx))
+                continue
+
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
+            result = (df
+                .groupby(partition_cols)[target_col]
+                .transform(
+                    _generate_ordered_values,
+                    ordered_list=ordered_list,
+                    ordered_probs=ordered_probs,
+                )
+                .loc[filter_idx]
             )
-            .loc[filter_idx]
+
+            final_result.append(result)
+
+        # return a new dataframe with amended target_cols, plus the unchanged rest
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
         )
 
-        return result
+        return new_df
 
 # EXPORTABLE METHODS
 # ==================

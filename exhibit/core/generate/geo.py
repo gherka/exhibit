@@ -67,7 +67,7 @@ def get_random_point_in_polygon(poly, rng):
             return p
 
 def geo_make_regions(
-    df, filter_idx, target_col, partition_cols, spec_dict):
+    df, filter_idx, target_str, partition_cols, spec_dict):
     '''
     Create contiguous regions (one per partition level) and sample from
     H3 hexes that fall into each region. Only works if partition_cols is provided.
@@ -83,7 +83,7 @@ def geo_make_regions(
         Unmodified dataframe
     filter_idx     : pd.Index
         Index of rows to be modified by the function
-    target_col     : str
+    target_str     : str
         For geo functions acting on coordinate columns this means both lat and long
         columns of the named column.
     partition_cols : list
@@ -96,46 +96,50 @@ def geo_make_regions(
     pd.DataFrame
     '''
 
-    if partition_cols is None: #pragma: no cover
-        
-        return df.loc[filter_idx, target_col]
-
-    # add placeholders for output columns
-    target_cols = [f"{target_col}_latitude", f"{target_col}_longitude"]
-    df[target_cols] = 1
-    
-    # clean up partition cols and get the shared random number generator
+    geo_target_cols = [x.strip() for x in target_str.split(",")]
     partition_cols = [x.strip() for x in partition_cols.split(",") if x]
     rng = spec_dict["_rng"]
 
-    # get the geo df with h3s
-    h3_table_name = spec_dict["columns"][target_col]["h3_table"]
+    # error checking #1
+    if not partition_cols: #pragma: no cover
+        raise Exception("make_geo_regions action requires at least one partition")
+
+    # error checking #2
+    geo_target_cols_table_names = []
+    for target_col in geo_target_cols:
+
+        h3_table_name = spec_dict["columns"][target_col]["h3_table"]
+        geo_target_cols_table_names.append(h3_table_name)
+
+    if len(set(geo_target_cols_table_names)) != 1: #pragma: no cover
+        raise Exception("columns used for make_geo_regions action rely on different h3 tables")
+
+    # add placeholders for output columns
+    target_cols = []
+    for target_col in geo_target_cols:
+        temp_target_cols = [f"{target_col}_latitude", f"{target_col}_longitude"]
+        target_cols.extend(temp_target_cols)
+    df[target_cols] = 1
+    
+    # get the geo df with h3s (any one of the given geo_target_cols is fine)
     h3_ids = (
         query_anon_database(table_name=h3_table_name, column="h3", order="h3")
         .values.ravel())
 
-    dist = spec_dict["columns"][target_col]["distribution"]
     output_df = df.set_index(partition_cols).sort_index()
-
-    # pick the hex weights from the DB table, if any
-    if dist == "uniform":
-        h3_probs = None
-    else:
-        prob_col = query_anon_database(
-            table_name=h3_table_name, column=dist, order="h3", distinct=False)
-        h3_probs = (prob_col / prob_col.sum()).values.ravel()
-
-    geo_df = pd.DataFrame(data={"h3":h3_ids, "h3_probs": h3_probs})
-
-    # add H3 centroid coordinates
-    geo_df["lat"], geo_df["long"] = zip(
-        *geo_df["h3"].transform(lambda x: h3.h3_to_geo(x)))
 
     # create the groups object
     grouped = df.groupby(partition_cols)[target_cols]
 
     # get the grouped multiindex
     grouped_idx = grouped.size().index
+
+    # create the geo_df with regions
+    geo_df = pd.DataFrame(data={"h3":h3_ids})
+
+    # add H3 centroid coordinates
+    geo_df["lat"], geo_df["long"] = zip(
+        *geo_df["h3"].transform(lambda x: h3.h3_to_geo(x)))
 
     # create initial region indices based on the N of values in level=0
     n_regions = grouped_idx.get_level_values(level=0).nunique()
@@ -175,19 +179,36 @@ def geo_make_regions(
         group = grouped[1]
         index = grouped[0]
         region_ids = geo_df.loc[final_result[i], "h3"].values
-
         num_rows = len(group)
-        # get the probabilities of region_ids:
-        if dist == "uniform":
-            region_probs = None
-        else:
-            region_probs_col = geo_df.loc[geo_df["h3"].isin(region_ids), "h3_probs"]
-            region_probs = (region_probs_col / region_probs_col.sum()).values.ravel()
 
-        region_df = generate_geospatial_column(
-            target_col, region_ids, region_probs, num_rows, rng)
+        # COLUMN SPECIFIC CODE (ALL COLUMNS SHARE THE SAME REGIONS)
+        for target_col in geo_target_cols:
 
-        output_df.loc[index, target_cols] = region_df.values
+            dist = spec_dict["columns"][target_col]["distribution"]
+            target_cols = [f"{target_col}_latitude", f"{target_col}_longitude"]
+
+            # pick the hex weights from the DB table, if any
+            if dist == "uniform":
+                h3_probs = None
+            else:
+                prob_col = query_anon_database(
+                    table_name=h3_table_name, column=dist, order="h3", distinct=False)
+                h3_probs = (prob_col / prob_col.sum()).values.ravel()
+
+            # add the hex probabiltities to the geo_df (uniform or column specific)
+            geo_df = geo_df.sort_values(by="h3").assign(h3_probs=h3_probs)
+
+            # get the probabilities of region_ids:
+            if dist == "uniform":
+                region_probs = None
+            else:
+                region_probs_col = geo_df.loc[geo_df["h3"].isin(region_ids), "h3_probs"]
+                region_probs = (region_probs_col / region_probs_col.sum()).values.ravel()
+
+            region_df = generate_geospatial_column(
+                target_col, region_ids, region_probs, num_rows, rng)
+
+            output_df.loc[index, target_cols] = region_df.values
 
     return output_df.reset_index()
 

@@ -841,17 +841,6 @@ class constraintsTests(unittest.TestCase):
         test_dict = {
 
             "_rng" : np.random.default_rng(seed=0),
-            "columns" : {
-                "A" : {
-                    "uniques" : 5,
-                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
-                },
-                "C" : {
-                    "uniques" : 20,
-                    "original_values": pd.DataFrame(
-                        data={"C": [str(x) for x in range(20)]})
-                }
-            },
             "constraints" : {
                 "custom_constraints": {
                     "cc1" : {
@@ -883,12 +872,6 @@ class constraintsTests(unittest.TestCase):
         test_dict = {
 
             "_rng" : np.random.default_rng(seed=0),
-            "columns" : {
-                "A" : {
-                    "uniques" : 5,
-                    "original_values" : pd.DataFrame(data={"A": list("ABCDE")})
-                },
-            },
             "constraints" : {
                 "custom_constraints": {
                     "cc1" : {
@@ -1036,6 +1019,81 @@ class constraintsTests(unittest.TestCase):
         result = anon_df["A"].tolist()
 
         self.assertListEqual(expected, result)
+
+    def test_custom_constraints_one_targets_multiple_actions(self):
+        '''
+        Users should be able to apply multiple actions (comma separated) to the target
+        columns. Remember that under the latest implementation, make_distinct won't add
+        any new values to the partition - just remove duplicates and replace them with
+        blank "" strings to preserve distributions better.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 4,
+                    "original_values" : pd.DataFrame(data={
+                        "A": list("ABCD"),
+                        "probability_vector": [0.1, 0.1, 0.4, 0.4]
+                        })
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "targets" : {
+                            "A" : "make_distinct, sort_descending",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("CCDD")
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()["A"].to_list()
+
+        expected = ["D", "C", "", ""]
+        
+        self.assertListEqual(result, expected)
+
+    def test_custom_constraints_multiple_targets_same_action(self):
+        '''
+        Users should be able to apply the same action to multiple targets (comma
+        separated).
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "C == 'spam'",
+                        "targets" : {
+                            "A, B" : "make_same",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 4,
+            "B" : list("FGHIJ") * 4,
+            "C" : ["spam", "spam", "ham", "ham", "ham"] * 4,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+        
+        self.assertTrue((result.query("C=='spam'")["A"] == "A").all())
+        self.assertTrue((result.query("C=='spam'")["B"] == "F").all())
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

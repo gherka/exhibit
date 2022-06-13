@@ -280,18 +280,22 @@ class MissingDataGenerator:
             cc_targets = constraint.get("targets", dict())
             clean_filter = clean_up_constraint(cc_filter)
 
-            for target, action in cc_targets.items():
+            for target_str, action_str in cc_targets.items():
 
-                if action == "make_null":
+                if "make_null" in action_str:
 
-                    make_null_idx.append(
-                        (
-                        self.nan_data
-                            .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                            .query(clean_filter).index,
-                        target
-                        )
-                    )    
+                    target_cols = [x.strip() for x in target_str.split(",")]
+
+                    for target in target_cols:
+
+                        make_null_idx.append(
+                            (
+                            self.nan_data
+                                .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                                .query(clean_filter).index,
+                            target
+                            )
+                        )    
 
         return make_null_idx
 
@@ -310,17 +314,21 @@ class MissingDataGenerator:
             cc_targets = constraint.get("targets", dict())
             clean_filter = clean_up_constraint(cc_filter)
 
-            for target, action in cc_targets.items():
+            for target_str, action_str in cc_targets.items():
 
-                if action == "make_not_null":
+                if "make_not_null" in action_str:
 
-                    not_null_idx.append(
-                        (
-                        self.nan_data
-                            .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                            .query(clean_filter).index,
-                        target
+                    target_cols = [x.strip() for x in target_str.split(",")]
+
+                    for target in target_cols:
+
+                        not_null_idx.append(
+                            (
+                            self.nan_data
+                                .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                                .query(clean_filter).index,
+                            target
+                            )
                         )
-                    )
 
         return not_null_idx
