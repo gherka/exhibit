@@ -44,14 +44,16 @@ def generate_regex_column(anon_pattern, name, size):
     for match in re.finditer(class_pattern, static_string):
         if match:
             match_placeholder = f"match{match.start()}"
-            temp_string = temp_string.replace(match.group(), match_placeholder)
+            temp_string = temp_string.replace(match.group(), match_placeholder, 1)
             match_lookup[match_placeholder] = match.group()
     
     static_series = pd.Series([temp_string]*size)
     
     repl_series_dict = {}
     
-    for placeholder, pattern in match_lookup.items():
+    for i, items in enumerate(match_lookup.items()):
+        placeholder, pattern = items
+        rng = np.random.default_rng(seed=0 + i)
         repl_series = pd.Series(_generate_random_class_characters(pattern, size, rng))
         repl_series_dict[placeholder] = repl_series
         

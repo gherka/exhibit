@@ -99,7 +99,7 @@ def scale_continuous_column(series, precision, **dist_params):
     # fallback is to return unscaled series
     return series
 
-def generate_derived_column(anon_df, calculation, precision=2):
+def generate_derived_column(anon_df, calculation):
     '''
     Use Pandas eval() function to try to parse user calculations.
 
@@ -110,8 +110,6 @@ def generate_derived_column(anon_df, calculation, precision=2):
         dataframe is nearly complete
     calculation : str
         user-defined calculation to create a new column
-    precision : int
-        output is rounded to the given precision
 
     Returns
     --------
@@ -139,7 +137,6 @@ def generate_derived_column(anon_df, calculation, precision=2):
         #groupby requires pd.eval, not df.eval
         temp_series = (pd
                     .eval(safe_calculation, local_dict={"df":safe_df}, engine="python")
-                    .round(precision)
                 )
 
         #expect multi-index in groupby DF
@@ -155,10 +152,9 @@ def generate_derived_column(anon_df, calculation, precision=2):
 
     basic_output = (safe_df
                     .eval(safe_calculation, local_dict={"df":safe_df}, engine="python")
-                    .round(precision)
                 )
 
-    return basic_output  
+    return basic_output
 
 def generate_cont_val(
     row,

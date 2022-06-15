@@ -345,4 +345,4 @@ linked_columns:
 # Denominator column B, you would write Rate: (A / B)
 # ----------------------------------------------------------
 derived_columns:
-  avlos: (los / stays)
+  avlos: los.div(stays).round(2)
