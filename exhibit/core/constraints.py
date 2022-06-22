@@ -37,6 +37,7 @@ class ConstraintHandler:
         self.rng = spec_dict["_rng"]
         self.dependent_column = None
         self.independent_expression = None
+        self.current_action = None
         self.input = anon_df
         self.output = None
 
@@ -133,13 +134,17 @@ class ConstraintHandler:
         output_df = source.copy()
 
         dispatch_dict = {
-            "make_outlier"    : self.make_outlier,
-            "sort_ascending"  : partial(self.sort_values, ascending=True),
-            "sort_descending" : partial(self.sort_values, ascending=False),
-            "make_distinct"   : self.make_distinct,
-            "make_same"       : self.make_same,
+            "make_outlier"         : self.make_outlier,
+            "sort_ascending"       : partial(self.sort_values, asc=True),
+            "sort_descending"      : partial(self.sort_values, asc=False),
+            "make_distinct"        : self.make_distinct,
+            "make_same"            : self.make_same,
             "generate_as_sequence" : self.generate_as_sequence,
-            "geo_make_regions" : geo_make_regions,
+            "geo_make_regions"     : geo_make_regions,
+            "sort_and_skew_right"  : partial(self.sort_and_skew, direction="right"),
+            "sort_and_skew_left"   : partial(self.sort_and_skew, direction="left"),
+            "sort_and_make_peak"   : partial(self.sort_and_skew, direction="up"),
+            "sort_and_make_valley" : partial(self.sort_and_skew, direction="down"),
         }
 
         kwargs_dict = {
@@ -173,7 +178,7 @@ class ConstraintHandler:
                 actions = [x.strip() for x in action_str.split(",")]
                 
                 for action in actions:
-
+                    self.current_action = action
                     if (action_func := dispatch_dict.get(action, None)):
 
                         _kwargs = kwargs_dict.get(action, {})
@@ -460,6 +465,8 @@ class ConstraintHandler:
 
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
+        if partition_cols is not None:
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
         for target_col in target_cols:
         
@@ -469,7 +476,6 @@ class ConstraintHandler:
 
             if partition_cols is not None:
 
-                partition_cols = [x.strip() for x in partition_cols.split(",") if x]
                 grouped_series = df.dropna(subset=[target_col]).groupby(partition_cols)[target_col]
                 outlier_series = grouped_series.transform(_within_group_outliers)
                 result = series.copy()
@@ -517,7 +523,7 @@ class ConstraintHandler:
         return new_df
 
     def sort_values(
-        self, df, filter_idx, target_str, partition_cols=None, ascending=True):
+        self, df, filter_idx, target_str, partition_cols=None, asc=True):
         '''
         Sort filtered data slice with optional nesting achieved by partitioning
 
@@ -531,7 +537,7 @@ class ConstraintHandler:
             Column(s) where user wants to add outliers
         partition_cols : list
             Columns to group by to achieve nested sort
-        ascending        : boolean
+        asc            : boolean
             Direction of sorting
 
         Returns
@@ -543,23 +549,24 @@ class ConstraintHandler:
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
 
+        if partition_cols is not None:
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
         for target_col in target_cols:
 
             if partition_cols is None:
                 
-                new_sorted_series = df.loc[filter_idx, target_col].sort_values(ascending=ascending)
-                new_sorted_series.index = filter_idx
-                final_result.append(new_sorted_series)
+                new_series = df.loc[filter_idx, target_col].sort_values(ascending=asc)
+                new_series.index = filter_idx
+                final_result.append(new_series)
                 continue
-
-            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
             # remember that sorted() defaults to reverse=False so
             # sorted(False) = ascending; df.sort_values(False) = descending
             # meaning for sorted() we have to reverse the boolean parameter
             result = (df
                 .groupby(partition_cols)[target_col]
-                .transform(sorted, reverse=not ascending)
+                .transform(sorted, reverse=not asc)
                 .loc[filter_idx]
             )
 
@@ -615,6 +622,9 @@ class ConstraintHandler:
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
 
+        if partition_cols is not None:
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+
         # the section on orig_vals / orig_uniques is not needed
         for target_col in target_cols:
 
@@ -634,7 +644,8 @@ class ConstraintHandler:
                 )[target_col].tolist()
 
             elif orig_vals_in_spec == ORIGINAL_VALUES_PAIRED: #pragma: no cover
-                raise ValueError("make_distinct action not supported for paired columns")
+                raise ValueError(
+                    f"{self.current_action} not supported for paired columns")
 
             if MISSING_DATA_STR in original_uniques:
                 original_uniques.remove(MISSING_DATA_STR)
@@ -645,8 +656,6 @@ class ConstraintHandler:
                 result = _make_distinct_within_group(filtered_series)
                 final_result.append(result)
                 continue
-
-            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
             result = (df
                 .loc[filter_idx]
@@ -692,17 +701,17 @@ class ConstraintHandler:
        
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
+        if partition_cols is not None:
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
         for target_col in target_cols:
 
             if partition_cols is None:
                 
                 repl = df.loc[filter_idx[0], target_col]
-                new_same_series = df.loc[filter_idx, target_col].transform(lambda x: repl)
-                final_result.append(new_same_series)
+                new_series = df.loc[filter_idx, target_col].transform(lambda x: repl)
+                final_result.append(new_series)
                 continue
-
-            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
             temp_result = (df
                 .groupby(partition_cols)[target_col]
@@ -804,6 +813,8 @@ class ConstraintHandler:
 
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
+        if partition_cols is not None:
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
         for target_col in target_cols:
 
@@ -819,11 +830,10 @@ class ConstraintHandler:
 
             if partition_cols is None:
                 
-                new_vals = _generate_ordered_values(filter_idx, ordered_list, ordered_probs)
+                new_vals = _generate_ordered_values(
+                    filter_idx, ordered_list, ordered_probs)
                 final_result.append(pd.Series(new_vals, index=filter_idx))
                 continue
-
-            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
             result = (df
                 .groupby(partition_cols)[target_col]
@@ -845,6 +855,177 @@ class ConstraintHandler:
         )
 
         return new_df
+
+    def sort_and_skew(
+        self, df, filter_idx, target_str, partition_cols=None, direction=None):
+        '''
+        Transform two columns to create a custom distribution.
+        If both columns and continuous, the first one in target_str is sorted and the
+        second is transformed to have its distribution skewed.
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_str     : str
+            target_str must have at least two columns
+        partition_cols : list
+            Columns to group by if you want to retain the scaling (to a target sum) per
+            group.
+        direction      : str
+            Direction of the new distribution based on a sine function. One of: left,
+            right, up, down.
+
+        Returns
+        -------
+        pd.DataFrame
+            Only the filtered slice is returned
+        '''
+        # dictionary with parameters for the sine function depending on the type of 
+        # distribution the user requests
+        # the tuple is for:
+        # a - amplitude, b - angular velocity (width), c - phase angle (shift)
+        sine_dict = {
+            "right": (1, 5, 0.9),
+            "left" : (-1, 5, 0.4),
+            "up"   : (-1, 7.6, 0.9),
+            "down" : (1, 7.6, 0.9),
+        }
+
+        def _make_skewed_series(group):
+            '''
+            Logic for transformation. Although we rescale the skewed series, if the
+            specification doesn't allow duplicates, the final sum might differ from
+            the expected. Also, remember that by skewing the values from the original
+            distribution, the row weights are destroyed via sorting - you can't have
+            a specific looking distribution and weights that work against it. There
+            could be four directions of skew: left (mean to the left of the median),
+            right (mean to the right of the median), peak and valley. All of these
+            are achieved by using sine waves with different parameters. 
+            '''
+
+            nrows = len(group)
+            if nrows == 1: #pragma: no cover
+                return group
+
+            sine_params = sine_dict.get(direction, None)
+            if sine_params is None: #pragma: no cover
+                return group
+
+            x = np.linspace(0, 1, num=nrows)
+            a, b, c = sine_params
+
+            sine_vals = a * np.sin(b * x + c)
+            sine_vals = sine_vals + rng.uniform(low=-0.5, high=0.5, size=nrows)
+            skewed_series = pd.Series(data=sine_vals, name=skew_col)
+        
+            scale_params = {}
+
+            # remember that when creating a peak, you want to continue from previous
+            # point so the distribution needs to be "lifted" up by half. Same with the
+            # valley. Skew left / right have slight coefficients to make the curve look
+            # better. 
+            scale_coefs = {
+                "sum" : {
+                    "up"   : 1.5,
+                    "down" : 0.5,
+                    "left" : 0.8,
+                    "right": 0.8,
+                },
+                "min" : {
+                    "up"   : 1,
+                    "down" : 0.5,
+                    "left" : 0.5,
+                    "right": 0.5,
+                },
+                "max" : {
+                    "up"   : 1.5,
+                    "down" : 1,
+                    "left" : 1,
+                    "right": 1,
+                },
+            }
+
+            if dist_params_set.intersection(set(["target_sum"])):
+                scale_params["target_sum"] = group.sum() * scale_coefs["sum"][direction]
+                        
+            elif dist_params_set.intersection(set(["target_min", "target_max"])):
+                scale_params["target_min"] = group.min() * scale_coefs["min"][direction]
+                scale_params["target_max"] = group.max() * scale_coefs["max"][direction]
+
+            elif dist_params_set.intersection(set(["target_mean", "target_std"])):
+                scale_params["target_mean"] = group.mean()
+                scale_params["target_std"] = group.std() * 2
+
+            if scale_params:
+                result = scale_continuous_column(
+                    skewed_series, precision, **scale_params)
+            else: #pragma: no cover
+                result = skewed_series
+
+            # add nulls based on the miss_probability of the skew column
+            miss_pct = self.spec_dict["columns"][skew_col]["miss_probability"]
+
+            skewed_result = np.where(
+                rng.random(size=nrows) < miss_pct,
+                pd.NA, result.values)
+
+            skewed_series = pd.Series(
+                data=skewed_result, index=group.index, name=skew_col)
+            
+            return skewed_series
+
+        target_cols = [x.strip() for x in target_str.split(",")]
+        if len(target_cols) != 2: # pragma: no cover
+            raise Exception(f"{self.current_action} requires exactly 2 target columns.")
+
+        if partition_cols is not None:
+            partition_cols = [x.strip() for x in partition_cols.split(",") if x]
+        
+        sort_col = target_cols[0]
+        skew_col = target_cols[1]
+        
+        rng = self.spec_dict["_rng"]
+        col_data = self.spec_dict["columns"][skew_col]
+        precision = col_data.get("precision", "integer")
+        dist_params_set = set(col_data["distribution_parameters"].keys())
+
+        if partition_cols is None:
+            
+            series = df.loc[filter_idx, skew_col]
+            sorted_series = df.loc[filter_idx, sort_col].sort_values()
+            skewed_series = _make_skewed_series(series)
+            sorted_series.index = skewed_series.index
+
+            new_df = pd.concat(
+                [skewed_series, sorted_series] + 
+                [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+                axis=1
+            )
+
+            return new_df
+
+        skewed_series = (df
+            .loc[filter_idx]
+            .groupby(partition_cols)[skew_col]
+            .transform(_make_skewed_series)
+        )
+
+        sorted_series = (df
+                .loc[filter_idx]
+                .groupby(partition_cols)[sort_col]
+                .transform(sorted)  
+            )
+
+        new_df = pd.concat(
+            [skewed_series, sorted_series] + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
+        )
+
+        return new_df        
 
 # EXPORTABLE METHODS
 # ==================

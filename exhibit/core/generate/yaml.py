@@ -234,7 +234,11 @@ def generate_YAML_string(spec_dict):
     # - "make_distinct"
     # - "make_same"
     # - "generate_as_sequence"
-    # - "geo_make_regions
+    # - "geo_make_regions"
+    # - "sort_and_skew_left"
+    # - "sort_and_skew_right"
+    # - "sort_and_make_peak"
+    # - "sort_and_make_valley"
     #
     # Adding or banning nulls is useful when a value in one column, 
     # like Readmissions Within 28 days, necessitates a valid value in

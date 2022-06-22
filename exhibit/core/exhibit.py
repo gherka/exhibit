@@ -201,6 +201,11 @@ class newExhibit:
         else: #pragma: no cover
             raise TypeError("Specification is not in .yml format")
 
+        # empty strings (no numerical columns) are read as None,
+        # but the tool expects a sequence.
+        for key, value in self.spec_dict["metadata"].items():
+            if "columns" in key and value is None:
+                self.spec_dict["metadata"][key] = set()
 
         for col in self.spec_dict["metadata"]["categorical_columns"]:
 

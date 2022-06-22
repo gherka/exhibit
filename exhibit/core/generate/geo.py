@@ -96,15 +96,13 @@ def geo_make_regions(
     pd.DataFrame
     '''
 
+    if not partition_cols: #pragma: no cover
+        raise Exception("make_geo_regions action requires at least one partition")
+
     geo_target_cols = [x.strip() for x in target_str.split(",")]
     partition_cols = [x.strip() for x in partition_cols.split(",") if x]
     rng = spec_dict["_rng"]
 
-    # error checking #1
-    if not partition_cols: #pragma: no cover
-        raise Exception("make_geo_regions action requires at least one partition")
-
-    # error checking #2
     geo_target_cols_table_names = []
     for target_col in geo_target_cols:
 

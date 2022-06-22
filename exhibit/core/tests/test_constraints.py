@@ -1095,6 +1095,179 @@ class constraintsTests(unittest.TestCase):
         self.assertTrue((result.query("C=='spam'")["A"] == "A").all())
         self.assertTrue((result.query("C=='spam'")["B"] == "F").all())
 
+
+    def test_custom_constraints_sort_and_skew_right(self):
+        '''
+        Mean is to the right of the median. Making a column skewed requires at least
+        two target columns where one is the ordering column and another - whose 
+        distribution is being skewed.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "type": "continuous",
+                    "precision" : "float",
+                    "distribution" : "weighted_uniform",
+                    "distribution_parameters": {
+                        "dispersion" : 0.1,
+                        "target_sum" : 10_000
+                    },
+                    "miss_probability" : 0,
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "B >= '2020/03/01'",
+                        "targets" : {
+                            "B, A" : "sort_and_skew_right",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : test_dict["_rng"].normal(size=1000),
+            "B": pd.date_range(
+                    start="2020/01/01",
+                    periods=1000,
+                    freq="D",            
+                ),
+        })
+
+        # make sure A is all positive
+        test_data["A"] = test_data["A"] + abs(test_data["A"].min())
+        test_data["B"] = test_data["B"].sample(frac=1)
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        # make sure that the average of the first 20% of the filtered slice is at least
+        # twice as big as the average of the last 20% of the filtered slice.
+        self.assertGreater(
+            result.query("B >= '2020/03/01'")["A"].iloc[:188].mean(),
+            result.query("B >= '2020/03/01'")["A"].iloc[-188:].mean() * 2
+        )
+ 
+
+    def test_custom_constraints_sort_and_skew_left(self):
+        '''
+        Mean is to the left of the median. Making a column skewed requires at least
+        two target columns where one is the ordering column and another - whose 
+        distribution is being skewed.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "type": "continuous",
+                    "precision" : "float",
+                    "distribution" : "weighted_uniform",
+                    "distribution_parameters": {
+                        "dispersion" : 0.1,
+                        "target_min" : 1,
+                        "target_max" : 20
+                    },
+                    "miss_probability" : 0,
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "B >= '2020/03/01'",
+                        "targets" : {
+                            "B, A" : "sort_and_skew_left",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : test_dict["_rng"].normal(size=1000),
+            "B": pd.date_range(
+                    start="2020/01/01",
+                    periods=1000,
+                    freq="D",            
+                ),
+        })
+
+        # make sure A is all positive
+        test_data["A"] = test_data["A"] + abs(test_data["A"].min())
+        test_data["B"] = test_data["B"].sample(frac=1)
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        self.assertGreater(
+            result.query("B >= '2020/03/01'")["A"].iloc[-188:].mean(),
+            result.query("B >= '2020/03/01'")["A"].iloc[:188].mean() * 2,
+        )
+
+    def test_custom_constraints_sort_and_skew_left_with_partition(self):
+        '''
+        Mean is to the left of the median. Making a column skewed requires at least
+        two target columns where one is the ordering column and another - whose 
+        distribution is being skewed.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "type": "continuous",
+                    "precision" : "float",
+                    "distribution" : "weighted_uniform",
+                    "distribution_parameters": {
+                        "dispersion" : 0.1,
+                        "target_mean" : 25,
+                        "target_std" : 2
+                    },
+                    "miss_probability" : 0,
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "B >= '2020/03/01'",
+                        "partition" : "C",
+                        "targets" : {
+                            "B, A" : "sort_and_skew_left",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : test_dict["_rng"].normal(size=1000),
+            "B": pd.date_range(
+                    start="2020/01/01",
+                    periods=1000,
+                    freq="D",            
+                ),
+            "C" : ["spam", "ham"] * 500,
+        })
+
+        # make sure A is all positive
+        test_data["A"] = test_data["A"] + abs(test_data["A"].min())
+        test_data["B"] = test_data["B"].sample(frac=1)
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        self.assertGreater(
+            result.query("(B >= '2020/03/01') & C == 'spam'")["A"].iloc[-188:].mean(),
+            result.query("(B >= '2020/03/01') & C == 'spam'")["A"].iloc[:188].mean() * 2
+        )
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
