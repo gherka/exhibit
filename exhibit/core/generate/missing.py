@@ -73,10 +73,19 @@ class MissingDataGenerator:
         # relationships where NA in Column A is also NA is column B if both have the
         # same miss_probability.
         for i, col_name in enumerate(sorted(standalone_cols)):
-            
+
             # reset the generator for each column
             rng = np.random.default_rng(seed=i)
 
+            # special case for user-linked columns which can have "Missing data" already
+            # if it appeared in the source for the linkage
+            linked_col_groups = self.spec_dict["linked_columns"]
+            if linked_col_groups and linked_col_groups[0][0] == 0:
+                user_linked_cols = linked_col_groups[0][1]
+                if col_name in user_linked_cols:
+                    self.nan_data[col_name].replace(MISSING_DATA_STR, pd.NA, inplace=True)
+                    continue
+            
             miss_pct = self.spec_dict["columns"][col_name]["miss_probability"]
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
             col_type = self.spec_dict["columns"][col_name]["type"]

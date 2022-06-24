@@ -209,7 +209,8 @@ class newSpec:
             create_temp_table(
                 table_name=table_name,
                 col_names=[safe_col_name],
-                data=[(x,) for x in self.df[col].unique()] + [(MISSING_DATA_STR, )]
+                data=[(x,) for x in self.df[col].dropna().unique()] +
+                     [(MISSING_DATA_STR, )]
             )
             return ORIGINAL_VALUES_DB
 

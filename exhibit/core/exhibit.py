@@ -201,11 +201,16 @@ class newExhibit:
         else: #pragma: no cover
             raise TypeError("Specification is not in .yml format")
 
-        # empty strings (no numerical columns) are read as None,
-        # but the tool expects a sequence.
+        # for convenience, some YAML heading, like numerical_columns or linked_columns
+        # can be left blank by the user; this is read as NONE by YAML parser, but the
+        # code expects them to be sequences (of column names) - as a bandaid, we catch
+        # these NONE values early and change them into empty sequences.
         for key, value in self.spec_dict["metadata"].items():
             if "columns" in key and value is None:
                 self.spec_dict["metadata"][key] = set()
+
+        if self.spec_dict.get("linked_columns", None) is None:
+                self.spec_dict["linked_columns"] = list()
 
         for col in self.spec_dict["metadata"]["categorical_columns"]:
 
