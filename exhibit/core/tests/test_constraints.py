@@ -1020,6 +1020,48 @@ class constraintsTests(unittest.TestCase):
 
         self.assertListEqual(expected, result)
 
+    def test_custom_constraints_generate_as_repeating_sequence(self):
+        '''
+        Doc string
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "uniques" : 3,
+                    "original_values" : pd.DataFrame(data={
+                        "A": list("ABC"),
+                        "probability_vector": [0.25, 0.25, 0.25]
+                        })
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "partition" : "B",
+                        "targets" : {
+                            "A" : "generate_as_repeating_sequence",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABBAC") * 2,
+            "B" : ["p1"] * 8 + ["p2"] * 2
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        anon_df = test_gen.process_constraints()
+        
+        expected = ["A","B","C","A","B","C","A","B","A","B"]
+        result = anon_df["A"].tolist()
+
+        self.assertListEqual(expected, result)
+
     def test_custom_constraints_one_targets_multiple_actions(self):
         '''
         Users should be able to apply multiple actions (comma separated) to the target

@@ -140,6 +140,8 @@ class ConstraintHandler:
             "make_distinct"        : self.make_distinct,
             "make_same"            : self.make_same,
             "generate_as_sequence" : self.generate_as_sequence,
+            "generate_as_repeating_sequence" :
+                        partial(self.generate_as_sequence, repeating=True),
             "geo_make_regions"     : geo_make_regions,
             "sort_and_skew_right"  : partial(self.sort_and_skew, direction="right"),
             "sort_and_skew_left"   : partial(self.sort_and_skew, direction="left"),
@@ -731,7 +733,7 @@ class ConstraintHandler:
         return new_df
 
     def generate_as_sequence(
-        self, df, filter_idx, target_str, partition_cols=None):
+        self, df, filter_idx, target_str, partition_cols=None, repeating=False):
         '''
         This custom constraint is only valid if the original values of the target
         column are below the in-line limit and appear in the spec. Taking them from
@@ -758,6 +760,11 @@ class ConstraintHandler:
             Column where user wants values to follow the spec order
         partition_cols : list
             Columns to group by
+        repeating: boolean
+            If set to True, when all values in a sequence have equal probabilities
+            and the number of values in a partition exceeds the number of requested
+            rows, the sequence will restart. This is different from normal mode where
+            the combined probabilities dictate whether a sequence will reach its end. 
 
         Returns
         -------
@@ -786,6 +793,18 @@ class ConstraintHandler:
                 
                 # more rows than available values
                 if (diff := n - m) > 0:
+                    
+                    if repeating:
+                        full_seq_i = int(np.floor(n / m))
+                        remainder_seq_j = int(n % m)
+
+                        result = (
+                            ordered_list * full_seq_i +
+                            ordered_list[:remainder_seq_j]
+                        )
+
+                        return result
+
                     return ordered_list + [""] * diff
 
                 return ordered_list[:n]

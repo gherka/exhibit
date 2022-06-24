@@ -234,6 +234,7 @@ def generate_YAML_string(spec_dict):
     # - "make_distinct"
     # - "make_same"
     # - "generate_as_sequence"
+    # - "generate_as_repeating_sequence"
     # - "geo_make_regions"
     # - "sort_and_skew_left"
     # - "sort_and_skew_right"
