@@ -274,6 +274,9 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
     if user_linked_cols is not None:
         cols = cols.difference(user_linked_cols)
 
+    # since set is unordered, the linked tree can change from one run to another
+    cols = list(sorted(cols))
+
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):
         #drop NAs because replacing them with Missing data means

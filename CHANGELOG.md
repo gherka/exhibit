@@ -1,6 +1,22 @@
 ## Release notes
 ---
 
+### 0.9.5 (June 26, 2022)
+
+##### Enhancements
+- Added 4 new custom actions to manipulate timeseries: given a numerical column and a timeseries column, create artificial skew (left or right) or add peak / valley.
+- `generate_as_sequence` custom action has a new variant that lets you generate repeated sequences of values in the order that they appear in the spec, regardless of the probability vector.
+- You can now apply a single custom action to multiple columns by providing them as a comma-separated target string. The same applies to actions. The processing of custom constraints happens in the order in which column names / actions were specified.
+
+##### Bug fixes
+- Fixed an issue where custom constraints wouldn't always respect original column types (float or Int64). 
+- Fixed an issue where column values generated from a regular expression pattern were inadvertently repeated under certain conditions.
+- Fixed a bug with missing values in user linked columns.
+- Fixed a bug that could result in linked column groups being in different order when re-running the generation of the same specification.
+
+##### Package version upgrades
+- numpy bumped to 1.22
+
 ### 0.9.4 (June 6, 2022)
 
 ##### Enhancements

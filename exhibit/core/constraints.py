@@ -787,23 +787,23 @@ class ConstraintHandler:
             m = len(ordered_list)
             unordered_result = []
             pointer = 0
+
+            if repeating:
+                full_seq_i = int(np.floor(n / m))
+                remainder_seq_j = int(n % m)
+
+                result = (
+                    ordered_list * full_seq_i +
+                    ordered_list[:remainder_seq_j]
+                )
+
+                return result
             
             # special case; ignore probabilities
             if len(set(ordered_probs)) == 1:
                 
                 # more rows than available values
                 if (diff := n - m) > 0:
-                    
-                    if repeating:
-                        full_seq_i = int(np.floor(n / m))
-                        remainder_seq_j = int(n % m)
-
-                        result = (
-                            ordered_list * full_seq_i +
-                            ordered_list[:remainder_seq_j]
-                        )
-
-                        return result
 
                     return ordered_list + [""] * diff
 
