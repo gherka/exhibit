@@ -51,7 +51,7 @@ def temp_exhibit(
 
     Parameters
     ----------
-    filename : str
+    filename : str or pd.DataFrame
         the .csv to use as the base for spec / df generation
     fromdata_namespace : dict
         dictionary with testing values for creating a spec
@@ -78,7 +78,11 @@ def temp_exhibit(
 
         f_name = join(td, temp_name)
 
-        default_data_path = Path(package_dir("sample", "_data", filename))
+        # for internal use when testing with a custom dataframe, not a static file
+        if isinstance(filename, pd.DataFrame):
+            default_data_path = filename
+        else:
+            default_data_path = Path(package_dir("sample", "_data", filename))
 
         fromdata_defaults = {
             "command"           : "fromdata",

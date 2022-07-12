@@ -17,6 +17,7 @@ from .sql import query_anon_database
 from .generate.continuous import scale_continuous_column
 from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
 from .generate.geo import geo_make_regions
+from .linkage.matrix import generate_user_linked_anon_df
 
 class ConstraintHandler:
     '''
@@ -139,6 +140,7 @@ class ConstraintHandler:
             "sort_descending"      : partial(self.sort_values, asc=False),
             "make_distinct"        : self.make_distinct,
             "make_same"            : self.make_same,
+            "make_almost_same"     : partial(self.make_same, almost=True),
             "generate_as_sequence" : self.generate_as_sequence,
             "generate_as_repeating_sequence" :
                         partial(self.generate_as_sequence, repeating=True),
@@ -520,7 +522,7 @@ class ConstraintHandler:
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        )
+        ).reindex(columns=df.columns)
 
         return new_df
 
@@ -579,7 +581,7 @@ class ConstraintHandler:
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        )
+        ).reindex(columns=df.columns)
 
         return new_df
 
@@ -672,12 +674,13 @@ class ConstraintHandler:
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        )
+        ).reindex(columns=df.columns)
 
         return new_df
 
     def make_same(
-        self, df, filter_idx, target_str, partition_cols=None):
+        self, df, filter_idx, target_str,
+        partition_cols=None, almost=False, cascade=True):
         '''
         Force all values in the partition to be the same as the first.
         Remember that groubpy doesn't sort the observations within groups
@@ -694,13 +697,29 @@ class ConstraintHandler:
             Column(s) where user wants to make same
         partition_cols : list
             Columns to group by to achieve nested sort
+        almost         : Boolean
+            Generate values that are the same in 95% of rows
+        cascade        : Boolean
+            Re-generate linked columns if target column is part of a linked group
 
         Returns
         -------
         pd.DataFrame
             Only the filtered data slice with identical values is returned
         '''
-       
+
+        def _make_almost_same(group):
+
+            rng = self.rng.random(size=len(group))
+            uniques = sorted(group.unique())
+            same_val = uniques[0]
+            rng_val = same_val if len(uniques) == 1 else self.rng.choice(uniques[1:])
+
+            result_arr = np.where(rng < 0.05, rng_val, same_val)
+            result_series = pd.Series(
+                data=result_arr, index=group.index, dtype=group.dtype, name=group.name)
+            return result_series
+
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
         if partition_cols is not None:
@@ -710,14 +729,19 @@ class ConstraintHandler:
 
             if partition_cols is None:
                 
+                # without groupby, transform / apply will pass a single cell string
+                # instead of the series to the function.
                 repl = df.loc[filter_idx[0], target_col]
-                new_series = df.loc[filter_idx, target_col].transform(lambda x: repl)
+                s = df.loc[filter_idx, target_col]
+                new_series = (
+                    _make_almost_same(s) if almost else s.transform(lambda x: repl))
                 final_result.append(new_series)
                 continue
 
+            transform_func = _make_almost_same if almost else lambda x: x.iloc[0]
             temp_result = (df
                 .groupby(partition_cols)[target_col]
-                .transform(lambda x: x.iloc[0])
+                .transform(transform_func)
                 .loc[filter_idx]
             )
 
@@ -728,9 +752,37 @@ class ConstraintHandler:
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        )
+        ).reindex(columns=df.columns)
 
-        return new_df
+        # should really look at changing the linked groups spec to being a dict
+        user_linked_cols = []
+        try:
+            if self.spec_dict["linked_columns"][0][0] == 0:
+                user_linked_cols = self.spec_dict["linked_columns"][0][1]
+        except:
+            return new_df
+
+        # at the end, if any of the target cols are in the user linked cols,
+        # re-create the ulinked df
+        if cascade and (set(target_cols) & set(user_linked_cols)):
+            
+            starting_col_matrix = np.full(
+                shape=(new_df.shape[0], len(user_linked_cols)), fill_value=None)
+
+            idx = [user_linked_cols.index(target_col) for target_col in target_cols]
+
+            starting_col_matrix[:, idx] = new_df[target_cols].values
+
+            ulinked_df = generate_user_linked_anon_df(
+                self.spec_dict, user_linked_cols, new_df.shape[0], starting_col_matrix)
+
+            new_df = pd.concat(
+                [ulinked_df.set_index(new_df.index)] + 
+                [df.loc[filter_idx, [x for x in df.columns if x not in user_linked_cols]]],
+                axis=1
+            ).reindex(columns=df.columns)
+
+            return new_df
 
     def generate_as_sequence(
         self, df, filter_idx, target_str, partition_cols=None, repeating=False):
@@ -851,7 +903,8 @@ class ConstraintHandler:
                 
                 new_vals = _generate_ordered_values(
                     filter_idx, ordered_list, ordered_probs)
-                final_result.append(pd.Series(new_vals, index=filter_idx))
+                final_result.append(
+                    pd.Series(new_vals, index=filter_idx, name=target_col))
                 continue
 
             result = (df
@@ -871,7 +924,7 @@ class ConstraintHandler:
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        )
+        ).reindex(columns=df.columns)
 
         return new_df
 
@@ -1022,7 +1075,7 @@ class ConstraintHandler:
                 [skewed_series, sorted_series] + 
                 [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
                 axis=1
-            )
+            ).reindex(columns=df.columns)
 
             return new_df
 
@@ -1042,7 +1095,7 @@ class ConstraintHandler:
             [skewed_series, sorted_series] + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        )
+        ).reindex(columns=df.columns)
 
         return new_df        
 

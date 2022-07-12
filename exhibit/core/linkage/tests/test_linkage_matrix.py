@@ -109,12 +109,12 @@ class exhibitTests(unittest.TestCase):
             7:0.5
         }
 
-        initial_arr = np.array([1, ])
+        ref_arr = np.array([1, None, None])
         lcd = [0, 0, 0]
 
         # for the same seed, results should match
         expected = np.array([1, 3, 6])
-        result = tm.process_row(label_matrix, proba_lookup, lcd, rng, initial_arr)
+        result = tm.process_row(label_matrix, proba_lookup, lcd, rng, ref_arr)
         # order is important!
         assert_array_equal(expected, result)
 
@@ -217,9 +217,9 @@ class exhibitTests(unittest.TestCase):
 
         lcd = [0, 1, 0, 0]
 
-        init_arr = np.array([0, ])
+        ref_arr = np.array([0, None, None, None])
 
-        result = list(tm.process_row(test_matrix, test_probas, lcd, rng, init_arr))
+        result = list(tm.process_row(test_matrix, test_probas, lcd, rng, ref_arr))
 
         expected = [0, 6, 12, 16]
 

@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
+from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_DB
 from exhibit.core.sql import create_temp_table
 from exhibit.db import db_util
@@ -1309,6 +1310,77 @@ class constraintsTests(unittest.TestCase):
             result.query("(B >= '2020/03/01') & C == 'spam'")["A"].iloc[-188:].mean(),
             result.query("(B >= '2020/03/01') & C == 'spam'")["A"].iloc[:188].mean() * 2
         )
+
+    def test_custom_constraints_make_same_user_linked_cols(self):
+        '''
+        Sometimes you want to make one of the user linked columns same, while generating
+        others. This is problematic because ulinked columns are generated all at once.
+        '''
+
+        test_data = pd.DataFrame(data={
+            "C0": ["G1", "G1", "G1", "G2", "G2"], # group by this col
+            "C1": ["A", "A", "A", "B", "B"],
+            "C2": ["C", "D", "E", "F", "G"], # make_same this col
+            "C3": ["I", "J", "K", "L", "M"]
+        })
+
+        # test_spec = {}
+        test_spec = {
+            "metadata" : {"number_of_rows": 10},
+            "constraints" : {
+                "custom_constraints" : {
+                    "cc1" : {
+                        "partition":"C0",
+                        "targets" : {
+                            "C2" : "make_same" # also works with C1, C2
+                        }
+                    }
+                }
+            }
+        }
+
+        from_data = {
+            "linked_columns" : ["C1", "C2", "C3"]
+        }
+
+        _, temp_df = temp_exhibit(
+            filename=test_data, fromdata_namespace=from_data,
+            test_spec_dict=test_spec)
+
+        self.assertEqual(2, temp_df.shape[0])
+
+
+    def test_custom_constraints_make_almost_same(self):
+        '''
+        There is 5% chance that the value will not be same. Check it's under 10% because
+        of random chance.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "B == 'spam'",
+                        "targets" : {
+                            "A" : "make_almost_same",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 400,
+            "B" : ["spam", "spam", "ham", "ham", "ham"] * 400,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints().query("B=='spam'")
+        
+        pct_B = result.value_counts().agg(lambda x: x / sum(x)).iloc[1]
+        self.assertTrue(pct_B > 0 and pct_B < 0.1)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

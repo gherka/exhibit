@@ -233,6 +233,7 @@ def generate_YAML_string(spec_dict):
     # - "sort_descending"
     # - "make_distinct"
     # - "make_same"
+    # - "make_almost_same"
     # - "generate_as_sequence"
     # - "generate_as_repeating_sequence"
     # - "geo_make_regions"

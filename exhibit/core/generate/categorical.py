@@ -67,7 +67,7 @@ class CategoricalDataGenerator:
 
                 u_linked_df = generate_user_linked_anon_df(
                     spec_dict=self.spec_dict,
-                    linked_group=linked_group,
+                    linked_cols=linked_group[1],
                     num_rows=self.num_rows
                 )
 
