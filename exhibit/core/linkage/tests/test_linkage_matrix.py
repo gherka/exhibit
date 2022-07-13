@@ -109,7 +109,7 @@ class exhibitTests(unittest.TestCase):
             7:0.5
         }
 
-        ref_arr = np.array([1, None, None])
+        ref_arr = np.array([1, -1, -1])
         lcd = [0, 0, 0]
 
         # for the same seed, results should match
@@ -217,7 +217,7 @@ class exhibitTests(unittest.TestCase):
 
         lcd = [0, 1, 0, 0]
 
-        ref_arr = np.array([0, None, None, None])
+        ref_arr = np.array([0, -1, -1, -1])
 
         result = list(tm.process_row(test_matrix, test_probas, lcd, rng, ref_arr))
 

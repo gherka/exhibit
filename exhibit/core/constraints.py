@@ -766,8 +766,11 @@ class ConstraintHandler:
         # re-create the ulinked df
         if cascade and (set(target_cols) & set(user_linked_cols)):
             
+            # make sure the starting matrix has object dtype because it can have a mix
+            # of values inside: dependening on what's been pre-generated
             starting_col_matrix = np.full(
-                shape=(new_df.shape[0], len(user_linked_cols)), fill_value=None)
+                shape=(new_df.shape[0], len(user_linked_cols)),
+                fill_value=-1).astype("O")
 
             idx = [user_linked_cols.index(target_col) for target_col in target_cols]
 
@@ -783,6 +786,8 @@ class ConstraintHandler:
             ).reindex(columns=df.columns)
 
             return new_df
+
+        return new_df #pragma: no cover
 
     def generate_as_sequence(
         self, df, filter_idx, target_str, partition_cols=None, repeating=False):
@@ -914,7 +919,6 @@ class ConstraintHandler:
                     ordered_list=ordered_list,
                     ordered_probs=ordered_probs,
                 )
-                .loc[filter_idx]
             )
 
             final_result.append(result)

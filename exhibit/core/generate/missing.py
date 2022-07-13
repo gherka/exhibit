@@ -83,7 +83,9 @@ class MissingDataGenerator:
             if linked_col_groups and linked_col_groups[0][0] == 0:
                 user_linked_cols = linked_col_groups[0][1]
                 if col_name in user_linked_cols:
-                    self.nan_data[col_name].replace(MISSING_DATA_STR, pd.NA, inplace=True)
+                    self.nan_data[col_name] = (
+                        self.nan_data[col_name].map(
+                            lambda x: pd.NA if x == MISSING_DATA_STR else x))
                     continue
             
             miss_pct = self.spec_dict["columns"][col_name]["miss_probability"]
@@ -214,7 +216,8 @@ class MissingDataGenerator:
             self.nan_data.loc[mask, num_col] = scaled_new_series.values
 
         # replace Missing data back with np.nan
-        self.nan_data.replace({MISSING_DATA_STR : np.nan}, inplace=True)
+        self.nan_data = self.nan_data.applymap(
+            lambda x: np.nan if x == MISSING_DATA_STR else x)
 
         return self.nan_data
 
