@@ -150,20 +150,23 @@ def generate_user_linked_anon_df(
     rng = spec_dict["_rng"]
     lookup, matrix = get_lookup_and_matrix_from_db(table_id)
     new_label_lookup, proba_lookup = build_new_lookups(spec_dict, linked_cols, lookup)
+    # DANGER WHEN REVERSING THE DICT - SAME VALUES IN MULTIPLE COLUMNS WILL BE LOST
     rev_label_lookup = {key:value for value, key in new_label_lookup.items()}
     # linked columns dispersion list
     lcd = [spec_dict["columns"][col]["dispersion"] for col in linked_cols]
 
     # if re-creating linked values from a pre-generated sequence, reverse the dict to
-    # get the numerical mapping as expected.
+    # get the numerical mapping as expected, also changing the dtype for performance.
 
     if starting_col_matrix is not None:
        starting_col_matrix = (
-        pd.DataFrame(starting_col_matrix).replace(rev_label_lookup).values)
+        pd.DataFrame(starting_col_matrix)
+        .fillna(MISSING_DATA_STR)
+        .replace(rev_label_lookup).values.astype(np.int16))
 
     else:
         starting_col_matrix = np.full(
-            shape=(num_rows, len(linked_cols)), fill_value=None)
+            shape=(num_rows, len(linked_cols)), fill_value=-1)
 
     # multiprocessing only on unix
     if sys.platform != "win32":
@@ -254,7 +257,7 @@ def process_row(
     # is that there will always be valid targets for previous sequence length = 1 aka
     # from one column to the next.
     
-    _ref_array = np.where(ref_array == None, label_matrix, ref_array)
+    _ref_array = np.where(ref_array == -1, label_matrix, ref_array)
     mask = np.all(label_matrix[:, i:ref_arr_len] == _ref_array[:, i:], axis=1)
 
     valid_targets = np.unique(label_matrix[mask, arr_len])
@@ -275,7 +278,7 @@ def process_row(
     # take dispersion from the spec
     dispersion = lcd[arr_len]
 
-    if ref_array[arr_len] is not None:
+    if ref_array[arr_len] != -1:
         next_val = ref_array[arr_len]
     elif len(non_valid_targets) > 0 and rng.random() < dispersion:
         next_val = rng.choice(a=non_valid_targets, size=1)[0]
@@ -284,7 +287,7 @@ def process_row(
     
     new_array = np.append(acc_array, next_val)
 
-    if ref_array[arr_len] is None:
+    if ref_array[arr_len] == -1:
         ref_array[arr_len] = next_val
     
     return process_row(label_matrix, proba_lookup, lcd, rng, ref_array, new_array)
@@ -324,9 +327,12 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
                 [MISSING_DATA_STR]
             )
             orig_vals = pd.DataFrame(data={col:orig_vals_sorted})
-            prob_vector = [1 / orig_vals.shape[0]] * orig_vals.shape[0]
+            prob_vector = np.ones(orig_vals.shape[0])
+            # when values are from DB, set the miss probability to reflect the spec
+            prob_vector[-1] = spec_dict["columns"][col]["miss_probability"]
+            prob_vector /= prob_vector.sum()
 
-        if not prob_vector:
+        if prob_vector is None:
             prob_vector = orig_vals["probability_vector"].values
         
         pos_labels_temp = [f"{col}__{x}" for x in range(len(orig_vals[col].values))]
