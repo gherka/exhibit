@@ -247,7 +247,8 @@ class CategoricalDataGenerator:
 
         #missing data is the last row
         repl = sql_df[col_name].unique()
-        aliased_df = orig_df.replace(orig_df[col_name].values[:-1], repl)
+        aliases = dict(zip(orig_df[col_name].values[:-1], repl))
+        aliased_df = orig_df.applymap(lambda x: aliases.get(x, x))
         self.spec_dict["columns"][col_name]["original_values"] = aliased_df
 
         #we ignore Missing Data probability when we originally create the variable
