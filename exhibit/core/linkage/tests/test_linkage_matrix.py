@@ -29,12 +29,41 @@ class exhibitTests(unittest.TestCase):
     '''
 
     @classmethod
+    def setUpClass(cls):
+        '''
+        Make sure that after each time we call temp_exhibit, we save the table id into
+        the temp tables list for deletion. Exception is when we expect an error during
+        the running of exhibit or when we're inserting tables manually and should also
+        delete them manually.
+        '''
+        cls._temp_tables = []
+        cls._temp_exhibit = cls.save_temp_table(temp_exhibit)
+        
+    @classmethod
     def tearDownClass(cls):
         '''
         Clean up anon.db from temp tables
         '''
 
-        db_util.purge_temp_tables()
+        db_util.drop_tables(cls._temp_tables)
+
+    @classmethod
+    def save_temp_table(cls, f):
+        '''
+        Decorator function adding instance of the running test suite to
+        the decorated function (temp_exhibit) as a keyword argument, making
+        it (self) accessible to wrap so that we can get the running test's name
+        and doc_strig.
+        '''
+
+        def wrap(*args, **kw):
+            result = f(**kw)
+            table_id = result.temp_spec["metadata"]["id"]
+            cls._temp_tables.append(table_id)
+
+            return result
+
+        return wrap
 
     def test_user_defined_linked_columns_are_in_db(self):
         '''
@@ -43,7 +72,7 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["age", "hb_name"]
 
-        temp_spec, _ = temp_exhibit(
+        temp_spec, _ = self._temp_exhibit(
             fromdata_namespace={"linked_columns":user_linked_cols},
             return_df=False
         )
@@ -72,10 +101,12 @@ class exhibitTests(unittest.TestCase):
         )
 
         # save the data to DB
-        tm.save_predefined_linked_cols_to_db(test_df, "test")
-
-        test_lookup = query_anon_database("temp_test_lookup")
-        test_matrix = query_anon_database("temp_test_matrix")
+        table_id = "test"
+        self._temp_tables.append(table_id)
+        tm.save_predefined_linked_cols_to_db(test_df, table_id)
+    
+        test_lookup = query_anon_database(f"temp_{table_id}_lookup")
+        test_matrix = query_anon_database(f"temp_{table_id}_matrix")
 
         # max numerical value should 6 (from zero): A_eggs, A_spam, A_Missing data
         # B_bacon, B_ham, B_spamspam, B_Missing data
@@ -127,7 +158,7 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["age", "hb_name", "hb_code"]
 
-        _, temp_df = temp_exhibit(
+        _, temp_df = self._temp_exhibit(
             fromdata_namespace={"linked_columns":user_linked_cols},
         )
 
@@ -154,7 +185,7 @@ class exhibitTests(unittest.TestCase):
             }
         }
 
-        _, temp_df = temp_exhibit(
+        _, temp_df = self._temp_exhibit(
             fromdata_namespace={"linked_columns":user_linked_cols},
             test_spec_dict=test_spec_dict,
         )
@@ -174,7 +205,7 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["age", "hb_name", "hb_code"]
 
-        _, temp_df = temp_exhibit(
+        _, temp_df = self._temp_exhibit(
             fromdata_namespace={
                 "linked_columns":user_linked_cols,
                 "inline_limit": 10,
@@ -232,7 +263,7 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["age", "hb_name"]
 
-        temp_spec, _ = temp_exhibit(
+        temp_spec, _ = self._temp_exhibit(
             fromdata_namespace={"linked_columns":user_linked_cols},
             return_df=False
         )
@@ -261,39 +292,26 @@ class exhibitTests(unittest.TestCase):
             "C":range(5)
         })
 
-        test_dict = {"metadata": {"number_of_rows" : 100}}
-
-        temp_spec, _ = temp_exhibit(
-            fromdata_namespace={
-                "linked_columns":user_linked_cols,
-                "source" : test_df
-                },
-            test_spec_dict=test_dict,
+        temp_spec, _ = self._temp_exhibit(
+            filename=test_df,
+            fromdata_namespace={"linked_columns":user_linked_cols},
             return_df=False,
             return_spec=True,
         )
 
         # now let's edit the spec with user defined linked columns
         # removing "spam"
-        temp_vals = temp_spec["columns"]["A"]["original_values"]
-        del temp_vals[-2]
+        edited_vals = temp_spec["columns"]["A"]["original_values"].copy()
+        del edited_vals[-2]
+        temp_spec["columns"]["A"]["original_values"] = edited_vals
 
-        new_spec = generate_YAML_string(temp_spec)
-        temp_name = "_.yml"
-        
-        with tempfile.TemporaryDirectory() as td:
-            f_name = PurePath(td, temp_name)
-            with open(f_name, "w") as f:
-                f.write(new_spec)
-
-            # let's try to generate a new df with updated original values
-            self.assertRaises(
-                ValueError, temp_exhibit,
-                fromspec_namespace={"source" : f_name},
-                test_spec_dict={"metadata": {"number_of_rows" : 100}},
-                return_df=True,
-                return_spec=False
-            )
+        # let's try to generate a new df with updated original values
+        self.assertRaises(
+            ValueError, self._temp_exhibit,
+            filename=temp_spec,
+            return_df=True,
+            return_spec=False
+        )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

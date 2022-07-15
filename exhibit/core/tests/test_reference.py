@@ -45,6 +45,7 @@ def temp_exhibit(
     test_spec_dict=None,
     return_spec=True,
     return_df=True,
+    **kwargs,
     ):
     '''
     A helper method to generate and read custom specifications 
@@ -58,7 +59,11 @@ def temp_exhibit(
     fromspec_namespace : dict
         dictionary with testing values for running generation command
     test_spec_dict : dict
-        dictionary with testing values for user spec
+        dictionary with testing values for user spec: used to update the spec
+        generated from filename csv or DataFrame
+    return_spec : boolean
+        sometimes you only want to generate the csv and don't need the spec, 
+        like in performance benchmark testing
     return_df : boolean
         sometimes you only want to generate a spec; if return_df is False
         then the second element in the return tuple is None
@@ -72,59 +77,112 @@ def temp_exhibit(
     temp_spec = None
     temp_df = None
 
-    temp_name = "_.yml"
+    if isinstance(filename, dict) or \
+    (isinstance(filename, str) and filename[-3:] == "yml"):
+        source = "yml"
+    else:
+        source = "csv"
 
-    with tempfile.TemporaryDirectory() as td:
+    # function has five paths:
+    # 1) given .csv filename (or DataFrame) produce just a spec
+    # 2) given .csv filename (or DataFrame) produce a spec and a demo .csv
+    # 3) given a .yml filename (or dict) produce a demo .csv
+    # 4) given a .yml filename (or dict) produce a spec
+    # 5) given a .yml filename (or dict) produce a spec and a demo .csv
+    
+    # it's important to only generate appropriate parts because they are measured
+    # separetely in performance benchmarking tests.
 
-        f_name = join(td, temp_name)
+    # if source is data, we always produce a spec (can't have demo data without it)
+    if source == "csv":
 
-        # for internal use when testing with a custom dataframe, not a static file
-        if isinstance(filename, pd.DataFrame):
-            default_data_path = filename
-        else:
-            default_data_path = Path(package_dir("sample", "_data", filename))
+        with tempfile.TemporaryDirectory() as td:
 
-        fromdata_defaults = {
-            "command"           : "fromdata",
-            "source"            : default_data_path,
-            "inline_limit"      : 30,
-            "verbose"           : True,
-            "output"            : f_name,
-            "skip_columns"      : [],
-            "equal_weights"     : False,
-            "linked_columns"    : None
-        }
+            temp_spec_name = "_.yml"
+            f_name = join(td, temp_spec_name)
 
-        fromspec_defaults = {
-            "command"           : "fromspec",
-            "source"            : Path(f_name),
-            "verbose"           : True,
-        }
-        
-        #Update namespaces
-        if fromdata_namespace:
-            fromdata_defaults.update(fromdata_namespace)
-        if fromspec_namespace:
-            fromspec_defaults.update(fromspec_namespace)
-        
-        if return_spec:
+            # for internal use when testing with a custom dataframe, not a static file
+            if isinstance(filename, pd.DataFrame):
+                default_data_path = filename
+            else:
+                default_data_path = Path(package_dir("sample", "_data", filename))
+
+            fromdata_defaults = {
+                "command"           : "fromdata",
+                "source"            : default_data_path,
+                "inline_limit"      : 30,
+                "verbose"           : True,
+                "output"            : f_name,
+                "skip_columns"      : [],
+                "equal_weights"     : False,
+                "linked_columns"    : None
+            }
+
+            #Update namespaces
+            if fromdata_namespace:
+                fromdata_defaults.update(fromdata_namespace)
+
             xA = tm.newExhibit(**fromdata_defaults)
             xA.read_data()
             xA.generate_spec()
-            xA.write_spec()
 
-            temp_spec=xA.spec_dict
+            if return_spec:
+                temp_spec=xA.spec_dict
 
+            if return_df:
+
+                xA.write_spec()
+                fromspec_defaults = {
+                    "command"           : "fromspec",
+                    "source"            : Path(f_name),
+                    "verbose"           : True,
+                }
+
+                if fromspec_namespace:
+                    fromspec_defaults.update(fromspec_namespace)
+
+                xA = tm.newExhibit(**fromspec_defaults)
+                xA.read_spec()
+
+                if test_spec_dict:
+                    replace_nested_dict_values(xA.spec_dict, test_spec_dict)
+
+                if xA.validate_spec():
+                    xA.execute_spec()
+
+                temp_df = xA.anon_df
+
+    if source == "yml":
+
+        # for internal use when testing with a custom spec_dict, not a static file
+        if isinstance(filename, dict):
+            default_spec_path = filename
+        else:
+            default_spec_path = Path(package_dir("sample", "_spec", filename))
+
+        fromspec_defaults = {
+            "command"           : "fromspec",
+            "source"            : default_spec_path,
+            "verbose"           : True,
+        }
+
+        if fromspec_namespace:
+            fromspec_defaults.update(fromspec_namespace)
+        
+        xA = tm.newExhibit(**fromspec_defaults)
+        xA.read_spec()
+
+        if test_spec_dict:
+            replace_nested_dict_values(xA.spec_dict, test_spec_dict)
+
+        if return_spec:
+            temp_spec = xA.spec_dict
+        
         if return_df:
-            xA = tm.newExhibit(**fromspec_defaults)
-            xA.read_spec()
-            
-            if test_spec_dict:
-                replace_nested_dict_values(xA.spec_dict, test_spec_dict)
 
             if xA.validate_spec():
                 xA.execute_spec()
-            
+
             temp_df = xA.anon_df
 
     return returnTuple(temp_spec, temp_df)

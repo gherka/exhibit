@@ -1343,12 +1343,14 @@ class constraintsTests(unittest.TestCase):
             "linked_columns" : ["C1", "C2", "C3"]
         }
 
-        _, temp_df = temp_exhibit(
+        temp_spec, temp_df = temp_exhibit(
             filename=test_data, fromdata_namespace=from_data,
             test_spec_dict=test_spec)
+        
+        table_id = temp_spec["metadata"]["id"]
+        db_util.drop_tables(table_id)
 
         self.assertEqual(2, temp_df.shape[0])
-
 
     def test_custom_constraints_make_almost_same(self):
         '''

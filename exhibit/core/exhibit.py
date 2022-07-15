@@ -192,14 +192,19 @@ class newExhibit:
         anonymised values from anon db in the generation process.
         '''
 
-        if not isinstance(self.source, Path): #pragma: no cover
-            self.source = path_checker(self.source)
+        # for internal testing, you can pass a spec_dict directly as spec rather than
+        # having to create a .yml first in a temp directory and read it.
+        if isinstance(self.source, dict): #pragma: no cover
+            self.spec_dict = self.source
+        else:
+            if not isinstance(self.source, Path): #pragma: no cover
+                self.source = path_checker(self.source)
 
-        if self.source.suffix == ".yml":
-            with open(self.source) as f:
-                self.spec_dict = yaml.safe_load(f)
-        else: #pragma: no cover
-            raise TypeError("Specification is not in .yml format")
+            if self.source.suffix == ".yml":
+                with open(self.source) as f:
+                    self.spec_dict = yaml.safe_load(f)
+            else: #pragma: no cover
+                raise TypeError("Specification is not in .yml format")
 
         # for convenience, some YAML heading, like numerical_columns or linked_columns
         # can be left blank by the user; this is read as NONE by YAML parser, but the

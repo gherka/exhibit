@@ -12,9 +12,7 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
-from exhibit.core.constants import (
-    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED,
-    ORIGINAL_VALUES_REGEX, MISSING_DATA_STR)
+from exhibit.core.constants import MISSING_DATA_STR
 
 def format_header(dataframe, series_name, prefix=None):
     '''
@@ -272,8 +270,9 @@ def parse_original_values(original_values):
 
     Parameters
     ----------
-    original_values : list or str
-        If list, the first element is the header row
+    original_values : list or str or DataFrame
+        If list, the first element is the header row. str could be regex, paired column
+        indicator, etc. DataFrame could be passed from internal testing.
     
     Because the original_table is constructed with a lot of padding,
     each value in the list has to be stripped of spaces. 
@@ -293,25 +292,21 @@ def parse_original_values(original_values):
     -------
     Pandas DataFrame or untouched string
     '''
-    if original_values == ORIGINAL_VALUES_DB:
-        return original_values
+    
+    if isinstance(original_values, list):
 
-    if original_values == ORIGINAL_VALUES_PAIRED:
-        return original_values
+        df = pd.DataFrame(
+            data=[
+                map(str.strip, x.split("|")) for x in original_values[1:]
+            ],
+            columns=[x.strip() for x in original_values[0].split("|")],
+        )
 
-    if original_values == ORIGINAL_VALUES_REGEX:
-        return original_values
+        df.loc[:, "probability_vector"] = df["probability_vector"].astype(float)
 
-    df = pd.DataFrame(
-        data=[
-            map(str.strip, x.split("|")) for x in original_values[1:]
-        ],
-        columns=[x.strip() for x in original_values[0].split("|")],
-    )
+        return df
 
-    df.loc[:, "probability_vector"] = df["probability_vector"].astype(float)
-
-    return df
+    return original_values
 
 def build_list_of_uuid_frequencies(df, target_col):
     '''

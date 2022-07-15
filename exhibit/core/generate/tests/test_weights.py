@@ -180,7 +180,7 @@ class weightsTests(unittest.TestCase):
             table_name="temp_test_id_weights_1",
             col_names=["LinkCat1", "LinkCat2"], data=data)
 
-        self._temp_tables.append("temp_test_id_weights_0")
+        self._temp_tables.append("temp_test_id_weights_1")
 
         values = pd.DataFrame(data={
             "LinkCat1" : ["A", "B", MISSING_DATA_STR],

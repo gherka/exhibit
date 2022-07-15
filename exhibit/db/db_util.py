@@ -283,10 +283,11 @@ def drop_tables(table_names, db_uri=None):
         for table_name in table_names:
             
             for source_table in source_tables:
+                
+                # table id is enough to check: no need to spell out full table name
+                if table_name in source_table:
 
-                if table_name == source_table:
-
-                    c.execute(f"DROP TABLE {source_table}")
+                    c.execute(f"DROP TABLE IF EXISTS {source_table}")
                     conn.execute("VACUUM")
                     conn.commit()
 
