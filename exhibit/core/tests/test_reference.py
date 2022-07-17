@@ -45,6 +45,7 @@ def temp_exhibit(
     test_spec_dict=None,
     return_spec=True,
     return_df=True,
+    *args,
     **kwargs,
     ):
     '''
