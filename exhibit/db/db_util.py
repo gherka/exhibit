@@ -5,7 +5,6 @@ Currently not unit-tested.
 
 # Standard library imports
 import argparse
-import re
 import textwrap
 import sys
 import sqlite3

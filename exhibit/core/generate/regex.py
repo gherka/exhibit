@@ -26,7 +26,6 @@ def generate_regex_column(anon_pattern, name, size):
     
     static_quant_pattern = r"[^\]]\{\d{1}\}"
     static_string = anon_pattern
-    rng = np.random.default_rng(seed=0)
     
     for match in re.finditer(static_quant_pattern, anon_pattern):
         if match:

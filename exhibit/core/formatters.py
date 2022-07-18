@@ -3,13 +3,11 @@ A collection of converters to help with outputting
 and reading back user specification
 '''
 # Standard library imports
-import textwrap
 from collections import Counter
 from itertools import zip_longest
 
 # External library imports
 import pandas as pd
-import numpy as np
 
 # Exhibit imports
 from exhibit.core.constants import MISSING_DATA_STR

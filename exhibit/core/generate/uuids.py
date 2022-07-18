@@ -10,8 +10,6 @@ import uuid
 import numpy as np
 import pandas as pd
 
-from exhibit.core.sql import number_of_table_columns
-
 def generate_uuid_column(col_name, num_rows, miss_prob, frequency_distribution, seed):
     '''
     Have to use seed rather than a spec_wide rng generator because for consistent

@@ -3,7 +3,6 @@ Methods to generate continuous columns / values
 '''
 
 # Standard library imports
-from multiprocessing.sharedctypes import Value
 import re
 
 # External library imports

@@ -2,7 +2,7 @@
 Module for various derived and user-set constraints
 '''
 # Standard library imports
-from collections import namedtuple, Counter
+from collections import namedtuple
 from datetime import datetime
 from functools import partial
 import itertools as it
@@ -759,7 +759,7 @@ class ConstraintHandler:
         try:
             if self.spec_dict["linked_columns"][0][0] == 0:
                 user_linked_cols = self.spec_dict["linked_columns"][0][1]
-        except:
+        except (IndexError, KeyError):
             return new_df
 
         # at the end, if any of the target cols are in the user linked cols,
