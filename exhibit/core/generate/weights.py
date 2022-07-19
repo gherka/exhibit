@@ -45,7 +45,7 @@ def generate_weights_table(spec_dict, target_cols):
     
     num_cols = (
         set(spec_dict["metadata"]["numerical_columns"]) -
-        set(spec_dict.get("derived_columns", []))
+        set(spec_dict["derived_columns"])
     )
     
     for cat_col in target_cols:

@@ -111,7 +111,7 @@ class newSpec:
             "columns": {},
             "constraints": {},
             "linked_columns" : [],
-            "derived_columns": {"Example column": "Example calculation"},
+            "derived_columns": {},
             }
 
     def missing_data_chance(self, col):

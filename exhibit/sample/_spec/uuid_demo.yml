@@ -102,7 +102,7 @@ columns:
     anonymising_set: random
   sex:
     type: categorical
-    paired_columns: []
+    paired_columns:
     uniques: 2
     original_values:
     - sex          | probability_vector | risk_score
@@ -201,14 +201,14 @@ columns:
 # ===========
 #
 # There are two types of constraints you can impose of the data:
-# - boolean
-# - conditional
+# - basic
+# - custom
 # 
-# Boolean constraints take the form of a simple statement of the
+# Basic constraints take the form of a simple statement of the
 # form [dependent_column] [operator] [expression / independent_column].
 # The tool will try to guess these relationships when creating a
 # spec. You can also force a column to be always smaller / larger
-# than a scalar value. Note that adding a boolean constraint between
+# than a scalar value. Note that adding a basic constraint between
 # two columns will affect the distribution of weights and also the
 # target sum as these are designed to work with a single column.
 #
@@ -223,8 +223,14 @@ columns:
 # - "sort_descending"
 # - "make_distinct"
 # - "make_same"
+# - "make_almost_same"
 # - "generate_as_sequence"
-# - "geo_make_regions
+# - "generate_as_repeating_sequence"
+# - "geo_make_regions"
+# - "sort_and_skew_left"
+# - "sort_and_skew_right"
+# - "sort_and_make_peak"
+# - "sort_and_make_valley"
 #
 # Adding or banning nulls is useful when a value in one column, 
 # like Readmissions Within 28 days, necessitates a valid value in
@@ -237,6 +243,9 @@ columns:
 #   partition: age, sex
 #   targets:
 #     taget_column: target_action
+#
+# Custom constraints can target multiple columns, but each column can
+# appear only once in each custom constraint.
 #
 # If a column name has spaces, make sure to surround it with
 # the tilde character ~. This rule only applies when columns are used
@@ -284,7 +293,7 @@ constraints:
 # of this table must follow the format: id_N  where id is taken 
 # from the metadata section and N is the group number.
 # ----------------------------------------------------------
-linked_columns: []
+linked_columns:
 # ----------------------------------------------------------
 # DERIVED COLUMNS
 # ===============
@@ -299,4 +308,3 @@ linked_columns: []
 # Denominator column B, you would write Rate: (A / B)
 # ----------------------------------------------------------
 derived_columns:
-  Example column: Example calculation

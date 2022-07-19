@@ -323,7 +323,7 @@ def generate_YAML_string(spec_dict):
         c1 + yaml_meta + yaml_columns_all + c3 + yaml_constraints +
         c4 + yaml_linked + c5 + yaml_derived)
 
-    # replace empty lists with a blank
-    spec_yaml = spec_yaml.replace(" []", "")
+    # replace empty lists / dicts with a blank
+    spec_yaml = spec_yaml.replace(r" []", "").replace(r" {}", "")
 
     return spec_yaml

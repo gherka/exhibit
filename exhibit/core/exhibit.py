@@ -217,6 +217,9 @@ class newExhibit:
         if self.spec_dict.get("linked_columns", None) is None:
                 self.spec_dict["linked_columns"] = list()
 
+        if self.spec_dict.get("derived_columns", None) is None:
+                self.spec_dict["derived_columns"] = dict()
+
         for col in self.spec_dict["metadata"]["categorical_columns"]:
 
             original_values = self.spec_dict["columns"][col]["original_values"]
@@ -270,7 +273,7 @@ class newExhibit:
         for num_col in self.spec_dict["metadata"]["numerical_columns"]:
             
             # skip derived columns; they need main columns (inc. nulls) generated first
-            if num_col in self.spec_dict["derived_columns"]:
+            if num_col in (self.spec_dict.get("derived_columns", dict()) or dict()):
                 continue
 
             anon_df[num_col] = generate_continuous_column(

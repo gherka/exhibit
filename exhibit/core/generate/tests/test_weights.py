@@ -112,7 +112,8 @@ class weightsTests(unittest.TestCase):
                 "NumC": {
                     "type": "continuous",
                 }
-            }
+            },
+            "derived_columns" : {},
         }
 
         test_cols = ["CatC"]
@@ -150,7 +151,8 @@ class weightsTests(unittest.TestCase):
                 "NumC": {
                     "type": "continuous",
                 }
-            }
+            },
+            "derived_columns" : {},
         }
 
         test_cols = ["CatC"]
@@ -210,7 +212,8 @@ class weightsTests(unittest.TestCase):
                     "type": "continuous",
                 }
             },
-            "linked_columns": [(1, ["LinkCat1", "LinkCat2"])]
+            "linked_columns": [(1, ["LinkCat1", "LinkCat2"])],
+            "derived_columns" : {},
         }
 
         test_cols = ["LinkCat1", "LinkCat2"]
