@@ -262,11 +262,7 @@ constraints:
       partition: record_chi
       targets:
         dose_number : generate_as_sequence
-    chronology:
-      partition: record_chi
-      targets:
-        vacc_date : sort_ascending
-        dose_number : sort_ascending
+        vacc_date, dose_number : sort_ascending
         sex : make_same
 # ----------------------------------------------------------
 # LINKED COLUMNS

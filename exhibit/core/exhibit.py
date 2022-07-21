@@ -14,6 +14,8 @@ import yaml
 import numpy as np
 import pandas as pd
 
+from exhibit.core.constants import MISSING_DATA_STR
+
 # Exhibit imports
 from .specs import newSpec
 from .formatters import parse_original_values
@@ -258,6 +260,10 @@ class newExhibit:
         #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
         cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows)
         anon_df = cat_gen.generate()
+        for cat_col in self.spec_dict["metadata"]["categorical_columns"]:
+            anon_df[cat_col] = anon_df[cat_col].astype("category")
+            if MISSING_DATA_STR not in anon_df[cat_col].cat.categories:
+                anon_df[cat_col] = anon_df[cat_col].cat.add_categories(MISSING_DATA_STR)
 
         #3) ADD CONTINUOUS VARIABLES TO ANON DF
         # at this point, we don't have any Missing data placeholders (or actual nans)
@@ -293,7 +299,7 @@ class newExhibit:
                 self.spec_dict["columns"][uuid_col_name]["miss_probability"],
                 dist,
                 self.spec_dict["metadata"]["random_seed"]
-            )
+            ).astype("category")
 
             anon_df.insert(0, uuid_col_name, uuid_col)
 

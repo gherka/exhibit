@@ -133,6 +133,8 @@ class ConstraintHandler:
 
         source = self.input if self.output is None else self.output
         output_df = source.copy()
+        # preserve category dtypes at the end of each custom action
+        output_dtypes = output_df.dtypes[output_df.dtypes == "category"]
 
         dispatch_dict = {
             "make_outlier"         : self.make_outlier,
@@ -190,8 +192,7 @@ class ConstraintHandler:
                         # overwrite the original DF row IDs with the adjusted ones
                         output_df.loc[cc_filter_idx] = action_func(
                             output_df, cc_filter_idx, target_str,
-                            cc_partitions, **_kwargs)
-
+                            cc_partitions, **_kwargs).astype(output_dtypes)
         return output_df
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, bool_constraint):
@@ -480,7 +481,10 @@ class ConstraintHandler:
 
             if partition_cols is not None:
 
-                grouped_series = df.dropna(subset=[target_col]).groupby(partition_cols)[target_col]
+                grouped_series = (
+                    df
+                    .dropna(subset=[target_col])
+                    .groupby(partition_cols, observed=True)[target_col])
                 outlier_series = grouped_series.transform(_within_group_outliers)
                 result = series.copy()
                 result.loc[filter_idx] = outlier_series.loc[filter_idx]
@@ -569,7 +573,7 @@ class ConstraintHandler:
             # sorted(False) = ascending; df.sort_values(False) = descending
             # meaning for sorted() we have to reverse the boolean parameter
             result = (df
-                .groupby(partition_cols)[target_col]
+                .groupby(partition_cols, observed=True)[target_col]
                 .transform(sorted, reverse=not asc)
                 .loc[filter_idx]
             )
@@ -663,7 +667,7 @@ class ConstraintHandler:
 
             result = (df
                 .loc[filter_idx]
-                .groupby(partition_cols)[target_col]
+                .groupby(partition_cols, observed=True)[target_col]
                 .transform(_make_distinct_within_group)
             )
 
@@ -740,7 +744,7 @@ class ConstraintHandler:
 
             transform_func = _make_almost_same if almost else lambda x: x.iloc[0]
             temp_result = (df
-                .groupby(partition_cols)[target_col]
+                .groupby(partition_cols, observed=True)[target_col]
                 .transform(transform_func)
                 .loc[filter_idx]
             )
@@ -913,7 +917,7 @@ class ConstraintHandler:
                 continue
 
             result = (df
-                .groupby(partition_cols)[target_col]
+                .groupby(partition_cols, observed=True)[target_col]
                 .transform(
                     _generate_ordered_values,
                     ordered_list=ordered_list,
@@ -1043,10 +1047,10 @@ class ConstraintHandler:
 
             # add nulls based on the miss_probability of the skew column
             miss_pct = self.spec_dict["columns"][skew_col]["miss_probability"]
-
+            miss_val = pd.NA if group.dtype =='Int64' else np.nan
             skewed_result = np.where(
                 rng.random(size=nrows) < miss_pct,
-                pd.NA, result.values)
+                miss_val, result.values)
 
             skewed_series = pd.Series(
                 data=skewed_result, index=group.index, name=skew_col)
@@ -1085,13 +1089,13 @@ class ConstraintHandler:
 
         skewed_series = (df
             .loc[filter_idx]
-            .groupby(partition_cols)[skew_col]
+            .groupby(partition_cols, observed=True)[skew_col]
             .transform(_make_skewed_series)
         )
 
         sorted_series = (df
                 .loc[filter_idx]
-                .groupby(partition_cols)[sort_col]
+                .groupby(partition_cols, observed=True)[sort_col]
                 .transform(sorted)  
             )
 

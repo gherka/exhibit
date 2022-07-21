@@ -118,7 +118,7 @@ def generate_weights(df, cat_col, num_col, ew=False):
     weights = (
         df
         .fillna({cat_col:MISSING_DATA_STR})
-        .groupby([cat_col])[num_col].sum(min_count=1)
+        .groupby([cat_col], observed=True)[num_col].sum(min_count=1)
     )
 
     temp_output = weights.sort_index(kind="mergesort")

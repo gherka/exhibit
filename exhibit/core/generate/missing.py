@@ -31,6 +31,7 @@ class MissingDataGenerator:
 
         self.spec_dict = spec_dict
         self.data = data
+        self.dtypes = data.dtypes
         self.nan_data = data
         self.wt = spec_dict.get("weights_table", None)
 
@@ -219,7 +220,7 @@ class MissingDataGenerator:
         self.nan_data = self.nan_data.applymap(
             lambda x: np.nan if x == MISSING_DATA_STR else x)
 
-        return self.nan_data
+        return self.nan_data.astype(self.dtypes)
 
     def _find_columns_with_linked_missing_data(self):
         '''

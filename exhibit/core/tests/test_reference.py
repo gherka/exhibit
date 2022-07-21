@@ -258,7 +258,8 @@ class referenceTests(unittest.TestCase):
             left=expected_df,
             right=temp_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
     
     def test_reference_prescribing_linked_mnt_anon_data(self):
@@ -303,7 +304,8 @@ class referenceTests(unittest.TestCase):
             left=expected_df,
             right=temp_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
     
     def test_reference_inpatient_anon_data(self):
@@ -352,7 +354,8 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon,
             right=xA.anon_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
 
     def test_reference_inpatient_il10_random_data(self):
@@ -428,7 +431,8 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_il10,
             right=temp_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
 
     def test_reference_inpatient_il50_random_data(self):
@@ -493,7 +497,8 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_il50,
             right=temp_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
 
     def test_reference_inpatient_il10_mountains_data(self):
@@ -578,7 +583,8 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_mnt_il10,
             right=temp_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
 
     def test_reference_inpatient_il50_mountains_data(self):
@@ -652,7 +658,8 @@ class referenceTests(unittest.TestCase):
             left=inpatients_anon_mnt_il50,
             right=temp_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
 
     def test_reference_inpatient_modified_linked_columns_scenario_2(self):
@@ -787,7 +794,8 @@ class referenceTests(unittest.TestCase):
             left=uuid_anon,
             right=xA.anon_df,
             check_exact=False,
-            check_dtype=False
+            check_dtype=False,
+            check_categorical=False
         )
 
 if __name__ == "__main__" and __package__ is None:

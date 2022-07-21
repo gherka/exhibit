@@ -126,8 +126,8 @@ def geo_make_regions(
 
     output_df = df.set_index(partition_cols).sort_index()
 
-    # create the groups object
-    grouped = df.groupby(partition_cols)[target_cols]
+    # create the groups object; when grouping on categorical, ensure observed=True
+    grouped = df.groupby(partition_cols, observed=True)[target_cols]
 
     # get the grouped multiindex
     grouped_idx = grouped.size().index
@@ -161,7 +161,8 @@ def geo_make_regions(
             else:
                 prev_result = final_result #pragma: no cover
             
-            region_counts = grouped_idx.to_frame().groupby(level=i).size().to_list()
+            region_counts = (
+                grouped_idx.to_frame().groupby(level=i, observed=True).size().to_list())
 
             for j, subregion_count in enumerate(region_counts):
                 subdf = geo_df.loc[prev_result[j]]
@@ -206,6 +207,7 @@ def geo_make_regions(
             region_df = generate_geospatial_column(
                 target_col, region_ids, region_probs, num_rows, rng)
 
+            # if not region_df.empty:
             output_df.loc[index, target_cols] = region_df.values
 
     return output_df.reset_index()
