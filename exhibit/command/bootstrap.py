@@ -169,6 +169,20 @@ def main():
         "Example: exhibit fromdata secret_data.csv -d age"
         f"{arg_separator}"
     )
+
+    parser.add_argument(
+        "--save_probabilities", "-p",
+        default=[],
+        nargs="+",
+        metavar="",
+        help=
+        "\nManually define categorical columns where the number of unique values "
+        "exceeds the inline limit, but you want to keep their probabilities rather "
+        "than use uniform distribution during synthesis. Note that this does not "
+        "affect numerical column weights which will still be the same for all values.\n"
+        "Example: exhibit fromdata secret_data.csv -il 5 -p age"
+        f"{arg_separator}"
+    )
     
     parser.add_argument(
         "--verbose", "-v",
@@ -186,7 +200,8 @@ def main():
     args_dict["uuid_columns"] = set(args_dict.get("uuid_columns", set()))
     args_dict["skip_columns"] = set(args_dict.get("skip_columns", set()))
     args_dict["discrete_columns"] = set(args_dict.get("discrete_columns", set()))
-    
+    args_dict["save_probabilities"] = set(args_dict.get("save_probabilities", set()))
+
     #New instance has access to all command line parameters
     exhibit = newExhibit(**args_dict)
 

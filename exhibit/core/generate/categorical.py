@@ -282,21 +282,29 @@ class CategoricalDataGenerator:
         else:
             table_name, *sql_column = anon_set.split(".")
             sql_df = query_anon_database(table_name, sql_column, uniques)
-            #rename sql_df columns to be same as original + paired; zip is 
-            #only going to pair up columns up to the shorter list!
-            sql_df.rename(
-                columns=dict(zip(
-                    sql_df.columns,
-                    [col_name] + paired_cols
-                )),
-                inplace=True
-            )
+
+        #rename sql_df columns to be same as original + paired; zip is 
+        #only going to pair up columns up to the shorter list!
+        sql_df.rename(
+            columns=dict(zip(
+                sql_df.columns,
+                [col_name] + paired_cols
+            )),
+            inplace=True
+        )
 
         #2) GENERATE ANONYMISED ROWS
         if complete:
-            anon_df = sql_df
+            anon_df = sql_df.drop(columns="probability_vector", errors="ignore")
         else:
-            idx = self.rng.choice(len(sql_df), self.num_rows)
+            if "probability_vector" in sql_df.columns:
+                probs = sql_df["probability_vector"].astype(float).values
+                probs = probs / probs.sum()
+                sql_df.drop(columns="probability_vector", inplace=True)
+                idx = self.rng.choice(a=len(sql_df), p=probs, size=self.num_rows)
+            else:
+                idx = self.rng.choice(len(sql_df), self.num_rows)
+
             anon_list = [sql_df.iloc[x, :].values for x in idx]
             anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 

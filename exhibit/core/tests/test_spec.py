@@ -4,6 +4,7 @@ Unit and reference tests for the newSpec class & its functions
 
 # Standard library imports
 import unittest
+from pathlib import Path
 
 # External library imports
 import pandas as pd
@@ -11,6 +12,9 @@ import numpy as np
 
 # Exhibit imports
 from exhibit.sample.sample import prescribing_data as ref_df
+from exhibit.core.utils import package_dir
+from exhibit.core.tests.test_reference import temp_exhibit
+from exhibit.db import db_util
 
 # Module under test
 from exhibit.core import specs as tm
@@ -75,6 +79,35 @@ class specsTests(unittest.TestCase):
         test_col_order = list(test_spec.output_spec_dict()["columns"].keys())
 
         self.assertListEqual(expected_col_order, test_col_order)
+
+    def test_columns_exceeding_inline_limit_are_generated_with_probabilities(self):
+        '''
+        If user wants to preserve probabilities of a column with a large number of 
+        unique values, they can include them under save_probabilities argument. You
+        only need to specify one of the paired columns - the probabilities will apply
+        to all.
+        '''
+        
+        # modify CLI namespace
+        fromdata_namespace = {
+            "source" : Path(package_dir("sample", "_data", "prescribing.csv")),
+            "inline_limit": 10,
+            "save_probabilities" : ["BNFItemDescription"]
+        }
+
+        temp_spec, temp_df = temp_exhibit(
+            fromdata_namespace=fromdata_namespace,
+        )
+
+        db_util.drop_tables(temp_spec["metadata"]["id"])
+        # BNFItemDescription's dtype is category so value_counts will return all values
+        # not just the observed ones.
+        result = (
+            temp_df["BNFItemDescription"]
+            .value_counts().where(lambda x: x != 0).dropna())
+        
+        self.assertEqual(result.min(), 5)
+        self.assertEqual(result.max(), 885)
             
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

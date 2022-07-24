@@ -207,7 +207,6 @@ def geo_make_regions(
             region_df = generate_geospatial_column(
                 target_col, region_ids, region_probs, num_rows, rng)
 
-            # if not region_df.empty:
             output_df.loc[index, target_cols] = region_df.values
 
     return output_df.reset_index()

@@ -93,8 +93,8 @@ class newExhibit:
         self, command, source, output=None,
         inline_limit=30, equal_weights=False,
         skip_columns=None, linked_columns=None, 
-        uuid_columns=None, discrete_columns=None, 
-        verbose=False):
+        uuid_columns=None, discrete_columns=None,
+        save_probabilities=None, verbose=False, **kwargs):
         '''
         Initialise either from the CLI or by instantiating directly
         '''
@@ -112,6 +112,7 @@ class newExhibit:
         self.linked_columns= linked_columns or set()
         self.uuid_columns= uuid_columns or set()
         self.discrete_columns = discrete_columns or set()
+        self.save_probabilities = save_probabilities or set()
         self.verbose = verbose
 
         self.spec_dict = None
@@ -154,6 +155,7 @@ class newExhibit:
                 ew=self.equal_weights,
                 user_linked_cols=self.linked_columns,
                 uuid_cols=self.uuid_columns,
+                save_probabilities=self.save_probabilities
                 )
 
             self.spec_dict = new_spec.output_spec_dict()

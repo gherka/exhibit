@@ -12,7 +12,9 @@ from .constraints import find_basic_constraint_columns
 from .utils import (
     guess_date_frequency, generate_table_id,
     float_or_int, sort_columns_by_dtype_az)
-from .formatters import build_table_from_lists, build_list_of_uuid_frequencies
+from .formatters import (
+    build_table_from_lists, build_list_of_uuid_frequencies,
+    build_list_of_probability_vectors)
 from .sql import create_temp_table
 from .generate.weights import generate_weights
 
@@ -75,6 +77,7 @@ class newSpec:
         self.random_seed = random_seed
         self.user_linked_cols = kwargs.get("user_linked_cols", set())
         self.uuid_cols = kwargs.get("uuid_cols", set())
+        self.db_prob_cols = kwargs.get("save_probabilities", set())
         self.id = generate_table_id()
         
         self.numerical_cols = (
@@ -176,42 +179,53 @@ class newSpec:
         -------
         String whose value depends on the path taken
         '''
-        
+       
         safe_col_name = col.replace(" ", "$")
         paired_cols = self.list_of_paired_cols(col)
         table_name = f"temp_{self.id}_{safe_col_name}"
+        prob_col_name = "probability_vector" # to match the original_values
 
         if path == "long":
+            
+            # note that building probability vectors adds a zero probability for missing
+            # data so that it is available in original_values section of the spec
+            # for columns that are put into DB, however, it's not needed.
+
+            if col in self.db_prob_cols:
+                probs = np.array(build_list_of_probability_vectors(self.df, col), float)
+            else:
+                probs = None
             
             #check if the column has any paired columns (which will also be long!)
             #and if there are any, stick them in SQL, prefixed with "paired_"
             if paired_cols:
-                
                 sql_paired_cols = [f"paired_{x}".replace(" ", "$") for x in paired_cols]
                 safe_col_names = [safe_col_name] + sql_paired_cols
-
                 data_cols = [col] + paired_cols
-                #use groupby to get unique values for paired columns and not all rows
-                data = list(
-                    self.df[data_cols].groupby(data_cols).max().to_records()
-                )
 
-                create_temp_table(
-                    table_name=table_name,
-                    col_names=safe_col_names,
-                    data=data
-                )
+            else:
+                safe_col_names = [safe_col_name]
+                data_cols = [col]
+            
+            # make sure to drop NAs
+            data = (self.df[data_cols]
+                .dropna()
+                .drop_duplicates()
+                .sort_values(by=data_cols)
+            )
+            
+            # exclude 0 probability from the probability vector
+            if probs is not None:
+                probs = probs[:-1]
+                data[prob_col_name] = probs
+                safe_col_names.append(prob_col_name)
 
-                return ORIGINAL_VALUES_DB
-
-            # Some of the "long" single columns are redundant because they are
-            # part of a linked group, but we don't know which yet at this point
             create_temp_table(
                 table_name=table_name,
-                col_names=[safe_col_name],
-                data=[(x,) for x in self.df[col].dropna().unique()] +
-                     [(MISSING_DATA_STR, )]
+                col_names=safe_col_names,
+                data=data.to_records(index=False)
             )
+
             return ORIGINAL_VALUES_DB
 
         if path == "paired":
