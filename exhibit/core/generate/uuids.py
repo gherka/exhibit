@@ -15,14 +15,19 @@ def generate_uuid_column(col_name, num_rows, miss_prob, frequency_distribution, 
     Have to use seed rather than a spec_wide rng generator because for consistent
     uuids we need to use the same 128-bit integer.
     '''
+
+    # for internal use in tests or scripting
+    if isinstance(frequency_distribution, pd.DataFrame): #pragma: no cover
+        freq_df = frequency_distribution
     
-    # parse the frequency distribution into a Pandas dataframe:
-    freq_df = pd.DataFrame(
-        data=[
-            map(str.strip, x.split("|")) for x in frequency_distribution[1:]
-        ],
-        columns=[x.strip() for x in frequency_distribution[0].split("|")],
-    )
+    else:
+        # parse the frequency distribution into a Pandas dataframe:
+        freq_df = pd.DataFrame(
+            data=[
+                map(str.strip, x.split("|")) for x in frequency_distribution[1:]
+            ],
+            columns=[x.strip() for x in frequency_distribution[0].split("|")],
+        )
 
     # ensure the probabilities sum up to 1
     prob_vector = freq_df["probability_vector"].astype(float).values
