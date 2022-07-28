@@ -299,6 +299,61 @@ class continuousTests(unittest.TestCase):
         self.assertFalse((test_df[right_skew_rows]["Nums"] > test_mean).any())
         self.assertFalse((test_df[left_skew_rows]["Nums"] < test_mean).any())
 
+    def test_normal_distribution_generation_unscaled(self):
+        '''
+        Make sure zero weights are respected.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        test_spec_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata" : {
+                "random_seed" : 0,
+            },
+            "columns" : {
+                "Nums" : {
+                    "precision" : "float",
+                    "distribution" : "normal",
+                    "distribution_parameters": {
+                        "dispersion" : 0.1,
+                    },
+                    "miss_probability" : 0,
+                }
+            }
+        }
+
+        test_anon_df = pd.DataFrame(
+            data={
+                "C1": ["A", "A", "B", "B"]*1000,
+                "C2": ["C", "C", "D", "D"]*1000
+            }
+        )
+
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.0, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "C") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "D") : {"weights": Weights(0.5, 0.5)},
+
+        }
+
+        result = tm.generate_continuous_column(
+            test_spec_dict,
+            test_anon_df,
+            test_col,
+            target_cols=target_cols,
+            wt=wt
+        )
+
+        idx = test_anon_df.query("C1 == 'A'").index
+        all_zeroes = all(result[idx] == 0)
+        self.assertTrue(all_zeroes)
+
     def test_weights_are_preserved_after_target_scaling(self):
         '''
         If dispersion is set to zero, the weights should stay

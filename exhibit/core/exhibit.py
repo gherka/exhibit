@@ -10,6 +10,7 @@ from collections import UserDict
 from pathlib import Path
 
 # External library imports
+import dill
 import yaml
 import numpy as np
 import pandas as pd
@@ -23,7 +24,7 @@ from .validator import newValidator
 from .constraints import ConstraintHandler
 from .utils import (
     path_checker, read_with_date_parser, count_core_rows,
-    get_attr_values)
+    get_attr_values, package_dir)
 
 from .generate.missing import MissingDataGenerator
 from .generate.categorical import CategoricalDataGenerator
@@ -422,8 +423,19 @@ class newExhibit:
             if number_dropped > 0:
                 print(f"WARNING: Deleted {number_dropped} duplicates.")
                 anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
+
+        #10) APPLY ML MODELS; EXPERIMENTAL; NOT TESTED
+        if models := self.spec_dict.get("models", None): #pragma: no cover
+
+            for model_name, params in models.items():
+                # load the model object
+                with open(package_dir("models", f"{model_name}.pickle"), "rb") as f:
+                    model = dill.load(f)
+
+                # apply the model to the anon_df
+                anon_df = model.apply_model(anon_df, **params)
             
-        #10) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
+        #11) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
     def write_data(self): # pragma: no cover

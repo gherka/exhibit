@@ -318,10 +318,34 @@ def generate_YAML_string(spec_dict):
     """)
 
     yaml_derived = yaml.safe_dump(yaml_list[4], sort_keys=False, width=1000)
-    
+
+    c6 = textwrap.dedent("""\
+    # ----------------------------------------------------------
+    # MODELS
+    # ===============
+    # 
+    # You can generate columns in your dataset using custom machine
+    # learning models, using the synthetic dataset generated so far
+    # as input. Follow the tutorial in the recipes folder to create
+    # your model and save it in the models folder. The specification
+    # format is as follows:
+    # 
+    # models:
+    #   model_name: (without .pickle extension)
+    #     hyperparameter_name : hyperparameter_value
+    # 
+    # You can chain models one after another - they are called in the
+    # same order as they appear in the specification. Make sure that
+    # the same libraries used in creating the model are available in
+    # the environment where Exhibit is installed.
+    # ----------------------------------------------------------
+    """)
+
+    yaml_models = yaml.safe_dump(yaml_list[5], sort_keys=False, width=1000)
+
     spec_yaml = (
         c1 + yaml_meta + yaml_columns_all + c3 + yaml_constraints +
-        c4 + yaml_linked + c5 + yaml_derived)
+        c4 + yaml_linked + c5 + yaml_derived + c6 + yaml_models)
 
     # replace empty lists / dicts with a blank
     spec_yaml = spec_yaml.replace(r" []", "").replace(r" {}", "")

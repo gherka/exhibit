@@ -220,7 +220,11 @@ def _draw_from_normal_distribution(
     for cat_col, val in row.iteritems():
 
         w, ew = wt[(num_col, cat_col, val)]["weights"]
-            
+
+        # short-circuit if any of the weights is zero
+        if w == 0:
+            return _apply_dispersion(0, dispersion, rng)
+
         #don't make any changes if no difference from equal weight
         row_diff = 0 if (w - ew) == 0 else (w / ew) - 1
 

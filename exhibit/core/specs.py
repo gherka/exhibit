@@ -115,6 +115,7 @@ class newSpec:
             "constraints": {},
             "linked_columns" : [],
             "derived_columns": {},
+            "models" : {},
             }
 
     def missing_data_chance(self, col):

@@ -48,6 +48,7 @@ class specsTests(unittest.TestCase):
             "constraints",
             "linked_columns",
             "derived_columns",
+            "models",
             ]
 
         self.assertListEqual(

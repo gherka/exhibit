@@ -355,3 +355,23 @@ linked_columns:
 # ----------------------------------------------------------
 derived_columns:
   avlos: los.div(stays).round(2)
+# ----------------------------------------------------------
+# MODELS
+# ===============
+# 
+# You can generate columns in your dataset using custom machine
+# learning models, using the synthetic dataset generated so far
+# as input. Follow the tutorial in the recipes folder to create
+# your model and save it in the models folder. The specification
+# format is as follows:
+# 
+# models:
+#   model_name: (without .pickle extension)
+#     hyperparameter_name : hyperparameter_value
+# 
+# You can chain models one after another - they are called in the
+# same order as they appear in the specification. Make sure that
+# the same libraries used in creating the model are available in
+# the environment where Exhibit is installed.
+# ----------------------------------------------------------
+models:
