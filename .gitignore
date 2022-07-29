@@ -2,3 +2,5 @@ old
 __pycache__
 .vscode
 exhibit.egg-info
+*.pickle
+!*smoker_model.pickle

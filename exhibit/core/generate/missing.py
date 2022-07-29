@@ -158,7 +158,7 @@ class MissingDataGenerator:
         # only go through this step if there are nulls in categorical columns
         # and the spec_dict includes numerical columns that would be affected
         # otherwise, return early.
-        cat_cols = self.spec_dict["metadata"]["categorical_columns"]
+        cat_cols = list(self.spec_dict["metadata"]["categorical_columns"])
         num_cols = (
             set(self.spec_dict["metadata"]["numerical_columns"]) -
             set(self.spec_dict.get("derived_columns", {}).keys()))

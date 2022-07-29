@@ -50,7 +50,11 @@ def generate_continuous_column(spec_dict, anon_df, col_name, **kwargs):
     # of if fit is set to distribution, draw from a normal distribution
     # taking into account values' weights and column mean & standard deviation
 
-    new_series = anon_df.loc[:, list(target_cols)].apply(
+    # even if target_cols is empty, run through the function (like when the only
+    # generated columns so far are dates)
+    apply_cols = list(target_cols) if target_cols else anon_df.columns
+
+    new_series = anon_df.loc[:, apply_cols].apply(
         func=generate_cont_val,
         axis=1,
         weights_table=wt,
