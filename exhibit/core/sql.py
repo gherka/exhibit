@@ -84,14 +84,13 @@ def query_anon_database(
         result = c.fetchall()
  
     if len(column_names) == 1:
-        output = pd.DataFrame(data={column_names[0]: [x[0] for x in result]})
-        output.rename(columns=lambda x: x.replace("$", " "), inplace=True)
-        return output
-    
-    output = pd.DataFrame(data=result, columns=column_names)
-    output.rename(columns=lambda x: x.replace("$", " "), inplace=True)
+        output = pd.DataFrame(data={column_names[0]: [x[0] for x in result]})        
+    else:
+        output = pd.DataFrame(data=result, columns=column_names)
 
+    output = output.rename(columns=lambda x: x.replace("$", " "))
     return output
+
 
 def create_temp_table(
     table_name, col_names, data, strip_whitespace=True, db_uri=None, return_table=False

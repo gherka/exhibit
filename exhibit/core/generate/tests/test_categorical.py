@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import Mock, patch
 import tempfile
 from os.path import abspath, join
+from sqlite3 import OperationalError
 
 # External library imports
 import numpy as np
@@ -16,6 +17,7 @@ from pandas.testing import assert_frame_equal
 
 # Exhibit imports
 from exhibit.core.sql import create_temp_table
+from exhibit.core.tests.test_reference import temp_exhibit
 
 # Module under test
 from exhibit.core.generate import categorical as tm
@@ -64,41 +66,18 @@ class categoricalTests(unittest.TestCase):
 
     def test_unrecognized_anon_set(self):
         '''
-        Should really define fixed anon sets somewhere properly upstream.
+        Any anonymising set that is not in the anonDB should raise a SQL error
         '''
        
         test_dict = {
-            "metadata": {"inline_limit" : 10},
             "columns": {
-                "test_Unknown": {
-                    "type": "categorical",
-                    "paired_columns": [],
-                    "uniques" : 5,
-                    "original_values" : pd.DataFrame(),
+                "age": {
                     "anonymising_set" : "spamspam",
-                    "cross_join_all_unique_values" : False,
                 }
             }
         }
-    
-        test_num_rows = 100
-        test_col_name = "test_Unknown"
 
-        path = "exhibit.core.generate.categorical.CategoricalDataGenerator.__init__"
-        with patch(path) as mock_init:
-            mock_init.return_value = None
-            generatorMock = tm.CategoricalDataGenerator(Mock(), Mock())
-
-        fixed_anon_sets = ["random", "mountains", "patients", "birds"]
-        setattr(generatorMock, "spec_dict", test_dict)
-        setattr(generatorMock, "num_rows", test_num_rows)
-        setattr(generatorMock, "fixed_anon_sets", fixed_anon_sets)
-
-        result = generatorMock._generate_anon_series(test_col_name)
-        
-        self.assertTrue((result == "spamspam").all())
-        self.assertEqual(len(result), test_num_rows)
-        self.assertEqual(result.name, test_col_name)
+        self.assertRaises(OperationalError, temp_exhibit, test_spec_dict=test_dict)       
 
     def test_random_column_with_missing_pairs_sql(self):
         '''

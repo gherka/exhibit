@@ -11,6 +11,8 @@ import textwrap
 import pandas as pd
 import numpy as np
 
+from exhibit.core.constants import ORIGINAL_VALUES_REGEX
+
 # Exhibit imports
 from ..utils import get_attr_values, package_dir
 from ..sql import query_anon_database
@@ -193,14 +195,10 @@ class CategoricalDataGenerator:
         #capture categorical-only information
         paired_cols = col_attrs["paired_columns"]
         anon_set = col_attrs["anonymising_set"]
-        root_anon_set = anon_set.split(".")[0]
+        orig_vals = col_attrs["original_values"]
 
-        #special case if anonymising set isn't defined - assume regex
-        if root_anon_set not in self.fixed_anon_sets:
-            print(textwrap.dedent(f"""
-            WARNING: Anonymising set for {col_name} not recognized.
-            Assuming regex pattern and uniform random distribution.
-            """))
+        #generate values based on a regular expression specified in the anonymising_set
+        if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_REGEX:
             return generate_regex_column(anon_set, col_name, self.num_rows)  
 
         #values were stored in SQL; randomise based on uniform distribution
@@ -282,6 +280,13 @@ class CategoricalDataGenerator:
         else:
             table_name, *sql_column = anon_set.split(".")
             sql_df = query_anon_database(table_name, sql_column, uniques)
+
+        #if sql df is an anonymising set with different column names, like mountaints,
+        #we want to rename them to the actual column names used in the spec;
+        #alternatively, if the sql df is a lookup and column there match the spec, we
+        #make sure to take those columns that match.
+        if set([col_name] + paired_cols).issubset(set(sql_df.columns)):
+            sql_df = sql_df[[col_name] + paired_cols]
 
         #rename sql_df columns to be same as original + paired; zip is 
         #only going to pair up columns up to the shorter list!

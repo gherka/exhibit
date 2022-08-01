@@ -6,7 +6,6 @@ Test the generation of uuid columns
 import unittest
 
 # External library imports
-import numpy as np
 import pandas as pd
 
 # Module under test
