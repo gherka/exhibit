@@ -1,6 +1,22 @@
 ## Release notes
 ---
 
+### 0.9.6 (August 3, 2022)
+
+##### Enhancements
+- Added experimental support for using pickled machine learning models as plug-ins. See the `Create Exhibit-compatible ML model.ipynb` recipe for details.
+- Added an option to save probabilities of values in columns that are put into the DB.
+- Added performance and memory benchmarking.
+- You can now reference custom lookups you added to the DB directly in the specification as long as specification columns and DB columns match.
+- Added a `make_almost_same` custom action.
+
+##### Bug fixes
+- Fixed a bug where generating a dataset without any categorical columns would give an error.
+- Fixed a DB bug that gave missing data an equal chance to appear for columns where number of uniques exceeded the in-line limit.
+
+##### Package version upgrades
+- added `dill` as a dependency
+
 ### 0.9.5 (June 26, 2022)
 
 ##### Enhancements

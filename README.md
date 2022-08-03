@@ -16,6 +16,8 @@ The goal of Exhibit is to make it easier to generate anonymised data at scale in
 - Preserve important relationships between your columns (paired, hierarchical, custom)
 - Add outliers to any subset of the generated data
 - Generate and manipulate missing data and timeseries
+- Generate geo-spatial data using H3 hexes
+- Augment your synthetic data with compiled machine learning models and custom functions
 
 ---
 ### Installation:
