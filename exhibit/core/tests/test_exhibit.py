@@ -6,13 +6,13 @@ Unit tests for the exhibit module
 import unittest
 from unittest.mock import patch, mock_open
 from pathlib import Path
-import argparse
 
 # External imports
 import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import package_dir, get_attr_values
+from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.db import db_util
 
 # Module under test
@@ -260,6 +260,41 @@ class exhibitTests(unittest.TestCase):
     
         # uuid columns are correctly placed in metadata section
         self.assertCountEqual(uuid_columns, metadata_uuid_columns)
+
+    @unittest.skip("Skip in CI to avoid adding ML dependencies to the build")
+    def test_data_generation_with_predefined_models(self):
+        '''
+        User can save custom ML models into the exhibit/models folder and use
+        them in their specifications to add or modify existing columns. The demo
+        model is trained on data that supports the hypothesis that smoking is more
+        prevalent among males.
+        '''
+
+        test_dict = {
+            "metadata" : {
+                "number_of_rows" : 1000,
+            },
+            "models": {
+                "smoker_model" : {
+                    "sample" : True
+                }
+            }
+        }
+
+        temp_spec, temp_df = temp_exhibit(
+            filename="inpatients.csv",
+            test_spec_dict=test_dict
+        )
+
+        #save ID to tidy up temp columns created as part of testing
+        self._temp_tables.append(temp_spec["metadata"]["id"])
+
+        result = temp_df.groupby(["sex", "smoker"]).size().reset_index(name="count")
+        
+        self.assertGreater(
+            result.query("sex == 'Male' & smoker == 'smoker'")["count"].values[0],
+            result.query("sex == 'Female' & smoker == 'smoker'")["count"].values[0]
+        )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

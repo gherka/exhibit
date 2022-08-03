@@ -16,6 +16,7 @@ from pandas.api.types import is_datetime64_any_dtype
 from pandas.testing import assert_frame_equal
 
 # Exhibit imports
+from exhibit.db import db_util
 from exhibit.core.sql import create_temp_table
 from exhibit.core.tests.test_reference import temp_exhibit
 
@@ -26,6 +27,14 @@ class categoricalTests(unittest.TestCase):
     '''
     Doc string
     '''
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+
+        db_util.purge_temp_tables()
 
     def test_random_timeseries(self):
         '''

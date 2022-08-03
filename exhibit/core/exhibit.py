@@ -424,7 +424,8 @@ class newExhibit:
                 print(f"WARNING: Deleted {number_dropped} duplicates.")
                 anon_df = anon_df.loc[~duplicated_idx, :].reset_index(drop=True)
 
-        #10) APPLY ML MODELS; EXPERIMENTAL; NOT TESTED
+        #10) APPLY ML MODELS; EXPERIMENTAL; NOT TESTED BY CI TO AVOID ADDING ML
+        # DEPENDENCIES TO THE BUILD
         if models := self.spec_dict.get("models", None): #pragma: no cover
 
             for model_name, params in models.items():

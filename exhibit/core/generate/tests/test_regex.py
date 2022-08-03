@@ -6,6 +6,7 @@ Test the generation of column values where anonymising set is given as regex
 import unittest
 
 # Exhibit imports
+from exhibit.db import db_util
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.core.constants import ORIGINAL_VALUES_REGEX
 
@@ -13,6 +14,14 @@ class regexTests(unittest.TestCase):
     '''
     Doc string
     '''
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+
+        db_util.purge_temp_tables()
 
     def test_regex_column(self):
         '''
