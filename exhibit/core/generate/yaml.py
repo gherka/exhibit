@@ -103,6 +103,8 @@ def generate_YAML_string(spec_dict):
     #  - 3         | 0.2
     #  miss_probability: 0.0
     #  anonymising_set: uuid
+    #
+    # You can choose between uuid and range anonymising sets.
     # ----------------------------------------------------------
     """)
 

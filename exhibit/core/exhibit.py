@@ -70,8 +70,9 @@ class newExhibit:
         is False.
     skip_columns   : set
         Set of columns to skip when reading in the data.
-    linked_columns : set
-        Set of columns linked with non-hierarchical relationships.
+    linked_columns : list
+        list of columns linked with non-hierarchical relationships. Order is preserved
+        because you might want to selectively disassociate neighbouring columns.
     uuid_columns : set
         Set of columns to treat as having record identifiers.
     verbose        : bool
@@ -110,7 +111,7 @@ class newExhibit:
         self.inline_limit = inline_limit
         self.equal_weights = equal_weights
         self.skip_columns = skip_columns or set()
-        self.linked_columns= linked_columns or set()
+        self.linked_columns= linked_columns or list()
         self.uuid_columns= uuid_columns or set()
         self.discrete_columns = discrete_columns or set()
         self.save_probabilities = save_probabilities or set()
@@ -301,7 +302,8 @@ class newExhibit:
                 self.spec_dict["metadata"]["number_of_rows"],
                 self.spec_dict["columns"][uuid_col_name]["miss_probability"],
                 dist,
-                self.spec_dict["metadata"]["random_seed"]
+                self.spec_dict["metadata"]["random_seed"],
+                self.spec_dict["columns"][uuid_col_name]["anonymising_set"]
             ).astype("category")
 
             anon_df.insert(0, uuid_col_name, uuid_col)

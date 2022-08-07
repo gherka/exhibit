@@ -75,7 +75,7 @@ class newSpec:
         self.inline_limit = inline_limit
         self.ew = ew
         self.random_seed = random_seed
-        self.user_linked_cols = kwargs.get("user_linked_cols", set())
+        self.user_linked_cols = kwargs.get("user_linked_cols", list())
         self.uuid_cols = kwargs.get("uuid_cols", set())
         self.db_prob_cols = kwargs.get("save_probabilities", set())
         self.id = generate_table_id()
