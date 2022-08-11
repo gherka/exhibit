@@ -280,7 +280,7 @@ def process_row(
     dispersion = lcd[arr_len]
 
     # default is to pick a random valid target
-    next_val = rng.choice(a=valid_targets, p=target_proba, size=1)[0]
+    next_val = rng.choice(a=valid_targets, p=target_proba)
 
     # except when it's already pre-generated
     if ref_array[arr_len] != -1:
@@ -291,7 +291,7 @@ def process_row(
         all_targets = np.unique(label_matrix[:, arr_len])
         non_valid_targets = np.setdiff1d(all_targets, valid_targets)
         if len(non_valid_targets) > 0:
-            next_val = rng.choice(a=non_valid_targets, size=1)[0]
+            next_val = rng.choice(a=non_valid_targets)
 
     new_array = np.append(acc_array, next_val)
 

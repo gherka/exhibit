@@ -13,7 +13,9 @@ import numpy as np
 from pandas.testing import assert_frame_equal, assert_series_equal
 
 # Exhibit imports
+from exhibit.db import db_util
 from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
+from exhibit.core.tests.test_reference import temp_exhibit
 
 # Module under test
 from exhibit.core.generate import missing as tm
@@ -22,6 +24,14 @@ class missingDataTests(unittest.TestCase):
     '''
     Doc string
     '''
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+
+        db_util.purge_temp_tables()
 
     def test_feeding_data_to_missing_generator(self):
         '''
@@ -533,8 +543,35 @@ class missingDataTests(unittest.TestCase):
 
         self.assertTrue(result["C1"].isna().any())
         self.assertEqual(result["C2"].sum(), 200)
-        
 
+    def test_user_linked_columns_having_missing_data(self):
+        '''
+        Because user linked columns can have complex relationships, we 
+        need to make sure missing data is handled correctly.
+        '''
+
+        test_df = pd.DataFrame(data={
+            "A": ["spam", "spam", "eggs", "eggs", "spam"],
+            "B": ["bacon", "spamspam", np.nan, "parrot", "bacon"],
+            "C": range(5)
+        })
+
+        test_dict = {
+            "metadata" : {
+                "number_of_rows" : 1000
+            }
+        }
+
+        fromdata_test = {
+            "linked_columns" : ["A", "B"]
+        }
+
+        _, df = temp_exhibit(
+            filename=test_df, fromdata_namespace=fromdata_test,
+            test_spec_dict=test_dict, return_spec=False)
+
+        self.assertTrue(df.query("A == 'eggs'")["B"].isna().any())    
+        
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

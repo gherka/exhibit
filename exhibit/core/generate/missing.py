@@ -78,16 +78,17 @@ class MissingDataGenerator:
             # reset the generator for each column
             rng = np.random.default_rng(seed=i)
 
-            # special case for user-linked columns which can have "Missing data" already
-            # if it appeared in the source for the linkage
-            linked_col_groups = self.spec_dict["linked_columns"]
-            if linked_col_groups and linked_col_groups[0][0] == 0:
-                user_linked_cols = linked_col_groups[0][1]
-                if col_name in user_linked_cols:
-                    self.nan_data[col_name] = (
+            # special case for user linked columns which can have "Missing data" already
+            # if it appeared in the source for the linkage along with its probability.
+            # hierarchical linkage is not affected because having multiple NAN CAs for 
+            # different HBs, for example, means the linkage is no longer hierarchical
+            # and doesn't map 1 to many and is instead many to many.
+            
+            if any(self.nan_data[col_name] == MISSING_DATA_STR):
+                self.nan_data[col_name] = (
                         self.nan_data[col_name].map(
                             lambda x: pd.NA if x == MISSING_DATA_STR else x))
-                    continue
+                continue
             
             miss_pct = self.spec_dict["columns"][col_name]["miss_probability"]
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member

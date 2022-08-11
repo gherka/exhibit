@@ -120,12 +120,19 @@ def read_with_date_parser(path, **kwargs):
 
     if path.suffix in [".csv",]:
 
-        skipped_cols = kwargs.get("skip_columns", [])
-        discrete_cols = kwargs.get("discrete_columns", [])
+        skipped_cols = kwargs.get("skip_columns", set())
+        discrete_cols = kwargs.get("discrete_columns", set())
     
-        df = pd.read_csv(path, dtype={c:str for c in discrete_cols})
-
-        df = df[[x for x in df.columns if x not in skipped_cols]]
+        df = pd.read_csv(path, dtype={c:str for c in discrete_cols}, low_memory=False)
+        
+        # basic validation to ensure user didn't specify column that are missing
+        for col in skipped_cols | discrete_cols:
+            if col not in df.columns:
+                raise ValueError(
+                    f"Can't skip / make discrete {col} column. "
+                    "It's missing from the supplied file.")
+        
+        df = df.drop(columns=skipped_cols)
 
         for x in df.loc[0, :].iteritems():
             date_col = date_parser(x)

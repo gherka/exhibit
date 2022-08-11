@@ -13,10 +13,11 @@ from pathlib import Path
 
 # External library imports
 import pandas as pd
-import numpy as np
 
 # Exhibit imports
+from exhibit.db import db_util
 from exhibit.sample.sample import inpatients_spec
+from exhibit.core.tests.test_reference import temp_exhibit
 
 # Module under test
 from exhibit.core import utils as tm
@@ -25,6 +26,14 @@ class utilsTests(unittest.TestCase):
     '''
     Collection of unit tests for the utils.py module
     '''
+    
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Clean up anon.db from temp tables
+        '''
+
+        db_util.purge_temp_tables()
 
     def test_path_checker_raises_exception_on_incorrect_path(self):
         '''
@@ -151,6 +160,19 @@ class utilsTests(unittest.TestCase):
         self.assertTrue(tm.float_or_int(test_series_1), "integer")
         self.assertEqual(tm.float_or_int(test_series_2), "integer")
         self.assertEqual(tm.float_or_int(test_series_3), "float")
+
+    def test_missing_skipped_or_discrete_columns(self):
+        '''
+        If user specifies a column to be skipped or marked as discrete and it doesn't
+        exist in the source file, the automatic error downstream in the code is not
+        helpful in tracing the source of the problem.
+        '''
+
+        fromdata_test = {
+            "skip_columns": {"spam"}
+        }
+
+        self.assertRaises(ValueError, temp_exhibit, fromdata_namespace=fromdata_test)  
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
