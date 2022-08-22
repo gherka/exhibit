@@ -288,7 +288,7 @@ def _weights_transform(x, weights):
     if x == 0:
         return 0
 
-    if np.isnan(x):
+    if np.isnan(x): # pragma: no cover
         return np.NaN
     
     return max(0.001, round(x / weights.sum(), 3))

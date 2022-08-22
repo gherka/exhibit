@@ -127,9 +127,6 @@ def temp_exhibit(
             xA.read_data()
             xA.generate_spec()
 
-            if return_spec:
-                temp_spec=xA.spec_dict
-
             if return_df:
 
                 xA.write_spec()
@@ -152,6 +149,9 @@ def temp_exhibit(
                     xA.execute_spec()
 
                 temp_df = xA.anon_df
+            
+            if return_spec:
+                temp_spec=xA.spec_dict
 
     if source == "yml":
 

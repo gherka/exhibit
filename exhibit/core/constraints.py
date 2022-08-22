@@ -163,11 +163,8 @@ class ConstraintHandler:
             cc_partitions = constraint.get("partition", None)
             cc_targets = constraint.get("targets", dict())
 
-            clean_filter = clean_up_constraint(cc_filter)
-
-            cc_filter_mask = (output_df
-                    .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                    .eval(clean_filter, engine="python"))
+            clean_cc_filter = clean_up_constraint_string(cc_filter)
+            cc_filter_mask = get_constraint_mask(output_df, clean_cc_filter)
             cc_filter_idx = output_df[cc_filter_mask].index
 
             # if masked dataframe is empty (no values to adjust), exit loop
@@ -195,7 +192,7 @@ class ConstraintHandler:
                             cc_partitions, **_kwargs).astype(output_dtypes)
         return output_df
 
-    def adjust_dataframe_to_fit_constraint(self, anon_df, bool_constraint):
+    def adjust_dataframe_to_fit_constraint(self, anon_df, basic_constraint):
         '''
         Because by this point the anonymised dataset is complete, some numerical
         column might have been cast to nullable Int64. This will cause issues with
@@ -206,14 +203,10 @@ class ConstraintHandler:
         '''
 
         output_df = anon_df.copy()
-
-        clean_rule = clean_up_constraint(bool_constraint)
+        clean_bc = clean_up_constraint_string(basic_constraint)
         
         #only apply the adjustments to rows that DON'T already meet the constraint
-        mask = (output_df
-                    .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                    .eval(clean_rule, engine="python")
-        )
+        mask = get_constraint_mask(output_df, clean_bc)
 
         #if masked dataframe is empty (no values to adjust), return early
         #remember that for boolean constraints, we're adjusting rows TO MATCH
@@ -225,7 +218,7 @@ class ConstraintHandler:
         #at this point, the tokeniser produces "safe" column names, with __
         (self.dependent_column,
         op,
-        self.independent_expression) = tokenise_constraint(clean_rule)
+        self.independent_expression) = tokenise_basic_constraint(clean_bc)
 
         target_col = self.dependent_column.replace("__", " ")
         
@@ -1168,7 +1161,7 @@ def find_basic_constraint_columns(df):
             
     return output
 
-def clean_up_constraint(rule_string):
+def clean_up_constraint_string(raw_string, type="cc_filter"):
     '''
     The default way to handle column names with whitespace in eval strings
     is to enclose them in backticks. However, the default tokeniser will
@@ -1183,12 +1176,12 @@ def clean_up_constraint(rule_string):
 
     # index is always available when doing df.eval or df.query 
     # and returns a boolean array of True values for each row
-    if rule_string is None:
+    if raw_string is None:
         return "index == index"
     
-    column_names = re.findall(r"~.*?~", rule_string)
+    column_names = re.findall(r"~.*?~", raw_string)
     repl_dict = {"~": "", " ": "__"}
-    clean_rule = rule_string
+    clean_string = raw_string
 
     for col_name in column_names:
         
@@ -1197,11 +1190,23 @@ def clean_up_constraint(rule_string):
             lambda x: repl_dict[x.group()],
             col_name)
 
-        clean_rule = clean_rule.replace(col_name, clean_col_name)
+        clean_string = clean_string.replace(col_name, clean_col_name)
 
-    return clean_rule
+    return clean_string
 
-def tokenise_constraint(constraint):
+def get_constraint_mask(df, clean_string):
+    '''
+    Get a boolean mask where the clean string evaluates as True
+    '''
+
+    mask = (df
+            .rename(lambda x: x.replace(" ", "__"), axis="columns")
+            .eval(clean_string, engine="python")
+        )
+
+    return mask
+
+def tokenise_basic_constraint(constraint):
     '''
     Given a constraint string, split it into individual tokens:
     x:  dependent column name that will be adjusted,

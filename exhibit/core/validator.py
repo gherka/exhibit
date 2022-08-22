@@ -12,7 +12,7 @@ from itertools import chain
 import textwrap
 
 # Exhibit imports
-from .constraints import tokenise_constraint
+from .constraints import tokenise_basic_constraint
 from .utils import get_attr_values
 from .sql import number_of_table_rows, number_of_table_columns
 
@@ -272,7 +272,7 @@ class newValidator:
             for constraint in spec_dict["constraints"]["basic_constraints"]:
                 
                 # tokenise without cleaning up - as user has entered them
-                tcon = tokenise_constraint(constraint)
+                tcon = tokenise_basic_constraint(constraint)
 
                 # all constraints should dissembe into 3 parts
                 # spaces must be enclosed by tilda

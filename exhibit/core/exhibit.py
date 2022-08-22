@@ -261,15 +261,34 @@ class newExhibit:
         #1) FIND THE NUMBER OF "CORE" ROWS TO GENERATE
         core_rows = count_core_rows(self.spec_dict)
 
-        #2) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
+        #2) GENERATE UUID COLUMNS
+        # initialise an empty df
+        anon_df = pd.DataFrame()
+        for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"] or set():
+
+            dist = self.spec_dict["columns"][uuid_col_name]["frequency_distribution"]
+
+            uuid_col = generate_uuid_column(
+                uuid_col_name,
+                self.spec_dict["metadata"]["number_of_rows"],
+                self.spec_dict["columns"][uuid_col_name]["miss_probability"],
+                dist,
+                self.spec_dict["metadata"]["random_seed"],
+                self.spec_dict["columns"][uuid_col_name]["anonymising_set"]
+            ).astype("category")
+
+            anon_df.insert(0, uuid_col_name, uuid_col)
+
+        #3) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
         cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows)
-        anon_df = cat_gen.generate()
+        cat_df = cat_gen.generate()
+        anon_df = pd.concat([anon_df, cat_df], axis=1)
         for cat_col in self.spec_dict["metadata"]["categorical_columns"]:
             anon_df[cat_col] = anon_df[cat_col].astype("category")
             if MISSING_DATA_STR not in anon_df[cat_col].cat.categories:
                 anon_df[cat_col] = anon_df[cat_col].cat.add_categories(MISSING_DATA_STR)
 
-        #3) ADD CONTINUOUS VARIABLES TO ANON DF
+        #4) ADD CONTINUOUS VARIABLES TO ANON DF
         # at this point, we don't have any Missing data placeholders (or actual nans)
         # these are added after this step when we can properly account for conditional
         # constraints and other inter-dependencies
@@ -291,22 +310,6 @@ class newExhibit:
                                                     anon_df=anon_df,
                                                     col_name=num_col
             )
-
-        #4) GENERATE UUID COLUMNS
-        for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"] or set():
-
-            dist = self.spec_dict["columns"][uuid_col_name]["frequency_distribution"]
-
-            uuid_col = generate_uuid_column(
-                uuid_col_name,
-                self.spec_dict["metadata"]["number_of_rows"],
-                self.spec_dict["columns"][uuid_col_name]["miss_probability"],
-                dist,
-                self.spec_dict["metadata"]["random_seed"],
-                self.spec_dict["columns"][uuid_col_name]["anonymising_set"]
-            ).astype("category")
-
-            anon_df.insert(0, uuid_col_name, uuid_col)
 
         #5) GENERATE GEOSPATIAL COLUMNS
         geospatial_cols = [c for c, _ in get_attr_values(

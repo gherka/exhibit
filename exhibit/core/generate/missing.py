@@ -11,7 +11,7 @@ import pandas as pd
 
 # Exhibit 
 from ..constants import MISSING_DATA_STR
-from ..constraints import clean_up_constraint
+from ..constraints import clean_up_constraint_string, get_constraint_mask
 from ..utils import get_attr_values
 from .continuous import generate_cont_val, scale_continuous_column
 
@@ -292,7 +292,8 @@ class MissingDataGenerator:
 
             cc_filter = constraint.get("filter", None)
             cc_targets = constraint.get("targets", dict())
-            clean_filter = clean_up_constraint(cc_filter)
+            clean_cc_filter = clean_up_constraint_string(cc_filter)
+            cc_mask = get_constraint_mask(self.nan_data, clean_cc_filter)
 
             for target_str, action_str in cc_targets.items():
 
@@ -303,13 +304,8 @@ class MissingDataGenerator:
                     for target in target_cols:
 
                         make_null_idx.append(
-                            (
-                            self.nan_data
-                                .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                                .query(clean_filter).index,
-                            target
-                            )
-                        )    
+                            (self.nan_data.loc[cc_mask].index, target)
+                        )
 
         return make_null_idx
 
@@ -326,7 +322,8 @@ class MissingDataGenerator:
 
             cc_filter = constraint.get("filter", None)
             cc_targets = constraint.get("targets", dict())
-            clean_filter = clean_up_constraint(cc_filter)
+            clean_cc_filter = clean_up_constraint_string(cc_filter)
+            cc_mask = get_constraint_mask(self.nan_data, clean_cc_filter)
 
             for target_str, action_str in cc_targets.items():
 
@@ -337,12 +334,7 @@ class MissingDataGenerator:
                     for target in target_cols:
 
                         not_null_idx.append(
-                            (
-                            self.nan_data
-                                .rename(lambda x: x.replace(" ", "__"), axis="columns")
-                                .query(clean_filter).index,
-                            target
-                            )
+                            (self.nan_data.loc[cc_mask].index, target)
                         )
 
         return not_null_idx

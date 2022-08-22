@@ -105,7 +105,7 @@ class constraintsTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
-    def test_tokenise_constraint(self):
+    def test_tokenise_basic_constraint(self):
         '''
         Separate the constraint string into a 3-element tuple:
         dependent_column, operator and indepedent_condition
@@ -121,9 +121,9 @@ class constraintsTests(unittest.TestCase):
         c2_expected = ("A", "==", "B")
         c3_expected = ("A", "<", "B__B + C")
 
-        c1_result = tm.tokenise_constraint(c1)
-        c2_result = tm.tokenise_constraint(c2)
-        c3_result = tm.tokenise_constraint(c3)
+        c1_result = tm.tokenise_basic_constraint(c1)
+        c2_result = tm.tokenise_basic_constraint(c2)
+        c3_result = tm.tokenise_basic_constraint(c3)
 
         self.assertEqual(c1_expected, c1_result)
         self.assertEqual(c2_expected, c2_result)
@@ -394,17 +394,17 @@ class constraintsTests(unittest.TestCase):
         c3_expected = "Spam == Spam__Spam__Eggs - Spam__Eggs"
 
         self.assertEqual(
-            tm.clean_up_constraint(c1),
+            tm.clean_up_constraint_string(c1),
             c1_expected
         )
 
         self.assertEqual(
-            tm.clean_up_constraint(c2),
+            tm.clean_up_constraint_string(c2),
             c2_expected
         )
 
         self.assertEqual(
-            tm.clean_up_constraint(c3),
+            tm.clean_up_constraint_string(c3),
             c3_expected
         )
 
