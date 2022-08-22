@@ -335,10 +335,17 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
                 sorted([x for x in orig_vals_db[col] if x != MISSING_DATA_STR]) + 
                 [MISSING_DATA_STR]
             )
+
             orig_vals = pd.DataFrame(data={col:orig_vals_sorted})
-            prob_vector = np.ones(orig_vals.shape[0])
-            # when values are from DB, set the miss probability to reflect the spec
-            prob_vector[-1] = spec_dict["columns"][col]["miss_probability"]
+
+            if "probability_vector" not in orig_vals_db.columns:
+                prob_vector = np.ones(orig_vals.shape[0])
+                prob_vector[-1] = spec_dict["columns"][col]["miss_probability"]
+            else:
+                prob_vector = orig_vals_db["probability_vector"].astype(float).values
+                prob_vector = np.append(
+                    prob_vector, spec_dict["columns"][col]["miss_probability"])          
+
             prob_vector /= prob_vector.sum()
 
         if prob_vector is None:

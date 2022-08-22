@@ -313,6 +313,27 @@ class exhibitTests(unittest.TestCase):
             return_spec=False
         )
 
+    def test_lookup_and_matrix_from_db_with_probabilities(self):
+        '''
+        Using a standard inpatient data. By default user linked columns put into the
+        database due to exceeding inline_limit are generated using uniform distribution.
+        However, by passing a column name in the -p flag, you can save the original
+        probabilities alongside the values.
+        '''
+
+        user_linked_cols = ["age", "hb_name"]
+
+        _, temp_df = self._temp_exhibit(
+            fromdata_namespace={
+                "linked_columns":user_linked_cols,
+                "inline_limit" : 5,
+                "save_probabilities": "hb_name",
+            },
+        )
+
+        # the probability varies a lot from GGC (high) to Scotland (low)
+        self.assertGreater(temp_df.hb_name.value_counts().std(), 350)
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
