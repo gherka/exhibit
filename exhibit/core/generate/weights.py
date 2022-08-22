@@ -114,11 +114,13 @@ def generate_weights(df, cat_col, num_col, ew=False):
     List of weights in ascending order of values rounded to 3 digits.
     '''
 
-    #min_count=1 ensures that [np.NaN, np.NaN] is summed to np.NaN and not zero
+    # since weights are used at a per-row basis, we need to take an average of the
+    # numerical column per each categorical value to avoid over- and under-sized effects
+    # of duplicate rows. All NAs in numerical columns are treated as zeroes.
     weights = (
         df
         .fillna({cat_col:MISSING_DATA_STR})
-        .groupby([cat_col], observed=True)[num_col].sum(min_count=1)
+        .groupby([cat_col], observed=True)[num_col].mean().fillna(0)
     )
 
     temp_output = weights.sort_index(kind="mergesort")
