@@ -404,3 +404,9 @@ def sort_columns_by_dtype_az(dtypes):
         key=lambda x: list(zip(dtypes.transform(_dtype_grouper).values, x))).index
     
     return result
+
+def natural_key(string_):
+    '''
+    Thanks SO!
+    '''
+    return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]

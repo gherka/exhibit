@@ -13,6 +13,7 @@ import numpy as np
 # Exhibit imports
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_DB
+from exhibit.core.generate.uuids import generate_uuid_column
 from exhibit.core.sql import create_temp_table
 from exhibit.db import db_util
 
@@ -1384,6 +1385,190 @@ class constraintsTests(unittest.TestCase):
         pct_B = result.value_counts().agg(lambda x: x / sum(x)).iloc[1]
         self.assertTrue(pct_B > 0 and pct_B < 0.1)
 
+    def test_custom_constraints_targeting_high_frequency_rows(self):
+        '''
+        Sometimes you want to apply custom actions just to "frequent fliers" or 
+        on the other end of the spectrum, to "rare events".
+        '''
+
+        rng = np.random.default_rng(seed=0)
+        num_rows = 1000
+
+        test_dict = {
+
+            "_rng" : rng,
+            "columns" : {
+                "AGE" : {
+                    "precision" : "integer"
+                }
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "~RECORD ID~ with_high_frequency",
+                        "targets" : {
+                            "AGE" : "shift_distribution_right",
+                        }
+                    },
+                }
+            },
+        }
+
+        uuid_data = [
+            (1, 0.5),
+            (2, 0.2),
+            (3, 0.2),
+            (5, 0.2),
+            (10, 0.2),
+            (17, 0.2),
+            (18, 0.2),
+            (19, 0.2),
+            (20, 0.2),
+        ]
+
+        freq_df = pd.DataFrame(
+            data=uuid_data, columns=["frequency", "probability_vector"])
+
+        uuid_col = generate_uuid_column(
+            col_name="RECORD ID",
+            num_rows=num_rows,
+            miss_prob=0,
+            frequency_distribution=freq_df,
+            seed=0,
+            uuid_type="range"
+        )
+
+        test_data = pd.DataFrame(data={
+            "AGE" : rng.integers(low=0, high=90, size=num_rows),
+            "RECORD ID"  : uuid_col,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        high_idx = (
+            result["RECORD ID"].value_counts().where(lambda x: x >= 17).dropna().index)
+        low_idx = (
+            result["RECORD ID"].value_counts().where(lambda x: x < 17).dropna().index
+        )
+
+        self.assertGreater(
+            result[result["RECORD ID"].isin(high_idx)].AGE.mean(),
+            result[result["RECORD ID"].isin(low_idx)].AGE.mean(),
+        )
+
+    def test_custom_constraints_targeting_low_frequency_rows(self):
+        '''
+        Sometimes you want to apply custom actions just to "frequent fliers" or 
+        on the other end of the spectrum, to "rare events".
+        '''
+
+        rng = np.random.default_rng(seed=0)
+        num_rows = 1000
+
+        test_dict = {
+
+            "_rng" : rng,
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "~RECORD ID~ with_low_frequency",
+                        "targets" : {
+                            "AGE" : "shift_distribution_left",
+                        }
+                    },
+                }
+            },
+        }
+
+        uuid_data = [
+            (1, 0.5),
+            (2, 0.2),
+            (3, 0.2),
+            (5, 0.2),
+            (10, 0.2),
+            (17, 0.2),
+            (18, 0.2),
+            (19, 0.2),
+            (20, 0.2),
+        ]
+
+        freq_df = pd.DataFrame(
+            data=uuid_data, columns=["frequency", "probability_vector"])
+
+        uuid_col = generate_uuid_column(
+            col_name="RECORD ID",
+            num_rows=num_rows,
+            miss_prob=0,
+            frequency_distribution=freq_df,
+            seed=0,
+            uuid_type="range"
+        )
+
+        test_data = pd.DataFrame(data={
+            "AGE" : rng.integers(low=0, high=90, size=num_rows),
+            "RECORD ID"  : uuid_col,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        high_idx = (
+            result["RECORD ID"].value_counts().where(lambda x: x > 3).dropna().index)
+        low_idx = (
+            result["RECORD ID"].value_counts().where(lambda x: x <= 3).dropna().index
+        )
+
+        self.assertLess(
+            result[result["RECORD ID"].isin(low_idx)].AGE.mean(),
+            result[result["RECORD ID"].isin(high_idx)].AGE.mean(),
+        )
+
+    def test_custom_constraints_shift_categorical_distribution(self):
+        '''
+        Test we can shift the probabilities of categorical values
+        along their sorted order to make values closer to Z more likely
+        to appear than values closer to A for any given filter.
+        '''
+
+        rng = np.random.default_rng(seed=0)
+        num_rows = 1000
+
+        test_dict = {
+
+            "_rng" : rng,
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"    : "HB == 'A'",
+                        "targets" : {
+                            "AGE" : "shift_distribution_right",
+                        }
+                    },
+                }
+            },
+        }
+
+
+
+        test_data = pd.DataFrame(data={
+            "AGE" : rng.choice(list(map(str, range(100))), size=num_rows),
+            "HB"  : rng.choice(a=["A", "B"], p=[0.5, 0.5], size=num_rows)
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        # check the top end values for A and B. A should have higher ages as more 
+        # frequent values; remap string ages back to digits
+        top_A = np.mean(list(
+            map(int, result.query("HB == 'A'")["AGE"].value_counts().head().index)))
+
+        top_B = np.mean(list(
+            map(int, result.query("HB == 'B'")["AGE"].value_counts().head().index)))
+        
+        self.assertGreater(top_A, top_B)
+        
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

@@ -243,6 +243,8 @@ def generate_YAML_string(spec_dict):
     # - "sort_and_skew_right"
     # - "sort_and_make_peak"
     # - "sort_and_make_valley"
+    # - "shift_distribution_right"
+    # - "shift_distribution_left"
     #
     # Adding or banning nulls is useful when a value in one column, 
     # like Readmissions Within 28 days, necessitates a valid value in
@@ -258,6 +260,12 @@ def generate_YAML_string(spec_dict):
     #
     # Custom constraints can target multiple columns, but each column can
     # appear only once in each custom constraint.
+    # 
+    # Expressions used in the filter must be understood by Pandas eval().
+    # Additionally, you can use these custom filters:
+    #
+    # - "COLUMN_NAME with_high_frequency"
+    # - "COLUMN_NAME with_low_frequency"
     #
     # If a column name has spaces, make sure to surround it with
     # the tilde character ~. This rule only applies when columns are used

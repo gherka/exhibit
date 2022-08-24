@@ -5,3 +5,4 @@ PyYAML == 6.0
 shapely == 1.8.2
 h3 == 3.7.4
 dill == 0.3.5.1
+scipy == 1.8.0

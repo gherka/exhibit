@@ -7,10 +7,14 @@ from datetime import datetime
 from functools import partial
 import itertools as it
 import re
+import warnings
 
 # External library imports
 import numpy as np
 import pandas as pd
+from scipy.stats import beta, gamma
+from pandas.api.types import is_numeric_dtype
+from pandas.api.types import is_datetime64_any_dtype
 
 # Exibit imports
 from .sql import query_anon_database
@@ -18,6 +22,7 @@ from .generate.continuous import scale_continuous_column
 from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
 from .generate.geo import geo_make_regions
 from .linkage.matrix import generate_user_linked_anon_df
+from .utils import natural_key
 
 class ConstraintHandler:
     '''
@@ -151,6 +156,8 @@ class ConstraintHandler:
             "sort_and_skew_left"   : partial(self.sort_and_skew, direction="left"),
             "sort_and_make_peak"   : partial(self.sort_and_skew, direction="up"),
             "sort_and_make_valley" : partial(self.sort_and_skew, direction="down"),
+            "shift_distribution_right": partial(self.shift_distribution, right=True),
+            "shift_distribution_left" : partial(self.shift_distribution, right=False)
         }
 
         kwargs_dict = {
@@ -1100,6 +1107,128 @@ class ConstraintHandler:
 
         return new_df        
 
+    def shift_distribution(
+        self, df, filter_idx, target_str, partition_cols=None, right=True):
+        '''
+        Shift the distribution of the filtered data slice. For numerical values this 
+        means shifting up would use upper quartile of the pre-custom action data as 
+        new mean and apply a beta distribution meaning higher values are more likely.
+        
+        For categorical values, shifting distribution up means further up in the natural
+        sort order, i.e. given values "1", "20", "3" with equal probabilities, this
+        custom action will make 20 much more likely.
+
+        This custom action is different from sort_and_skew in that it operates on a
+        single column and can shift distributions of any column type, not just numeric.
+
+        There is some overlap, however, so it might be possible to change the "skew"
+        logic to reuse this function (given a series, shift its distribution)
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_str     : str
+            Column(s) to be modified by the function
+        partition_cols : list
+            Columns to group by to achieve nested application of the function
+        right          : boolean
+            Preferred direction of the new distribution
+
+        Returns
+        -------
+        pd.DataFrame
+            Only the filtered and shifted slice is returned
+        '''
+
+        final_result = []
+        rng = np.random.default_rng(seed=0)
+        target_cols = [x.strip() for x in target_str.split(",")]
+
+        if partition_cols is not None: #pragma: no cover
+            warnings.warn("Use of partitions for this custom action is not supported.")
+
+        for target_col in target_cols:
+
+            if is_numeric_dtype(df[target_col]):
+
+                # logic for numerical (continuous) columns
+                b = df[target_col].quantile(0.75) if right else df[target_col].quantile(0.25)
+
+                target_series = df.loc[filter_idx, target_col]
+                a = 2
+                target_mean = b
+                scale = target_series.std()
+                loc = target_mean - (a * scale)
+                X = gamma(a, loc=loc, scale=scale)
+
+                data = X.rvs(size=len(target_series), random_state=0)
+
+                # mirror the data around the mean if scaling down
+                if not right:
+                    mean_diff = abs(data - data.mean())
+                    data = np.where(
+                        data < data.mean(),
+                        data + mean_diff * 2,
+                        data - mean_diff * 2 
+                    )
+                
+                new_series = pd.Series(
+                    data=data,
+                    index=target_series.index,
+                    name=target_series.name
+                )
+                
+                if target_series.dtype in ("int64", "Int64"):
+                    new_series = new_series.round().astype("Int64")
+            
+                final_result.append(new_series)
+                continue
+
+            elif is_datetime64_any_dtype(df[target_col]): # pragma: no cover
+                raise NotImplemented(
+                    "Datetime columns can't have their distributions shifted yet.")
+            
+            # category, object, etc.
+            # typically, values that are useful targets of this custom action
+            # will be named in a sortable way (age, ratings)
+            else:
+
+                target_series = df.loc[filter_idx, target_col]
+                u = sorted(target_series.unique(), key=natural_key)
+                a, b = 4, 1
+                
+                # if shifting left, the beta pdf distribution is mirrored
+                if not right: # pragma: no cover
+                    a, b = 1, 4
+
+                X = beta(a, b)
+                new_probs = X.pdf(
+                    np.linspace(start=0.001, stop=0.999, num=len(u)+1)[1:])
+
+                # ensure probs are in positive territory and then normalise
+                pos_probs = new_probs + abs(new_probs.min()) * 2
+                norm_probs = pos_probs / pos_probs.sum()
+
+                new_data = rng.choice(a=u, p=norm_probs, size=len(target_series))
+
+                new_series = pd.Series(
+                    data=new_data, index=target_series.index,
+                    name=target_series.name)
+
+                final_result.append(new_series)
+                continue
+
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
+        ).reindex(columns=df.columns)
+
+        return new_df
+
 # EXPORTABLE METHODS
 # ==================
 def find_basic_constraint_columns(df):
@@ -1199,10 +1328,67 @@ def get_constraint_mask(df, clean_string):
     Get a boolean mask where the clean string evaluates as True
     '''
 
-    mask = (df
-            .rename(lambda x: x.replace(" ", "__"), axis="columns")
-            .eval(clean_string, engine="python")
+    # special case for high/low frequency filters
+    if (freq_string:="with_high_frequency") in clean_string:
+        target_freq = "high"
+
+    elif (freq_string:="with_low_frequency") in clean_string:
+        target_freq = "low"
+    else:
+        target_freq = None
+
+    if target_freq:
+
+        target_col = clean_string.replace(freq_string, "").strip()
+        rng = np.random.default_rng(seed=0)
+   
+        _df = df.rename(lambda x: x.replace(" ", "__"), axis="columns")
+
+        # using frequency counts = one probability per frequency (high intervals)
+        freq_df = _df[target_col].value_counts()
+        freqs = freq_df.unique()
+        probs = _get_probabilities_by_frequency(freqs, target_freq)
+
+        idx = []
+        candidate_idx = (
+            freq_df.reset_index()
+            .groupby(target_col)["index"]
+            .apply(list).to_dict()
         )
+
+        for i, freq in enumerate(freqs):
+            miss = 0
+            p = probs[i]
+            # for values we deem to be 100% high/low, we pick up all records
+            if p == 1:
+                idx.extend(candidate_idx[freq])
+                continue
+            # others (via smoothing), have a progressively reduced probability; try
+            # 25 times to draw, but if either we run out values or fail to draw,
+            # move to the next frequency. Expectation is that it takes 25 trials to 
+            # first success with probability 5%. In practice, this will vary a lot.
+            while miss < 25:
+                draw = rng.random() < p
+                if draw:
+                    try:
+                        idx.append(candidate_idx[freq].pop())
+                        # reset the counter
+                        miss = 0
+                    except IndexError:
+                        break
+                else:
+                    miss = miss + 1
+
+        mask = _df[target_col].isin(idx)
+        return mask
+        
+    try:
+        mask = (df
+                .rename(lambda x: x.replace(" ", "__"), axis="columns")
+                .eval(clean_string, engine="python"))
+
+    except SyntaxError: #pragma: no cover
+        raise SyntaxError("Invalid filter expression supplied to custom action.")
 
     return mask
 
@@ -1231,3 +1417,93 @@ def tokenise_basic_constraint(constraint):
     result = Constraint(*[x.strip() for x in token_list])
 
     return result
+
+def _get_probabilities_by_frequency(f, target_f="high"):
+    '''
+    Assign new binary probabilities (include / not include) to row frequencies,
+    depending on the required direction target_f.
+    
+    Parameters
+    ----------
+    f             : np.array or Sequence
+        a sequence of row frequencies sorted large to small
+    target_f      : str
+        preferred direction, either high or low.
+        
+        If high, then high frequencies will be assigned a higher probability. Upper
+        quartile and above is guaranteed to be classed as "high" and frequecies below
+        that are assigned probabilities based on a beta distribution.
+        
+        If low, then low frequencies will be assigned a higher probability. Lower
+        quartile and below is guaranteed to be classed as "low" and frequencies above
+        that are assigned probabilities based on a beta distribution.
+
+    Returns
+    -------
+    np.array
+        Probabilities are returned in the order of frequencies when the latter are 
+        sorted largest to smallest. This is so that the returned array could be used
+        alongside unique values from value_counts().
+    '''
+
+    if not isinstance(f, np.ndarray): #pragma: no cover
+        f = np.array
+
+    if target_f == "high":
+
+        # to cover situations like 1,2,3,4,20 and 3 being the median
+        uq = np.quantile(np.array(range(1, f.max() + 1)), 0.75)
+        
+        # frequencies below the upper quartile have vastly reduced (but non-zero) probs
+        a, b = 5, 0.99
+        new_min = 0.001
+        new_max = 0.999
+        beta_f = np.insert(f[f < uq].astype(float), 0, uq)
+
+        scaled_f = (
+            ((beta_f - beta_f.min()) * (new_max - new_min)) / 
+            (beta_f.max() - beta_f.min())
+            ) + new_min
+
+        X = beta(a, b)
+        beta_probs = X.pdf(scaled_f)
+        # exclude the upper quartile from the beta probs
+        beta_probs = (beta_probs / beta_probs.sum())[1:]
+        # make sure the beta_probs is the same length as f (prepend with zeroes)
+        beta_probs = np.pad(beta_probs, pad_width=(len(f[f >= uq]), 0), mode="constant")
+        
+        probs = np.where(f >= uq, 1, beta_probs)
+
+    if target_f == "low":
+
+        # sort the array ascending
+        f = np.sort(f)
+
+        # to cover situations like 1,2,3,4,20 and 3 being the median
+        lq = np.quantile(np.array(range(1, f.max() + 1)), 0.25)
+        
+        # frequencies above the lower quartile have vastly reduced (but non-zero) probs
+        a, b = 0.99, 5
+        new_min = 0.001
+        new_max = 0.999
+        
+        beta_f = np.insert(f[f > lq].astype(float), 0, lq)
+
+        scaled_f = (
+            ((beta_f - beta_f.min()) * (new_max - new_min)) /
+            (beta_f.max() - beta_f.min())
+            ) + new_min
+
+        X = beta(a, b)
+        beta_probs = X.pdf(scaled_f)
+        # exclude the upper quartile from the beta probs
+        beta_probs = (beta_probs / beta_probs.sum())[1:]
+        # make sure the beta_probs is the same length as f (prepend with zeroes)
+        beta_probs = np.pad(beta_probs, pad_width=(len(f[f <= lq]), 0), mode="constant")
+        
+        probs = np.where(f < lq, 1, beta_probs)
+
+        # reverse the probabilities to match the initial frequencies order
+        probs = probs[::-1]
+
+    return probs
