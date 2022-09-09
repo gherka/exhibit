@@ -1549,8 +1549,6 @@ class constraintsTests(unittest.TestCase):
             },
         }
 
-
-
         test_data = pd.DataFrame(data={
             "AGE" : rng.choice(list(map(str, range(100))), size=num_rows),
             "HB"  : rng.choice(a=["A", "B"], p=[0.5, 0.5], size=num_rows)
@@ -1568,6 +1566,64 @@ class constraintsTests(unittest.TestCase):
             map(int, result.query("HB == 'B'")["AGE"].value_counts().head().index)))
         
         self.assertGreater(top_A, top_B)
+
+    def test_custom_constraints_shift_datetime_distribution(self):
+        '''
+        Test we can shift the probabilities of datetime values
+        along their sorted order to make later values more likely
+        to appear than earlier values for any given filter.
+        '''
+
+        rng = np.random.default_rng(seed=0)
+        num_rows = 1000
+
+        test_dict = {
+
+            "_rng" : rng,
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter" : "hb == 'A'",
+                        "targets" : {
+                            "admission_date" : "shift_distribution_right",
+                        }
+                    },
+                }
+            },
+        }
+
+        uuid_data = [
+            (1, 1),
+        ]
+
+        freq_df = pd.DataFrame(
+            data=uuid_data, columns=["frequency", "probability_vector"])
+
+        uuid_col = generate_uuid_column(
+            col_name="id",
+            num_rows=num_rows,
+            miss_prob=0,
+            frequency_distribution=freq_df,
+            seed=0,
+            uuid_type="range"
+        )
+
+        test_data = pd.DataFrame(data={
+            "id"  : uuid_col,
+            "hb" : rng.choice(["A", "B"], p=[0.5, 0.5], size=num_rows),
+            "admission_date" : rng.choice(
+                pd.date_range(start="2020-01-01", periods=360, freq="D"), size=num_rows)
+            
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+
+        # check the top 5 records by frequency:
+        self.assertGreater(
+            result.query("hb == 'A'").admission_date.value_counts().head().index.min(),
+            result.query("hb == 'B'").admission_date.value_counts().head().index.max()
+        )
         
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

@@ -1186,18 +1186,14 @@ class ConstraintHandler:
             
                 final_result.append(new_series)
                 continue
-
-            elif is_datetime64_any_dtype(df[target_col]): # pragma: no cover
-                raise NotImplemented(
-                    "Datetime columns can't have their distributions shifted yet.")
             
-            # category, object, etc.
+            # category, object, timeseries converted to strings etc.
             # typically, values that are useful targets of this custom action
             # will be named in a sortable way (age, ratings)
             else:
 
                 target_series = df.loc[filter_idx, target_col]
-                u = sorted(target_series.unique(), key=natural_key)
+                u = sorted(target_series.unique().astype(str), key=natural_key)
                 a, b = 4, 1
                 
                 # if shifting left, the beta pdf distribution is mirrored
