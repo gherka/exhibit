@@ -16,7 +16,7 @@ import numpy as np
 
 # Exhibit import
 from ..utils import exceeds_inline_limit
-from ..sql import query_anon_database
+from ..sql import query_exhibit_database
 from ..constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 
 # EXPORTABLE METHODS & CLASSES
@@ -456,7 +456,7 @@ class _LinkedDataGenerator:
             #error out when linked columns don't share the root table
             #or when there is a mix of notations.
 
-            sql_df = query_anon_database(self.anon_set)
+            sql_df = query_exhibit_database(self.anon_set)
             filter_cols = []
 
             for col in self.linked_cols:
@@ -476,7 +476,7 @@ class _LinkedDataGenerator:
         else:
             #column names match the spec
             table_name = f"temp_{self.id}_{self.linked_group[0]}"
-            sql_df = query_anon_database(table_name)
+            sql_df = query_exhibit_database(table_name)
 
         return sql_df
         
@@ -485,13 +485,13 @@ class _LinkedDataGenerator:
         '''
         Code path resolver for linked data generation.
 
-        Remember that all linked columns are stored in SQLite anon.db!
+        Remember that all linked columns are stored in exhibit DB!
 
         Currently, there are three scenarios (each with two flavours: random & aliased)
           - values in all linked columns are drawn from uniform distribution
                 This happens when the number of unique values in each column
                 exceeds the user-specified threshold. In this case, the values
-                are stored in anon.db and the user has no way to specify bespoke
+                are stored in exhibit DB and the user has no way to specify bespoke
                 probabilities.
 
           - there ARE user-defined probabilities for ONE of the linked columns,
@@ -549,14 +549,14 @@ class _LinkedDataGenerator:
         by the user, we will alias the originals to match.
 
         Original_values are in sorted order (except for Missing data which is always
-        last), which means that we can sort the original linked values from anon.db
+        last), which means that we can sort the original linked values from exhibit DB
         the same way and map the values in LINKED_DF (which might or might not have
         ALL of original values due to probability vectors) to the user-edited ones
         from the spec (and not from the DB as would be the case normally)
 
         There is an edge case of when user deletes or adds a row in the spec which
         would mean the number of "aliases" won't match the number of "originals" put
-        and then extracted from anon.db. 
+        and then extracted from exhibit DB. 
 
         Make changes in-place
         '''
@@ -575,7 +575,7 @@ class _LinkedDataGenerator:
                 #avoid it messing up the aliasing mappings which rely on two sets
                 #of column names being in the same order.
                 original_col_values = sorted(
-                    query_anon_database(
+                    query_exhibit_database(
                         table_name=linked_table_name,
                         column=linked_col.replace(" ", "$"),
                         exclude_missing=True
@@ -852,7 +852,7 @@ def _create_paired_columns_lookup(spec_dict, base_column):
         #check if paired column values live in SQL or are part of original_values
         if exceeds_inline_limit(spec_dict, base_column):
 
-            paired_df = query_anon_database(table_name=table_name)
+            paired_df = query_exhibit_database(table_name=table_name)
             paired_df.rename(columns=lambda x: x.replace("paired_", ""), inplace=True)
             paired_df.rename(columns=lambda x: x.replace("$", " "), inplace=True)
 

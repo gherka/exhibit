@@ -15,7 +15,7 @@ from exhibit.core.constants import ORIGINAL_VALUES_REGEX
 
 # Exhibit imports
 from ..utils import get_attr_values, package_dir
-from ..sql import query_anon_database
+from ..sql import query_exhibit_database
 from ..linkage.hierarchical import generate_linked_anon_df
 from ..linkage.matrix import generate_user_linked_anon_df
 from ..specs import ORIGINAL_VALUES_PAIRED
@@ -170,7 +170,7 @@ class CategoricalDataGenerator:
         - whether the column has any paired columns
 
         The paths differ primarily in terms of where the data sits: as part
-        of the spec in original_values or in anon.db
+        of the spec in original_values or in exhibit DB.
 
         Things are further complicated if users want to use a single column
         from an anonymising table, like mountains.peak
@@ -256,7 +256,7 @@ class CategoricalDataGenerator:
 
         return anon_df
         
-    def _generate_from_sql(self, col_name, col_attrs, complete=False, db_uri=None):
+    def _generate_from_sql(self, col_name, col_attrs, complete=False, db_path=None):
         '''
         Whatever the anonymising method, if a column has more unique values than
         allowed by the inline_limit parameter, it will be put into SQLite3 db.
@@ -266,20 +266,17 @@ class CategoricalDataGenerator:
         uniques = col_attrs["uniques"]
         paired_cols = col_attrs["paired_columns"] or list()
 
-        if db_uri is None:
-            db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
-
         #1) QUERY SQL TO GET VALUES USED TO BUILD THE DATAFRAME
         if anon_set == "random":
 
             safe_col_name = col_name.replace(" ", "$")
             table_name = f"temp_{self.spec_dict['metadata']['id']}_{safe_col_name}"
-            sql_df = query_anon_database(
-                table_name, db_uri=db_uri, exclude_missing=True)
+            sql_df = query_exhibit_database(
+                table_name, exclude_missing=True, db_path=db_path)
 
         else:
             table_name, *sql_column = anon_set.split(".")
-            sql_df = query_anon_database(table_name, sql_column, uniques)
+            sql_df = query_exhibit_database(table_name, sql_column, uniques)
 
         #if sql df is an anonymising set with different column names, like mountaints,
         #we want to rename them to the actual column names used in the spec;

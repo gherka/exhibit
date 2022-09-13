@@ -12,7 +12,7 @@ import numpy as np
 # Exhibit import
 from ..constants import MISSING_DATA_STR
 from ..utils import exceeds_inline_limit, is_paired
-from ..sql import query_anon_database
+from ..sql import query_exhibit_database
 
 # EXPORTABLE METHODS
 # ==================
@@ -54,7 +54,7 @@ def generate_weights_table(spec_dict, target_cols):
         equal_weight = 1 / val_count
         full_anon_flag = False
 
-        #if column is put into anon.db, weights are always uniform
+        #if column is put into exhibit DB, weights are always uniform
         if exceeds_inline_limit(spec_dict, cat_col):
 
             full_anon_flag = True
@@ -190,7 +190,7 @@ def target_columns_for_weights_table(spec_dict):
 def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
     '''
     Function to create a weights dataframe for a categorical column
-    whose values are drawn from anon.db.
+    whose values are drawn from exhibit DB.
 
     There are 4 of possible scenarios:
      - random shuffle of existing values in a linked column
@@ -226,7 +226,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
             ws_df = pd.DataFrame(
                 data=(
-                    query_anon_database(table_name)
+                    query_exhibit_database(table_name)
                         .iloc[:, col_pos]
                         .drop_duplicates()
                 )
@@ -237,7 +237,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
         else:
             ws_df = pd.DataFrame(
-                data=query_anon_database(table_name, sql_column)
+                data=query_exhibit_database(table_name, sql_column)
             )
             #rename columns to match the source
             ws_df.columns = [cat_col]
@@ -260,7 +260,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
                 sql_column = cat_col.replace(" ", "$")
                 
                 ws_df = pd.DataFrame(
-                    data=query_anon_database(table_name, sql_column)
+                    data=query_exhibit_database(table_name, sql_column)
                 )
                 break
 
@@ -268,7 +268,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
             table_name = f"temp_{table_id}_{cat_col.replace(' ', '$')}"
             ws_df = pd.DataFrame(
-                data=query_anon_database(table_name)
+                data=query_exhibit_database(table_name)
             )
     
     #Finally, generate equal weights for the column and put into weights_df

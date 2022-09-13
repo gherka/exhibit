@@ -18,7 +18,7 @@ class regexTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-        Clean up anon.db from temp tables
+        Clean up local exhibit.db from temp tables
         '''
 
         db_util.purge_temp_tables()

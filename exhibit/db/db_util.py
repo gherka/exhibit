@@ -1,5 +1,5 @@
 '''
-Basic command line utility for interacting with anon.db
+Basic command line utility for interacting with exhibit.db
 Currently not unit-tested.
 '''
 
@@ -15,6 +15,7 @@ import pandas as pd
 
 # Exhibit imports
 from exhibit.core.utils import package_dir, path_checker
+from exhibit.core.constants import EXHIBIT_DB_LOCAL
 
 def main():
     '''
@@ -24,7 +25,7 @@ def main():
     desc = textwrap.dedent('''\
     ------------------------------------------
     Exhibit: Utility to simplify working with
-    the anon.db SQLite3 database.
+    the exhibit.db SQLite3 database.
     ------------------------------------------
     ''')
 
@@ -47,7 +48,7 @@ def main():
         action="store_true",
         default=False,
         help=textwrap.dedent("""\
-        Print the list of all tables in the anon.db
+        Print the list of all tables in exhibit.db
         """)
     )
 
@@ -95,7 +96,7 @@ def main():
 
 def purge_temp_tables(db_uri=None):
     '''
-    Delete all tables with "temp_" prefix from anon.db
+    Delete all tables with "temp_" prefix from exhibit.db
 
     Parameters
     ----------
@@ -109,7 +110,7 @@ def purge_temp_tables(db_uri=None):
     '''
 
     if db_uri is None:
-        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+        db_uri = "file:" + package_dir(EXHIBIT_DB_LOCAL) + "?mode=rw"
 
     conn = sqlite3.connect(db_uri, uri=True)
     
@@ -132,7 +133,7 @@ def purge_temp_tables(db_uri=None):
 
 def list_all_tables(db_uri=None):
     '''
-    Print out a list of all tables in anon.db
+    Print out a list of all tables in exhibit.db
 
     Parameters
     ----------
@@ -146,7 +147,7 @@ def list_all_tables(db_uri=None):
     '''
 
     if db_uri is None:
-        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+        db_uri = "file:" + package_dir(EXHIBIT_DB_LOCAL) + "?mode=rw"
 
     conn = sqlite3.connect(db_uri, uri=True)
     
@@ -176,7 +177,7 @@ def table_info(table_name, db_uri=None):
     '''
 
     if db_uri is None:
-        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+        db_uri = "file:" + package_dir(EXHIBIT_DB_LOCAL) + "?mode=rw"
 
     conn = sqlite3.connect(db_uri, uri=True)
 
@@ -201,7 +202,7 @@ def table_info(table_name, db_uri=None):
 
 def insert_table(file_path, table_name=None, db_uri=None):
     '''
-    Parse a .csv file and insert it into anon.db under its stem name
+    Parse a .csv file and insert it into exhibit.db under its stem name
 
     Parameters
     ----------
@@ -218,7 +219,7 @@ def insert_table(file_path, table_name=None, db_uri=None):
     '''
 
     if db_uri is None:
-        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+        db_uri = "file:" + package_dir(EXHIBIT_DB_LOCAL) + "?mode=rw"
 
     # used internally in Exhibit for testing
     if isinstance(file_path, pd.DataFrame):
@@ -253,7 +254,7 @@ def insert_table(file_path, table_name=None, db_uri=None):
 
 def drop_tables(table_names, db_uri=None):
     '''
-    Drop named table(s) from anon.db
+    Drop named table(s) from exhibit.db
 
     Parameters
     ----------
@@ -267,7 +268,7 @@ def drop_tables(table_names, db_uri=None):
     '''
 
     if db_uri is None:
-        db_uri = "file:" + package_dir("db", "anon.db") + "?mode=rw"
+        db_uri = "file:" + package_dir(EXHIBIT_DB_LOCAL) + "?mode=rw"
 
     conn = sqlite3.connect(db_uri, uri=True)
 

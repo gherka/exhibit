@@ -11,7 +11,7 @@ from shapely.ops import linemerge, unary_union, polygonize
 from shapely.affinity import scale, rotate
 
 # Exhibit imports
-from ..sql import query_anon_database
+from ..sql import query_exhibit_database
 
 def generate_geospatial_column(col_name, h3_ids, h3_probs, number_of_rows, rng):
     '''
@@ -21,7 +21,7 @@ def generate_geospatial_column(col_name, h3_ids, h3_probs, number_of_rows, rng):
     Parameters (from spec_dict)
     ----------
     col_name       : str
-        name of the table in anon.db which contains h3 hex ids and their weights
+        name of the table in exhibit DB which contains h3 hex ids and their weights
     h3_ids         : list
         list of valid h3 ids from which lat/long pairs should be sampled
     h3_probs       : list
@@ -121,7 +121,7 @@ def geo_make_regions(
     
     # get the geo df with h3s (any one of the given geo_target_cols is fine)
     h3_ids = (
-        query_anon_database(table_name=h3_table_name, column="h3", order="h3")
+        query_exhibit_database(table_name=h3_table_name, column="h3", order="h3")
         .values.ravel())
 
     output_df = df.set_index(partition_cols).sort_index()
@@ -190,7 +190,7 @@ def geo_make_regions(
             if dist == "uniform":
                 h3_probs = None
             else:
-                prob_col = query_anon_database(
+                prob_col = query_exhibit_database(
                     table_name=h3_table_name, column=dist, order="h3", distinct=False)
                 h3_probs = (prob_col / prob_col.sum()).values.ravel()
 

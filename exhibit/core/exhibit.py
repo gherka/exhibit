@@ -40,7 +40,7 @@ from .generate.continuous import (
 
 from .generate.uuids import generate_uuid_column
 from .generate.geo import generate_geospatial_column
-from .sql import query_anon_database
+from .sql import query_exhibit_database
 
 class newExhibit:
     '''
@@ -63,7 +63,7 @@ class newExhibit:
         that lets you modify the specification before writing it out to a .yml file.
     inline_limit   : int
         If the number of unique values in a categorical column exceeds inline limit,
-        the values will be saved in the anon.db database and not listed in the .yml
+        the values will be saved in the exhibit database and not listed in the .yml
         specification for manual editing. Default is 30.
     equal_weights  : bool
         Use equal weights and probabilities for all printed column values. Default
@@ -191,11 +191,11 @@ class newExhibit:
         to be a string that can either contain original column values
         formatted in a csv-like table or a plain string indicating 
         how the original values were processed (either as Paired columns
-        or stored away in a temporary table in the anon database).
+        or stored away in a temporary table in the exhibit database).
         
         If original values are a csv-like table, parse it early
         so that we can amend the dataframe in-place when using
-        anonymised values from anon db in the generation process.
+        anonymised values from exhibit db in the generation process.
         '''
 
         # for internal testing, you can pass a spec_dict directly as spec rather than
@@ -343,14 +343,14 @@ class newExhibit:
             h3_table_name = self.spec_dict["columns"][col]["h3_table"]
             dist = self.spec_dict["columns"][col]["distribution"]
             h3_ids = (
-                query_anon_database(table_name=h3_table_name, column="h3", order="h3")
+                query_exhibit_database(table_name=h3_table_name, column="h3", order="h3")
                 .values.ravel())
 
             # pick the hex weights from the DB table, if any
             if dist== "uniform":
                 h3_probs = None
             else:
-                prob_col = query_anon_database(
+                prob_col = query_exhibit_database(
                     table_name=h3_table_name, column=dist, order="h3", distinct=False)
                 h3_probs = (prob_col / prob_col.sum()).values.ravel()
 

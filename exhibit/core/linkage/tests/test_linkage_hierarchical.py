@@ -12,7 +12,7 @@ import numpy as np
 from pandas.testing import assert_frame_equal
 
 # Exibit imports
-from exhibit.core.sql import create_temp_table, query_anon_database
+from exhibit.core.sql import create_temp_table, query_exhibit_database
 from exhibit.core.constants import MISSING_DATA_STR, ORIGINAL_VALUES_PAIRED
 from exhibit.db import db_util
 
@@ -333,7 +333,7 @@ class linkageTests(unittest.TestCase):
 
         This happens when the number of unique values in each column
         exceeds the user-specified threshold. In this case, the values
-        are stored in anon.db and the user has no way to specify bespoke
+        are stored in exhibit DB and the user has no way to specify bespoke
         probabilities. All SQL DB linked tables will have Missing Data as
         the last row.
         '''
@@ -547,7 +547,7 @@ class linkageTests(unittest.TestCase):
             }
         }
 
-        sql_df = (query_anon_database("mountains")
+        sql_df = (query_exhibit_database("mountains")
                     .rename(columns={
                         "range": "A",
                         "peak" : "B"

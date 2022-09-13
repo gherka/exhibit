@@ -93,7 +93,7 @@ def main():
         default=30,
         help=
         "\nIf the number of unique values in a categorical column exceeds "
-        "inline limit, the values will be saved in the anon.db database "
+        "inline limit, the values will be saved in the exhibit database "
         "and not listed in the .yml specification for manual editing. "
         "Only used with the fromdata command. Default is 30.\n"
         "Example: exhibit fromdata secret_data.csv -il 10"

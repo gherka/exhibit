@@ -33,7 +33,7 @@ class geoTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-        Clean up anon.db from temp tables
+        Clean up local exhibit.db from temp tables
         '''
 
         db_util.drop_tables(cls._temp_tables)
@@ -45,7 +45,7 @@ class geoTests(unittest.TestCase):
         based on h3 hexes with a very skewed distribution
         '''
         
-        # add h3s to a temp table in anon_db
+        # add h3s to a temp table in local exhibit.db
         init_hex = "881954d4adfffff"
         unordered_h3s = h3.hex_range_distances(init_hex, K=30)
         temp_h3s = [h for sublist in unordered_h3s for h in sorted(sublist)]
@@ -109,7 +109,7 @@ class geoTests(unittest.TestCase):
         equal to 1.
         '''
         
-        # add h3s to a temp table in anon_db
+        # add h3s to a temp table in local exhibit.db
         init_hex = "881954d4adfffff"
         unordered_h3s = h3.hex_range_distances(init_hex, K=30)
         temp_h3s = [h for sublist in unordered_h3s for h in sorted(sublist)]
@@ -165,7 +165,7 @@ class geoTests(unittest.TestCase):
         skewed distribution.
         '''
         
-        # add h3s to a temp table in anon_db
+        # add h3s to a temp table in local exhibit.db
         init_hex = "881954d4adfffff"
         unordered_h3s = h3.hex_range_distances(init_hex, K=30)
         temp_h3s = [h for sublist in unordered_h3s for h in sorted(sublist)]
@@ -240,7 +240,7 @@ class geoTests(unittest.TestCase):
         is using a uniform distribution.
         '''
         
-        # add h3s to a temp table in anon_db
+        # add h3s to a temp table in local exhibit.db
         init_hex = "881954d4adfffff"
         unordered_h3s = h3.hex_range_distances(init_hex, K=30)
         temp_h3s = [h for sublist in unordered_h3s for h in sorted(sublist)]

@@ -44,7 +44,7 @@ class performanceTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-        Clean up anon.db from temp tables and save performance test results
+        Clean up exhibit.db from temp tables and save performance test results
         '''
 
         db_util.purge_temp_tables()
@@ -247,7 +247,8 @@ class performanceTests(unittest.TestCase):
         self.expected_memory = 200
 
         # add geo info to db
-        # add h3s to a temp table in anon_db
+        # add h3s to a temp table in exhibit.db (since it's using db_util,
+        # the test only works on a local, SQLite3 exhibit database.
         init_hex = "881954d4adfffff"
         unordered_h3s = h3.hex_range_distances(init_hex, K=30)
         temp_h3s = [h for sublist in unordered_h3s for h in sorted(sublist)]

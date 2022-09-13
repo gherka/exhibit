@@ -17,7 +17,7 @@ from pandas.api.types import is_numeric_dtype
 from pandas.api.types import is_datetime64_any_dtype
 
 # Exibit imports
-from .sql import query_anon_database
+from .sql import query_exhibit_database
 from .generate.continuous import scale_continuous_column
 from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
 from .generate.geo import geo_make_regions
@@ -646,7 +646,7 @@ class ConstraintHandler:
             elif orig_vals_in_spec == ORIGINAL_VALUES_DB:
 
                 table_name = f'temp_{self.spec_dict["metadata"]["id"]}_{target_col}'
-                original_uniques = query_anon_database(
+                original_uniques = query_exhibit_database(
                     table_name=table_name,
                     column=target_col,
                 )[target_col].tolist()

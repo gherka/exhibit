@@ -49,7 +49,7 @@ To create a demo specification that equialises all probabilities and weights, ru
 ---
 ### Database
 
-Exhibit is bundled with a SQLite3 database and a Python utility tool to interact with it. Alternatively, you can connect directly to `/exhbit/db/anon.db`. The database contains three sample aliasing datasets: `mountains`, `birds` and `patients` designed to help you quickly alias original values without manually editing individual column values.
+Exhibit is bundled with a SQLite3 database and a Python utility tool to interact with it. Alternatively, you can connect directly to `/exhbit/db/exhibit.db`. The database contains three sample aliasing datasets: `mountains`, `birds` and `patients` designed to help you quickly alias original values without manually editing individual column values.
 
  - `mountains` has 15 mountain ranges and their top 10 peaks making it useful for aliasing hierarchical pairs, like NHS Boards and Hospitals.
  - `birds` has 150 pairs of common / scientific bird names. This can be useful for 1:1 paired columns.
@@ -57,7 +57,7 @@ Exhibit is bundled with a SQLite3 database and a Python utility tool to interact
 
 The database is also used to store temporary data for columns where the number of unique values exceeds user threshold and thus not available for editing directly in the `yml` file.
 
-**Note that original, confidential data might be saved in the `exhibit/db/anon.db` file on your local machine. You can purge all temporary tables by calling `--purge` command from the included utility tool or by interfacing with the database directly.**
+**Note that original, confidential data might be saved in the `exhibit/db/exhibit.db` file on your local machine. You can purge all temporary tables by calling `--purge` command from the included utility tool or by interfacing with the database directly.**
 
 ---
 ### Disclaimer

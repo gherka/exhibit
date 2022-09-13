@@ -36,7 +36,7 @@ class exhibitTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-        Clean up anon.db from temp tables
+        Clean up local exhibit.db from temp tables
         '''
 
         db_util.drop_tables(cls._temp_tables)

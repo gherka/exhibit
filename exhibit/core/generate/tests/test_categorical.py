@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import Mock, patch
 import tempfile
 from os.path import abspath, join
-from sqlite3 import OperationalError
+from sqlalchemy.exc import InvalidRequestError
 
 # External library imports
 import numpy as np
@@ -31,7 +31,7 @@ class categoricalTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-        Clean up anon.db from temp tables
+        Clean up local exhibit.db from temp tables
         '''
 
         db_util.purge_temp_tables()
@@ -86,7 +86,7 @@ class categoricalTests(unittest.TestCase):
             }
         }
 
-        self.assertRaises(OperationalError, temp_exhibit, test_spec_dict=test_dict)       
+        self.assertRaises(InvalidRequestError, temp_exhibit, test_spec_dict=test_dict)       
 
     def test_random_column_with_missing_pairs_sql(self):
         '''
@@ -133,11 +133,12 @@ class categoricalTests(unittest.TestCase):
                 table_name="temp_1234_test_Root",
                 col_names=["test_Root", "test_C1"],
                 data=[("A ", "B"), ("A", "B")],
-                db_uri=db_path,
-                return_table=False)
+                return_table=False,
+                db_path=db_path,
+                )
 
             result = generatorMock._generate_from_sql(
-                test_col_name, test_col_attrs, db_uri=db_path)
+                test_col_name, test_col_attrs, db_path=db_path)
 
             expected = pd.DataFrame(
                 data={

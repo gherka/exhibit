@@ -16,7 +16,7 @@ import pandas as pd
 
 # Exhibit imports
 from ..constants import MISSING_DATA_STR
-from ..sql import create_temp_table, query_anon_database
+from ..sql import create_temp_table, query_exhibit_database
 
 def save_predefined_linked_cols_to_db(df, id):
     """
@@ -90,7 +90,6 @@ def save_predefined_linked_cols_to_db(df, id):
         table_name=f"temp_{id}_matrix",
         col_names=col_names,
         data=label_matrix,
-        strip_whitespace=False
     )
 
     # save the lookup to SQLite db; note that numerical_ids are
@@ -99,7 +98,6 @@ def save_predefined_linked_cols_to_db(df, id):
         table_name=f"temp_{id}_lookup",
         col_names=["pos_label", "num_label"],
         data=list(pos_label_to_id.items()),
-        strip_whitespace=False
     )
 
 def add_prefix(df, sep="__"):
@@ -201,8 +199,8 @@ def get_lookup_and_matrix_from_db(table_id):
     one is lookup and another is matrix.
     '''
 
-    lookup = dict(query_anon_database(f"temp_{table_id}_lookup").values)
-    matrix = query_anon_database(f"temp_{table_id}_matrix").values
+    lookup = dict(query_exhibit_database(f"temp_{table_id}_lookup").values)
+    matrix = query_exhibit_database(f"temp_{table_id}_matrix").values
 
     return lookup, matrix
 
@@ -330,7 +328,7 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
 
             safe_col = col.replace(" ", "$")
             table_id = spec_dict["metadata"]["id"]
-            orig_vals_db = query_anon_database(table_name=f"temp_{table_id}_{safe_col}")
+            orig_vals_db = query_exhibit_database(table_name=f"temp_{table_id}_{safe_col}")
             orig_vals_sorted = (
                 sorted([x for x in orig_vals_db[col] if x != MISSING_DATA_STR]) + 
                 [MISSING_DATA_STR]

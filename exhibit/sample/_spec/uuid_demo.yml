@@ -39,7 +39,7 @@ metadata:
 # "random", meaning original values are drawn at random,
 # (respecting probabilities, if supplied) but you can add
 # your own custom sets, including linked, by creating a
-# suitable table in the anon.db SQLite3 database.
+# suitable table in the exhibit database (local or external).
 #
 # The tool comes with a number of sample anonymising sets
 # (see documentation). To use just one column from a set,
@@ -53,7 +53,7 @@ metadata:
 #
 # Depending on the number of unique values in a column,
 # its original values can either be listed in the spec,
-# put in the anon.db database or, if the values follow a
+# put into the exhibit database or, if the values follow a
 # one to one relationship with another column, be listed
 # as part of that column's section.
 #
@@ -180,7 +180,7 @@ columns:
 #    distribution: uniform
 #    miss_probability: 0
 #
-# h3_table referrs to H3 hexagon IDs stored in anon.db. exhibit
+# h3_table refers to H3 hexagon IDs stored in the exhibit DB. exhibit
 # doesn't come with any geospatial lookups by default, but there
 # is a recipe explaining how to create one. The format of the table
 # is that it has to have a column named "h3" with h3 ids. 
@@ -275,8 +275,7 @@ constraints:
 # zero indexed group.
 #
 # Groups of hierarchically linked columns are listed together under the 
-# index starting from 1. Their details are saved in the bundled anon.db
-# SQLite database. 
+# index starting from 1. Their details are saved in the exhibit database.
 #
 # The specification format is as follows:
 # - - 1
@@ -285,9 +284,9 @@ constraints:
 # - - 2
 #   - - ...etc.
 # It's possible to add a linked columns group manually by adding 
-# a table to anon.db with the hierarchical relationships. The name
-# of this table must follow the format: id_N  where id is taken 
-# from the metadata section and N is the group number.
+# a table to the exhibit databse with the hierarchical relationships.
+# The name of this table must follow the format: id_N  where id is 
+# taken from the metadata section and N is the group number.
 # ----------------------------------------------------------
 linked_columns:
 # ----------------------------------------------------------

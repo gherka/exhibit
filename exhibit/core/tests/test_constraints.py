@@ -1325,7 +1325,6 @@ class constraintsTests(unittest.TestCase):
             "C3": ["I", "J", "K", "L", "M"]
         })
 
-        # test_spec = {}
         test_spec = {
             "metadata" : {"number_of_rows": 10},
             "constraints" : {

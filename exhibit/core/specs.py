@@ -37,7 +37,7 @@ class newSpec:
         specifies the maximum number of unique values (categories) a column can
         have for them to be displayed in full for manual editing; default is 30.
         If the full list is too long to display, the values are put in a dedicated
-        anon.db table for later retrieval and the weights and probability vectors 
+        exhibit.db table for later retrieval and the weights and probability vectors 
         are drawn from a uniform distribution.
     ew : Boolean
         if equal_weights is set to True in the CLI, all weights and probabilities of
@@ -393,7 +393,7 @@ class newSpec:
         h_linked_cols = find_hierarchically_linked_columns(
             self.df, self.output, user_linked_cols=self.user_linked_cols)
 
-        # add the user defined linked columns first and then to anon.db
+        # add the user defined linked columns first and then to exhibit db
         if self.user_linked_cols:
 
             self.output["linked_columns"].extend([(0, self.user_linked_cols)])
@@ -409,7 +409,7 @@ class newSpec:
 
             self.output["linked_columns"].extend(linked_tree)
 
-            # Add linked column values to the temp tables in anon.db
+            # Add linked column values to the temp tables in exhibit db
             # we drop the NAs from the data at this point because
             # we don't want to add Missing data twice.
             linked_temp_df = self.df[list(self.cat_cols)]

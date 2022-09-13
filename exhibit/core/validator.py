@@ -14,7 +14,7 @@ import textwrap
 # Exhibit imports
 from .constraints import tokenise_basic_constraint
 from .utils import get_attr_values
-from .sql import number_of_table_rows, number_of_table_columns
+from .sql import get_number_of_table_rows, get_number_of_table_columns
 
 class newValidator:
     '''
@@ -209,7 +209,7 @@ class newValidator:
             
             if v.split(".")[0] in self.fixed_sql_sets:
                 col_uniques = spec_dict["columns"][c]["uniques"]
-                anon_uniques = number_of_table_rows(v)
+                anon_uniques = get_number_of_table_rows(v)
 
                 if col_uniques > anon_uniques:
                     print(fail_msg % {
@@ -242,7 +242,7 @@ class newValidator:
                 linked_col_count = len(linked_group[1])
 
                 if linked_set != "random":
-                    anon_col_count = number_of_table_columns(linked_set)
+                    anon_col_count = get_number_of_table_columns(linked_set)
                     if linked_col_count > anon_col_count:
                         print(fail_msg % {
                         "anon_set" : linked_set,

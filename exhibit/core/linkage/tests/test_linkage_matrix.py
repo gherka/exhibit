@@ -14,7 +14,7 @@ from numpy.testing import assert_array_equal
 
 # Exhibit imports
 from exhibit.db import db_util
-from exhibit.core.sql import query_anon_database
+from exhibit.core.sql import query_exhibit_database
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.core.generate.yaml import generate_YAML_string
 
@@ -42,7 +42,7 @@ class exhibitTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         '''
-        Clean up anon.db from temp tables
+        Clean up local exhibit.db from temp tables
         '''
 
         db_util.drop_tables(cls._temp_tables)
@@ -78,8 +78,8 @@ class exhibitTests(unittest.TestCase):
         )
 
         table_id = temp_spec["metadata"]["id"]
-        lookup = dict(query_anon_database(f"temp_{table_id}_lookup").values)
-        matrix = query_anon_database(f"temp_{table_id}_matrix")
+        lookup = dict(query_exhibit_database(f"temp_{table_id}_lookup").values)
+        matrix = query_exhibit_database(f"temp_{table_id}_matrix")
 
         # we're starting from age column so its first positional value is assigned id 0
         self.assertEqual(lookup["age__0"], 0)
@@ -105,8 +105,8 @@ class exhibitTests(unittest.TestCase):
         self._temp_tables.append(table_id)
         tm.save_predefined_linked_cols_to_db(test_df, table_id)
     
-        test_lookup = query_anon_database(f"temp_{table_id}_lookup")
-        test_matrix = query_anon_database(f"temp_{table_id}_matrix")
+        test_lookup = query_exhibit_database(f"temp_{table_id}_lookup")
+        test_matrix = query_exhibit_database(f"temp_{table_id}_matrix")
 
         # max numerical value should 6 (from zero): A_eggs, A_spam, A_Missing data
         # B_bacon, B_ham, B_spamspam, B_Missing data
