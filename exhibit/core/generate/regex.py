@@ -23,8 +23,10 @@ def generate_regex_column(anon_pattern, name, size):
 
     Returns pd.Series
     '''
+    # ensure that each column gets a unique (except for anagrams) seed
+    column_seed = sum([ord(x) for x in name])
     
-    static_quant_pattern = r"[^\]]\{\d{1}\}"
+    static_quant_pattern = r"[^\]]\{\d+\}"
     static_string = anon_pattern
     
     for match in re.finditer(static_quant_pattern, anon_pattern):
@@ -34,7 +36,7 @@ def generate_regex_column(anon_pattern, name, size):
             static_string = static_string.replace(match.group(), char*repeat)
     
     
-    class_pattern = r"(\[.*?\])(\{\d{1}\})?"
+    class_pattern = r"(\[.*?\])(\{\d+\})?"
     
     match_lookup = {}
 
@@ -52,7 +54,7 @@ def generate_regex_column(anon_pattern, name, size):
     
     for i, items in enumerate(match_lookup.items()):
         placeholder, pattern = items
-        rng = np.random.default_rng(seed=0 + i)
+        rng = np.random.default_rng(seed=column_seed + i)
         repl_series = pd.Series(_generate_random_class_characters(pattern, size, rng))
         repl_series_dict[placeholder] = repl_series
         
@@ -97,19 +99,34 @@ def _generate_random_class_characters(pattern, size, rng):
     quant = 1
 
     #check if a different quantifier is present
-    if re.findall(r"{\d{1}}", pattern):
-        quant = int(pattern[-2])
-        pattern = pattern[:-3]
+    if re.findall(r"{\d+}", pattern):
+        # find out how many digits are in the quantifier
+        quant_s = pattern.index("{")
+        quant_e = pattern.index("}")
+        quant = int(pattern[quant_s + 1 : quant_e])
+        pattern = pattern[:quant_s]
     #drop square brackets around the quantifier, e.g {2}
     pattern = pattern[1:-1]
     
     #if class is given as a range, split on -
+    #exclude [ \ ] ^ _ ` characters (use list for those)
     if "-" in pattern:
+        excl_ords = {91, 92, 93, 94, 95, 96}
         lower_char, upper_char = re.split("-", pattern)
         #convert to ASCII codes, with inclusive upper end
         lower_ord = ord(lower_char)
         upper_ord = ord(upper_char)
-        result_array = rng.integers(lower_ord, upper_ord + 1, size=(size, quant))
+        all_ords = set(range(lower_ord, upper_ord + 1))
+
+        if excl_ords in all_ords: #pragma: no cover
+            print(
+                "WARNING: The regular expression range contains characters [/]^_' "
+                "which are excluded by default. To include them in the generated "
+                " strings, please use a regex list syntax rather than range."
+            )
+
+        valid_ords = list(all_ords - excl_ords)
+        result_array = rng.choice(valid_ords, size=(size, quant))
         result = ["".join(chr(x) for x in y) for y in result_array]
     
     #pattern given as a list of characters [abc]
