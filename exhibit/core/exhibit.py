@@ -474,16 +474,24 @@ class newExhibit:
             # special case for when user wants to edit demo spec before saving it
             if self.output == "specification": #pragma: no cover
                 return Specification(self.spec_dict)
+
             self.write_spec()
+            return None
 
         else:
             self.read_spec()
             if self.validate_spec():
                 self.execute_spec()
+                
                 # special case for when user wants to edit demo data before saving it
                 if self.output == "dataframe": #pragma: no cover
                     return self.anon_df
+
                 self.write_data()
+                return None
+
+            # technically unreachable code because validation failures will raise
+            return None #pragma: no cover
 
 class Specification(UserDict): #pragma: no cover
     '''

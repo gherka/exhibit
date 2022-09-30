@@ -221,6 +221,9 @@ def insert_table(file_path, table_name=None, db_uri=None):
     if db_uri is None:
         db_uri = "file:" + package_dir(EXHIBIT_DB_LOCAL) + "?mode=rw"
 
+    # initialise table_df
+    table_df = None
+
     # used internally in Exhibit for testing
     if isinstance(file_path, pd.DataFrame):
         table_df = file_path
@@ -238,6 +241,9 @@ def insert_table(file_path, table_name=None, db_uri=None):
             table_df = pd.read_csv(file_path)
         except UnicodeDecodeError:
             table_df = pd.read_csv(file_path, encoding="ANSI")
+
+    if table_df is None:
+        raise RuntimeError("No data to insert.")
 
     conn = sqlite3.connect(db_uri, uri=True)
 

@@ -361,8 +361,8 @@ class linkageTests(unittest.TestCase):
         expected_std_A = 100
         expected_std_B = 50
 
-        self.assertTrue(result["A"].value_counts().std() <= expected_std_A)
-        self.assertTrue(result["B"].value_counts().std() <= expected_std_B)
+        self.assertLessEqual(result["A"].value_counts().std(), expected_std_A)
+        self.assertLessEqual(result["B"].value_counts().std(), expected_std_B)
 
     def test_scenario_2_random(self):
         '''
@@ -443,7 +443,7 @@ class linkageTests(unittest.TestCase):
 
         #somewhat arbitrary bounds for standard deviations
         self.assertTrue(all(bs_std_zero1 <= 50))
-        self.assertTrue(bs_std_zero6 <= 150)
+        self.assertLessEqual(bs_std_zero6, 150)
     
     def test_scenario_2_random_4_cols(self):
         '''
@@ -596,7 +596,7 @@ class linkageTests(unittest.TestCase):
 
         #somewhat arbitrary bounds for standard deviations
         self.assertTrue(all(bs_std_zero1 <= 50))
-        self.assertTrue(bs_std_zero6 <= 150)
+        self.assertLessEqual(bs_std_zero6, 150)
     
     def test_scenario_3_random(self):
         '''

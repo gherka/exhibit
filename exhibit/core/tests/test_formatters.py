@@ -7,7 +7,6 @@ import unittest
 
 # External library imports
 import pandas as pd
-import numpy as np
 
 # Exhibit imports
 from exhibit.core.constants import ORIGINAL_VALUES_REGEX

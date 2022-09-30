@@ -4,8 +4,6 @@ Unit and reference tests for user defined linkage
 
 # Standard library imports
 import unittest
-import tempfile
-from pathlib import PurePath
 
 # External imports
 import numpy as np
@@ -16,7 +14,6 @@ from numpy.testing import assert_array_equal
 from exhibit.db import db_util
 from exhibit.core.sql import query_exhibit_database
 from exhibit.core.tests.test_reference import temp_exhibit
-from exhibit.core.generate.yaml import generate_YAML_string
 
 # Module under test
 import exhibit.core.linkage.matrix as tm

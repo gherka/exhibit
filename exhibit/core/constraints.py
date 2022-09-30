@@ -14,7 +14,6 @@ import numpy as np
 import pandas as pd
 from scipy.stats import beta, gamma
 from pandas.api.types import is_numeric_dtype
-from pandas.api.types import is_datetime64_any_dtype
 
 # Exibit imports
 from .sql import query_exhibit_database

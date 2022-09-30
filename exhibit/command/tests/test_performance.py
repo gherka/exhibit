@@ -23,7 +23,7 @@ from exhibit.db import db_util
 # Optional [dev] imports
 try:
     from memory_profiler import memory_usage
-except:
+except ImportError:
     memory_usage = None
     print(f"memory_profiler not found. Make sure exhibit is installed in [dev] mode")
 

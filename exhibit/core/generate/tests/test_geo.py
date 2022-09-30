@@ -3,7 +3,6 @@ Test the handling & generation of geospatial data
 '''
 
 # Standard library imports
-from itertools import chain
 import unittest
 
 # External library imports
@@ -13,9 +12,6 @@ import pandas as pd
 # Exhibit imports
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.db import db_util
-
-# Module under test
-from exhibit.core.generate import geo as tm
 
 class geoTests(unittest.TestCase):
     '''

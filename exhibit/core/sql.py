@@ -6,12 +6,11 @@ Module with functions to provide an interface with the exhibit database
 import os
 
 #External library imports
-import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 
 from sqlalchemy import MetaData, Table, Column, String, Float, text, create_engine, func
-from sqlalchemy.sql import select, insert
+from sqlalchemy.sql import select
 from sqlalchemy.schema import DropTable
 from sqlalchemy.engine import make_url
 

@@ -5,7 +5,6 @@ Methods to generate categorical columns / values
 # Standard library imports
 from collections import namedtuple
 from itertools import chain
-import textwrap
 
 # External library imports
 import pandas as pd
@@ -14,7 +13,7 @@ import numpy as np
 from exhibit.core.constants import ORIGINAL_VALUES_REGEX
 
 # Exhibit imports
-from ..utils import get_attr_values, package_dir
+from ..utils import get_attr_values
 from ..sql import query_exhibit_database
 from ..linkage.hierarchical import generate_linked_anon_df
 from ..linkage.matrix import generate_user_linked_anon_df
