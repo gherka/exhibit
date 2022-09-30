@@ -267,13 +267,16 @@ class newExhibit:
         for uuid_col_name in self.spec_dict["metadata"]["uuid_columns"] or set():
 
             dist = self.spec_dict["columns"][uuid_col_name]["frequency_distribution"]
+            # optionally take the uuid_seed rather than spec-wide random seed
+            uuid_seed = self.spec_dict["columns"][uuid_col_name].get(
+                "uuid_seed", self.spec_dict["metadata"]["random_seed"])
 
             uuid_col = generate_uuid_column(
                 uuid_col_name,
                 self.spec_dict["metadata"]["number_of_rows"],
                 self.spec_dict["columns"][uuid_col_name]["miss_probability"],
                 dist,
-                self.spec_dict["metadata"]["random_seed"],
+                uuid_seed,
                 self.spec_dict["columns"][uuid_col_name]["anonymising_set"]
             ).astype("category")
 

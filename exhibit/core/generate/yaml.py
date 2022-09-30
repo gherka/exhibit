@@ -92,7 +92,9 @@ def generate_YAML_string(spec_dict):
     # columns manually or infer them from the source data. If adding a
     # UUID column manually, don't forget to add it in the metadata section.
     #
-    # The format of a UUID column in the specification is as follows:
+    # The format of a UUID column in the specification is as follows. Note
+    # that there is an optional "uuid_seed" parameter for cases when you want
+    # to have differently seeded uuids in the same spec.
     # 
     # record_chi:
     #  type: uuid
