@@ -593,6 +593,70 @@ class continuousTests(unittest.TestCase):
         self.assertAlmostEqual(scaled_series.mean(), test_mean)
         self.assertAlmostEqual(scaled_series.std(), test_std)
 
+    def test_range_scaling_with_equal_weights(self):
+        '''
+        Sometimes, you can end up with a spec that will try to scale
+        a Series with a single value to between target_min and target_max.
+        This will ordinarily throw an error, so rather than do the scaling, 
+        we're setting the Series values to the min or the max, depending what's
+        available.
+        '''
+
+        Weights = namedtuple("Weights", ["weight", "equal_weight"])
+
+        test_min = 10
+        test_max = 150
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata" : {
+                "random_seed" : 0
+            },
+            "columns" : {
+                "Nums" : {
+                    "precision" : float,
+                    "distribution" : "weighted_uniform",
+                    "distribution_parameters" : {
+                        "dispersion" : 0,
+                        "target_min" : test_min,
+                        "target_max" : test_max,
+                    },
+                    "miss_probability" : 0,
+                }
+            }
+        }
+
+        test_df = pd.DataFrame(
+            data={
+                "C1": ["A", "B", "C", "D"]*100,
+                "C2": ["E", "E", "E", "E"]*100
+            }
+        )
+
+        test_col = "Nums"
+
+        target_cols = {"C1", "C2"}
+
+        wt = {
+            ("Nums", "C1", "A") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C1", "B") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C1", "C") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C1", "D") : {"weights": Weights(0.5, 0.5)},
+            ("Nums", "C2", "E") : {"weights": Weights(0.5, 0.5)},
+        }
+
+        result = tm.generate_continuous_column(
+            test_dict,
+            test_df,
+            test_col,
+            target_cols=target_cols,
+            wt=wt
+        )
+    
+        test_df["Nums"] = result
+
+        self.assertTrue(all(test_df["Nums"] == test_min))
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

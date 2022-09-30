@@ -285,6 +285,10 @@ def _scale_to_range(series, precision, target_min=None, target_max=None, **_kwar
     if X.isna().all(): #pragma: no cover
         return X
     
+    # where the min == max in the source data, just pick non-null target and fill series
+    if len(X.unique()) == 1:
+        return pd.Series(np.full(shape=len(X), fill_value=target_min or target_max))
+    
     # adjust for potential negative signs!
     if target_min is None:
 
