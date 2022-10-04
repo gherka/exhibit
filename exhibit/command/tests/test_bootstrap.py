@@ -16,9 +16,9 @@ class bootstrapTests(unittest.TestCase):
     '''
 
     @patch("argparse.ArgumentParser.parse_args")
-    @patch("exhibit.command.bootstrap.newExhibit.write_spec")
-    @patch("exhibit.command.bootstrap.newExhibit.generate_spec")
-    @patch("exhibit.command.bootstrap.newExhibit.read_data")
+    @patch("exhibit.command.bootstrap.Exhibit.write_spec")
+    @patch("exhibit.command.bootstrap.Exhibit.generate_spec")
+    @patch("exhibit.command.bootstrap.Exhibit.read_data")
     def test_sequence_was_called_when_command_is_set_to_fromdata(
         self, mock_read, mock_generate, mock_write, mock_args):
         '''
@@ -41,10 +41,10 @@ class bootstrapTests(unittest.TestCase):
         mock_generate.assert_called()
 
     @patch("argparse.ArgumentParser.parse_args")
-    @patch("exhibit.command.bootstrap.newExhibit.write_data")
-    @patch("exhibit.command.bootstrap.newExhibit.execute_spec")
-    @patch("exhibit.command.bootstrap.newExhibit.validate_spec")
-    @patch("exhibit.command.bootstrap.newExhibit.read_spec")
+    @patch("exhibit.command.bootstrap.Exhibit.write_data")
+    @patch("exhibit.command.bootstrap.Exhibit.execute_spec")
+    @patch("exhibit.command.bootstrap.Exhibit.validate_spec")
+    @patch("exhibit.command.bootstrap.Exhibit.read_spec")
     def test_sequence_was_called_when_command_is_set_to_fromspec(
         self, mock_read, mock_validate, mock_execute, mock_write, mock_args):
         '''

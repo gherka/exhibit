@@ -66,6 +66,11 @@ def generate_weights_table(spec_dict, target_cols):
 
         #get weights and values, from whatever WS was created
         for num_col in num_cols:
+            
+            #if numerical column is missing from original_values DF (can happen when
+            #spec is generated outside of CLI / manually), use equal_weights.
+            if num_col not in ws_df.columns: #pragma: no cover
+                ws_df[num_col] = equal_weight
 
             ws = ws_df[num_col].astype(float)
             # because we might've taken the FULL anon_set (150 or more), 

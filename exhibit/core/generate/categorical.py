@@ -10,14 +10,12 @@ from itertools import chain
 import pandas as pd
 import numpy as np
 
-from exhibit.core.constants import ORIGINAL_VALUES_REGEX
-
 # Exhibit imports
+from ..constants import ORIGINAL_VALUES_REGEX, ORIGINAL_VALUES_PAIRED
 from ..utils import get_attr_values
 from ..sql import query_exhibit_database
 from ..linkage.hierarchical import generate_linked_anon_df
 from ..linkage.matrix import generate_user_linked_anon_df
-from ..specs import ORIGINAL_VALUES_PAIRED
 from .regex import generate_regex_column
 
 # EXPORTABLE METHODS

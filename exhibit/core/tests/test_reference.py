@@ -123,7 +123,7 @@ def temp_exhibit(
             if fromdata_namespace:
                 fromdata_defaults.update(fromdata_namespace)
 
-            xA = tm.newExhibit(**fromdata_defaults)
+            xA = tm.Exhibit(**fromdata_defaults)
             xA.read_data()
             xA.generate_spec()
 
@@ -139,7 +139,7 @@ def temp_exhibit(
                 if fromspec_namespace:
                     fromspec_defaults.update(fromspec_namespace)
 
-                xA = tm.newExhibit(**fromspec_defaults)
+                xA = tm.Exhibit(**fromspec_defaults)
                 xA.read_spec()
 
                 if test_spec_dict:
@@ -170,7 +170,7 @@ def temp_exhibit(
         if fromspec_namespace:
             fromspec_defaults.update(fromspec_namespace)
         
-        xA = tm.newExhibit(**fromspec_defaults)
+        xA = tm.Exhibit(**fromspec_defaults)
         xA.read_spec()
 
         if test_spec_dict:
@@ -333,7 +333,7 @@ class referenceTests(unittest.TestCase):
                 skip_columns=[]
             )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_spec()
         if xA.validate_spec():
             xA.execute_spec()
@@ -778,7 +778,7 @@ class referenceTests(unittest.TestCase):
                 skip_columns=[]
             )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_spec()
         if xA.validate_spec():
             xA.execute_spec()

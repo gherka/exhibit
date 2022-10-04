@@ -9,7 +9,7 @@ import unittest
 import yaml
 
 # Exhibit imports
-from exhibit.core.specs import newSpec
+from exhibit.core.spec import Spec
 from exhibit.sample.sample import prescribing_data as ref_df
 from exhibit.db import db_util
 
@@ -42,7 +42,7 @@ class yamlTests(unittest.TestCase):
         Doc string
         '''
 
-        test_spec_dict = newSpec(ref_df, 140).output_spec_dict()
+        test_spec_dict = Spec(ref_df, 140).generate()
         output = tm.generate_YAML_string(test_spec_dict)
 
         table_id = test_spec_dict["metadata"]["id"]

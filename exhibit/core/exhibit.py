@@ -18,7 +18,7 @@ import pandas as pd
 from exhibit.core.constants import MISSING_DATA_STR
 
 # Exhibit imports
-from .specs import newSpec
+from .spec import Spec
 from .formatters import parse_original_values
 from .validator import newValidator
 from .constraints import ConstraintHandler
@@ -42,7 +42,7 @@ from .generate.uuids import generate_uuid_column
 from .generate.geo import generate_geospatial_column
 from .sql import query_exhibit_database
 
-class newExhibit:
+class Exhibit:
     '''
     The main class encapsulating the demonstrator
     
@@ -151,7 +151,7 @@ class newExhibit:
 
         if self.df is not None:
 
-            new_spec = newSpec(
+            new_spec = Spec(
                 data=self.df,
                 inline_limit=self.inline_limit,
                 ew=self.equal_weights,
@@ -160,7 +160,7 @@ class newExhibit:
                 save_probabilities=self.save_probabilities
                 )
 
-            self.spec_dict = new_spec.output_spec_dict()
+            self.spec_dict = new_spec.generate()
 
         return self
             
@@ -464,7 +464,7 @@ class newExhibit:
     def generate(self):
         '''
         Public method for generating either the data or the specification
-        depending on how the newExhibit class was instantiated.
+        depending on how the Exhibit class was instantiated.
         '''
 
         if self.command == "fromdata":

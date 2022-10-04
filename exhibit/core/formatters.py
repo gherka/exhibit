@@ -12,6 +12,15 @@ import pandas as pd
 # Exhibit imports
 from exhibit.core.constants import MISSING_DATA_STR
 
+class FormattedList(list):
+    '''
+    A special type of list to help identify formatted list of strings
+    used to construct a csv-like table in the spec. This way, we can 
+    separate processing for these formatted values from a basic list
+    of values passed to original_values during manual column creation
+    '''
+    pass
+
 def format_header(dataframe, series_name, prefix=None):
     '''
     Function to pad the header values based on the length
@@ -212,7 +221,7 @@ def build_table_from_lists(
 
     Returns
     -------
-    List of lists
+    FormattedList instance
     '''
     #generate first column, minus the header  (original values)
     c1 = build_list_of_values(dataframe, original_series_name)
@@ -258,7 +267,7 @@ def build_table_from_lists(
     
     final = header + row_cols
 
-    return final
+    return FormattedList(final)
 
 def parse_original_values(original_values):
     '''

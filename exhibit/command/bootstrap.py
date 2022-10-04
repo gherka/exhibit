@@ -11,7 +11,7 @@ import textwrap
 import sys
 
 # Exhibit imports
-from exhibit.core.exhibit import newExhibit
+from exhibit.core.exhibit import Exhibit
 from exhibit.core.utils import path_checker
 
 def main():
@@ -203,7 +203,7 @@ def main():
     args_dict["save_probabilities"] = set(args_dict.get("save_probabilities", set()))
 
     #New instance has access to all command line parameters
-    exhibit = newExhibit(**args_dict)
+    exhibit = Exhibit(**args_dict)
 
     #Generate either the data or the specification
     exhibit.generate()

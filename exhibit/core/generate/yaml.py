@@ -7,9 +7,23 @@ import textwrap
 
 # External library imports
 import yaml
+from yaml.representer import SafeRepresenter
+
+# Exhibit imports
+from exhibit.core.spec import (
+    UUIDColumn, CategoricalColumn, NumericalColumn, DateColumn)
+from exhibit.core.formatters import FormattedList
 
 # EXPORTABLE METHODS
 # ==================
+class ExhibitDumper(yaml.SafeDumper):
+    '''
+    Columns are subclassed dictionaries, but YAML's safe_dump will not recognize
+    them as such unless you add a specific representer for each "special" class.
+    '''
+    pass
+
+
 def generate_YAML_string(spec_dict):
     '''
     Serialise specification dictionary into a YAML string with added comments
@@ -28,6 +42,12 @@ def generate_YAML_string(spec_dict):
     '''
     
     yaml.SafeDumper.ignore_aliases = lambda *args: True
+    # register custom classes so that YAML knows how to represent them
+    ExhibitDumper.add_representer(UUIDColumn, SafeRepresenter.represent_dict)
+    ExhibitDumper.add_representer(CategoricalColumn, SafeRepresenter.represent_dict)
+    ExhibitDumper.add_representer(NumericalColumn, SafeRepresenter.represent_dict)
+    ExhibitDumper.add_representer(DateColumn, SafeRepresenter.represent_dict)
+    ExhibitDumper.add_representer(FormattedList, SafeRepresenter.represent_list)
 
     yaml_list = [{key:value} for key, value in spec_dict.items()]
 
@@ -44,7 +64,7 @@ def generate_YAML_string(spec_dict):
 
     yaml_meta = (
         yaml
-        .safe_dump(yaml_list[0], sort_keys=False, width=1000)
+        .dump(yaml_list[0], sort_keys=False, width=1000, Dumper=ExhibitDumper)
     )
 
     c2a = textwrap.dedent("""\
@@ -111,7 +131,8 @@ def generate_YAML_string(spec_dict):
     """)
 
     yaml_columns_all = (
-        c2a + yaml.safe_dump(yaml_list[1], sort_keys=False, width=1000))
+        c2a + yaml.dump(
+            yaml_list[1], sort_keys=False, width=1000, Dumper=ExhibitDumper))
 
     c2b = textwrap.dedent("""\
     # ----------------------------------------------------------
@@ -280,7 +301,7 @@ def generate_YAML_string(spec_dict):
 
     yaml_constraints = (
         yaml
-        .safe_dump(yaml_list[2], sort_keys=False, width=1000)
+        .dump(yaml_list[2], sort_keys=False, width=1000, Dumper=ExhibitDumper)
     )
 
     c4 = textwrap.dedent("""\
@@ -310,7 +331,8 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_linked = yaml.safe_dump(yaml_list[3], sort_keys=False, width=1000)
+    yaml_linked = yaml.dump(
+        yaml_list[3], sort_keys=False, width=1000, Dumper=ExhibitDumper)
 
     c5 = textwrap.dedent("""\
     # ----------------------------------------------------------
@@ -328,7 +350,8 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_derived = yaml.safe_dump(yaml_list[4], sort_keys=False, width=1000)
+    yaml_derived = yaml.dump(
+        yaml_list[4], sort_keys=False, width=1000, Dumper=ExhibitDumper)
 
     c6 = textwrap.dedent("""\
     # ----------------------------------------------------------
@@ -352,7 +375,8 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     """)
 
-    yaml_models = yaml.safe_dump(yaml_list[5], sort_keys=False, width=1000)
+    yaml_models = yaml.dump(
+        yaml_list[5], sort_keys=False, width=1000, Dumper=ExhibitDumper)
 
     spec_yaml = (
         c1 + yaml_meta + yaml_columns_all + c3 + yaml_constraints +

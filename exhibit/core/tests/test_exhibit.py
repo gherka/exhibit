@@ -53,7 +53,7 @@ class exhibitTests(unittest.TestCase):
             skip_columns=[]
         )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_data()
         
         assert isinstance(xA.df, pd.DataFrame)
@@ -88,7 +88,7 @@ class exhibitTests(unittest.TestCase):
 
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
            
-            xA = tm.newExhibit(**args)
+            xA = tm.Exhibit(**args)
             xA.write_spec("hello")
 
             mo.assert_called_with("test.yml", "w")
@@ -110,7 +110,7 @@ class exhibitTests(unittest.TestCase):
         
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
                 
-            xA = tm.newExhibit(**args)
+            xA = tm.Exhibit(**args)
             xA.write_spec("hello")
 
             mo.assert_called_with("source_dataset_SPEC.yml", "w")
@@ -130,7 +130,7 @@ class exhibitTests(unittest.TestCase):
             skip_columns=[]
         )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_data()
         xA.generate_spec()
 
@@ -160,7 +160,7 @@ class exhibitTests(unittest.TestCase):
             linked_columns=user_linked_cols
         )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_data()
         xA.generate_spec()
 
@@ -190,7 +190,7 @@ class exhibitTests(unittest.TestCase):
             linked_columns=user_linked_cols
         )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_data()
         xA.generate_spec()
 
@@ -217,7 +217,7 @@ class exhibitTests(unittest.TestCase):
             linked_columns=user_linked_cols
         )
 
-        self.assertRaises(Exception, tm.newExhibit, **args)
+        self.assertRaises(Exception, tm.Exhibit, **args)
 
     def test_uuid_columns_are_never_duplicated_in_other_column_types(self):
         '''
@@ -238,7 +238,7 @@ class exhibitTests(unittest.TestCase):
             uuid_columns=uuid_columns
         )
 
-        xA = tm.newExhibit(**args)
+        xA = tm.Exhibit(**args)
         xA.read_data()
         xA.generate_spec()
 

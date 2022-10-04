@@ -1,5 +1,5 @@
 '''
-Unit and reference tests for the newSpec class & its functions
+Unit and reference tests for the Spec class & its functions
 '''
 
 # Standard library imports
@@ -11,14 +11,14 @@ import pandas as pd
 import numpy as np
 
 # Exhibit imports
+from exhibit import exhibit as xbt
 from exhibit.sample.sample import prescribing_data as ref_df
 from exhibit.core.utils import package_dir
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.db import db_util
 
 # Module under test
-from exhibit.core import specs as tm
-
+from exhibit.core import spec as tm
 
 class specsTests(unittest.TestCase):
     '''
@@ -31,7 +31,7 @@ class specsTests(unittest.TestCase):
         own copy of the dataframe
         '''
 
-        test_spec = tm.newSpec(ref_df, 140)
+        test_spec = tm.Spec(ref_df, 140)
 
         self.assertIsInstance(test_spec.df, pd.DataFrame)
 
@@ -40,7 +40,7 @@ class specsTests(unittest.TestCase):
         Add tests looking at deeper structure
         '''
 
-        test_spec = tm.newSpec(ref_df, 140)
+        test_spec = tm.Spec(ref_df, 140)
 
         expected_keys = [
             "metadata",
@@ -72,12 +72,12 @@ class specsTests(unittest.TestCase):
             "cats"  : list("ABCDE")
         })
 
-        test_spec = tm.newSpec(test_df, 10)
+        test_spec = tm.Spec(test_df, 10)
 
         expected_col_order = [
             "bools", "cats", "floats", "ints", "dates"]
 
-        test_col_order = list(test_spec.output_spec_dict()["columns"].keys())
+        test_col_order = list(test_spec.generate()["columns"].keys())
 
         self.assertListEqual(expected_col_order, test_col_order)
 
@@ -109,6 +109,44 @@ class specsTests(unittest.TestCase):
         
         self.assertEqual(result.min(), 5)
         self.assertEqual(result.max(), 885)
+
+    def test_empty_placeholder_spec(self):
+        '''
+        One way of generating synthetic data using Exhibit is to initialise an empty
+        spec and populate it with details programatically via a script. In order
+        to facilitate that, Exhibit allows you to initialise an empty spec. Trying to
+        generate data from an empty spec will still raise various operational errors,
+        though.
+        '''
+
+        empty_spec = tm.Spec()
+        empty_spec_dict = empty_spec.generate()
+        self.assertTrue(isinstance(empty_spec_dict, dict))
+
+    def test_categorical_column_initialised_from_list(self):
+        '''
+        Typically, if generating spec_dict for YAML export, the original_values (when
+        under inline_limit) will come as a list of strings that are formatted (padded)
+        in a special way by the formatters functions. However, you can also initialise
+        the CategoricalColumn from scratch so Exhibit needs to know whether the list
+        given to original_values is a pre-formatted one OR a basic list of values.
+        '''
+
+        empty_spec = tm.Spec()
+        spec_dict = empty_spec.generate()
+        spec_dict["metadata"]["number_of_rows"] = 100
+        spec_dict["metadata"]["categorical_columns"] = ["test"]
+
+        spec_dict["columns"]["test"] = tm.CategoricalColumn("test",
+         original_values=["spam", "ham", "eggs", "spamspam"],
+         original_probs=[0.1, 0.5, 0.3, 0.1]
+         )
+
+        exhibit_data = xbt.Exhibit(
+            command="fromspec", source=spec_dict, output="dataframe")
+        anon_df = exhibit_data.generate()
+
+        self.assertEqual(anon_df.shape, (100, 1))
             
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
