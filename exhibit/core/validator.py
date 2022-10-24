@@ -39,17 +39,17 @@ class newValidator:
         '''
         Run all validator methods defined in the class
         
-        Each validator methods returns True or False so
-        return False at the first methods that returns False
-        or return True if all methods returned True
+        Each validator methods returns True or False and might
+        change the original spec so return either the validated spec
+        or None, meaning the validation failed.
         '''
 
         gen = (m for m in dir(self) if "validate" in m)
         
         for method in gen:
             if not getattr(self, method)():
-                return False
-        return True
+                return None
+        return self.spec_dict
 
     def validate_column_names(self, spec_dict=None):
         '''
@@ -350,4 +350,46 @@ class newValidator:
             return False
         
         return True
-        
+
+    def validate_metadata_columns(self, spec_dict=None):
+        '''
+        All columns defined in the spec must be listed in the appropriate metadata
+        section. When the spec is generated from data, this happens automatically. 
+        However, when creating a spec from scratch, duplicating column names in the spec
+        and the metadata can get tedious and is prone to errors. This validator ensures
+        that any columns added to the spec, will also be added to the metadata.
+        '''
+
+        if spec_dict is None:
+            spec_dict = self.spec_dict
+
+        warn_msg = textwrap.dedent("""
+        VALIDATION WARNING: Metadata updated with missing columns
+        """)
+
+        warn = False
+
+        m_uuid = spec_dict["metadata"].get("uuid_columns", list())
+        m_cat = spec_dict["metadata"].get("categorical_columns", list())
+        m_num = spec_dict["metadata"].get("numerical_columns", list())
+        m_date = spec_dict["metadata"].get("date_columns", list())
+        m_geo = spec_dict["metadata"].get("geospatial_columns", list())
+
+        col_types = {
+            "uuid" : m_uuid,
+            "categorical" : m_cat,
+            "continuous" : m_num,
+            "date" : m_date,
+            "geospatial" : m_geo
+        }
+
+        for col, col_attrs in spec_dict["columns"].items():
+            col_type = col_attrs["type"]
+            if col not in col_types[col_type]:
+                col_types[col_type].append(col)
+                warn = True
+
+        if warn:
+            print(warn_msg)
+
+        return True

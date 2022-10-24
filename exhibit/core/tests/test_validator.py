@@ -3,9 +3,11 @@ Unit and reference tests for the Exhibit package
 '''
 
 # Standard library imports
+import sys
 import unittest
 from unittest.mock import Mock
 from copy import deepcopy
+from io import StringIO
 
 # Module under test (or more correctly, class and its methods)
 from exhibit.core.validator import newValidator as tm
@@ -308,6 +310,47 @@ class validatorTests(unittest.TestCase):
             tm.validate_no_repeating_columns_in_linked_groups(
                 validatorMock, spec_dict=test_dict)
             )
+
+    def test_metadata_columns_match_spec(self):
+        '''
+        The list of numerical / date / categorical columns in the metadata
+        should match the columns in the spec. If any are missing, add them and
+        output a warning message. This can happen when the spec is manually edited.
+        '''
+
+        validatorMock = Mock()
+
+        test_dict = {
+            "metadata" : {
+                "uuid_columns"       : [],
+                "categorical_columns": [],
+                "numerical_columns"  : [],
+                "date_columns"       : [],
+                "geospatial_columns" : [],
+            },
+            "columns" : {
+                "uuid_A" : {
+                    "type" : "uuid"
+                },
+                "cat_A" : {
+                    "type" : "categorical"
+                }
+            }
+ 
+        }
+
+        capturedOutput = StringIO()
+        sys.stdout = capturedOutput
+        
+        tm.validate_metadata_columns(validatorMock, spec_dict=test_dict)
+        
+        # reset standard out
+        sys.stdout = sys.__stdout__
+
+        self.assertEqual(
+            "VALIDATION WARNING: Metadata updated with missing columns",
+            capturedOutput.getvalue().strip()
+        )
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

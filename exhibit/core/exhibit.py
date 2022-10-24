@@ -218,7 +218,7 @@ class Exhibit:
         # these NONE values early and change them into empty sequences.
         for key, value in self.spec_dict["metadata"].items():
             if "columns" in key and value is None:
-                self.spec_dict["metadata"][key] = set()
+                self.spec_dict["metadata"][key] = list()
 
         if self.spec_dict.get("linked_columns", None) is None:
                 self.spec_dict["linked_columns"] = list()
@@ -244,10 +244,13 @@ class Exhibit:
         To avoid this, the newValidator class contains methods that check the 
         integrity of the specification. 
 
-        If validation passes, returns True, else returns False with helpful messages
+        If validation passes, update the specification with the validated one and
+        return True, else return False with earlier helpful messages from validator.
         '''
 
-        return newValidator(self.spec_dict).run_validator()
+        validated_spec = newValidator(self.spec_dict).run_validator()
+        self.spec_dict = validated_spec
+        return validated_spec is not None
 
     def execute_spec(self):
         '''
