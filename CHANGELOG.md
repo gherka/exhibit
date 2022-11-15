@@ -1,5 +1,20 @@
 ## Release notes
 ---
+### 0.9.7 (November 15, 2022)
+
+##### Enhancements
+- Using Exhibit as an importable library is now easier. Please see the scripting recipe for more details and examples.
+- `anon.db` is now called `exhibit.db`. You can also now use 3rd party databases to store associated specification / aliasing data, as long as you have the required SQL Alchemy dialect installed. Set `EXHIBIT_DB_SCHEMA` and `EXHIBIT_DB_URL` environment variables and Exhibit will use those instead of the local `exhibit.db`.
+- New custom action & filter pairs: `shift_distribution_right / left` and `COLUMN_NAME with_high / low_frequency`
+- You can now save probabilities for columns you marked as linked in the CLI.
+- UUID columns can now be generated using incrementing integer values by setting `anonymising_set` to `range`. You can also set different seeds for each UUID column.
+
+##### Bug fixes
+- Improved the calculation of weights for numerical columns.
+- Various other minor bug fixes and improvements to error messages.
+
+##### Package version upgrades
+- added `scipy` and `sqlalchemy` as dependencies.
 
 ### 0.9.6 (August 3, 2022)
 
@@ -15,7 +30,7 @@
 - Fixed a DB bug that gave missing data an equal chance to appear for columns where number of uniques exceeded the in-line limit.
 
 ##### Package version upgrades
-- added `dill` as a dependency
+- added `dill` as a dependency.
 
 ### 0.9.5 (June 26, 2022)
 
@@ -31,7 +46,7 @@
 - Fixed a bug that could result in linked column groups being in different order when re-running the generation of the same specification.
 
 ##### Package version upgrades
-- numpy bumped to 1.22
+- numpy bumped to 1.22.
 
 ### 0.9.4 (June 6, 2022)
 
@@ -46,9 +61,9 @@
 - Fixed a number of issues around nullable integer type.
 
 ##### Package version upgrades
-- pandas bumped to 1.4.2
-- numpy bumped to 1.21.5
-- PyYAML bumped to 6.0
+- pandas bumped to 1.4.2.
+- numpy bumped to 1.21.5.
+- PyYAML bumped to 6.0.
 
 ### 0.9.3 (April 19, 2022)
 
