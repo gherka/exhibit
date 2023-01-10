@@ -632,30 +632,7 @@ class ConstraintHandler:
         if partition_cols is not None:
             partition_cols = [x.strip() for x in partition_cols.split(",") if x]
 
-        # the section on orig_vals / orig_uniques is not needed
         for target_col in target_cols:
-
-            orig_vals_in_spec = self.spec_dict["columns"][target_col]["original_values"]
-
-            if isinstance(orig_vals_in_spec, pd.DataFrame):
-                original_uniques = (
-                    orig_vals_in_spec[target_col].tolist()
-                )
-
-            elif orig_vals_in_spec == ORIGINAL_VALUES_DB:
-
-                table_name = f'temp_{self.spec_dict["metadata"]["id"]}_{target_col}'
-                original_uniques = query_exhibit_database(
-                    table_name=table_name,
-                    column=target_col,
-                )[target_col].tolist()
-
-            elif orig_vals_in_spec == ORIGINAL_VALUES_PAIRED: #pragma: no cover
-                raise ValueError(
-                    f"{self.current_action} not supported for paired columns")
-
-            if MISSING_DATA_STR in original_uniques:
-                original_uniques.remove(MISSING_DATA_STR)
                     
             if partition_cols is None:
                 

@@ -779,6 +779,47 @@ class constraintsTests(unittest.TestCase):
         
         self.assertFalse(result.query("B=='spam'")["A"].dropna().duplicated().any())
 
+    def test_custom_constraints_make_distinct_with_date_columns(self):
+        '''
+        Ensure filtered values in the target column are distinct from 
+        each other within the date range specified by user. At the moment,
+        the check for distinct isn't going to generate any new data to replace
+        the duplicates; these are marked as null values.
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "columns" : {
+                "A" : {
+                    "type": "date",
+                    "uniques" : 5,
+                },
+            },
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "partition" : "B",
+                        "targets" : {
+                            "A" : "make_distinct",
+                        }
+                    }
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list(pd.date_range(start='2020-01-01', periods=5)) * 4,
+            "B" : [True, False] * 10,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        # remember for make_distinct we're replacing duplicates with an empty string
+        result = test_gen.process_constraints().replace({"":pd.NA}).dropna()
+        
+        self.assertFalse(result.query("B == True")["A"].duplicated().any())
+        self.assertFalse(result.query("B == False")["A"].duplicated().any())
+
 
     def test_custom_constraints_make_distinct_with_db_values(self):
         '''

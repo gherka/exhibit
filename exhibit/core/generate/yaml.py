@@ -365,8 +365,8 @@ def generate_YAML_string(spec_dict):
     # format is as follows:
     # 
     # models:
-    #   model_name: (without .pickle extension)
-    #     hyperparameter_name : hyperparameter_value
+    #   model_name (without .pickle extension):
+    #     hyperparameter_name: hyperparameter_value
     # 
     # You can chain models one after another - they are called in the
     # same order as they appear in the specification. Make sure that
