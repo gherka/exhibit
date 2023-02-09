@@ -16,9 +16,8 @@ from scipy.stats import beta, gamma
 from pandas.api.types import is_numeric_dtype
 
 # Exibit imports
-from .sql import query_exhibit_database
 from .generate.continuous import scale_continuous_column
-from .constants import ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR
+from .constants import MISSING_DATA_STR
 from .generate.geo import geo_make_regions
 from .linkage.matrix import generate_user_linked_anon_df
 from .utils import natural_key

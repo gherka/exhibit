@@ -384,7 +384,8 @@ class Exhibit:
         # rearrange (sort, make distinct or same) the categorical values leaving
         # the original numerical values that don't correspond to correct weights
         constraint_targets = []
-        cat_cols_set = set(self.spec_dict["metadata"]["categorical_columns"])
+        cat_cols = self.spec_dict["metadata"]["categorical_columns"]
+        cat_cols_set = set(cat_cols)
 
         if (ccs:=self.spec_dict["constraints"]["custom_constraints"]):
             
@@ -395,6 +396,9 @@ class Exhibit:
 
         # check if there are common columns between constraint targets and cat_cols
         if cat_cols_set & set(constraint_targets):
+
+            anon_df.loc[:, cat_cols] = (
+                anon_df.loc[:, cat_cols].fillna(MISSING_DATA_STR))
             
             # we don't want to re-create continuous columns that were subject of a cc
             num_cols = (
@@ -416,6 +420,9 @@ class Exhibit:
                     anon_df=anon_df.loc[~num_col_na_mask],
                     col_name=num_col
                 )
+            
+            anon_df.loc[:, cat_cols] = anon_df.loc[:, cat_cols].applymap(
+            lambda x: np.nan if x == MISSING_DATA_STR else x)
 
         #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         for name, calc in self.spec_dict["derived_columns"].items():
