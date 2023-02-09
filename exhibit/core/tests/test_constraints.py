@@ -1428,10 +1428,13 @@ class constraintsTests(unittest.TestCase):
     def test_custom_constraints_targeting_high_frequency_rows(self):
         '''
         Sometimes you want to apply custom actions just to "frequent fliers" or 
-        on the other end of the spectrum, to "rare events".
+        on the other end of the spectrum, to "rare events". When shifting distribution
+        of integer columns, you have to provide distribution parameters because the 
+        shifting would convert the values to floats and you need to re-scale the column
+        to convert it back to int / avoid unintended changes to the overall range.
         '''
 
-        rng = np.random.default_rng(seed=0)
+        rng = np.random.default_rng(seed=1)
         num_rows = 1000
 
         test_dict = {
@@ -1439,7 +1442,12 @@ class constraintsTests(unittest.TestCase):
             "_rng" : rng,
             "columns" : {
                 "AGE" : {
-                    "precision" : "integer"
+                    "precision" : "integer",
+                    "distribution": "weighted_uniform",
+                    "distribution_parameters": {
+                        "target_min" : 0,
+                        "target_max" : 90
+                    },
                 }
             },
             "constraints" : {
@@ -1509,12 +1517,28 @@ class constraintsTests(unittest.TestCase):
         test_dict = {
 
             "_rng" : rng,
+            "columns" : {
+                "AGE" : {
+                    "precision" : "integer",
+                    "distribution": "weighted_uniform",
+                    "distribution_parameters": {
+                        "target_min" : 0,
+                        "target_max" : 90
+                    },
+                }
+            },
             "constraints" : {
                 "custom_constraints": {
                     "cc1" : {
                         "filter"    : "~RECORD ID~ with_low_frequency",
                         "targets" : {
                             "AGE" : "shift_distribution_left",
+                        }
+                    },
+                    "cc2" : {
+                        "partition": "RECORD ID",
+                        "targets" : {
+                            "AGE" : "make_same",
                         }
                     },
                 }

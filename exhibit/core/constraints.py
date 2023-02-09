@@ -474,7 +474,7 @@ class ConstraintHandler:
 
         for target_col in target_cols:
         
-            series = df[target_col].dropna()
+            series = df[target_col].dropna().astype(float)
             # make sure that original filtered index reflects the non-null series
             filter_idx = series.index.intersection(filter_idx)
 
@@ -1142,8 +1142,8 @@ class ConstraintHandler:
 
                 data = X.rvs(size=len(target_series), random_state=0)
 
-                # mirror the data around the mean if scaling down
-                if not right:
+                # mirror the data around the mean if shifting right
+                if right:
                     mean_diff = abs(data - data.mean())
                     data = np.where(
                         data < data.mean(),
@@ -1157,10 +1157,27 @@ class ConstraintHandler:
                     name=target_series.name
                 )
                 
+                # rescale the shifted distribution using custom distribution parameters
+                # to avoid compression of values at the lower/upper end, e.g. if 
+                # increasing the frequency of high values, these will be forced to the
+                # lower bound if the scaling is min/max. Given that at this point, the
+                # column is already scaled, we can use its statistics to ensure adding
+                # this contraint doesn't have unintended side-effects like increasing
+                # the range of the data.
+                col_data = self.spec_dict["columns"][target_col]
+                precision = col_data["precision"]
+                tmin = df[target_col].quantile(0.25) if right else df[target_col].min()
+                tmax = df[target_col].max() if right else df[target_col].quantile(0.75)
+
+                dist_params = {"target_min" : tmin, "target_max" : tmax}
+
+                final_series = scale_continuous_column(
+                    new_series, precision, **dist_params)
+
                 if target_series.dtype in ("int64", "Int64"):
-                    new_series = new_series.round().astype("Int64")
-            
-                final_result.append(new_series)
+                    final_series = final_series.round().astype("Int64")
+
+                final_result.append(final_series)
                 continue
             
             # category, object, timeseries converted to strings etc.
