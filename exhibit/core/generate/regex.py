@@ -11,15 +11,12 @@ import numpy as np
 
 # EXPORTABLE METHODS
 # ==================
-def generate_regex_column(anon_pattern, name, size):
+def generate_regex_column(anon_pattern, name, size, target_uniques=None):
     '''
     #1) analyse pattern
     #2) generate static part, incl. quantifiers
     #3) find dynamic random parts, replace in original string with placeholders
     #4) slice together in a vectorised way
-
-    There is an issue that a pattern A[1-9][1-9] will result in duplicate characters
-    A11, A22 rather than unique so for now, use A[1-9]{2} which avoids this issue.
 
     Returns pd.Series
     '''
@@ -58,10 +55,26 @@ def generate_regex_column(anon_pattern, name, size):
         repl_series = pd.Series(_generate_random_class_characters(pattern, size, rng))
         repl_series_dict[placeholder] = repl_series
         
-    final = _recursive_concat_series(static_series, repl_series_dict)
-    final.name = name
+    regex_series = _recursive_concat_series(static_series, repl_series_dict)
+    regex_series.name = name
 
-    return final
+    # no impact on older code calling the method directly
+    if target_uniques is None:
+        return regex_series
+
+    # check if the requested number of uniques is available from the generated column
+    if target_uniques > regex_series.nunique():
+        raise ValueError(
+            f"The number of uniques specified for {name} is too high"
+            " given the regex pattern.")
+    
+    # create a new RNG generator with a fixed seed
+    rng = np.random.default_rng(seed=0)
+    limited_regex_series = pd.Series(
+        rng.choice(a=regex_series.unique()[:target_uniques], size=len(regex_series)))
+    limited_regex_series.name = name
+
+    return limited_regex_series
 
 # INNER MODULE METHODS
 # ====================

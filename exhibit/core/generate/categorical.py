@@ -193,10 +193,12 @@ class CategoricalDataGenerator:
         paired_cols = col_attrs["paired_columns"]
         anon_set = col_attrs["anonymising_set"]
         orig_vals = col_attrs["original_values"]
+        target_uniques = col_attrs.get("uniques", None)
 
         #generate values based on a regular expression specified in the anonymising_set
         if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_REGEX:
-            return generate_regex_column(anon_set, col_name, self.num_rows)  
+            return generate_regex_column(
+                anon_set, col_name, self.num_rows, target_uniques)
 
         #values were stored in SQL; randomise based on uniform distribution
         if col_attrs["uniques"] > self.spec_dict["metadata"]["inline_limit"]:
