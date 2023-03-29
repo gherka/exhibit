@@ -134,7 +134,7 @@ def read_with_date_parser(path, **kwargs):
         
         df = df.drop(columns=skipped_cols)
 
-        for x in df.loc[0, :].iteritems():
+        for x in df.dropna().iloc[0, :].iteritems():
             date_col = date_parser(x)
             if date_col is not None:
                 df[date_col] = pd.to_datetime(df[date_col], dayfirst=True)
