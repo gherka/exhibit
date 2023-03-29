@@ -347,6 +347,9 @@ def generate_YAML_string(spec_dict):
     #
     # For example, assuming you have Numerator column A and
     # Denominator column B, you would write Rate: (A / B)
+    #
+    # You can also add a derived column with the current date and
+    # time by using a special variable '@sysdate'
     # ----------------------------------------------------------
     """)
 
