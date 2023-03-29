@@ -218,8 +218,11 @@ class MissingDataGenerator:
             self.nan_data.loc[mask, num_col] = scaled_new_series.values
 
         # replace Missing data back with np.nan
+        # since we're applying the function across all columns, including numerical,
+        # these can contain pd.NA which is a "special" type that will error out if
+        # trying to evaluate it against a string. Replace with a standard np.NAN.
         self.nan_data = self.nan_data.applymap(
-            lambda x: np.nan if x == MISSING_DATA_STR else x)
+            lambda x: np.nan if pd.isna(x) or x == MISSING_DATA_STR else x)
 
         return self.nan_data.astype(self.dtypes)
 
