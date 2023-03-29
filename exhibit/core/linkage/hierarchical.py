@@ -332,9 +332,9 @@ def find_pair_linked_columns(df, ignore_cols=None):
     if ignore_cols:
         all_cols = all_cols - set(ignore_cols)
     
-    #single value & numeric columns are ignored
+    #single value, numeric and datetime columns are ignored
     cols = [col for col in all_cols if
-    df[col].nunique() > 1 and col not in df.select_dtypes(include=np.number)
+    df[col].nunique() > 1 and col not in df.select_dtypes(include=[np.number, "datetime"])
     ]
     
     #combinations produce a pair only once (AB, not AB + BA)
