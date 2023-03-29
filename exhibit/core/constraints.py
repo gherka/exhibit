@@ -621,6 +621,9 @@ class ConstraintHandler:
             if not group.duplicated().any():
                 return group
 
+            # make sure blank string is available as a category before replacing
+            if group.dtype.name == "category": #pragma: no cover
+                group = group.cat.add_categories([""])
             new_group = group.where(~group.duplicated(), "").tolist()
             
             return pd.Series(new_group, name=target_col)

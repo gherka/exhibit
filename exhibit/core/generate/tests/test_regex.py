@@ -84,7 +84,7 @@ class regexTests(unittest.TestCase):
         
         self.assertEqual(test_df["GPPracticeName"].nunique(), target_uniques)
 
-    def test_number_of_unique_values_in_regex_column(self):
+    def test_error_raised_if_not_enough_regex_uniques(self):
         '''
         Test the error if the number of requested uniques is too high for the pattern - 
         we're not applying this test at the generation step because the pattern can be
