@@ -117,7 +117,8 @@ def geo_make_regions(
     for target_col in geo_target_cols:
         temp_target_cols = [f"{target_col}_latitude", f"{target_col}_longitude"]
         target_cols.extend(temp_target_cols)
-    df[target_cols] = 1
+    # in case values for partition columns are null
+    df[target_cols] = np.nan
     
     # get the geo df with h3s (any one of the given geo_target_cols is fine)
     h3_ids = (
