@@ -666,7 +666,7 @@ class _LinkedDataGenerator:
 
         sub_dfs = []
 
-        for base_col_value, size in base_col_counts.iteritems():
+        for base_col_value, size in base_col_counts.items():
             
             pool_of_idx = (
                 self.sql_df[self.sql_df[self.base_col] == base_col_value].index)

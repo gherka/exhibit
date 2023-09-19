@@ -372,11 +372,11 @@ class referenceTests(unittest.TestCase):
         '''
 
         source_data_path = Path(package_dir("sample", "_data", "inpatients.csv"))
-
+        
+        # dayfirst=True would trigger warnings when encountering dates in Y-m-d format
         test_dataframe = pd.read_csv(
             source_data_path,
             parse_dates=["quarter_date"],
-            dayfirst=True
         )
 
         # Modify test_dataframe to suit test conditions
@@ -451,7 +451,6 @@ class referenceTests(unittest.TestCase):
         test_dataframe = pd.read_csv(
             source_data_path,
             parse_dates=["quarter_date"],
-            dayfirst=True
         )
 
         # Modify test_dataframe to suit test conditions
@@ -519,7 +518,6 @@ class referenceTests(unittest.TestCase):
         test_dataframe = pd.read_csv(
             source_data_path,
             parse_dates=["quarter_date"],
-            dayfirst=True
         )
 
         # Modify test_dataframe to suit test conditions
@@ -600,7 +598,6 @@ class referenceTests(unittest.TestCase):
         test_dataframe = pd.read_csv(
             source_data_path,
             parse_dates=["quarter_date"],
-            dayfirst=True
         )
 
         # Modify test_dataframe to suit test conditions
@@ -675,7 +672,6 @@ class referenceTests(unittest.TestCase):
         test_dataframe = pd.read_csv(
             source_data_path,
             parse_dates=["quarter_date"],
-            dayfirst=True
         )
 
         # modify CLI namespace
@@ -726,7 +722,6 @@ class referenceTests(unittest.TestCase):
         test_dataframe = pd.read_csv(
             source_data_path,
             parse_dates=["quarter_date"],
-            dayfirst=True
         )
 
         # modify CLI namespace
