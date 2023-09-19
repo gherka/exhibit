@@ -318,7 +318,8 @@ class CategoricalDataGenerator:
         if missing_paired_cols:
             missing_df = pd.DataFrame(
                 data=zip(*[anon_df[col_name]] * len(missing_paired_cols)),
-                columns=missing_paired_cols
+                # sets are no longer allowed as column names
+                columns=list(missing_paired_cols)
             )
 
             anon_df = pd.concat([anon_df, missing_df], axis=1)

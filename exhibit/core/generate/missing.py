@@ -215,7 +215,9 @@ class MissingDataGenerator:
 
             # for some reason assigning a series back, rather than values
             # creates nulls in certain rows, but not others; maybe Pandas bug.
-            self.nan_data.loc[mask, num_col] = scaled_new_series.values
+            # when the array is empty, Pandas generates a ValueError
+            if len(scaled_new_series) != 0:
+                self.nan_data.loc[mask, num_col] = scaled_new_series.values
 
         # replace Missing data back with np.nan
         # since we're applying the function across all columns, including numerical,

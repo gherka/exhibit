@@ -224,7 +224,7 @@ def _draw_from_normal_distribution(
     row_diff_sum = 1
     dispersion = dist_params.get("dispersion", 0)
 
-    for cat_col, val in row.iteritems():
+    for cat_col, val in row.items():
 
         w, ew = wt[(num_col, cat_col, val)]["weights"]
 
@@ -254,7 +254,7 @@ def _draw_from_uniform_distribution(row, wt, num_col, rng, **dist_params):
     base_value = 1000
     dispersion = dist_params.get("dispersion", 0)
 
-    for cat_col, val in row.iteritems():
+    for cat_col, val in row.items():
 
         try:
 

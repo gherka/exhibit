@@ -1341,9 +1341,10 @@ def get_constraint_mask(df, clean_string):
         probs = _get_probabilities_by_frequency(freqs, target_freq)
 
         idx = []
+        # need to explicityly pass a name to reset_index()
         candidate_idx = (
-            freq_df.reset_index()
-            .groupby(target_col)["index"]
+            freq_df.reset_index(name="count")
+            .groupby("count")[target_col]
             .apply(list).to_dict()
         )
 

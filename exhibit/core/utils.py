@@ -88,7 +88,9 @@ def date_parser(row_tuple):
     if len(re.findall(date_regex, row_value)) in [2, 4]:
 
         try:
-            dateutil.parser.parse(row_value)
+            # moved the dayfirst check away from pd.to_datetime because it throws warnings
+            # when encountering dates in the Y-m-D format and dayfirst is set to True.
+            dateutil.parser.parse(row_value, dayfirst=True)
             return column_name
 
         except ValueError: # pragma: no cover
@@ -139,7 +141,7 @@ def read_with_date_parser(path, **kwargs):
             if not df[col].dropna().empty:
                 date_col = date_parser((col, df[col].dropna().iloc[0]))
                 if date_col is not None:
-                    df[date_col] = pd.to_datetime(df[date_col], dayfirst=True)
+                    df[date_col] = pd.to_datetime(df[date_col])
 
         return df
     
