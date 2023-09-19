@@ -134,10 +134,12 @@ def read_with_date_parser(path, **kwargs):
         
         df = df.drop(columns=skipped_cols)
 
-        for x in df.dropna().iloc[0, :].iteritems():
-            date_col = date_parser(x)
-            if date_col is not None:
-                df[date_col] = pd.to_datetime(df[date_col], dayfirst=True)
+        for col in df.columns:
+            # make sure to check if the entire column is null first
+            if not df[col].dropna().empty:
+                date_col = date_parser((col, df[col].dropna().iloc[0]))
+                if date_col is not None:
+                    df[date_col] = pd.to_datetime(df[date_col], dayfirst=True)
 
         return df
     
