@@ -155,7 +155,8 @@ def generate_derived_column(anon_df, calculation):
 
     basic_output = (safe_df
                     .eval(safe_calculation, local_dict={
-                        "df":safe_df,
+                        "df"     : safe_df,
+                        "random" : np.random.randint,  
                         "sysdate": pd.to_datetime("now", utc=True).round("s").tz_localize(None)},
                     engine="python")
                 )

@@ -415,7 +415,10 @@ class Exhibit:
             )
             for num_col in num_cols:
                 
-                # derived columns won't have weight so we ignore them
+                # derived columns won't have weight so typically we ignore them, however
+                # at the end of this stage, we need to revisit those derived columns that
+                # reference re-generated columns in their definition because that might
+                # have changed from when the derived columns have been originally created
                 if num_col in self.spec_dict["derived_columns"]: # pragma: no cover
                     continue
 
@@ -428,7 +431,13 @@ class Exhibit:
                     anon_df=anon_df.loc[~num_col_na_mask],
                     col_name=num_col
                 )
-            
+            # see comments above as to why we're re-generating derived columns
+            for derived_col, derived_def in self.spec_dict["derived_columns"].items(): #pragma: no cover
+                for num_col in num_cols:
+                    if num_col in derived_def:
+                        anon_df[derived_col] = generate_derived_column(anon_df, derived_def)
+                        break             
+                    
             anon_df.loc[:, cat_cols] = anon_df.loc[:, cat_cols].applymap(
             lambda x: np.nan if x == MISSING_DATA_STR else x)
 
