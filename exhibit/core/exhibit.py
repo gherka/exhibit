@@ -96,7 +96,8 @@ class Exhibit:
         inline_limit=30, equal_weights=False,
         skip_columns=None, linked_columns=None, 
         uuid_columns=None, discrete_columns=None,
-        save_probabilities=None, verbose=False, **kwargs):
+        save_probabilities=None, derived_columns_first=False,
+        verbose=False, **kwargs):
         '''
         Initialise either from the CLI or by instantiating directly
         '''
@@ -115,6 +116,7 @@ class Exhibit:
         self.uuid_columns= uuid_columns or set()
         self.discrete_columns = discrete_columns or set()
         self.save_probabilities = save_probabilities or set()
+        self.derived_columns_first = derived_columns_first
         self.verbose = verbose
 
         self.spec_dict = None
@@ -376,6 +378,12 @@ class Exhibit:
         miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
         anon_df = miss_gen.add_missing_data()
 
+        #6.5) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        if self.derived_columns_first: #pragma: no cover
+            for name, calc in self.spec_dict["derived_columns"].items():
+                if "Example" not in name:
+                    anon_df[name] = generate_derived_column(anon_df, calc)
+
         #7) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
@@ -425,9 +433,10 @@ class Exhibit:
             lambda x: np.nan if x == MISSING_DATA_STR else x)
 
         #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
-        for name, calc in self.spec_dict["derived_columns"].items():
-            if "Example" not in name:
-                anon_df[name] = generate_derived_column(anon_df, calc)
+        if not self.derived_columns_first:
+            for name, calc in self.spec_dict["derived_columns"].items():
+                if "Example" not in name:
+                    anon_df[name] = generate_derived_column(anon_df, calc)
 
         #9) CHECK IF DUPLICATES ARE OK
         # only consider categorical columns (+uuid) for potential duplicates

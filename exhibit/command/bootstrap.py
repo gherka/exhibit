@@ -183,6 +183,17 @@ def main():
         "Example: exhibit fromdata secret_data.csv -il 5 -p age"
         f"{arg_separator}"
     )
+
+    parser.add_argument(
+        "--derived_columns_first", "-derived",
+        default=False,
+        action="store_true",
+        help=
+        "\nOccasionally, you might want to generate derived columns before "
+        "applying constraints so that the derived columns are available "
+        "in basic / custom constraint logic. Set to False by default."
+        f"{arg_separator}"
+    )
     
     parser.add_argument(
         "--verbose", "-v",
