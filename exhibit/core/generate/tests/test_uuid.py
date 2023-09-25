@@ -79,6 +79,42 @@ class uuidTests(unittest.TestCase):
 
         self.assertEqual(len(result), 100)
 
+    def test_uuid_column_generation_with_pseudo_chis_standalone(self):
+        '''
+        Dummy CHIs are only similar to real CHIs in that they have 10 digits
+        and that they can start from zero. Neither DOB, nor Gender is encoded,
+        plus the month of the DOB part is always set to 13 to avoid even 
+        accidental matches. The algorithm is completely deterministic.
+        '''
+        
+        n = 1000
+        pseudo_chis = tm._generate_pseudo_chis(n=n)
+
+        self.assertEqual(len(set(pseudo_chis)), n)
+
+    def test_uuid_column_generation_with_pseudo_chis(self):
+        '''
+        Pseudi CHIs are only similar to real CHIs in that they have 10 digits
+        and that they can start from zero. Neither DOB, nor Gender is encoded,
+        plus the month of the DOB part is always set to 13 to avoid even 
+        accidental matches. The algorithm is completely deterministic.
+        '''
+
+        n = 1000
+        expected = 900 # 800 CHIs to appear once and 100 CHIs appear twice.
+        
+        freq_dist = [
+            "frequency | probability_vector",
+            "1         | 0.800",
+            "2         | 0.200"
+        ]
+
+        result = tm.generate_uuid_column(
+            "pseudo_chi", n, 0, freq_dist, 0, uuid_type="pseudo_chi")
+
+
+        self.assertEqual(len(set(result)), expected)
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"
