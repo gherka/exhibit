@@ -166,7 +166,13 @@ def _draw_from_normal_distribution(
 
     for cat_col, val in row.items():
 
-        w, ew = wt[(num_col, cat_col, val)]["weights"]
+        # if weights table doesn't have a match for a numerical column, assume no weight
+        weights = wt.get((num_col, cat_col, val), None)
+
+        if weights is None:
+            w, ew = (1, 1)
+        else:
+            w, ew = weights["weights"]
 
         # short-circuit if any of the weights is zero
         if w == 0:
@@ -196,14 +202,13 @@ def _draw_from_uniform_distribution(row, wt, num_col, rng, **dist_params):
 
     for cat_col, val in row.items():
 
-        try:
+        # if weights table doesn't have a match for a numerical column, assume no weight
+        weights = wt.get((num_col, cat_col, val), None)
 
-            weight = wt[(num_col, cat_col, val)]["weights"].weight
-
-        # only valid for paired columns that have their values already "reduced"
-        except KeyError:
-
+        if weights is None:
             weight = 1
+        else:
+            weight = weights["weights"].weight
 
         base_value = base_value * weight
 
