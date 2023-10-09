@@ -102,67 +102,6 @@ def scale_continuous_column(series, precision, **dist_params):
     # fallback is to return unscaled series
     return series
 
-def generate_derived_column(anon_df, calculation):
-    '''
-    Use Pandas eval() function to try to parse user calculations.
-
-    Parameters
-    -----------
-    anon_df : pd.DataFrame
-        derived columns are calculated as the last step so the anonymised
-        dataframe is nearly complete
-    calculation : str
-        user-defined calculation to create a new column
-
-    Returns
-    --------
-    pd.Series
-    
-    Columns passed in calculation might have spaces which will trip up
-    eval() so we take an extra step to replace whitespace with _ in
-    both the calculation and the anon_df. Users can also use groupby to
-    create aggregated calculations, but extra care needs to be taken when
-    specifying the calculation: start with df.groupby and enclose column
-    names in single quotes.
-    '''
-
-    safe_calculation = re.sub(r"\b\s\b", r"__", calculation)
-    safe_df = anon_df.rename(columns=lambda x: x.replace(" ", "__"))
-
-    # some columns might come in as Int64 (Pandas dtype) which will fall over
-    # when trying to use in eval because it relies on numpy dtypes, not pandas'
-    # this means that it's safer to let the dtype fall down to float even though
-    # it might be the result of running an operation between two INT columns.
-    numeric_cols = safe_df.select_dtypes(include=np.number).columns
-    safe_df[numeric_cols] = safe_df[numeric_cols].astype(float)
-
-    if "groupby" in safe_calculation:
-        #groupby requires pd.eval, not df.eval
-        temp_series = (pd
-                    .eval(safe_calculation, local_dict={"df":safe_df}, engine="python")
-                )
-
-        #expect multi-index in groupby DF
-        temp_anon_df = safe_df.set_index(temp_series.index.names)
-        #assign on index
-        temp_anon_df[temp_series.name] = temp_series
-        #reset index and return series
-        groupby_output = temp_anon_df.reset_index()[temp_series.name]
-        #revert back to original column name
-        groupby_output.name = groupby_output.name.replace("__", " ")
-
-        return groupby_output
-
-    basic_output = (safe_df
-                    .eval(safe_calculation, local_dict={
-                        "df"     : safe_df,
-                        "random" : np.random.randint,  
-                        "sysdate": pd.to_datetime("now", utc=True).round("s").tz_localize(None)},
-                    engine="python")
-                )
-
-    return basic_output
-
 def generate_cont_val(
     row,
     weights_table,

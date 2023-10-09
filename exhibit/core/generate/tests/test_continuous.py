@@ -20,44 +20,6 @@ class continuousTests(unittest.TestCase):
     Doc string
     '''
 
-    def test_generate_derived_column_basic(self):
-        '''
-        All of the work is done by pandas.eval() method;
-        we're just testing column names with whitespace are OK
-        '''
-
-        test_df = pd.DataFrame(
-            data=np.ones((5, 2)),
-            columns=["Hello World", "A"])
-
-        calc = "Hello World + A"
-
-        self.assertEqual(tm.generate_derived_column(test_df, calc).sum(), 10)
-
-    def test_generate_derived_column_groupby(self):
-        '''
-        We want to allow users to create aggregated columns, like peer values.
-        Make sure that column names are enclosed in single spaces.
-        '''
-
-        test_df = pd.DataFrame(
-            data={
-                "C1":["A", "A", "B", "B", "C", "C"], #locations
-                "C2":["spam", "eggs"] * 3, #groupby dimension(s)
-                "C3":[1, 10] * 3 #aggregation column
-            }
-        )
-
-        calc = "df.groupby('C2')['C3'].sum()"
-
-        expected = pd.Series([3, 30, 3, 30, 3, 30], name="C3")
-
-        assert_series_equal(
-            left=tm.generate_derived_column(test_df, calc),
-            right=expected,
-            check_dtype=False
-            )
-
     def test_apply_dispersion(self):
         '''
         Given a range of dispersion values, return noisy value

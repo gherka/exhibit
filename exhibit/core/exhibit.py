@@ -19,7 +19,7 @@ from exhibit.core.constants import MISSING_DATA_STR
 
 # Exhibit imports
 from .spec import Spec
-from .formatters import parse_original_values
+from .formatters import parse_original_values, format_df_for_export
 from .validator import newValidator
 from .constraints import ConstraintHandler
 from .utils import (
@@ -34,9 +34,8 @@ from .generate.weights import (
                     generate_weights_table,
                     target_columns_for_weights_table)
 
-from .generate.continuous import (
-                    generate_continuous_column,
-                    generate_derived_column)
+from .generate.continuous import generate_continuous_column
+from .generate.derived import generate_derived_column
 
 from .generate.uuids import generate_uuid_column
 from .generate.geo import generate_geospatial_column
@@ -485,6 +484,8 @@ class Exhibit:
         else:
             output_path = self.output
 
+        # run formatting checks, like converting timestamp deltas to clean strings
+        self.anon_df = format_df_for_export(self.anon_df)
         self.anon_df.to_csv(output_path, index=False)
 
         print("Exhibit ready to view")

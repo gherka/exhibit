@@ -98,6 +98,23 @@ class formattersTests(unittest.TestCase):
 
         self.assertListEqual(expected_list, result)
 
+    def test_formatting_timedelta_columns_prior_to_export(self):
+        '''
+        Timedeltas that are less than 1 day still have 0 days prepended to the values
+        when Pandas exports a DataFrame as csv. We have a pre-export formatter take 
+        care of that.
+        '''
+
+        timestamps = ["00:01:01", "10:02:44", ]
+        test_df = pd.DataFrame(data={
+            "A"     : range(2),
+            "delta" : pd.to_timedelta(timestamps)
+        })
+
+        result = tm.format_df_for_export(test_df)["delta"].to_list()
+
+        self.assertListEqual(timestamps, result)
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

@@ -348,3 +348,17 @@ def build_list_of_uuid_frequencies(df, target_col):
     result = header + freq_list
     
     return result
+
+def format_df_for_export(df):
+    '''
+    The way data is formatted is mainly controlled by the DataFrame formatting
+    classes. There is no easy way to modify it for our purposes so this is a 
+    semi-manual way of cleaning up / hiding any inconsistencies. This is a last
+    resort method so try to solve any formatting / typing issues elsewhere.
+    '''
+
+    for column in df.columns:
+        if df[column].dtype == "timedelta64[ns]":
+            df[column] = df[column].astype(str).str.replace('0 days ', '')
+
+    return df
