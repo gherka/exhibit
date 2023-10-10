@@ -626,7 +626,7 @@ class ConstraintHandler:
                 group = group.cat.add_categories([""])
             new_group = group.where(~group.duplicated(), "").tolist()
             
-            return pd.Series(new_group, name=target_col)
+            return pd.Series(new_group, index=group.index, name=target_col)
 
         final_result = []
         target_cols = [x.strip() for x in target_str.split(",")]
