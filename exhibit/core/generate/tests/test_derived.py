@@ -4,7 +4,6 @@ Test the generation of continuous columns & values
 
 # Standard library imports
 import unittest
-from collections import namedtuple
 
 # External library imports
 import pandas as pd

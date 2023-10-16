@@ -3,7 +3,6 @@ Methods to generate continuous columns / values
 '''
 
 # Standard library imports
-import re
 
 # External library imports
 import numpy as np

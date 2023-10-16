@@ -54,6 +54,9 @@ def generate_uuid_column(
 
     for row in freq_df.itertuples():
 
+        # initialise intermediate uuid list
+        _uuids = []
+
         # always round up the number of generated rows before casting to int
         _num_rows = int(np.ceil(
             num_rows * float(row.probability_vector) / int(row.frequency)))
@@ -70,8 +73,6 @@ def generate_uuid_column(
             uuids.extend(_uuids)
             range_max = range_max + _num_rows
             continue
-
-        _uuids = []
 
         for _ in range(_num_rows):
             _uuids.append(uuid.UUID(int=rng.getrandbits(128), version=4).hex)

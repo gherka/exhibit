@@ -9,7 +9,6 @@ from collections import namedtuple
 
 # External library imports
 import pandas as pd
-from pandas.testing import assert_series_equal
 import numpy as np
 
 # Module under test

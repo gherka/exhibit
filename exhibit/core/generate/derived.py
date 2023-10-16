@@ -4,8 +4,6 @@ Methods to generate derived columns
 
 # Standard library imports
 import re
-from datetime import time
-from functools import partial
 
 # External library imports
 import numpy as np
