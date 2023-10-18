@@ -11,6 +11,7 @@ dependencies:
   - pyyaml=6.0.1
   - scipy=1.11.1
   - shapely=2.0.1
+  - sql-metadata=2.9.0
   - sqlalchemy=1.4.39
   - pip:
       - h3==3.7.6

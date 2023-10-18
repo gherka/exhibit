@@ -153,6 +153,63 @@ class categoricalTests(unittest.TestCase):
                 right=result,
             )
 
+    def test_column_with_values_based_on_conditonal_sql(self):
+        '''
+        Users can provide a custom SQL as anonymising set which can reference
+        columns in the spec as well as any table in the Exhibit DB.
+        '''
+
+        set_sql = '''
+        SELECT temp_main.gender, temp_linked.linked_condition
+        FROM temp_main JOIN temp_linked ON temp_main.gender = temp_linked.gender
+        '''
+
+        linked_data = pd.DataFrame(data={
+            "gender" : ["M", "M", "M", "F", "F", "F"],
+            "linked_condition": ["A", "B", "B", "C","C","C"]
+        })
+
+        db_util.insert_table(linked_data, "temp_linked")
+       
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata": {
+                "categorical_columns": ["gender", "linked_condition"],
+                "date_columns": [],
+                "inline_limit" : 5,
+                "id" : "main"
+                },
+            "columns": {
+                "gender": {
+                    "type": "categorical",
+                    "uniques" : 2,
+                    "original_values" : pd.DataFrame(data={
+                        "gender" : ["M", "F", "Missing Data"],
+                        "probability_vector" : [0.5, 0.5, 0]
+                    }),
+                    "paired_columns": None,
+                    "anonymising_set" : "random",
+                    "cross_join_all_unique_values" : False,
+                },
+                "linked_condition": {
+                    "type": "categorical",
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(),
+                    "paired_columns": None,
+                    "anonymising_set" : set_sql,
+                    "cross_join_all_unique_values" : False,
+                }
+            }
+        }
+
+        gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=10)
+        result = gen.generate()
+
+        self.assertTrue(
+            (result.query("gender == 'F'")["linked_condition"] == 'C').all())
+        self.assertFalse(
+            (result.query("gender == 'M'")["linked_condition"] == 'C').any())
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

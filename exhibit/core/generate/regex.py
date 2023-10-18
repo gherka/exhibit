@@ -9,6 +9,9 @@ import re
 import pandas as pd
 import numpy as np
 
+# Exhibit imports
+from ..utils import shuffle_data
+
 # EXPORTABLE METHODS
 # ==================
 def generate_regex_column(anon_pattern, name, size, target_uniques=None):
@@ -60,7 +63,7 @@ def generate_regex_column(anon_pattern, name, size, target_uniques=None):
 
     # no impact on older code calling the method directly
     if target_uniques is None:
-        return regex_series
+        return shuffle_data(regex_series)
 
     # check if the requested number of uniques is available from the generated column
     if target_uniques > regex_series.nunique():
@@ -74,7 +77,7 @@ def generate_regex_column(anon_pattern, name, size, target_uniques=None):
         rng.choice(a=regex_series.unique()[:target_uniques], size=len(regex_series)))
     limited_regex_series.name = name
 
-    return limited_regex_series
+    return shuffle_data(limited_regex_series)
 
 # INNER MODULE METHODS
 # ====================

@@ -9,11 +9,12 @@ from itertools import chain
 # External library imports
 import pandas as pd
 import numpy as np
+from sql_metadata import Parser
 
 # Exhibit imports
 from ..constants import ORIGINAL_VALUES_REGEX, ORIGINAL_VALUES_PAIRED
-from ..utils import get_attr_values
-from ..sql import query_exhibit_database
+from ..utils import get_attr_values, shuffle_data
+from ..sql import query_exhibit_database, check_table_exists, execute_sql, create_temp_table
 from ..linkage.hierarchical import generate_linked_anon_df
 from ..linkage.matrix import generate_user_linked_anon_df
 from .regex import generate_regex_column
@@ -56,10 +57,10 @@ class CategoricalDataGenerator:
         A dataframe with all categorical columns
         '''
 
-        generated_dfs = []
+        self.generated_dfs = []
 
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-        for linked_group in (self.spec_dict["linked_columns"] or list()):
+        for linked_group in (self.spec_dict.get("linked_columns") or list()):
             
             # zero-numbered linked group is reserved for user-defined groupings
             if linked_group[0] == 0:
@@ -70,7 +71,7 @@ class CategoricalDataGenerator:
                     num_rows=self.num_rows
                 )
 
-                generated_dfs.append(u_linked_df)
+                self.generated_dfs.append(u_linked_df)
 
             else:
 
@@ -79,20 +80,15 @@ class CategoricalDataGenerator:
                     linked_group=linked_group,
                     num_rows=self.num_rows)
 
-                generated_dfs.append(linked_df)
+                self.generated_dfs.append(linked_df)
 
         #2) GENERATE NON-LINKED DFs
         for col in [col for col in self.all_cols if col not in self.skipped_cols]:
-            s = (
-                self._generate_anon_series(col)
-                .sample(frac=1, random_state=np.random.PCG64(0))
-                .reset_index(drop=True)
-            )
-
-            generated_dfs.append(s)
+            s = self._generate_anon_series(col)
+            self.generated_dfs.append(s)
 
         #3) CONCAT GENERATED DFs AND SERIES
-        temp_anon_df = pd.concat(generated_dfs, axis=1)
+        temp_anon_df = pd.concat(self.generated_dfs, axis=1)
 
         #4) GENERATE SERIES WITH "COMPLETE", CROSS-JOINED COLUMNS
         complete_series = []
@@ -155,11 +151,15 @@ class CategoricalDataGenerator:
         
         random_dates = self.rng.choice(all_pos_dates, self.num_rows)
 
-        return pd.Series(random_dates, name=col_name)
+        return shuffle_data(pd.Series(random_dates, name=col_name))
 
     def _generate_anon_series(self, col_name):
         '''
-        Generate basic categorical series anonymised according to user input
+        Generate basic categorical series anonymised according to user input.
+
+        Note that in all cases except external tables, the final series is shuffled
+        and index reset. Series generated from external tables are an exception because
+        their values are linked to columns that have already been generated.
 
         The code can take different paths depending on these things: 
         - whether a the anonymising method is set to random or a custom set
@@ -195,6 +195,15 @@ class CategoricalDataGenerator:
         orig_vals = col_attrs["original_values"]
         target_uniques = col_attrs.get("uniques", None)
 
+        #check if the anonymising set is a SQL statement
+        parser = Parser(anon_set)
+        try:
+            sql_tables = parser.tables
+            sql_columns = parser.columns_dict
+            return self._generate_using_external_table(col_name, anon_set, sql_tables, sql_columns)
+        except ValueError:
+            pass
+
         #generate values based on a regular expression specified in the anonymising_set
         if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_REGEX:
             return generate_regex_column(
@@ -226,9 +235,10 @@ class CategoricalDataGenerator:
                         .rename(columns=lambda x: x.replace("paired_", ""))
                 )
 
-                return pd.merge(original_series, paired_df, how="left", on=col_name)
+                return shuffle_data(
+                    pd.merge(original_series, paired_df, how="left", on=col_name))
 
-            return original_series
+            return shuffle_data(original_series)
 
         #finally, if we have original_values, but anon_set is not random
         #we pick the N distinct values from the anonymysing set, replace
@@ -253,7 +263,7 @@ class CategoricalDataGenerator:
         anon_list = [sql_df.iloc[x, :].values for x in idx]
         anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 
-        return anon_df
+        return shuffle_data(anon_df)
         
     def _generate_from_sql(self, col_name, col_attrs, complete=False, db_path=None):
         '''
@@ -324,7 +334,7 @@ class CategoricalDataGenerator:
 
             anon_df = pd.concat([anon_df, missing_df], axis=1)
 
-        return anon_df
+        return shuffle_data(anon_df)
 
     def _generate_complete_series(self, col_name):
         '''
@@ -391,7 +401,7 @@ class CategoricalDataGenerator:
             (self.spec_dict["metadata"]["date_columns"] or list()))
         
         nested_linked_cols = [
-            sublist for n, sublist in (self.spec_dict["linked_columns"] or list())
+            sublist for n, sublist in (self.spec_dict.get("linked_columns") or list())
             ]
 
         complete_cols = [c for c, v in get_attr_values(
@@ -418,3 +428,89 @@ class CategoricalDataGenerator:
         column_types = Columns(all_cols, complete_cols, paired_cols, skipped_cols)
 
         return column_types
+
+    def _generate_using_external_table(
+            self, col_name, anon_set, sql_tables, sql_columns):
+        '''
+        Doc string
+        '''
+        # get the id for the dataset that is being generated
+        source_table_id = self.spec_dict["metadata"]["id"]
+
+        # establish which table is the "source" table and which is "external"
+        ext_tables = [t for t in sql_tables if t != f"temp_{source_table_id}"]
+        if not ext_tables:
+            raise RuntimeError("anonynising_set SQL is missing external table name.")
+        
+        # establish which columns are "join" columns; if there are none that
+        # means we're using external table without linking it to the existing data
+        # also need to ensure there is graceful error handling when user doesn't fully
+        # qualify table column names.
+        join_columns = [
+            c.split(".")[1] for c in sql_columns["select"] if c.split(".")[1] != col_name]        
+
+        # check the "external" table is in exhibit.db
+        for ext_table in ext_tables:
+            if not check_table_exists(ext_table):
+                raise RuntimeError(
+                    f"anonymising_set SQL includes a table {ext_table} that "
+                    "is missing from Exhibit.db"
+                )
+        
+        # insert the dataframe generated so far into the DB; we make sure to drop
+        # duplicates in case user didn't specify DISTINC in his SQL query
+        existing_data = pd.concat(self.generated_dfs).to_frame()
+        existing_data_distinct = existing_data.drop_duplicates(subset=join_columns)
+
+        # check how dataframes behave rather than series TODO
+        existing_data_cols = [x.name for x in self.generated_dfs ]
+
+        # this function converts list of tuples into a dataframe anyway
+        create_temp_table(
+            table_name=f"temp_{source_table_id}",
+            col_names=existing_data_cols,
+            data=existing_data_distinct
+        )
+
+        # run the SQL from anon_set
+        result = execute_sql(anon_set)
+
+        # create the dataframe with SQL data
+        sql_df_cols = [x.split('.')[1] for x in sql_columns["select"]]
+        sql_df = pd.DataFrame(data=result, columns=sql_df_cols)
+
+        # get the probabilities for the selected column in the external table
+        # at the level of the join key - use a hash for the combination of columns!
+        # TODO add a check for any existing probabilities in case user want to override
+        # the probabilities coming from the external table.
+
+        # Rather than use existing probabilities from the spec, treat them as a weight 
+        # and apply them to the conditional, per-join key probabilities from external
+        # table. TEST THIS A LOT.
+        probas = {}
+
+        groups = sql_df.groupby(join_columns)
+        for i, group in groups:
+
+            total_count = len(group)
+            proba_arr = (group
+                            .value_counts()
+                            .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
+                            .reset_index(level=col_name)
+                            .values
+                            )
+            a, p = np.split(proba_arr, 2, axis=1)
+            probas[i[0]] = (a.flatten(), p.flatten().astype(float))
+            
+
+        # take the data generated so far and generate appropriate values based on key
+        groups = existing_data.groupby(join_columns).groups
+        temp_result = []
+
+        for group_key, group_index in groups.items():
+            new_data = self.rng.choice(a=probas[group_key][0], p=probas[group_key][1], size=len(group_index))
+            temp_result.append(pd.Series(data=new_data, index=group_index, name=col_name))
+
+        final_result = pd.concat(temp_result)
+
+        return final_result

@@ -15,6 +15,7 @@ import dateutil
 
 # External library imports
 import pandas as pd
+import numpy as np
 from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype, is_bool_dtype
 
 # Exhibit imports
@@ -414,3 +415,15 @@ def natural_key(string_):
     Thanks SO!
     '''
     return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]
+
+def shuffle_data(data):
+    '''
+    Shuffle series / dataframe and reset index.
+    '''
+
+    shuffled_series = (data
+        .sample(frac=1, random_state=np.random.PCG64(0))
+        .reset_index(drop=True)
+    )
+    
+    return shuffled_series

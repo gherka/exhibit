@@ -9,7 +9,8 @@ import os
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 
-from sqlalchemy import MetaData, Table, Column, String, Float, text, create_engine, func
+from sqlalchemy import (
+    MetaData, Table, Column, String, Float, text, create_engine, func, inspect)
 from sqlalchemy.sql import select
 from sqlalchemy.schema import DropTable
 from sqlalchemy.engine import make_url
@@ -117,7 +118,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
         make sure there are no spaces in the table_name as they are not allowed
     col_names: list or any other iterable
         column names also can't contain spaces
-    data: list of tuples
+    data: list of tuples or pd.DataFrame
         each tuple containting row's worth of data
     return_table : bool
         optional. Sometimes useful to return all values from the newly created table
@@ -158,8 +159,8 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
     metadata = MetaData(bind=engine, schema=db_schema)
 
     # to help with managing the data, convert tuples to a dataframe
-    data_df = pd.DataFrame(data)
-
+    data_df = pd.DataFrame(data) if not isinstance(data, pd.DataFrame) else data
+    
     # make sure that numeric columns are typed as Float, not custom np.int32, etc.
     # and strip whitespace from non-numeric values which is left over from YAML
     data_types = []
@@ -288,5 +289,44 @@ def get_number_of_table_columns(table_name, db_path=None):
 
     # shut down the engine which closes all associated connections
     engine.dispose()
+
+    return result
+
+def check_table_exists(table_name, db_path=None):
+    '''
+    Doc string
+    '''
+
+    db_url = os.environ.get("EXHIBIT_DB_URL", None)
+    db_path = db_path if db_path else package_dir(EXHIBIT_DB_LOCAL)
+
+    if db_url is None:
+        db_url = make_url("sqlite:///" + db_path + "?mode=r")
+
+    # create engine and inspect 
+    engine = create_engine(db_url)
+    result = inspect(engine).has_table(table_name)
+
+    # shut down the engine which closes all associated connections
+    engine.dispose()
+    
+    return result
+
+def execute_sql(sql, db_path=None):
+    '''
+    Doc string
+    '''
+
+    db_url = os.environ.get("EXHIBIT_DB_URL", None)
+    db_path = db_path if db_path else package_dir(EXHIBIT_DB_LOCAL)
+
+    if db_url is None:
+        db_url = make_url("sqlite:///" + db_path + "?mode=r")
+    
+    # create engine and connection
+    engine = create_engine(db_url)
+
+    with engine.connect() as conn:
+        result = conn.execute(sql).fetchall()
 
     return result
