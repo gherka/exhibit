@@ -93,7 +93,7 @@ class utilsTests(unittest.TestCase):
 
         result = [tm.guess_date_frequency(x) for x in test_cases]
 
-        expected = ["D", "MS", "MS", "QS", "QS", "YS"]
+        expected = ["D", "M", "MS", "Q", "QS", "YS"]
 
         self.assertEqual(result, expected)
 

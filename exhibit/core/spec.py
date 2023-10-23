@@ -180,12 +180,17 @@ class Spec:
             if is_datetime64_dtype(self.df.dtypes[col]):
 
                 from_date = self.df[col].min().date().isoformat()
+                to_date = self.df[col].max().date().isoformat()
                 date_uniques = int(self.df[col].nunique())
                 date_freq = guess_date_frequency(self.df[col])
                 date_miss_proba = self._missing_data_chance(col)
 
+                # we don't include anonymising set by default for date column because
+                # an empty string is rendered as '' in YAML.
                 date_col = DateColumn(
+                    col_name = col,
                     from_date=from_date,
+                    to_date=to_date,
                     uniques=date_uniques,
                     freq=date_freq,
                     miss_proba=date_miss_proba
@@ -598,13 +603,13 @@ class DateColumn(dict):
     '''
 
     def __init__(
-            self, from_date, uniques, freq="D",
+            self, col_name, uniques, freq="D", from_date=None,
             to_date=None, cross_join=True, miss_proba=0, anonymising_set=None):
         '''
         Parameters
         ----------
-        from_date  : string
-            Start date in an ISO format (YYYY-MM-DD).
+        col_name   : string 
+            Date column to be generated.
         uniques    : int
             Number of date values to use in the generation. Note that the overall 
             length of the column is determined by the number_of_rows value in the
@@ -614,6 +619,8 @@ class DateColumn(dict):
             documentation for more details. Defaults to single day frequency (D),
             meaning a DateColumn initialised with from_date=2020-01-01 and uniques=7
             will generate dates from the range 2020-01-01 - 2020-01-07.
+        from_date  : string
+            Start date in an ISO format (YYYY-MM-DD).
         to_date  : string
             End date in an ISO format (YYYY-MM-DD). You must include either from or to
             date.
@@ -626,6 +633,10 @@ class DateColumn(dict):
         anonymising_set : str
             Optional SQL SELECT statement to pick the date values from.
         '''
+
+        if from_date is None and to_date is None: #pragma: no cover
+            raise RuntimeError(
+                f"{col_name} is missing at least one of from_date or to_date")
         
         self["type"] = "date"
         self["from"] = from_date
@@ -634,4 +645,6 @@ class DateColumn(dict):
         self["frequency"] = freq
         self["cross_join_all_unique_values"] = cross_join
         self["miss_probability"] = miss_proba
-        self["anonymising_set"] = anonymising_set
+        # optional parameters; is these are set, they will appear in the spec
+        if anonymising_set is not None:
+            self["anonymising_set"] = anonymising_set

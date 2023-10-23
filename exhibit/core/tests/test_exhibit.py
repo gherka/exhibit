@@ -317,10 +317,12 @@ class exhibitTests(unittest.TestCase):
         spec_dict["columns"]["id"] = UUIDColumn(uuid_seed=0)
 
         spec_dict["columns"]["date_of_birth"] = DateColumn(
-            from_date="2000-01-01", to_date="2023-01-01", uniques=5, cross_join=False)
+            col_name="date_of_birth", from_date="2000-01-01", to_date="2023-01-01",
+            uniques=5, cross_join=False)
         
         spec_dict["columns"]["date_of_death"] = DateColumn(
-            from_date="2000-01-01", to_date="2023-01-01", uniques=5, cross_join=False,
+            col_name="date_of_death", from_date="2000-01-01", to_date="2023-01-01",
+            uniques=5, cross_join=False,
             anonymising_set='''
             SELECT temp_test.id, dates.date as date_of_death
             FROM temp_test, dates

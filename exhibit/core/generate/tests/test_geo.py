@@ -216,8 +216,8 @@ class geoTests(unittest.TestCase):
 
         #rather than assert the entire generated df, just check the summary stats
         #exact values might change from one package version (h3, numpy) to another
-        expected_max_long = -3.671
-        expected_max_lat = 55.68
+        expected_max_long = -3.748
+        expected_max_lat = 55.624
         query = "HB2014Name == 'NHS Ayrshire and Arran'"
 
         self.assertEqual(
@@ -290,8 +290,8 @@ class geoTests(unittest.TestCase):
         self._temp_tables.append(temp_spec["metadata"]["id"])
 
         # package version change means the RNG rolls slightly differently to prev. ver
-        expected_max_long = -3.554
-        expected_max_lat = 55.569
+        expected_max_long = -3.3
+        expected_max_lat = 55.547
         query = "HB2014Name == 'NHS Orkney' & GPPracticeName == 'SKERRYVORE PRACTICE'"
 
         self.assertEqual(

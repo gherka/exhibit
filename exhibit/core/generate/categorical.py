@@ -5,6 +5,7 @@ Methods to generate categorical columns / values
 # Standard library imports
 from collections import namedtuple
 from itertools import chain
+import warnings
 
 # External library imports
 import pandas as pd
@@ -151,6 +152,18 @@ class CategoricalDataGenerator:
         if start is not None and end is not None:
 
             all_pos_dates = pd.date_range(start=start, end=end, freq=freq)
+            # when the number of requested periods is greater than the total possible
+            # range between from and to, given the frequency, we issue a warning, then
+            # omit the date_to and generate N=periods unique dates from date_from.
+            if len(all_pos_dates) < periods:
+                warnings.warn(
+                    f"The number of unique dates at frequency {freq} between {start} "
+                    f"and {end} is smaller than the number of requested periods"
+                    f"({periods}). The date_to parameter will be ignored.",
+                    RuntimeWarning
+                    )
+                all_pos_dates = pd.date_range(start=start, periods=periods, freq=freq)
+
             all_pos_dates = self.rng.choice(all_pos_dates, periods, replace=False)
 
         else:

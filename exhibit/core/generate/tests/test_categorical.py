@@ -4,16 +4,16 @@ Test the generation of categorical columns & values
 
 # Standard library imports
 import unittest
-from unittest.mock import Mock, patch
 import tempfile
+from unittest.mock import Mock, patch
 from os.path import abspath, join
-from sqlalchemy.exc import InvalidRequestError
 
 # External library imports
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype
 from pandas.testing import assert_frame_equal
+from sqlalchemy.exc import InvalidRequestError
 
 # Exhibit imports
 from exhibit.db import db_util
@@ -425,6 +425,38 @@ class categoricalTests(unittest.TestCase):
 
         self.assertTrue((result.query("age > 18")["smoker"] == "yes").all())
         self.assertTrue((result.query("age <= 18")["smoker"] == "no").all())
+
+    def test_date_column_with_impossible_combination_of_from_to_and_period(self):
+        '''
+        By default, the spec is generated with date_from, date_to, unique periods and
+        frequency. It's possible to have a situation where the combination of these
+        parameters will be impossible to satisfy, like 2020-01-01 to 2020-02-01 with
+        frequency=M and periods=10. In such as case, we drop the date_from and keep
+        the rest.
+        '''
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata": {
+                "date_columns" : ["source_date"],
+                "inline_limit" : 5,
+                "id" : "main"
+                },
+            "columns": {
+                "source_date": {
+                    "type": "date",
+                    "from": '2023-01-01',
+                    "to"  : '2023-02-01',
+                    "uniques" : 60,
+                    "frequency" : 'D',
+                    "cross_join_all_unique_values" : False,
+                },
+            }
+        }
+
+        gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=10)
+
+        self.assertWarns(RuntimeWarning, gen.generate)
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
