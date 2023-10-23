@@ -597,7 +597,9 @@ class DateColumn(dict):
     Column type to generate dates given a start date and the number of dates.
     '''
 
-    def __init__(self, from_date, uniques, freq="D", cross_join=True, miss_proba=0):
+    def __init__(
+            self, from_date, uniques, freq="D",
+            to_date=None, cross_join=True, miss_proba=0, anonymising_set=None):
         '''
         Parameters
         ----------
@@ -612,17 +614,24 @@ class DateColumn(dict):
             documentation for more details. Defaults to single day frequency (D),
             meaning a DateColumn initialised with from_date=2020-01-01 and uniques=7
             will generate dates from the range 2020-01-01 - 2020-01-07.
+        to_date  : string
+            End date in an ISO format (YYYY-MM-DD). You must include either from or to
+            date.
         cross_join : Boolean
             Flag to say whether the full range dates should be available for all other
             column values. This is useful if wanting to ensure "complete" time series
             for comparison.
         miss_proba : float
             Percentage of records to be nulled.
+        anonymising_set : str
+            Optional SQL SELECT statement to pick the date values from.
         '''
         
         self["type"] = "date"
-        self["cross_join_all_unique_values"] = cross_join
-        self["miss_probability"] = miss_proba
         self["from"] = from_date
+        self["to"] = to_date
         self["uniques"] = uniques
         self["frequency"] = freq
+        self["cross_join_all_unique_values"] = cross_join
+        self["miss_probability"] = miss_proba
+        self["anonymising_set"] = anonymising_set

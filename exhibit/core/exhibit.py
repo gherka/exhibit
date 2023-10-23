@@ -287,7 +287,8 @@ class Exhibit:
             anon_df.insert(0, uuid_col_name, uuid_col)
 
         #3) GENERATE CATEGORICAL PART OF THE DATASET (INC. TIMESERIES)
-        cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows)
+        # we pass anon_df in case anonymising_set SQL needs to reference existing UUIDs
+        cat_gen = CategoricalDataGenerator(self.spec_dict, core_rows, anon_df)
         cat_df = cat_gen.generate()
         anon_df = pd.concat([anon_df, cat_df], axis=1)
         for cat_col in self.spec_dict["metadata"]["categorical_columns"]:

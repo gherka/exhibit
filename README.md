@@ -54,6 +54,7 @@ Exhibit is bundled with a SQLite3 database and a Python utility tool to interact
  - `mountains` has 15 mountain ranges and their top 10 peaks making it useful for aliasing hierarchical pairs, like NHS Boards and Hospitals.
  - `birds` has 150 pairs of common / scientific bird names. This can be useful for 1:1 paired columns.
  - `patients` has 360 made-up patient records with details such as gender, 5-year age band, date of birth and CHI number. Fields from this dataset can be selectively pulled in when linked data is required.
+  - `dates` has dates ranging from 1900-01-01 to 2100-01-01 at a single day interval. This table is useful if you have a SQL statement in the `anonymising_set` that picks dates based on a condition. 
 
 The database is also used to store temporary data for columns where the number of unique values exceeds user threshold and thus not available for editing directly in the `yml` file.
 

@@ -10,6 +10,7 @@ from itertools import chain
 import pandas as pd
 import numpy as np
 from sql_metadata import Parser
+from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 
 # Exhibit imports
 from ..constants import ORIGINAL_VALUES_REGEX, ORIGINAL_VALUES_PAIRED
@@ -32,7 +33,7 @@ class CategoricalDataGenerator:
     (where uniques > inline_limit) - for now, this works only for linked data.
     '''
 
-    def __init__(self, spec_dict, core_rows):
+    def __init__(self, spec_dict, core_rows, anon_df=None):
         '''
         This class is covering the entire spec_dict as far as the 
         generation of non-numerical data is concerned.
@@ -41,7 +42,10 @@ class CategoricalDataGenerator:
         self.spec_dict = spec_dict
         self.rng = spec_dict["_rng"]
         self.num_rows = core_rows
-        self.fixed_anon_sets = ["random", "mountains", "patients", "birds"]
+        self.fixed_anon_sets = ["random", "mountains", "patients", "birds", "dates"]
+        # we need UUID dataset (if it exists) for possible conditional SQL that
+        # references already-generated columns in the spec
+        self.anon_df = anon_df
         
         (self.all_cols,
          self.complete_cols,
@@ -113,13 +117,7 @@ class CategoricalDataGenerator:
             )
         
         #6) TIDY UP
-        # reset index and shuffle rows one last time
-        anon_df = (
-            temp_anon_df
-                .drop("key", axis=1)
-                .sample(frac=1, random_state=np.random.PCG64(0))
-                .reset_index(drop=True)
-        )
+        anon_df = temp_anon_df.drop("key", axis=1)
 
         return anon_df
 
@@ -140,11 +138,25 @@ class CategoricalDataGenerator:
         pd.Series
         '''
 
-        all_pos_dates = pd.date_range(
-            start=self.spec_dict["columns"][col_name]["from"],
-            periods=self.spec_dict["columns"][col_name]["uniques"],
-            freq=self.spec_dict["columns"][col_name]["frequency"],            
-        )
+        # see which date parameters we have access to
+        start = self.spec_dict["columns"][col_name].get("from", None)
+        end = self.spec_dict["columns"][col_name].get("to", None)
+        
+        # frequency and periods are always required
+        freq = self.spec_dict["columns"][col_name]["frequency"]
+        periods = self.spec_dict["columns"][col_name]["uniques"]
+
+        # if we have both start and end, we generate all values in-between and pick the 
+        # dates at random to match the number of periods, without repeats
+        if start is not None and end is not None:
+
+            all_pos_dates = pd.date_range(start=start, end=end, freq=freq)
+            all_pos_dates = self.rng.choice(all_pos_dates, periods, replace=False)
+
+        else:
+            # one of the start / end is None
+            all_pos_dates = pd.date_range(
+                start=start, end=end, periods=periods, freq=freq)
 
         if complete:
             return pd.Series(all_pos_dates, name=col_name)
@@ -182,39 +194,39 @@ class CategoricalDataGenerator:
         Pandas Series object or a Dataframe
         '''
 
-        col_type = self.spec_dict["columns"][col_name]["type"]
         col_attrs = self.spec_dict["columns"][col_name]
-
-        if col_type == "date":
-            
-            return self._generate_timeseries(col_name, complete=False)  
+        col_type = col_attrs["type"]
         
-        #capture categorical-only information
-        paired_cols = col_attrs["paired_columns"]
-        anon_set = col_attrs["anonymising_set"]
-        orig_vals = col_attrs["original_values"]
+        # capture categorical-only information, with fallback for date columns
+        paired_cols = col_attrs.get("paired_columns", None)
+        orig_vals = col_attrs.get("original_values", None)
         target_uniques = col_attrs.get("uniques", None)
 
-        #check if the anonymising set is a SQL statement
-        parser = Parser(anon_set)
-        try:
-            sql_tables = parser.tables
-            sql_columns = parser.columns_dict
-            return self._generate_using_external_table(col_name, anon_set, sql_tables, sql_columns)
-        except ValueError:
-            pass
+        # typically, only categorical columns will have an anonymising set, but time
+        # columns can use it for SQL to pull conditional values from external table
+        # ignoring the standard date genderation parameters, like from / to.        
+        anon_set = col_attrs.get("anonymising_set", None)
 
-        #generate values based on a regular expression specified in the anonymising_set
+        # check if the anonymising set is a SQL statement starting with SELECT
+        # note that for dates, all other parameters, like from / to will be ignored
+        if anon_set is not None and anon_set.strip().upper()[:6] == "SELECT":
+            return self._generate_using_external_table(col_name, anon_set)
+
+        # normal date columns generated using from / to / number of uniques
+        if col_type == "date":
+            return self._generate_timeseries(col_name, complete=False)  
+
+        # generate values based on a regular expression specified in the anonymising_set
         if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_REGEX:
             return generate_regex_column(
                 anon_set, col_name, self.num_rows, target_uniques)
 
-        #values were stored in SQL; randomise based on uniform distribution
+        # values were stored in SQL; randomise based on uniform distribution
         if col_attrs["uniques"] > self.spec_dict["metadata"]["inline_limit"]:
             return self._generate_from_sql(col_name, col_attrs)
 
-        #we have access to original_values and the paths are dependant on anon_set
-        #take every row except last which is reserved for Missing data
+        # we have access to original_values and the paths are dependant on anon_set
+        # take every row except last which is reserved for Missing data
         col_df = col_attrs["original_values"].iloc[:-1, :]
         col_prob = np.array(col_df["probability_vector"]).astype(float)
 
@@ -240,25 +252,25 @@ class CategoricalDataGenerator:
 
             return shuffle_data(original_series)
 
-        #finally, if we have original_values, but anon_set is not random
-        #we pick the N distinct values from the anonymysing set, replace
-        #the original values + paired column values in the original_values
-        #DATAFRAME, making sure the changes happen in-place which means
-        #that downstream, the weights table will be built based on the
-        #modified "original_values" dataframe.
+        # finally, if we have original_values, but anon_set is not random
+        # we pick the N distinct values from the anonymysing set, replace
+        # the original values + paired column values in the original_values
+        # DATAFRAME, making sure the changes happen in-place which means
+        # that downstream, the weights table will be built based on the
+        # modified "original_values" dataframe.
 
         sql_df = self._generate_from_sql(col_name, col_attrs, complete=True)
 
-        #includes Missing data row as opposed to col_df which doesn't
+        # includes Missing data row as opposed to col_df which doesn't
         orig_df = col_attrs["original_values"]
 
-        #missing data is the last row
+        # missing data is the last row
         repl = sql_df[col_name].unique()
         aliases = dict(zip(orig_df[col_name].values[:-1], repl))
         aliased_df = orig_df.applymap(lambda x: aliases.get(x, x))
         self.spec_dict["columns"][col_name]["original_values"] = aliased_df
 
-        #we ignore Missing Data probability when we originally create the variable
+        # we ignore Missing Data probability when we originally create the variable
         idx = self.rng.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
         anon_list = [sql_df.iloc[x, :].values for x in idx]
         anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
@@ -287,15 +299,15 @@ class CategoricalDataGenerator:
             table_name, *sql_column = anon_set.split(".")
             sql_df = query_exhibit_database(table_name, sql_column, uniques)
 
-        #if sql df is an anonymising set with different column names, like mountaints,
-        #we want to rename them to the actual column names used in the spec;
-        #alternatively, if the sql df is a lookup and column there match the spec, we
-        #make sure to take those columns that match.
+        # if sql df is an anonymising set with different column names, like mountaints,
+        # we want to rename them to the actual column names used in the spec;
+        # alternatively, if the sql df is a lookup and column there match the spec, we
+        # make sure to take those columns that match.
         if set([col_name] + paired_cols).issubset(set(sql_df.columns)):
             sql_df = sql_df[[col_name] + paired_cols]
 
-        #rename sql_df columns to be same as original + paired; zip is 
-        #only going to pair up columns up to the shorter list!
+        # rename sql_df columns to be same as original + paired; zip is 
+        # only going to pair up columns up to the shorter list!
         sql_df.rename(
             columns=dict(zip(
                 sql_df.columns,
@@ -320,9 +332,9 @@ class CategoricalDataGenerator:
             anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 
         #3) HANDLE MISSING PAIRED COLUMNS IN SQL
-        #if the column has paired columns and a non-random anonymising set,
-        #the anonymising set must also provide the paired columns or the same
-        #values will be used for the original + paired columns
+        # if the column has paired columns and a non-random anonymising set,
+        # the anonymising set must also provide the paired columns or the same
+        # values will be used for the original + paired columns
         missing_paired_cols = set(paired_cols) - set(sql_df.columns[1:])
 
         if missing_paired_cols:
@@ -396,9 +408,12 @@ class CategoricalDataGenerator:
 
         Columns = namedtuple("Columns", ["all", "complete", "paired", "skipped"])
 
+        # there might be cases when you want to generate just the date columns or just
+        # the categorical columns so they might be missing from the metadata section
         all_cols = (
-            (self.spec_dict["metadata"]["categorical_columns"] or list()) +
-            (self.spec_dict["metadata"]["date_columns"] or list()))
+            (self.spec_dict["metadata"].get("categorical_columns", list())) +
+            (self.spec_dict["metadata"].get("date_columns", list()))
+        )
         
         nested_linked_cols = [
             sublist for n, sublist in (self.spec_dict.get("linked_columns") or list())
@@ -429,41 +444,70 @@ class CategoricalDataGenerator:
 
         return column_types
 
-    def _generate_using_external_table(
-            self, col_name, anon_set, sql_tables, sql_columns):
+    def _generate_using_external_table(self, col_name, anon_set):
         '''
-        Doc string
+        We assume that the aliased column is the one you want to pick the values from
+        and the rest of the columns in the select statement are going to be the join
+        keys.
         '''
-        # get the id for the dataset that is being generated
+
+        parser = Parser(anon_set)
+        sql_tables = parser.tables
+        aliased_columns = parser.columns_aliases_names
         source_table_id = self.spec_dict["metadata"]["id"]
 
-        # establish which table is the "source" table and which is "external"
-        ext_tables = [t for t in sql_tables if t != f"temp_{source_table_id}"]
-        if not ext_tables:
-            raise RuntimeError("anonynising_set SQL is missing external table name.")
+        if len(aliased_columns) != 1 or aliased_columns[0] != col_name:
+            raise RuntimeError(
+                f"Please make sure the SQL SELECT statement in {col_name}'s "
+                f"anonymising_set includes exactly one aliased column named {col_name}."
+            )
         
-        # establish which columns are "join" columns; if there are none that
-        # means we're using external table without linking it to the existing data
-        # also need to ensure there is graceful error handling when user doesn't fully
-        # qualify table column names.
-        join_columns = [
-            c.split(".")[1] for c in sql_columns["select"] if c.split(".")[1] != col_name]        
+        # "join" columns are all non-aliased columns from the source table
+        # "join" here refers to joining back the data from the SQL statment to the
+        # original source data, not any join columns that are part of the JOIN section
+        # of SQL proper.
+
+        join_columns = []
+        for qualified_column in parser.columns_dict["select"]:
+            table, column = qualified_column.split(".")
+            if table == f"temp_{source_table_id}" and column != col_name:
+                join_columns.append(column)
+
+        # "source" table aka existing table is always put into exhibit DB, but if 
+        # SQL is trying to reference an external table, we should check if it exists
+        ext_tables = [t for t in sql_tables if t != f"temp_{source_table_id}"]     
 
         # check the "external" table is in exhibit.db
         for ext_table in ext_tables:
             if not check_table_exists(ext_table):
                 raise RuntimeError(
-                    f"anonymising_set SQL includes a table {ext_table} that "
-                    "is missing from Exhibit.db"
+                    f"Please make sure that {ext_table} used in the anonymising_set SQL"
+                    f" for column {col_name} exists in the Exhibit database."
                 )
         
         # insert the dataframe generated so far into the DB; we make sure to drop
-        # duplicates in case user didn't specify DISTINC in his SQL query
-        existing_data = pd.concat(self.generated_dfs).to_frame()
-        existing_data_distinct = existing_data.drop_duplicates(subset=join_columns)
+        # duplicates in case user didn't specify DISTINC in his SQL query;
+        # the anon_df would typically be from UUIDs that are generated before
+        # categorical columns.
+        if self.anon_df is not None:
+            existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
+        else:
+            existing_data = pd.concat(self.generated_dfs, axis=1)
 
-        # check how dataframes behave rather than series TODO
-        existing_data_cols = [x.name for x in self.generated_dfs ]
+        # ensure the data going into DB is processed identically for join keys
+        for col in join_columns:
+            if is_numeric_dtype(existing_data[col]):
+                existing_data[col] = existing_data[col].astype(float)
+            elif is_datetime64_dtype(existing_data[col]):
+                existing_data[col] = existing_data[col].dt.strftime("%Y-%m-%d")
+            else:
+                existing_data[col] = existing_data[col].astype(str).str.strip()
+
+        # dropping duplicates is a filter operation (even though it returns new data)
+        # unless we make an explicit copy of the de-duplicated dataframe, Pandas will 
+        # trigger SettingWithCopy warning when trying to change any values.
+        existing_data_distinct = existing_data.drop_duplicates(subset=join_columns).copy()
+        existing_data_cols = [c for c in existing_data.columns]
 
         # this function converts list of tuples into a dataframe anyway
         create_temp_table(
@@ -472,12 +516,12 @@ class CategoricalDataGenerator:
             data=existing_data_distinct
         )
 
-        # run the SQL from anon_set
+        # run the SQL from anon_set; note that the type of SQL query we'll likely see 
+        # will be a cross-join (e.g. dates) so any speed optimisations would be welcome
         result = execute_sql(anon_set)
 
         # create the dataframe with SQL data
-        sql_df_cols = [x.split('.')[1] for x in sql_columns["select"]]
-        sql_df = pd.DataFrame(data=result, columns=sql_df_cols)
+        sql_df = pd.DataFrame(data=result, columns=join_columns + aliased_columns)
 
         # get the probabilities for the selected column in the external table
         # at the level of the join key - use a hash for the combination of columns!
@@ -500,8 +544,11 @@ class CategoricalDataGenerator:
                             .values
                             )
             a, p = np.split(proba_arr, 2, axis=1)
+            # enusre p sums up to 1
+            p = p.flatten().astype(float)
+            p = p * (1 / sum(p))
+
             probas[i[0]] = (a.flatten(), p.flatten().astype(float))
-            
 
         # take the data generated so far and generate appropriate values based on key
         groups = existing_data.groupby(join_columns).groups
@@ -512,5 +559,10 @@ class CategoricalDataGenerator:
             temp_result.append(pd.Series(data=new_data, index=group_index, name=col_name))
 
         final_result = pd.concat(temp_result)
+
+        # ensure we return the correct type for date columns
+        col_type = self.spec_dict["columns"][col_name]["type"]
+        if col_type == 'date':
+            final_result = final_result.astype("datetime64[ns]")
 
         return final_result

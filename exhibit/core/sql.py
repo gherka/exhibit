@@ -7,7 +7,7 @@ import os
 
 #External library imports
 import pandas as pd
-from pandas.api.types import is_numeric_dtype
+from pandas.api.types import is_numeric_dtype, is_datetime64_dtype
 
 from sqlalchemy import (
     MetaData, Table, Column, String, Float, text, create_engine, func, inspect)
@@ -169,8 +169,12 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
         if is_numeric_dtype(data_df[col]):
             data_df[col] = data_df[col].astype(float)
             data_types.append(Float)
+        # datetimes are awkward - SQLlite only accept Python's datetimes, not Pandas'
+        elif is_datetime64_dtype(data_df[col]): # pragma: no cover
+            data_df[col] = data_df[col].dt.strftime("%Y-%m-%d")
+            data_types.append(String)
         else:
-            data_df[col] = data_df[col].str.strip()
+            data_df[col] = data_df[col].astype(str).str.strip()
             data_types.append(String)
 
     # convert back to a list of tuples

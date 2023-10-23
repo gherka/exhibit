@@ -13,6 +13,7 @@ import pandas as pd
 # Exhibit imports
 from exhibit.core.utils import package_dir, get_attr_values
 from exhibit.core.tests.test_reference import temp_exhibit
+from exhibit.core.spec import Spec, UUIDColumn, DateColumn
 from exhibit.db import db_util
 
 # Module under test
@@ -295,6 +296,42 @@ class exhibitTests(unittest.TestCase):
             result.query("sex == 'Male' & smoker == 'smoker'")["count"].values[0],
             result.query("sex == 'Female' & smoker == 'smoker'")["count"].values[0]
         )
+
+    def test_anonymising_set_with_UUID_column_in_SQL(self):
+        '''
+        One of the more common use cases for using SQL in anonymising_set is to be able
+        to generate data based on a common identifier between two tables - for example,
+        a patient's CHI can be used to link demographic information in one table and
+        hosptial episode data in another. In order for this to happen,
+        CategoricalDataGenerator must have access to the generated UUID column. 
+        '''
+
+        spec = Spec()
+        spec_dict = spec.generate()
+
+        spec_dict["metadata"]["id"] = "test"
+        spec_dict["metadata"]["number_of_rows"] = 10
+        spec_dict["metadata"]["uuid_columns"] = ["id"]
+        spec_dict["metadata"]["date_columns"] = ["date_of_birth", "date_of_death"]
+
+        spec_dict["columns"]["id"] = UUIDColumn(uuid_seed=0)
+
+        spec_dict["columns"]["date_of_birth"] = DateColumn(
+            from_date="2000-01-01", to_date="2023-01-01", uniques=5, cross_join=False)
+        
+        spec_dict["columns"]["date_of_death"] = DateColumn(
+            from_date="2000-01-01", to_date="2023-01-01", uniques=5, cross_join=False,
+            anonymising_set='''
+            SELECT temp_test.id, dates.date as date_of_death
+            FROM temp_test, dates
+            WHERE temp_test.date_of_birth < dates.date
+            ''')
+
+        exhibit_data = tm.Exhibit(
+            command="fromspec", source=spec_dict, output="dataframe")
+        anon_df = exhibit_data.generate()
+
+        self.assertTrue((anon_df["date_of_death"] > anon_df["date_of_birth"]).all())
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
