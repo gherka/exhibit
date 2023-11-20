@@ -18,6 +18,7 @@ The goal of Exhibit is to make it easier to generate anonymised data at scale in
 - Generate and manipulate missing data and timeseries
 - Generate geo-spatial data using H3 hexes
 - Augment your synthetic data with compiled machine learning models and custom functions
+- Use SQL to generate conditional values based on external tables
 
 ---
 ### Installation:

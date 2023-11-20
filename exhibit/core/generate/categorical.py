@@ -568,7 +568,14 @@ class CategoricalDataGenerator:
         temp_result = []
 
         for group_key, group_index in groups.items():
-            new_data = self.rng.choice(a=probas[group_key][0], p=probas[group_key][1], size=len(group_index))
+            # if the key is missing, then the SQL filtered out the data for that key
+            # having a COALESCE in SQL would fix it, but in case it's also missing, 
+            # we try to catch this edge case in code as well. 
+            try:
+                new_data = self.rng.choice(a=probas[group_key][0], p=probas[group_key][1], size=len(group_index))
+            except KeyError: #pragma: no cover
+                new_data = [np.nan] * len(group_index)
+    
             temp_result.append(pd.Series(data=new_data, index=group_index, name=col_name))
 
         final_result = pd.concat(temp_result)
