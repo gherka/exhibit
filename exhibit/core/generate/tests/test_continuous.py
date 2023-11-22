@@ -463,7 +463,8 @@ class continuousTests(unittest.TestCase):
         '''
 
         test_series = pd.Series(
-            [1, 2, 4, 8, 16, 4, 1]
+            [1, 2, 4, 8, 16, 4, 1],
+            name="test"
         )
             
         test_min = 10
@@ -487,6 +488,7 @@ class continuousTests(unittest.TestCase):
 
         self.assertEqual(scaled_series.min(), test_min)
         self.assertEqual(scaled_series.max(), test_max)
+        self.assertEqual(scaled_series.name, test_series.name)
 
     def test_range_scaling_with_integer_precision(self):
         '''
@@ -500,7 +502,8 @@ class continuousTests(unittest.TestCase):
         '''
 
         test_series = pd.Series(
-            [1, 2, 4, 8, 16, 4, 1, np.nan]
+            [1, 2, 4, 8, 16, 4, 1, np.nan],
+            name="test"
         )
             
         test_min = 10
@@ -513,6 +516,7 @@ class continuousTests(unittest.TestCase):
         self.assertEqual(scaled_series.min(), test_min)
         self.assertEqual(scaled_series.max(), test_max)
         self.assertEqual(scaled_series.dtype, "Int64")
+        self.assertEqual(scaled_series.name, test_series.name)
 
     def test_range_scaling_with_missing_min_max(self):
         '''
@@ -542,7 +546,10 @@ class continuousTests(unittest.TestCase):
         notebook in the docs folder of Exhibit.
         '''
 
-        test_series = pd.Series(np.random.normal(loc=10, scale=1, size=1_000))
+        test_series = pd.Series(
+            np.random.normal(loc=10, scale=1, size=1_000),
+            name="test"
+        )
             
         test_mean = -20
         test_std = 5
@@ -553,6 +560,28 @@ class continuousTests(unittest.TestCase):
 
         self.assertAlmostEqual(scaled_series.mean(), test_mean)
         self.assertAlmostEqual(scaled_series.std(), test_std)
+        self.assertEqual(scaled_series.name, test_series.name)
+
+    def test_scale_to_statistic_sum_series_name(self):
+        '''
+        We need to ensure that that the scaling function returns a correctly scaled
+        series with a name that matches the source, otherwise bugs can appear when,
+        for example, concatenating the results.
+        '''
+
+        test_series = pd.Series(
+            np.random.normal(loc=10, scale=1, size=1_000),
+            name="test"
+        )
+            
+        test_sum=500
+        precision = "integer"
+
+        scaled_series = tm._scale_to_target_sum(
+            test_series, precision, target_sum=test_sum)
+
+        self.assertEqual(scaled_series.sum(), test_sum)
+        self.assertEqual(scaled_series.name, test_series.name)
 
     def test_range_scaling_with_equal_weights(self):
         '''

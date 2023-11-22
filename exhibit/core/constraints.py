@@ -1417,7 +1417,7 @@ def _get_probabilities_by_frequency(f, target_f="high"):
     
     Parameters
     ----------
-    f             : np.array or Sequence
+    f             : np.ndarray or Sequence
         a sequence of row frequencies sorted large to small
     target_f      : str
         preferred direction, either high or low.
@@ -1439,7 +1439,7 @@ def _get_probabilities_by_frequency(f, target_f="high"):
     '''
 
     if not isinstance(f, np.ndarray): #pragma: no cover
-        f = np.array
+        f = np.ndarray(f)
 
     if target_f == "high":
 

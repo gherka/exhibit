@@ -234,7 +234,9 @@ def _scale_to_range(series, precision, target_min=None, target_max=None, **_kwar
     
     # where the min == max in the source data, just pick non-null target and fill series
     if len(X.unique()) == 1:
-        return pd.Series(np.full(shape=len(X), fill_value=target_min or target_max))
+        return pd.Series(
+            np.full(shape=len(X), fill_value=target_min or target_max),
+            name=series.name)
     
     # adjust for potential negative signs!
     if target_min is None:
@@ -254,7 +256,8 @@ def _scale_to_range(series, precision, target_min=None, target_max=None, **_kwar
         labels = np.arange(np.floor(target_min), np.ceil(target_max) + 1)
 
         out = pd.Series(
-            pd.cut(X, bins=bins, right=True, include_lowest=True, labels=labels)
+            pd.cut(X, bins=bins, right=True, include_lowest=True, labels=labels),
+            name=series.name
         )
 
         return out.astype("Int64")
@@ -343,7 +346,8 @@ def _conditional_rounding(series, target_sum):
             series + row_diff >= 0,
             series + row_diff,
             np.where(pd.isnull(series), pd.NA, 0)
-            )
+            ),
+        name=series.name
     )
     
     #how many rows will need to be rounded up to get to target
@@ -353,7 +357,7 @@ def _conditional_rounding(series, target_sum):
     #to adjust them to a lower target_sum; we floor them and return
     if boundary < 0:
         print(f"Target sum for {series.name} is too low for the number of rows.")
-        return pd.Series(np.floor(values))
+        return pd.Series(np.floor(values), name=series.name)
     
     #if series has NAs, then the calcualtion will be off
     clean_values = values.dropna() #keep original index
