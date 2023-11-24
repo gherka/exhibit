@@ -42,7 +42,7 @@ class formattersTests(unittest.TestCase):
             "value" : range(7)
         })
 
-        test_col = 'id'
+        test_col = "id"
 
         expected_list = [
             "frequency | probability_vector",

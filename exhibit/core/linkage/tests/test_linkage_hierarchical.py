@@ -214,7 +214,7 @@ class linkageTests(unittest.TestCase):
         # lists with equal elements, ignoring order
         self.assertCountEqual(
             tm.find_hierarchically_linked_columns(test_df, test_spec),
-            [('C1', 'C4'), ("C3", "C4")]
+            [("C1", "C4"), ("C3", "C4")]
         )
 
     def test_1_to_1_linked_columns(self):

@@ -96,14 +96,14 @@ class Exhibit:
         skip_columns=None, linked_columns=None, 
         uuid_columns=None, discrete_columns=None,
         save_probabilities=None, derived_columns_first=False,
-        verbose=False, **kwargs):
+        verbose=False):
         '''
         Initialise either from the CLI or by instantiating directly
         '''
 
         # Basic error checking on the arguments
         if linked_columns is not None and len(linked_columns) < 2:
-            raise Exception("Please provide at least two linked columns")
+            raise RuntimeError("Please provide at least two linked columns")
         
         self.command = command
         self.source = source
@@ -111,7 +111,7 @@ class Exhibit:
         self.inline_limit = inline_limit
         self.equal_weights = equal_weights
         self.skip_columns = skip_columns or set()
-        self.linked_columns= linked_columns or list()
+        self.linked_columns= linked_columns or []
         self.uuid_columns= uuid_columns or set()
         self.discrete_columns = discrete_columns or set()
         self.save_probabilities = save_probabilities or set()
@@ -179,7 +179,7 @@ class Exhibit:
         else:
             output_path = self.output
 
-        with open(output_path, "w") as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(spec_yaml)
         
         print("Exhibit ready to view")
@@ -208,7 +208,7 @@ class Exhibit:
                 self.source = path_checker(self.source)
 
             if self.source.suffix == ".yml":
-                with open(self.source) as f:
+                with open(self.source, encoding="utf-8") as f:
                     self.spec_dict = yaml.safe_load(f)
             else: #pragma: no cover
                 raise TypeError("Specification is not in .yml format")
@@ -219,13 +219,13 @@ class Exhibit:
         # these NONE values early and change them into empty sequences.
         for key, value in self.spec_dict["metadata"].items():
             if "columns" in key and value is None:
-                self.spec_dict["metadata"][key] = list()
+                self.spec_dict["metadata"][key] = []
 
         if self.spec_dict.get("linked_columns", None) is None:
-                self.spec_dict["linked_columns"] = list()
+            self.spec_dict["linked_columns"] = []
 
         if self.spec_dict.get("derived_columns", None) is None:
-                self.spec_dict["derived_columns"] = dict()
+            self.spec_dict["derived_columns"] = {}
 
         for col in self.spec_dict["metadata"]["categorical_columns"]:
 
@@ -253,6 +253,7 @@ class Exhibit:
         self.spec_dict = validated_spec
         return validated_spec is not None
 
+    #pylint: disable=R0912, R0915
     def execute_spec(self):
         '''
         Function only runs if validate_spec returned True
@@ -310,7 +311,7 @@ class Exhibit:
         for num_col in self.spec_dict["metadata"]["numerical_columns"]:
             
             # skip derived columns; they need main columns (inc. nulls) generated first
-            if num_col in (self.spec_dict.get("derived_columns", dict()) or dict()):
+            if num_col in (self.spec_dict.get("derived_columns", {}) or {}):
                 continue
 
             anon_df[num_col] = generate_continuous_column(
@@ -432,7 +433,8 @@ class Exhibit:
                     col_name=num_col
                 )
             # see comments above as to why we're re-generating derived columns
-            for derived_col, derived_def in self.spec_dict["derived_columns"].items(): #pragma: no cover
+            derived = self.spec_dict["derived_columns"].items()
+            for derived_col, derived_def in derived: #pragma: no cover
                 for num_col in num_cols:
                     if num_col in derived_def:
                         anon_df[derived_col] = generate_derived_column(anon_df, derived_def)
@@ -508,7 +510,7 @@ class Exhibit:
             self.write_spec()
             return None
 
-        else:
+        if self.command == "fromspec":
             self.read_spec()
             if self.validate_spec():
                 self.execute_spec()
@@ -520,8 +522,9 @@ class Exhibit:
                 self.write_data()
                 return None
 
-            # technically unreachable code because validation failures will raise
-            return None #pragma: no cover
+        raise RuntimeError( #pragma: no cover
+            "Generation command not recognized. Please initialise Exhibit "
+            "with a valid command.") 
 
 class Specification(UserDict): #pragma: no cover
     '''
@@ -541,5 +544,5 @@ class Specification(UserDict): #pragma: no cover
 
         spec_yaml = generate_YAML_string(self.data)
 
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(spec_yaml)

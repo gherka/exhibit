@@ -131,7 +131,7 @@ def _generate_pseudo_chis(n, seed=0):
     while len(result) < n:
         pseudo_chi = (
             str(random.randint(0,31)) + # day will be zero padded if total length < 10
-            '13' +                      # ensure no accidental collissions
+            "13" +                      # ensure no accidental collissions
             str(random.randint(20, 99)) +
             str(random.randint(0,9999)).zfill(4) # no specific logic for 9th digit
         ).zfill(10)

@@ -47,12 +47,12 @@ class exhibitTests(unittest.TestCase):
         Send "mock" command line arguments to parse_args function
         and assert that the program reads the same data as ref_df.
         '''
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            skip_columns=[]
-        )
+        args = {
+            "command"      : "fromdata",
+            "source"       : Path(package_dir("sample", "_data", "inpatients.csv")),
+            "skip_columns" : [],
+            "verbose"      : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_data()
@@ -80,19 +80,19 @@ class exhibitTests(unittest.TestCase):
         advantage of its methods that mimick the open() builtin
         '''
 
-        args = dict(
-            command="fromdata",
-            source="dummy.csv",
-            output="test.yml",
-            verbose=True,
-        )
+        args = {
+            "command" : "fromdata",
+            "source"  : "dummy.csv",
+            "output"  : "test.yml",
+            "verbose" : True,
+        }
 
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
            
             xA = tm.Exhibit(**args)
             xA.write_spec("hello")
 
-            mo.assert_called_with("test.yml", "w")
+            mo.assert_called_with("test.yml", "w", encoding="utf-8")
             mo.return_value.__enter__.return_value.write.assert_called_with("hello")
 
     def test_output_spec_creates_file_without_o_argument(self):
@@ -102,19 +102,19 @@ class exhibitTests(unittest.TestCase):
         the command: fromdata or fromspec.
         '''
 
-        args = dict(
-            command="fromdata",
-            source=Path("source_dataset.csv"),
-            output=None,
-            verbose=True,
-        )
+        args = {
+            "command" : "fromdata",
+            "source"  : Path("source_dataset.csv"),
+            "output"  : None,
+            "verbose" : True,
+        }
         
         with patch("exhibit.core.exhibit.open", new=mock_open()) as mo:
                 
             xA = tm.Exhibit(**args)
             xA.write_spec("hello")
 
-            mo.assert_called_with("source_dataset_SPEC.yml", "w")
+            mo.assert_called_with("source_dataset_SPEC.yml", "w", encoding="utf-8")
             mo.return_value.__enter__.return_value.write.assert_called_with("hello")
     
     def test_output_spec_respectes_equal_weights_argument(self):
@@ -122,14 +122,14 @@ class exhibitTests(unittest.TestCase):
         Doc string
         '''
 
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            inline_limit=30,
-            equal_weights=True,
-            skip_columns=[]
-        )
+        args = {
+            "command"       : "fromdata",
+            "source"        : Path(package_dir("sample", "_data", "inpatients.csv")),
+            "inline_limit"  : 30,
+            "equal_weights" : True,
+            "skip_columns"  : [],
+            "verbose"       : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_data()
@@ -151,15 +151,15 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["sex", "age"]
 
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            inline_limit=30,
-            equal_weights=True,
-            skip_columns=[],
-            linked_columns=user_linked_cols
-        )
+        args = {
+            "command"        : "fromdata",
+            "source"         : Path(package_dir("sample", "_data", "inpatients.csv")),
+            "inline_limit"   : 30,
+            "equal_weights"  : True,
+            "skip_columns"   : [],
+            "linked_columns" : user_linked_cols,
+            "verbose"        : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_data()
@@ -181,15 +181,15 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["hb_name", "hb_code", "age"]
 
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            inline_limit=30,
-            equal_weights=True,
-            skip_columns=[],
-            linked_columns=user_linked_cols
-        )
+        args = {
+            "command"        : "fromdata",
+            "source"         : Path(package_dir("sample", "_data", "inpatients.csv")),
+            "inline_limit"   : 30,
+            "equal_weights"  : True,
+            "skip_columns"   : [],
+            "linked_columns" : user_linked_cols,
+            "verbose"        : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_data()
@@ -208,15 +208,15 @@ class exhibitTests(unittest.TestCase):
 
         user_linked_cols = ["hb_name"]
 
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            inline_limit=30,
-            equal_weights=True,
-            skip_columns=[],
-            linked_columns=user_linked_cols
-        )
+        args = {
+            "command"        : "fromdata",
+            "source"         : Path(package_dir("sample", "_data", "inpatients.csv")),
+            "inline_limit"   : 30,
+            "equal_weights"  : True,
+            "skip_columns"   : [],
+            "linked_columns" : user_linked_cols,
+            "verbose"        : True,
+        }
 
         self.assertRaises(Exception, tm.Exhibit, **args)
 
@@ -229,15 +229,15 @@ class exhibitTests(unittest.TestCase):
 
         uuid_columns = {"hb_name", "quarter_date", "stays"}
 
-        args = dict(
-            command="fromdata",
-            source=Path(package_dir("sample", "_data", "inpatients.csv")),
-            verbose=True,
-            inline_limit=30,
-            equal_weights=True,
-            skip_columns={},
-            uuid_columns=uuid_columns
-        )
+        args = {
+            "command"       : "fromdata",
+            "source"        : Path(package_dir("sample", "_data", "inpatients.csv")),
+            "inline_limit"  : 30,
+            "equal_weights" : True,
+            "skip_columns"  : [],
+            "uuid_columns"  : uuid_columns,
+            "verbose"       : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_data()
@@ -248,8 +248,7 @@ class exhibitTests(unittest.TestCase):
 
         metadata_uuid_columns = xA.spec_dict["metadata"]["uuid_columns"]
 
-        col_names_and_types = [
-            x for x in get_attr_values(xA.spec_dict, "type", col_names=True)]
+        col_names_and_types = list(get_attr_values(xA.spec_dict, "type", col_names=True))
 
         not_expected = []
         for col_name, col_type in col_names_and_types:

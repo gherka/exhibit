@@ -1,6 +1,9 @@
 '''
 Module for various derived and user-set constraints
 '''
+
+# pylint: disable=C0302
+
 # Standard library imports
 from collections import namedtuple
 from datetime import datetime
@@ -166,7 +169,7 @@ class ConstraintHandler:
 
             cc_filter = constraint.get("filter", None)
             cc_partitions = constraint.get("partition", None)
-            cc_targets = constraint.get("targets", dict())
+            cc_targets = constraint.get("targets", {})
 
             clean_cc_filter = clean_up_constraint_string(cc_filter)
             cc_filter_mask = get_constraint_mask(output_df, clean_cc_filter)
@@ -447,7 +450,7 @@ class ConstraintHandler:
             whether the value is divisible by 2 without remainder.
             '''
 
-            q25, q50, q75 = np.percentile(series, [25, 50, 75])
+            q25, _, q75 = np.percentile(series, [25, 50, 75])
             iqr = q75 - q25
 
             if iqr == 0:
@@ -761,9 +764,11 @@ class ConstraintHandler:
             ulinked_df = generate_user_linked_anon_df(
                 self.spec_dict, user_linked_cols, new_df.shape[0], starting_col_matrix)
 
+            non_user_linked_cols = [x for x in df.columns if x not in user_linked_cols]
+
             new_df = pd.concat(
                 [ulinked_df.set_index(new_df.index)] + 
-                [df.loc[filter_idx, [x for x in df.columns if x not in user_linked_cols]]],
+                [df.loc[filter_idx, non_user_linked_cols]],
                 axis=1
             ).reindex(columns=df.columns)
 
@@ -865,7 +870,7 @@ class ConstraintHandler:
                 else:
                     pointer = 0
 
-            result = sorted(unordered_result, key=lambda x: ordered_list.index(x))
+            result = sorted(unordered_result, key=ordered_list.index)
 
             return result  
 
@@ -1025,7 +1030,7 @@ class ConstraintHandler:
 
             # add nulls based on the miss_probability of the skew column
             miss_pct = self.spec_dict["columns"][skew_col]["miss_probability"]
-            miss_val = pd.NA if group.dtype =='Int64' else np.nan
+            miss_val = pd.NA if group.dtype =="Int64" else np.nan
             skewed_result = np.where(
                 rng.random(size=nrows) < miss_pct,
                 miss_val, result.values)
@@ -1037,7 +1042,8 @@ class ConstraintHandler:
 
         target_cols = [x.strip() for x in target_str.split(",")]
         if len(target_cols) != 2: # pragma: no cover
-            raise Exception(f"{self.current_action} requires exactly 2 target columns.")
+            raise RuntimeError(
+                f"{self.current_action} requires exactly 2 target columns.")
 
         if partition_cols is not None:
             partition_cols = [x.strip() for x in partition_cols.split(",") if x]
@@ -1281,7 +1287,7 @@ def find_basic_constraint_columns(df):
             
     return output
 
-def clean_up_constraint_string(raw_string, type="cc_filter"):
+def clean_up_constraint_string(raw_string):
     '''
     The default way to handle column names with whitespace in eval strings
     is to enclose them in backticks. However, the default tokeniser will
@@ -1379,8 +1385,8 @@ def get_constraint_mask(df, clean_string):
                 .rename(lambda x: x.replace(" ", "__"), axis="columns")
                 .eval(clean_string, engine="python"))
 
-    except SyntaxError: #pragma: no cover
-        raise SyntaxError("Invalid filter expression supplied to custom action.")
+    except SyntaxError as e: #pragma: no cover
+        raise SyntaxError("Invalid filter expression supplied to custom action.") from e
 
     return mask
 

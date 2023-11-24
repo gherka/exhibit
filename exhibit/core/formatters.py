@@ -19,7 +19,7 @@ class FormattedList(list):
     separate processing for these formatted values from a basic list
     of values passed to original_values during manual column creation
     '''
-    pass
+
 
 def format_header(dataframe, series_name, prefix=None):
     '''
@@ -162,7 +162,7 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
     
     vectors = temp_vectors.values.tolist()
 
-    string_vectors = ["{0:.3f}".format(x).ljust(len(HEADER)) for x in vectors]
+    string_vectors = [f"{x:.3f}".ljust(len(HEADER)) for x in vectors]
 
     return string_vectors
 
@@ -187,7 +187,7 @@ def build_list_of_column_weights(weights):
     
     for key in sorted(weights):
 
-        padded_key = ["{0:.3f}".format(x).ljust(len(key)) for x in weights[key]]
+        padded_key = [f"{x:.3f}".ljust(len(key)) for x in weights[key]]
         sorted_temp.append(padded_key)
         
     sorted_final = [" | ".join(y for y in x).rstrip() for x in zip(*sorted_temp)]
@@ -333,15 +333,15 @@ def build_list_of_uuid_frequencies(df, target_col):
     counts = Counter(df[target_col].value_counts())
 
     freq_df = pd.DataFrame(
-        [(frequency, count) for frequency, count in counts.items()],
+        list(counts.items()),
         columns=["frequency", "count"]
     ).sort_values("frequency")
 
-    freq_df["pct"] = freq_df["count"] / freq_df["count"].sum()
+    freq_df.loc[:, "pct"] = freq_df["count"] / freq_df["count"].sum()
 
     freq_list = (
         freq_df["frequency"].astype(str).str.ljust(9)
-        .str.cat(freq_df["pct"].transform(lambda x: "{0:.3f}".format(x)), sep=' | ')
+        .str.cat(freq_df["pct"].transform(lambda x: f"{x:.3f}"), sep=" | ")
         .tolist()
     )
 
@@ -359,6 +359,6 @@ def format_df_for_export(df):
 
     for column in df.columns:
         if df[column].dtype == "timedelta64[ns]":
-            df[column] = df[column].astype(str).str.replace('0 days ', '')
+            df[column] = df[column].astype(str).str.replace("0 days ", "")
 
     return df

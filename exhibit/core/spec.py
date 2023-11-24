@@ -80,11 +80,11 @@ class Spec:
         self.output = {
             "metadata": {
                 "number_of_rows"      : 0,
-                "uuid_columns"        : list(),
-                "categorical_columns" : list(),
-                "numerical_columns"   : list(),
-                "date_columns"        : list(),
-                "geospatial_columns"  : list(),
+                "uuid_columns"        : [],
+                "categorical_columns" : [],
+                "numerical_columns"   : [],
+                "date_columns"        : [],
+                "geospatial_columns"  : [],
                 "inline_limit"        : self.inline_limit,
                 "random_seed"         : self.random_seed,
                 "id"                  : "",
@@ -92,8 +92,8 @@ class Spec:
             "columns": {},
             "constraints": {
                 "allow_duplicates"   : True,
-                "basic_constraints"  : list(),
-                "custom_constraints" : list()
+                "basic_constraints"  : [],
+                "custom_constraints" : []
             },
             "linked_columns" : [],
             "derived_columns": {},
@@ -104,7 +104,7 @@ class Spec:
 
             self.df = data.copy()
             self.ew = ew
-            self.user_linked_cols = kwargs.get("user_linked_cols", list())
+            self.user_linked_cols = kwargs.get("user_linked_cols", [])
             self.uuid_cols = kwargs.get("uuid_cols", set())
             self.db_prob_cols = kwargs.get("save_probabilities", set())
             self.id = generate_table_id()
@@ -135,7 +135,7 @@ class Spec:
             meta["categorical_columns"] = sorted(list(self.cat_cols))
             meta["numerical_columns"]   = sorted(list(self.numerical_cols))
             meta["date_columns"]        = sorted(list(self.date_cols))
-            meta["geospatial_columns"]  = list()
+            meta["geospatial_columns"]  = []
             meta["inline_limit"]        = self.inline_limit
             meta["random_seed"]         = self.random_seed
             meta["id"]                  = self.id
@@ -431,7 +431,7 @@ class Spec:
             return output
         
         #if path is something else, raise exception
-        raise ValueError("Incorrect %s" % path) # pragma: no cover
+        raise ValueError(f"Incorrect {path}") # pragma: no cover
 
 class UUIDColumn(dict):
     '''
@@ -522,7 +522,7 @@ class CategoricalColumn(dict):
         self["type"] = "categorical"
         self["name"] = name
         self["original_values"] = original_values
-        self["paired_columns"] = list() if paired_columns is None else paired_columns
+        self["paired_columns"] = [] if paired_columns is None else paired_columns
         self["uniques"] = 0 if uniques is None else uniques
         self["cross_join_all_unique_values"] = cross_join
         self["miss_probability"] = miss_proba

@@ -97,7 +97,7 @@ def geo_make_regions(
     '''
 
     if not partition_cols: #pragma: no cover
-        raise Exception("make_geo_regions action requires at least one partition")
+        raise RuntimeError("make_geo_regions action requires at least one partition")
 
     geo_target_cols = [x.strip() for x in target_str.split(",")]
     partition_cols = [x.strip() for x in partition_cols.split(",") if x]
@@ -110,7 +110,8 @@ def geo_make_regions(
         geo_target_cols_table_names.append(h3_table_name)
 
     if len(set(geo_target_cols_table_names)) != 1: #pragma: no cover
-        raise Exception("columns used for make_geo_regions action rely on different h3 tables")
+        raise RuntimeError(
+            "Columns used for make_geo_regions action rely on different h3 tables")
 
     # add placeholders for output columns
     target_cols = []
@@ -138,7 +139,7 @@ def geo_make_regions(
 
     # add H3 centroid coordinates
     geo_df["lat"], geo_df["long"] = zip(
-        *geo_df["h3"].transform(lambda x: h3.h3_to_geo(x)))
+        *geo_df["h3"].transform(h3.h3_to_geo))
 
     # create initial region indices based on the N of values in level=0
     n_regions = grouped_idx.get_level_values(level=0).nunique()
@@ -267,7 +268,7 @@ def _create_contiguous_regions(
     aspect_ratio = height/width
 
     line = LineString([p1, p2])
-    scaled_line = scale(line, xfact=15.0, yfact=15.0, zfact=1.0, origin='center')
+    scaled_line = scale(line, xfact=15.0, yfact=15.0, zfact=1.0, origin="center")
     
     # to avoid very thin regions, change the rotation angle of the cutting line based
     # on the aspect rato; 2 is a magic number; another option is to use a tighter "crop"
@@ -306,7 +307,7 @@ def _create_contiguous_regions(
 
         if retries == 5:
             print("Regions created: ", len(final_regions_idx))
-            raise Exception("Can't create a subregion.")
+            raise RuntimeError("Can't create a subregion.")
 
         rotated_line = rotate(scaled_line, angle=int(rng.uniform(low=0, high=180)))
         result = _cut_polygon_by_line(polygon, rotated_line)
@@ -323,7 +324,7 @@ def _create_contiguous_regions(
     final_regions_idx.extend([idx_child_1, idx_child_2])
     
     parent_idx = None
-    for i in range(len(final_regions_idx)):
+    for i, _ in enumerate(final_regions_idx):
         if final_regions_idx[i].equals(idx_child_1.union(idx_child_2)):
             parent_idx = i
             

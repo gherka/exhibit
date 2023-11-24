@@ -24,7 +24,7 @@ def generate_regex_column(anon_pattern, name, size, target_uniques=None):
     Returns pd.Series
     '''
     # ensure that each column gets a unique (except for anagrams) seed
-    column_seed = sum([ord(x) for x in name])
+    column_seed = sum(ord(x) for x in name)
     
     static_quant_pattern = r"[^\]]\{\d+\}"
     static_string = anon_pattern

@@ -45,8 +45,6 @@ def temp_exhibit(
     test_spec_dict=None,
     return_spec=True,
     return_df=True,
-    *args,
-    **kwargs,
     ):
     '''
     A helper method to generate and read custom specifications 
@@ -324,14 +322,13 @@ class referenceTests(unittest.TestCase):
         be different from those set in the spec as target sum is enforced
         BEFORE basic constraints are adjusted.
         '''
-
-
-        args = dict(
-                command="fromspec",
-                source=Path(package_dir("sample", "_spec", "inpatients_demo.yml")),
-                verbose=True,
-                skip_columns=[]
-            )
+        
+        args = {
+            "command"      : "fromspec",
+            "source"       : Path(package_dir("sample", "_spec", "inpatients_demo.yml")),
+            "skip_columns" : [],
+            "verbose"      : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_spec()
@@ -766,12 +763,12 @@ class referenceTests(unittest.TestCase):
             - no db
         '''
         
-        args = dict(
-                command="fromspec",
-                source=Path(package_dir("sample", "_spec", "uuid_demo.yml")),
-                verbose=True,
-                skip_columns=[]
-            )
+        args = {
+            "command"      : "fromspec",
+            "source"       : Path(package_dir("sample", "_spec", "uuid_demo.yml")),
+            "skip_columns" : [],
+            "verbose"      : True,
+        }
 
         xA = tm.Exhibit(**args)
         xA.read_spec()

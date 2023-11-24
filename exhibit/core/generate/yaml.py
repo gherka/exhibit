@@ -21,7 +21,6 @@ class ExhibitDumper(yaml.SafeDumper):
     Columns are subclassed dictionaries, but YAML's safe_dump will not recognize
     them as such unless you add a specific representer for each "special" class.
     '''
-    pass
 
 
 def generate_YAML_string(spec_dict):

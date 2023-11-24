@@ -28,16 +28,16 @@ class continuousTests(unittest.TestCase):
 
         #zero dispersion returns original value
         test_case_1 = tm._apply_dispersion(5, 0, rng)
-        expected_1 = (test_case_1 == 5)
+        expected_1 = test_case_1 == 5
 
         #basic interval picking
         test_case_2 = tm._apply_dispersion(10, 0.5, rng)
-        expected_2 = (5 <= test_case_2 <= 15)
+        expected_2 = 5 <= test_case_2 <= 15
 
         #avoid negative interval for values of zero where all
         #values are expected to be greater or equal to zero
         test_case_3 = tm._apply_dispersion(0, 0.2, rng)
-        expected_3 = (0 <= test_case_3 <= 2)
+        expected_3 = 0 <= test_case_3 <= 2
 
         #na returns na
         test_case_4 = tm._apply_dispersion(pd.NA, 0.2, rng)

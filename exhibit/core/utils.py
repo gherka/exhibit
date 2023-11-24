@@ -418,7 +418,7 @@ def natural_key(string_):
     '''
     Thanks SO!
     '''
-    return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]
+    return [int(s) if s.isdigit() else s for s in re.split(r"(\d+)", string_)]
 
 def shuffle_data(data):
     '''

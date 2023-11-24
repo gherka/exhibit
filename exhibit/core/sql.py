@@ -1,6 +1,8 @@
 '''
 Module with functions to provide an interface with the exhibit database
 '''
+#false positive on engine.dispose()
+#pylint: disable=E1101
 
 # Standard library imports
 import os

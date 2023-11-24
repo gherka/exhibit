@@ -81,9 +81,9 @@ class derivedTests(unittest.TestCase):
         calc = "@create_timestamp(hours, minutes, seconds)"
 
         expected = pd.Series([
-            '2022-01-31 01:00:00',
-            '2022-02-28 02:00:01',
-            '2022-03-31 00:59:10'
+            "2022-01-31 01:00:00",
+            "2022-02-28 02:00:01",
+            "2022-03-31 00:59:10"
         ])
 
         # can add dates and timedelta timestamps easily

@@ -46,6 +46,7 @@ class CategoricalDataGenerator:
         self.fixed_anon_sets = ["random", "mountains", "patients", "birds", "dates"]
         # we need UUID dataset (if it exists) for possible conditional SQL that
         # references already-generated columns in the spec
+        self.generated_dfs = []
         self.anon_df = anon_df
         
         (self.all_cols,
@@ -62,10 +63,8 @@ class CategoricalDataGenerator:
         A dataframe with all categorical columns
         '''
 
-        self.generated_dfs = []
-
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
-        for linked_group in (self.spec_dict.get("linked_columns") or list()):
+        for linked_group in (self.spec_dict.get("linked_columns") or []):
             
             # zero-numbered linked group is reserved for user-defined groupings
             if linked_group[0] == 0:
@@ -298,7 +297,7 @@ class CategoricalDataGenerator:
 
         anon_set = col_attrs["anonymising_set"]
         uniques = col_attrs["uniques"]
-        paired_cols = col_attrs["paired_columns"] or list()
+        paired_cols = col_attrs["paired_columns"] or []
 
         #1) QUERY SQL TO GET VALUES USED TO BUILD THE DATAFRAME
         if anon_set == "random":
@@ -424,12 +423,12 @@ class CategoricalDataGenerator:
         # there might be cases when you want to generate just the date columns or just
         # the categorical columns so they might be missing from the metadata section
         all_cols = (
-            (self.spec_dict["metadata"].get("categorical_columns", list())) +
-            (self.spec_dict["metadata"].get("date_columns", list()))
+            (self.spec_dict["metadata"].get("categorical_columns", [])) +
+            (self.spec_dict["metadata"].get("date_columns", []))
         )
         
         nested_linked_cols = [
-            sublist for n, sublist in (self.spec_dict.get("linked_columns") or list())
+            sublist for n, sublist in (self.spec_dict.get("linked_columns") or [])
             ]
 
         complete_cols = [c for c, v in get_attr_values(
@@ -520,7 +519,7 @@ class CategoricalDataGenerator:
         # unless we make an explicit copy of the de-duplicated dataframe, Pandas will 
         # trigger SettingWithCopy warning when trying to change any values.
         existing_data_distinct = existing_data.drop_duplicates(subset=join_columns).copy()
-        existing_data_cols = [c for c in existing_data.columns]
+        existing_data_cols = list(existing_data.columns)
 
         # this function converts list of tuples into a dataframe anyway
         create_temp_table(
@@ -572,7 +571,8 @@ class CategoricalDataGenerator:
             # having a COALESCE in SQL would fix it, but in case it's also missing, 
             # we try to catch this edge case in code as well. 
             try:
-                new_data = self.rng.choice(a=probas[group_key][0], p=probas[group_key][1], size=len(group_index))
+                new_data = self.rng.choice(
+                    a=probas[group_key][0], p=probas[group_key][1], size=len(group_index))
             except KeyError: #pragma: no cover
                 new_data = [np.nan] * len(group_index)
     
@@ -582,7 +582,7 @@ class CategoricalDataGenerator:
 
         # ensure we return the correct type for date columns
         col_type = self.spec_dict["columns"][col_name]["type"]
-        if col_type == 'date':
+        if col_type == "date":
             final_result = final_result.astype("datetime64[ns]")
 
         return final_result

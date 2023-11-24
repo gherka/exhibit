@@ -3,6 +3,8 @@ Benchmark the speed of generating data / spec using scerios that are too slow fo
 regular unit / reference testing
 '''
 
+#pylint: disable=W0201
+
 # Standard library imports
 import string
 import unittest
@@ -25,7 +27,7 @@ try:
     from memory_profiler import memory_usage
 except ImportError:
     memory_usage = None
-    print(f"memory_profiler not found. Make sure exhibit is installed in [dev] mode")
+    print("memory_profiler not found. Make sure exhibit is installed in [dev] mode")
 
 class performanceTests(unittest.TestCase):
     '''

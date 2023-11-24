@@ -2,6 +2,8 @@
 Test the code for parsing and enforcing constraints
 '''
 
+# pylint: disable=C0302
+
 # Standard library imports
 import unittest
 from datetime import datetime
@@ -809,7 +811,7 @@ class constraintsTests(unittest.TestCase):
         }
 
         test_data = pd.DataFrame(data={
-            "A" : list(pd.date_range(start='2020-01-01', periods=5)) * 4,
+            "A" : list(pd.date_range(start="2020-01-01", periods=5)) * 4,
             "B" : [True, False] * 10,
         })
 
@@ -1423,7 +1425,7 @@ class constraintsTests(unittest.TestCase):
         result = test_gen.process_constraints().query("B=='spam'")
         
         pct_B = result.value_counts().agg(lambda x: x / sum(x)).iloc[1]
-        self.assertTrue(pct_B > 0 and pct_B < 0.1)
+        self.assertTrue(0.1 > pct_B > 0)
 
     def test_custom_constraints_targeting_high_frequency_rows(self):
         '''

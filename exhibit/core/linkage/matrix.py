@@ -160,10 +160,11 @@ def generate_user_linked_anon_df(
     # get the numerical mapping as expected, also changing the dtype for performance.
 
     if starting_col_matrix is not None:
-       starting_col_matrix = (
-        pd.DataFrame(starting_col_matrix)
-        .fillna(MISSING_DATA_STR)
-        .applymap(lambda x: rev_label_lookup.get(x, x)).values.astype(np.int16))
+        starting_col_matrix = (
+            pd.DataFrame(starting_col_matrix)
+            .fillna(MISSING_DATA_STR)
+            .applymap(lambda x: rev_label_lookup.get(x, x)).values.astype(np.int16)
+        )
 
     else:
         starting_col_matrix = np.full(

@@ -126,7 +126,7 @@ class newValidator:
         VALIDATION FAIL: linked columns must have matching attributes (%(err_attr)s)
         """)
 
-        for linked_col_group in spec_dict["linked_columns"] or list():
+        for linked_col_group in spec_dict["linked_columns"] or []:
             #linked_columns[0] is the index of linked group; actual columns are [1] 
             linked_cols = linked_col_group[1]
 
@@ -341,7 +341,7 @@ class newValidator:
         VALIDATION FAIL: Duplicate column(s) in linked groups
         """)
 
-        nested_list = spec_dict["linked_columns"] or list()
+        nested_list = spec_dict["linked_columns"] or []
         flat_list = list(chain(*[sublist for _, sublist in nested_list]))
         flat_set = set(flat_list)
 
@@ -369,11 +369,11 @@ class newValidator:
 
         warn = False
 
-        m_uuid = spec_dict["metadata"].get("uuid_columns", list())
-        m_cat = spec_dict["metadata"].get("categorical_columns", list())
-        m_num = spec_dict["metadata"].get("numerical_columns", list())
-        m_date = spec_dict["metadata"].get("date_columns", list())
-        m_geo = spec_dict["metadata"].get("geospatial_columns", list())
+        m_uuid = spec_dict["metadata"].get("uuid_columns", [])
+        m_cat = spec_dict["metadata"].get("categorical_columns", [])
+        m_num = spec_dict["metadata"].get("numerical_columns", [])
+        m_date = spec_dict["metadata"].get("date_columns", [])
+        m_geo = spec_dict["metadata"].get("geospatial_columns", [])
 
         col_types = {
             "uuid" : m_uuid,

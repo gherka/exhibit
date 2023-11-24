@@ -267,9 +267,9 @@ class categoricalTests(unittest.TestCase):
         result = gen.generate()
 
         self.assertTrue(
-            (result.query("gender == 'F'")["linked_condition"] == 'C').all())
+            (result.query("gender == 'F'")["linked_condition"] == "C").all())
         self.assertFalse(
-            (result.query("gender == 'M'")["linked_condition"] == 'C').any())
+            (result.query("gender == 'M'")["linked_condition"] == "C").any())
 
     def test_column_with_external_date_values_in_conditonal_sql(self):
         '''
@@ -282,8 +282,8 @@ class categoricalTests(unittest.TestCase):
         FROM temp_main JOIN temp_linked ON temp_main.gender = temp_linked.gender
         '''
 
-        m_dates = pd.date_range(start='2022-01-01', periods=3, freq='D')
-        f_dates = pd.date_range(start='2023-01-01', periods=3, freq='D') 
+        m_dates = pd.date_range(start="2022-01-01", periods=3, freq="D")
+        f_dates = pd.date_range(start="2023-01-01", periods=3, freq="D") 
         dates = m_dates.union(f_dates)
 
         linked_data = pd.DataFrame(data={
@@ -355,10 +355,10 @@ class categoricalTests(unittest.TestCase):
             "columns": {
                 "source_date": {
                     "type": "date",
-                    "from": '2023-01-01',
-                    "to"  : '2023-02-01',
+                    "from": "2023-01-01",
+                    "to"  : "2023-02-01",
                     "uniques" : 5,
-                    "frequency" : 'D',
+                    "frequency" : "D",
                     "cross_join_all_unique_values" : False,
                 },
                 "conditional_date": {
@@ -373,7 +373,7 @@ class categoricalTests(unittest.TestCase):
         result = gen.generate()
 
         self.assertTrue((result["conditional_date"] > result["source_date"]).all())
-        self.assertTrue((result["conditional_date"] < '2023-03-01').all())
+        self.assertTrue((result["conditional_date"] < "2023-03-01").all())
 
     def test_column_with_using_case_statement_in_conditonal_sql(self):
         '''
@@ -445,10 +445,10 @@ class categoricalTests(unittest.TestCase):
             "columns": {
                 "source_date": {
                     "type": "date",
-                    "from": '2023-01-01',
-                    "to"  : '2023-02-01',
+                    "from": "2023-01-01",
+                    "to"  : "2023-02-01",
                     "uniques" : 60,
-                    "frequency" : 'D',
+                    "frequency" : "D",
                     "cross_join_all_unique_values" : False,
                 },
             }

@@ -184,7 +184,7 @@ class MissingDataGenerator:
             
             # if it's already NA, don't re-generate; it's NA for a reason!
             num_mask = self.nan_data[num_col].isna()
-            mask = (cat_mask & ~num_mask)
+            mask = cat_mask & ~num_mask
 
             # it's possible to have the left side be Int64 type and the right side
             # to be float64 (newly generated, unscaled); assigning different types
@@ -256,7 +256,7 @@ class MissingDataGenerator:
                 pairs.update([col] + attrs["paired_columns"])
 
             # linked groups
-            for i, linked_group in (self.spec_dict["linked_columns"] or list()):
+            for i, linked_group in (self.spec_dict["linked_columns"] or []):
                 # zero numbered linked group is reserved for user defined linkage
                 if i == 0:
                     continue
@@ -289,14 +289,14 @@ class MissingDataGenerator:
         original data passed in to the generator.
         '''
         
-        cc = self.spec_dict["constraints"]["custom_constraints"] or dict()
+        cc = self.spec_dict["constraints"]["custom_constraints"] or {}
 
         make_null_idx = []
         
         for _, constraint in cc.items():
 
             cc_filter = constraint.get("filter", None)
-            cc_targets = constraint.get("targets", dict())
+            cc_targets = constraint.get("targets", {})
             clean_cc_filter = clean_up_constraint_string(cc_filter)
             cc_mask = get_constraint_mask(self.nan_data, clean_cc_filter)
 
@@ -319,14 +319,14 @@ class MissingDataGenerator:
         Doc string
         '''
         
-        cc = self.spec_dict["constraints"]["custom_constraints"] or dict()
+        cc = self.spec_dict["constraints"]["custom_constraints"] or {}
 
         not_null_idx = []
             
         for _, constraint in cc.items():
 
             cc_filter = constraint.get("filter", None)
-            cc_targets = constraint.get("targets", dict())
+            cc_targets = constraint.get("targets", {})
             clean_cc_filter = clean_up_constraint_string(cc_filter)
             cc_mask = get_constraint_mask(self.nan_data, clean_cc_filter)
 
