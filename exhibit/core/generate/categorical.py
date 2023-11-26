@@ -467,7 +467,7 @@ class CategoricalDataGenerator:
         sql_tables = parser.tables
         aliased_columns = parser.columns_aliases_names
         source_table_id = self.spec_dict["metadata"]["id"]
-
+    
         if len(aliased_columns) != 1 or aliased_columns[0] != col_name:
             raise RuntimeError(
                 f"Please make sure the SQL SELECT statement in {col_name}'s "
@@ -537,13 +537,20 @@ class CategoricalDataGenerator:
 
         # get the probabilities for the selected column in the external table
         # at the level of the join key - use a hash for the combination of columns!
-        # TODO add a check for any existing probabilities in case user want to override
-        # the probabilities coming from the external table.
 
         # Rather than use existing probabilities from the spec, treat them as a weight 
         # and apply them to the conditional, per-join key probabilities from external
-        # table. TEST THIS A LOT.
+        # table.
         probas = {}
+        orig_vals = None
+
+        try:
+            orig_vals = self.spec_dict["columns"][col_name]["original_values"]
+            if isinstance(orig_vals, pd.DataFrame):
+                orig_vals = orig_vals.set_index(col_name)
+        # if we don't have original_values in the column spec, it's a date
+        except KeyError:
+            pass
 
         groups = sql_df.groupby(join_columns)
         for i, group in groups:
@@ -556,11 +563,18 @@ class CategoricalDataGenerator:
                             .values
                             )
             a, p = np.split(proba_arr, 2, axis=1)
-            # enusre p sums up to 1
+            a = a.flatten()
             p = p.flatten().astype(float)
-            p = p * (1 / sum(p))
 
-            probas[i[0]] = (a.flatten(), p.flatten().astype(float))
+            if orig_vals is not None:
+                for j, val in enumerate(a):
+                    if val in orig_vals.index:
+                        p_weight = float(orig_vals.loc[val, "probability_vector"])
+                        p[j] = p[j] * p_weight
+
+            # enusre p sums up to 1
+            p = p * (1 / sum(p))
+            probas[i[0]] = (a, p)
 
         # take the data generated so far and generate appropriate values based on key
         groups = existing_data.groupby(join_columns).groups

@@ -31,6 +31,7 @@ disable=C0303, # trailing whitespace
         E1130, # invalid unary operand (numpy)
         W0622, # redefine builtins - __package__
         W0640, # variable defined in loop
+        W0632, # unbalanced tuple unpacking - false positives
 
 
 [BASIC]

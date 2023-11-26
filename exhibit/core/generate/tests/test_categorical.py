@@ -184,7 +184,7 @@ class categoricalTests(unittest.TestCase):
         gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=10)
         self.assertRaises(RuntimeError, gen.generate)
 
-    def test_external_tables_used_inconditonal_sql_anonymising_set_exist(self):
+    def test_external_tables_used_in_conditonal_sql_anonymising_set_exist(self):
         '''
         Users can provide a custom SQL as anonymising set which can reference
         columns in the spec as well as any table in the Exhibit DB.
@@ -425,6 +425,80 @@ class categoricalTests(unittest.TestCase):
 
         self.assertTrue((result.query("age > 18")["smoker"] == "yes").all())
         self.assertTrue((result.query("age <= 18")["smoker"] == "no").all())
+
+    def test_column_with_external_sql_values_and_probablities(self):
+        '''
+        Users can provide a custom SQL as anonymising set which can reference
+        columns in the spec as well as any table in the Exhibit DB.
+        '''
+
+        set_sql = '''
+        SELECT temp_main.gender, temp_linked.condition as condition
+        FROM temp_main JOIN temp_linked ON temp_main.gender = temp_linked.gender
+        '''
+
+        linked_data = pd.DataFrame(data={
+            "gender"   : ["M", "M", "M", "F", "F", "F"],
+            "condition": ["A", "B", "C", "C", "D", "E"]
+        })
+
+        original_vals = pd.DataFrame(data={
+            "condition"          : ["A", "B", "C", "D", "E", "Missing Data"],
+            "probability_vector" : [0.1, 0.1, 0.5, 0.1, 0.2, 0.0],
+        })
+
+        db_util.insert_table(linked_data, "temp_linked")
+       
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=1),
+            "metadata": {
+                "categorical_columns": ["gender", "condition"],
+                "date_columns" : [],
+                "inline_limit" : 5,
+                "id" : "main"
+                },
+            "columns": {
+                "gender": {
+                    "type": "categorical",
+                    "uniques" : 2,
+                    "original_values" : pd.DataFrame(data={
+                        "gender" : ["M", "F", "Missing Data"],
+                        "probability_vector" : [0.5, 0.5, 0]
+                    }),
+                    "paired_columns": None,
+                    "anonymising_set" : "random",
+                    "cross_join_all_unique_values" : False,
+                },
+                "condition": {
+                    "type": "categorical",
+                    "uniques" : 5,
+                    "original_values" : original_vals,
+                    "paired_columns": None,
+                    "anonymising_set" : set_sql,
+                    "cross_join_all_unique_values" : False,
+                }
+            },
+        }
+
+        gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=1000)
+        result = gen.generate()
+
+        # basic check to see that we get gender-specific conditions
+        self.assertTrue(
+            (result.query("gender == 'M'")["condition"].isin(["A", "B", "C"]).all())
+        )
+
+        # main check to see if probabilities are taken into account
+        gen_probs = (
+            result.query("gender == 'F'")["condition"].value_counts() / 
+            result.query("gender == 'F'")["condition"].value_counts().sum()
+        ).round(1).values.tolist()
+
+        # the probs would sum up to 1, and rounding / RNG will mean that we should be close
+        # to the specified C=0.5, E=0.2 and D=0.1 probabilities.
+        expected_probs = [0.6, 0.2, 0.1]
+
+        self.assertListEqual(gen_probs, expected_probs)
 
     def test_date_column_with_impossible_combination_of_from_to_and_period(self):
         '''
