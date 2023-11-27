@@ -501,10 +501,10 @@ class CategoricalDataGenerator:
         # duplicates in case user didn't specify DISTINC in his SQL query;
         # the anon_df would typically be from UUIDs that are generated before
         # categorical columns.
-        if self.anon_df is not None:
-            existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
-        else:
+        if self.anon_df is None or self.anon_df.empty:
             existing_data = pd.concat(self.generated_dfs, axis=1)
+        else:
+            existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
 
         # ensure the data going into DB is processed identically for join keys
         for col in join_columns:

@@ -37,9 +37,9 @@ spec_dict["metadata"]["numerical_columns"] = ["count"]
 spec_dict["metadata"]["date_columns"] = ["discharge_date"]
 
 spec_dict["columns"]["id"] = UUIDColumn(uuid_seed=0)
-spec_dict["columns"]["hospital"] = CategoricalColumn("hospital", original_values="regex", anon_set="HOSP[1-9]{2}")
-spec_dict["columns"]["count"] = NumericalColumn(distribution_parameters={"target_min":1, "target_max":1000})
-spec_dict["columns"]["discharge_date"] = DateColumn("2020-01-01", 360 * 2, cross_join=False)
+spec_dict["columns"]["hospital"] = CategoricalColumn("hospital", uniques=5, original_values="regex", anon_set="HOSP[1-9]{2}")
+spec_dict["columns"]["count"] = NumericalColumn(distribution="normal", distribution_parameters={"target_min":1, "target_max":1000})
+spec_dict["columns"]["discharge_date"] = DateColumn("discharge_date", uniques=360 * 2, from_date="2020-01-01", cross_join=False)
 
 exhibit_data = xbt.Exhibit(command="fromspec", source=spec_dict, output="dataframe")
 anon_df = exhibit_data.generate()

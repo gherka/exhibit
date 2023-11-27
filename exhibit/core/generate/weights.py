@@ -185,7 +185,12 @@ def target_columns_for_weights_table(spec_dict):
         anon_set = spec_dict["columns"][cat_col]["anonymising_set"]
         if (
             is_paired(spec_dict, cat_col) or
-            anon_set.split(".")[0] not in fixed_sql_sets):
+            # we keep the columns if they are in fixed sets or have custom SQL;
+            # because regex can be very variable, we assume that if anoymising set is not in
+            # fixed sets, and doesn't start with SELECT, it's regex and shouldn't have weights
+            (anon_set.split(".")[0] not in fixed_sql_sets and
+            anon_set.strip().upper()[:6] != "SELECT") 
+            ):
             cat_cols_set.remove(cat_col)
 
     return cat_cols_set

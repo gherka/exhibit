@@ -462,7 +462,7 @@ class UUIDColumn(dict):
         miss_proba : float
             Percentage of records to be nulled.
         anon_set   : string
-            One of "uuid" or "range".
+            One of "uuid", "range", "pseudo_chi".
         '''
         
         self["type"] = "uuid"
@@ -634,7 +634,7 @@ class DateColumn(dict):
             Optional SQL SELECT statement to pick the date values from.
         '''
 
-        if from_date is None and to_date is None: #pragma: no cover
+        if (from_date is None and to_date is None) and anonymising_set is None: #pragma: no cover
             raise RuntimeError(
                 f"{col_name} is missing at least one of from_date or to_date")
         
