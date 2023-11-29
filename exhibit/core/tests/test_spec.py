@@ -147,6 +147,70 @@ class specsTests(unittest.TestCase):
         anon_df = exhibit_data.generate()
 
         self.assertEqual(anon_df.shape, (100, 1))
+
+    def test_mix_of_categorical_and_numerical_columns_with_incomplete_weights(self):
+        '''
+        This test covers both categorical and continuous column generation.
+
+        Remember that weights are relative to each other, meaning that if we provide
+        weights for just one value, it doesn't matter because it has no reference point.
+        If we provide weights for two values, they will be rescaled to sum to 1, while
+        other values without weights, will be treated as 1, meaning providing incomplete
+        weights will lead to smaller values relative to missing values. 
+        '''
+
+        def _generate_spam(_):
+            '''
+            Basic function to generate menu items in a fictitious bistro.
+
+            Parameters
+            ----------
+            _ : None
+                the anonymising_set function return one value at a time
+                and has access to the current row in the DF generated so far.
+                This argument is mandatory to include, even if it's unused.
+
+            Returns
+            ----------
+            Scalar value
+            '''
+
+            rng = np.random.default_rng()
+            val = rng.choice([
+                "Egg and bacon", "Egg, sausage, and bacon", "Egg and Spam",
+                "Egg, bacon, and Spam", "Egg, bacon, sausage, and Spam",
+                "Spam, bacon, sausage, and Spam", "Lobster Thermidor",
+            ])
+
+            return val
+
+        spec = tm.Spec()
+        spec_dict = spec.generate()
+
+        spec_dict["metadata"]["number_of_rows"] = 50
+        spec_dict["metadata"]["categorical_columns"] = ["menu"]
+        spec_dict["metadata"]["numerical_columns"] = ["price"]
+        spec_dict["metadata"]["id"] = "main"
+
+        menu_df = pd.DataFrame(data={
+            "menu" : ["Egg and bacon", "Lobster Thermidor", "Missing Data"],
+            "price": [0.5, 0.5, 0.0]
+        })
+
+        spec_dict["columns"]["menu"] = tm.CategoricalColumn("menu", uniques=7, original_values=menu_df, anon_set=_generate_spam)
+        spec_dict["columns"]["price"] = tm.NumericalColumn(distribution_parameters={"target_sum" : 1000, "dispersion": 0.2})
+
+        exhibit_data = xbt.Exhibit(command="fromspec", source=spec_dict, output="dataframe")
+        anon_df = exhibit_data.generate()
+
+        test_items = ["Egg and bacon", "Lobster Thermidor"]
+
+        # check that the average price of the two test items is about half the rest
+        self.assertAlmostEqual(
+            anon_df[anon_df["menu"].isin(test_items)]["price"].mean() * 2,
+            anon_df[~anon_df["menu"].isin(test_items)]["price"].mean(),
+            delta=3
+        )
             
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

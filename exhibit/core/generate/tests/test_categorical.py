@@ -3,6 +3,7 @@ Test the generation of categorical columns & values
 '''
 
 # Standard library imports
+import datetime
 import unittest
 import tempfile
 from unittest.mock import Mock, patch
@@ -531,6 +532,124 @@ class categoricalTests(unittest.TestCase):
         gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=10)
 
         self.assertWarns(RuntimeWarning, gen.generate)
+
+    def test_generate_column_with_custom_function_in_anonymised_set(self):
+        '''
+        This option is only valid for when Exhibit is used as a script. For
+        specification-based generation, use custom ML models. Note that 
+        while numerical weights are respected, probability vectors are not.
+        '''
+
+        def _generate_spam(_):
+            '''
+            Basic function to generate menu items in a fictitious bistro.
+
+            Parameters
+            ----------
+            _ : None
+                the anonymising_set function return one value at a time
+                and has access to the current row in the DF generated so far.
+                This argument is mandatory to include, even if it's unused.
+
+            Returns
+            ----------
+            Scalar value
+            '''
+
+            rng = np.random.default_rng()
+            val = rng.choice([
+                "Egg and bacon", "Egg, sausage, and bacon", "Egg and Spam",
+                "Egg, bacon, and Spam", "Egg, bacon, sausage, and Spam",
+                "Spam, bacon, sausage, and Spam", "Lobster Thermidor",
+            ])
+
+            return val
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata": {
+                "categorical_columns" : ["menu"],
+                "inline_limit" : 5,
+                "id" : "main"
+                },
+            "columns": {
+                "menu": {
+                    "type": "categorical",
+                    "uniques" : 7,
+                    "original_values" : pd.DataFrame(),
+                    "paired_columns": None,
+                    "anonymising_set" : _generate_spam,
+                    "cross_join_all_unique_values" : False,
+                },
+            }
+        }
+
+        gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=50)
+        result = gen.generate()
+
+        self.assertIsInstance(result, pd.DataFrame)
+        self.assertEqual(result.shape[0], 50)
+
+    def test_generate_column_with_custom_date_function_in_anonymised_set(self):
+        '''
+        This option is only valid for when Exhibit is used as a script. For
+        specification-based generation, use custom ML models. Note that 
+        while numerical weights are respected, probability vectors are not.
+        '''
+
+        def _increment_date(row):
+            '''
+            Basic function to generate menu items in a fictitious bistro.
+
+            Parameters
+            ----------
+            row : pd.Series
+                the anonymising_set function return one value at a time
+                and has access to the current row in the DF generated so far.
+                This argument is mandatory to include, even if it's unused.
+
+            Returns
+            ----------
+            Scalar value
+            '''
+            rng = np.random.default_rng()
+            cur_date = row["date"]
+            new_date = cur_date + datetime.timedelta(days=int(rng.integers(1, 10)))
+
+            return new_date
+
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata": {
+                "date_columns" : ["date", "future_date"],
+                "inline_limit" : 5,
+                "id" : "main"
+                },
+            "columns": {
+                "date": {
+                    "type": "date",
+                    "from": "2023-01-01",
+                    "to"  : "2024-01-01",
+                    "uniques" : 50,
+                    "frequency" : "D",
+                    "cross_join_all_unique_values" : False,
+                },
+                "future_date": {
+                    "type": "date",
+                    "from": "2023-01-01",
+                    "to"  : "2024-01-01",
+                    "uniques" : 50,
+                    "frequency" : "D",
+                    "cross_join_all_unique_values" : False,
+                    "anonymising_set" : _increment_date
+                }
+            }
+        }
+
+        gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=50)
+        result = gen.generate()
+
+        self.assertTrue((result["future_date"] > result["date"]).all())
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

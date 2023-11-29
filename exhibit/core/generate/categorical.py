@@ -219,6 +219,10 @@ class CategoricalDataGenerator:
         # ignoring the standard date genderation parameters, like from / to.        
         anon_set = col_attrs.get("anonymising_set", None)
 
+        # Users can pass custom functions to generate categorical / date columns
+        if callable(anon_set):
+            return self._generate_using_custom_function(col_name, anon_set)
+
         # check if the anonymising set is a SQL statement starting with SELECT
         # note that for dates, all other parameters, like from / to will be ignored
         if anon_set is not None and anon_set.strip().upper()[:6] == "SELECT":
@@ -501,8 +505,14 @@ class CategoricalDataGenerator:
         # duplicates in case user didn't specify DISTINC in his SQL query;
         # the anon_df would typically be from UUIDs that are generated before
         # categorical columns.
+
+        # self.anon_df is what is generated BEFORE categorical columns, e.g UUID columns
         if self.anon_df is None or self.anon_df.empty:
-            existing_data = pd.concat(self.generated_dfs, axis=1)
+            # self.generated_dfs has cat. columns generated BEFORE this particular column
+            if not self.generated_dfs: #pragma: no cover
+                existing_data = pd.DataFrame()
+            else:
+                existing_data = pd.concat(self.generated_dfs, axis=1)
         else:
             existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
 
@@ -600,3 +610,36 @@ class CategoricalDataGenerator:
             final_result = final_result.astype("datetime64[ns]")
 
         return final_result
+    
+    def _generate_using_custom_function(self, col_name, anon_set):
+        '''
+        _summary_
+
+        Parameters
+        ----------
+        col_name : _type_
+            _description_
+        anon_set : _type_
+            _description_
+        '''
+        # self.anon_df is what is generated BEFORE categorical columns, e.g UUID columns
+        if self.anon_df is None or self.anon_df.empty:
+            # self.generated_dfs has cat. columns generated BEFORE this particular column
+            if not self.generated_dfs:
+                existing_data = pd.DataFrame()
+            else:
+                existing_data = pd.concat(self.generated_dfs, axis=1)
+        else: #pragma: no cover
+            existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
+
+        if existing_data.empty:
+            result = pd.Series(
+                data=[anon_set(pd.Series) for _ in range(self.num_rows)],
+                name=col_name
+            )
+            return result
+
+        result = existing_data.apply(anon_set, axis=1)
+        result.name = col_name
+
+        return result

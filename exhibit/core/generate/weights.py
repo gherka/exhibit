@@ -180,9 +180,19 @@ def target_columns_for_weights_table(spec_dict):
     cat_cols = spec_dict["metadata"]["categorical_columns"] #includes linked
     cat_cols_set = set(cat_cols)
 
-    #drop paired columns and regex columns
+    #drop columns, like(paired / regex columns) that we don't expect to have num. weights
     for cat_col in cat_cols:
         anon_set = spec_dict["columns"][cat_col]["anonymising_set"]
+
+        # if we're missing original_values, there can be no weights
+        orig_vals = spec_dict["columns"][cat_col]["original_values"]
+        if orig_vals is None or (isinstance(orig_vals, pd.DataFrame) and orig_vals.empty): #pragma: no cover
+            cat_cols_set.remove(cat_col)
+            continue
+
+        # skip the checks for custom functions
+        if callable(anon_set):
+            continue
         if (
             is_paired(spec_dict, cat_col) or
             # we keep the columns if they are in fixed sets or have custom SQL;

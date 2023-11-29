@@ -206,6 +206,9 @@ class newValidator:
                 attr="anonymising_set",
                 col_names=True,
                 types=["categorical"]):
+            # ignore anonymising_sets that have custom functions 
+            if callable(v):
+                return True
             
             if v.split(".")[0] in self.fixed_sql_sets:
                 col_uniques = spec_dict["columns"][c]["uniques"]
