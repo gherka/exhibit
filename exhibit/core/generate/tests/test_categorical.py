@@ -427,6 +427,62 @@ class categoricalTests(unittest.TestCase):
         self.assertTrue((result.query("age > 18")["smoker"] == "yes").all())
         self.assertTrue((result.query("age <= 18")["smoker"] == "no").all())
 
+    def test_column_with_original_values_in_conditonal_sql(self):
+        '''
+        Users can provide a custom SQL as anonymising set which can reference
+        columns in the spec as well as any table in the Exhibit DB.
+        
+        Dates is a special built-in table in exhibit DB with a long list of dates
+        used in cross-join SQL queries.
+        '''
+
+        set_sql = '''
+        SELECT temp_main.age_at_birth, temp_original_values.age_at_death as age_at_death
+        FROM temp_main, temp_original_values
+        WHERE temp_original_values.age_at_death > temp_main.age_at_birth
+        '''
+       
+        test_dict = {
+            "_rng" : np.random.default_rng(seed=0),
+            "metadata": {
+                "categorical_columns": ["age_at_birth", "age_at_death"],
+                "inline_limit" : 30,
+                "id" : "main"
+                },
+            "columns": {
+                "age_at_birth": {
+                    "type": "categorical",
+                    "uniques" : 10,
+                    "original_values" : pd.DataFrame(data={
+                        "age_at_birth" : [1, 2, 5, 10, 17, 18, 19, 25, 50, 110, "Missing Data"],
+                        "probability_vector" : [0.5] * 10 + [0]
+                    }),
+                    "paired_columns": None,
+                    "anonymising_set" : "random",
+                    "cross_join_all_unique_values" : False,
+                },
+                "age_at_death": {
+                    "type": "categorical",
+                    "uniques" : 10,
+                    "original_values" : pd.DataFrame(data={
+                        "age_at_death" : [5, 10, 25, 30, 40, 50, 60, 80, 90, 111, "Missing Data"],
+                        "probability_vector" : [0.5] * 10 + [0]
+                    }),
+                    "paired_columns": None,
+                    "anonymising_set" : set_sql,
+                    "cross_join_all_unique_values" : False,
+                },
+            }
+        }
+
+        gen = tm.CategoricalDataGenerator(spec_dict=test_dict, core_rows=10)
+        result = gen.generate()
+
+        # note that SQLite will return text and does strange things if you try to cast
+        self.assertTrue((
+            result["age_at_death"].astype(int) >
+            result["age_at_birth"].astype(int)).all())
+
     def test_column_with_external_sql_values_and_probablities(self):
         '''
         Users can provide a custom SQL as anonymising set which can reference

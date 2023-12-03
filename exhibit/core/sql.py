@@ -176,7 +176,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
             data_df[col] = data_df[col].dt.strftime("%Y-%m-%d")
             data_types.append(String)
         else:
-            data_df[col] = data_df[col].astype(str).str.strip()
+            data_df.loc[:, col] = data_df.loc[:, col].astype(str).str.strip()
             data_types.append(String)
 
     # convert back to a list of tuples

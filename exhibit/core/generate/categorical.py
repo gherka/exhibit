@@ -491,7 +491,9 @@ class CategoricalDataGenerator:
 
         # "source" table aka existing table is always put into exhibit DB, but if 
         # SQL is trying to reference an external table, we should check if it exists
-        ext_tables = [t for t in sql_tables if t != f"temp_{source_table_id}"]     
+        ext_tables = [
+            t for t in sql_tables if t not in ["temp_original_values", f"temp_{source_table_id}"]
+        ]
 
         # check the "external" table is in exhibit.db
         for ext_table in ext_tables:
@@ -502,7 +504,7 @@ class CategoricalDataGenerator:
                 )
         
         # insert the dataframe generated so far into the DB; we make sure to drop
-        # duplicates in case user didn't specify DISTINC in his SQL query;
+        # duplicates in case user didn't specify DISTINCT in his SQL query;
         # the anon_df would typically be from UUIDs that are generated before
         # categorical columns.
 
@@ -515,6 +517,16 @@ class CategoricalDataGenerator:
                 existing_data = pd.concat(self.generated_dfs, axis=1)
         else:
             existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
+
+        # for convenience, we can reference original_values as a table - this could be 
+        # original_values as they appear in the SPEC or in the SQL (not implemented yet)
+        if "temp_original_values" in sql_tables:
+            ov_df = self.spec_dict["columns"][col_name]["original_values"][[col_name]]
+            create_temp_table(
+                table_name="temp_original_values",
+                col_names=[col_name],
+                data=ov_df
+            )
 
         # ensure the data going into DB is processed identically for join keys
         for col in join_columns:
