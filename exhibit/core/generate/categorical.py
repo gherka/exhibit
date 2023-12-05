@@ -582,7 +582,7 @@ class CategoricalDataGenerator:
                             .value_counts()
                             .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
                             .reset_index(level=col_name)
-                            .values
+                            .to_numpy(dtype="object")
                             )
             a, p = np.split(proba_arr, 2, axis=1)
             a = a.flatten()
