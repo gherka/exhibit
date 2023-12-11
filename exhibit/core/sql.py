@@ -191,7 +191,16 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
     metadata.create_all(engine)
 
     # insert the values (assuming tuples in the data follow the col_names order)
-    conn.execute(table.insert().values(data))
+    # sqlite has a limit on how many records can be inserted into a table at one time
+    # see: https://www.sqlite.org/limits.html #9
+    chunk = 32_000
+    if (engine.dialect.name == "sqlite") and (num_records:=len(data)) > chunk: #pragma: no cover
+        for i, _ in enumerate(range(0, num_records, chunk)):
+            from_i = i * chunk
+            to_i = (i+1) * chunk
+            conn.execute(table.insert().values(data[from_i:to_i]))
+    else:
+        conn.execute(table.insert().values(data))
 
     # save the table in case it's required
     if return_table:
