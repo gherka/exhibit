@@ -557,6 +557,11 @@ class CategoricalDataGenerator:
         # create the dataframe with SQL data
         sql_df = pd.DataFrame(data=result, columns=join_columns + aliased_columns)
 
+        # ensure that the column of interest (the one we're potentially matching to original
+        # values) is typed to string - and not datetime or int, coming out of SQL. We will
+        # convert to datetime at the end, if that's what the type in the spec is.
+        sql_df[col_name] = sql_df[col_name].astype("str")
+
         # get the probabilities for the selected column in the external table
         # at the level of the join key - use a hash for the combination of columns!
 
@@ -582,7 +587,7 @@ class CategoricalDataGenerator:
                             .value_counts()
                             .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
                             .reset_index(level=col_name)
-                            .to_numpy(dtype="object")
+                            .to_numpy(dtype="str")
                             )
             a, p = np.split(proba_arr, 2, axis=1)
             a = a.flatten()

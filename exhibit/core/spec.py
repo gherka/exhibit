@@ -492,7 +492,9 @@ class CategoricalColumn(dict):
             Column name. Unlike other column types, you must provide a matching column
             name to ensure smooth operation of the synthesis.
         original_values   : str | list | pd.DataFrame
-            A flexible way to provide instructions on what values to synthesise.
+            A flexible way to provide instructions on what values to synthesise. You don't
+            need to provide the Missing Data value and its probability; these are added
+            automatically with Missing Data having zero probability.
         original_probs    : list
             Only valid if original_values were provided as a list. The order of
             probabilities must match the order of original_values. Defauls to equal
@@ -536,19 +538,22 @@ class CategoricalColumn(dict):
          not isinstance(original_values, FormattedList)):
 
             original_values = list(original_values)
-            prob_vector = [1 / len(original_values)] * len(original_values) + [0]
+            prob_vector = [1 / len(original_values)] * len(original_values)
 
             if original_probs is not None:
                 original_probs = list(original_probs)
-                prob_vector = original_probs + [0]
+                prob_vector = original_probs
 
             self["original_values"] = pd.DataFrame(
                 data={
                     name: original_values + ["Missing data"],
-                    "probability_vector" : prob_vector
+                    "probability_vector" : prob_vector + [0]
                 }
             )
             self["uniques"] = len(set(original_values))
+
+        if isinstance(original_values, pd.DataFrame):
+            self["uniques"] = original_values[name].nunique()
 
 class NumericalColumn(dict):
     '''
