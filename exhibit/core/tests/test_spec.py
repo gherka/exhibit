@@ -16,6 +16,7 @@ from exhibit.sample.sample import prescribing_data as ref_df
 from exhibit.core.utils import package_dir
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.db import db_util
+from exhibit.core.constants import MISSING_DATA_STR
 
 # Module under test
 from exhibit.core import spec as tm
@@ -211,6 +212,47 @@ class specsTests(unittest.TestCase):
             anon_df[~anon_df["menu"].isin(test_items)]["price"].mean(),
             delta=3
         )
+
+    def test_categorical_column_initialised_from_dataframe_with_missing_data(self):
+        '''
+        If users don't explicitly provide a miss_proba argument to CategoricalColumn, 
+        but original_data has Missing Data value, we'll take the probability of that
+        and use it as miss_proba - otherwise, no missing data will be added.
+        '''
+
+        empty_spec = tm.Spec()
+        spec_dict = empty_spec.generate()
+        spec_dict["metadata"]["number_of_rows"] = 100
+        spec_dict["metadata"]["categorical_columns"] = ["list_1", "list_2", "list_3", "df"]
+
+        # list with original probs provided
+        spec_dict["columns"]["list_1"] = tm.CategoricalColumn("list_1",
+            original_values=["spam", "ham", "eggs", "spamspam", MISSING_DATA_STR],
+            original_probs=[0.1, 0.1, 0.1, 0.1, 0.6]
+        )
+
+        # list without explicit probs, meaning equal probs
+        spec_dict["columns"]["list_2"] = tm.CategoricalColumn("list_2",
+            original_values=["spam", "ham", "eggs", "spamspam", MISSING_DATA_STR],
+        )
+
+        # standard list without Missing Data, but with miss proba argument
+        spec_dict["columns"]["list_3"] = tm.CategoricalColumn("list_3",
+            original_values=["spam", "ham", "eggs", "spamspam"],
+            miss_proba=0.5
+        )
+
+        # data frame with probability vector
+        spec_dict["columns"]["df"] = tm.CategoricalColumn("df",
+            pd.DataFrame(data={
+                "df" : ["spam", "ham", MISSING_DATA_STR],
+                "probability_vector" : [0.1, 0.1, 0.8]
+            }))
+
+        exhibit_data = xbt.Exhibit(command="fromspec", source=spec_dict, output="dataframe")
+        anon_df = exhibit_data.generate()
+
+        self.assertTrue(anon_df.isna().any().all())
             
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

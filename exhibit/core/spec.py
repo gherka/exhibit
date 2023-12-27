@@ -538,22 +538,48 @@ class CategoricalColumn(dict):
          not isinstance(original_values, FormattedList)):
 
             original_values = list(original_values)
+            # fallback prob_vector with equal probabilities
             prob_vector = [1 / len(original_values)] * len(original_values)
-
+            
             if original_probs is not None:
-                original_probs = list(original_probs)
-                prob_vector = original_probs
+                prob_vector = list(original_probs)
 
+            # if we have missing data in the original list, we have two possibilities:
+            # we have a probability vector in which case it's taken care of, or not.
+            # we assume that missing data is the last item in the original values / probas
+            if MISSING_DATA_STR in original_values:
+                if original_probs is None:
+                    # take the equal probability we've derived earlier
+                    self["miss_probability"] = prob_vector[0]
+                else:
+                    self["miss_probability"] = prob_vector[-1]
+            
+            # if user didn't provide a missing data string in the original values list,
+            # we add it manually, together with whatever miss_probability we ended up with
+            else:
+                original_values = original_values + [MISSING_DATA_STR]
+                prob_vector = prob_vector + [self["miss_probability"]]
+
+            # finall
             self["original_values"] = pd.DataFrame(
                 data={
-                    name: original_values + ["Missing data"],
-                    "probability_vector" : prob_vector + [0]
+                    name: original_values,
+                    "probability_vector" : prob_vector
                 }
             )
-            self["uniques"] = len(set(original_values))
+            # overwrite uniques with the correct values (excluding missing data)
+            self["uniques"] = len({x for x in original_values if x != MISSING_DATA_STR})
 
         if isinstance(original_values, pd.DataFrame):
-            self["uniques"] = original_values[name].nunique()
+            # check for missing data in the provided data frame
+            if MISSING_DATA_STR in original_values[name].unique():
+                ov_arr = original_values[name].to_numpy()
+                proba_arr = original_values["probability_vector"].to_numpy()
+                self["miss_probability"] = proba_arr[ov_arr== MISSING_DATA_STR].item()
+
+            # add uniques, to save the trouble of providing them manually
+            self["uniques"] = len(
+                {x for x in original_values[name].values if x != MISSING_DATA_STR})
 
 class NumericalColumn(dict):
     '''
