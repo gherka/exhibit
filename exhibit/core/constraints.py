@@ -158,9 +158,11 @@ class ConstraintHandler:
             "sort_and_make_peak"   : partial(self.sort_and_skew, direction="up"),
             "sort_and_make_valley" : partial(self.sort_and_skew, direction="down"),
             "shift_distribution_right": partial(self.shift_distribution, right=True),
-            "shift_distribution_left" : partial(self.shift_distribution, right=False)
+            "shift_distribution_left" : partial(self.shift_distribution, right=False),
+            "assign_value"            : self.assign_value,
         }
 
+        # internal action kwargs
         kwargs_dict = {
             "geo_make_regions" : {"spec_dict" : self.spec_dict},
         }
@@ -189,10 +191,20 @@ class ConstraintHandler:
                 actions = [x.strip() for x in action_str.split(",")]
                 
                 for action in actions:
-                    self.current_action = action
-                    if (action_func := dispatch_dict.get(action, None)):
+                    spec_action_kwargs = {}
+                    # check if action has a argument (after $)
+                    action_with_args = action.split("$")
+                    self.current_action = action_with_args[0]
+
+                    # add arguments to the kwargs dict that will be passed to each action
+                    if len(action_with_args) > 1:
+                        for i, arg in enumerate(action_with_args[1:]):
+                            spec_action_kwargs[f"spec_kwarg_{i}"] = arg
+
+                    if (action_func := dispatch_dict.get(self.current_action, None)):
 
                         _kwargs = kwargs_dict.get(action, {})
+                        _kwargs.update(spec_action_kwargs)
 
                         # overwrite the original DF row IDs with the adjusted ones
                         output_df.loc[cc_filter_idx] = action_func(
@@ -1218,6 +1230,48 @@ class ConstraintHandler:
                 final_result.append(new_series)
                 continue
 
+        new_df = pd.concat(
+            final_result + 
+            [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
+            axis=1
+        ).reindex(columns=df.columns)
+
+        return new_df
+
+    def assign_value(
+        self, df, filter_idx, target_str, partition_cols=None, spec_kwarg_0=None):
+        '''
+        Sort filtered data slice with optional nesting achieved by partitioning
+
+        Parameters
+        ----------
+        df             : pd.DataFrame
+            Unmodified dataframe
+        filter_idx     : pd.Index
+            Index of rows to be modified by the function
+        target_str     : str
+            Column(s) where user wants to apply the constraint
+        partition_cols : list
+            Columns to group by to achieve nested application of the function
+        spec_kwarg_0   : str
+            Value to assign to the filtered selection
+
+        Returns
+        -------
+        pd.DataFrame
+            Returns a DataFrame with assigned (overridden) value
+        '''
+
+        assigned_value = spec_kwarg_0
+        final_result = []
+        target_cols = [x.strip() for x in target_str.split(",")]
+
+        for target_col in target_cols:
+
+            new_series = pd.Series(data=assigned_value, index=filter_idx, name=target_col)
+            final_result.append(new_series)
+
+        # return a new dataframe with amended target_cols, plus the unchanged rest
         new_df = pd.concat(
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],

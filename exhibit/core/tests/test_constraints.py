@@ -1690,6 +1690,37 @@ class constraintsTests(unittest.TestCase):
             result.query("hb == 'A'").admission_date.value_counts().head().index.min(),
             result.query("hb == 'B'").admission_date.value_counts().head().index.max()
         )
+
+    def test_custom_constraints_assign_value(self):
+        '''
+        Users should be able to assign an arbitrary value given a particular filter expression
+        '''
+
+        test_dict = {
+
+            "_rng" : np.random.default_rng(seed=0),
+            "constraints" : {
+                "custom_constraints": {
+                    "cc1" : {
+                        "filter"  : "C == 'spam'",
+                        "targets" : {
+                            "A" : "assign_value$lobster_thermidor",
+                        }
+                    },
+                }
+            },
+        }
+
+        test_data = pd.DataFrame(data={
+            "A" : list("ABCDE") * 4,
+            "B" : list("FGHIJ") * 4,
+            "C" : ["spam", "spam", "ham", "ham", "ham"] * 4,
+        })
+
+        test_gen = tm.ConstraintHandler(test_dict, test_data)
+        result = test_gen.process_constraints()
+        
+        self.assertTrue((result.query("C=='spam'")["A"] == "lobster_thermidor").all())
         
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

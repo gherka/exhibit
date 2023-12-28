@@ -267,6 +267,10 @@ def generate_YAML_string(spec_dict):
     # - "sort_and_make_valley"
     # - "shift_distribution_right"
     # - "shift_distribution_left"
+    # - "assign_value"
+    #
+    # assign_value can take an argument separated by $ (assign_value$hello_world)
+    # which will override the synthesised value in the filter selection.                   
     #
     # Adding or banning nulls is useful when a value in one column, 
     # like Readmissions Within 28 days, necessitates a valid value in
