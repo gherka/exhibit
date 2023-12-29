@@ -107,7 +107,7 @@ class Spec:
             self.user_linked_cols = kwargs.get("user_linked_cols", [])
             self.uuid_cols = kwargs.get("uuid_cols", set())
             self.db_prob_cols = kwargs.get("save_probabilities", set())
-            self.id = generate_table_id()
+            self.id = kwargs.get("id", generate_table_id())
             
             self.numerical_cols = (
                 set(self.df.select_dtypes(include=np.number).columns.values) -
@@ -484,7 +484,7 @@ class CategoricalColumn(dict):
     def __init__(self,
         name, original_values, original_probs=None,
         paired_columns=None, uniques=None, cross_join=False,
-        miss_proba=0, anon_set="random", dispersion=0):
+        miss_proba=None, anon_set="random", dispersion=0):
         '''
         Parameters
         ----------
@@ -493,8 +493,8 @@ class CategoricalColumn(dict):
             name to ensure smooth operation of the synthesis.
         original_values   : str | list | pd.DataFrame
             A flexible way to provide instructions on what values to synthesise. You don't
-            need to provide the Missing Data value and its probability; these are added
-            automatically with Missing Data having zero probability.
+            need to provide the Missing data value and its probability; these are added
+            automatically with Missing data having zero probability.
         original_probs    : list
             Only valid if original_values were provided as a list. The order of
             probabilities must match the order of original_values. Defauls to equal
@@ -527,7 +527,7 @@ class CategoricalColumn(dict):
         self["paired_columns"] = [] if paired_columns is None else paired_columns
         self["uniques"] = 0 if uniques is None else uniques
         self["cross_join_all_unique_values"] = cross_join
-        self["miss_probability"] = miss_proba
+        self["miss_probability"] = 0 if miss_proba is None else miss_proba
         self["anonymising_set"] = anon_set
         self["dispersion"] = dispersion
         
@@ -547,7 +547,7 @@ class CategoricalColumn(dict):
             # if we have missing data in the original list, we have two possibilities:
             # we have a probability vector in which case it's taken care of, or not.
             # we assume that missing data is the last item in the original values / probas
-            if MISSING_DATA_STR in original_values:
+            if MISSING_DATA_STR in original_values and miss_proba is None:
                 if original_probs is None:
                     # take the equal probability we've derived earlier
                     self["miss_probability"] = prob_vector[0]
@@ -572,7 +572,7 @@ class CategoricalColumn(dict):
 
         if isinstance(original_values, pd.DataFrame):
             # check for missing data in the provided data frame
-            if MISSING_DATA_STR in original_values[name].unique():
+            if MISSING_DATA_STR in original_values[name].unique() and miss_proba is None:
                 ov_arr = original_values[name].to_numpy()
                 proba_arr = original_values["probability_vector"].to_numpy()
                 self["miss_probability"] = proba_arr[ov_arr== MISSING_DATA_STR].item()

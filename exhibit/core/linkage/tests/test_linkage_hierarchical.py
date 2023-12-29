@@ -334,13 +334,13 @@ class linkageTests(unittest.TestCase):
         This happens when the number of unique values in each column
         exceeds the user-specified threshold. In this case, the values
         are stored in exhibit DB and the user has no way to specify bespoke
-        probabilities. All SQL DB linked tables will have Missing Data as
+        probabilities. All SQL DB linked tables will have Missing data as
         the last row.
         '''
 
         sql_df = pd.DataFrame(data={
-            "A":list(sorted([f"A{i}" for i in range(5)]*2)) + ["Missing data"],
-            "B": [f"B{i}" for i in range(10)] + ["Missing data"]
+            "A":list(sorted([f"A{i}" for i in range(5)]*2)) + [MISSING_DATA_STR],
+            "B": [f"B{i}" for i in range(10)] + [MISSING_DATA_STR]
         })
 
         #we're bypassing __init__ and going straight to testing scenario code

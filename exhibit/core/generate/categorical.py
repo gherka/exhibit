@@ -286,7 +286,7 @@ class CategoricalDataGenerator:
         aliased_df = orig_df.applymap(lambda x: aliases.get(x, x))
         self.spec_dict["columns"][col_name]["original_values"] = aliased_df
 
-        # we ignore Missing Data probability when we originally create the variable
+        # we ignore Missing data probability when we originally create the variable
         idx = self.rng.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
         anon_list = [sql_df.iloc[x, :].values for x in idx]
         anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)

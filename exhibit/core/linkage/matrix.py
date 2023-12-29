@@ -120,7 +120,9 @@ def add_prefix(df, sep="__"):
     data_dict = {}
     
     for col in df.columns:
-        data_dict[col] = np.add(f"{col}{sep}", df[col].fillna(MISSING_DATA_STR).values)
+        # cast to str in case we're dealing with integer-based categorical columns, like age
+        df_col_str = df[col].fillna(MISSING_DATA_STR).astype(str)
+        data_dict[col] = np.add(f"{col}{sep}", df_col_str.values)
         
     return pd.DataFrame(data_dict)
 
@@ -272,6 +274,14 @@ def process_row(
             label_matrix, proba_lookup, lcd, rng, ref_array, acc_array, i)
         
     target_proba = np.array([proba_lookup[x] for x in valid_targets])
+
+    # typically, there will be more than 1 value in target_proba, but we have to guard against
+    # possibility of there being just one value, and if its probability is zero (Missing data)
+    # then summing it to 1 will result in NA (division by zero). As a workaround, set proba to
+    # 1 whenever it's the only possible value - since having it less than 1 doesn't make sense.
+    if len(target_proba) == 1:
+        target_proba = np.array([1])
+
     # make sure the probabilities sum up to 1
     target_proba = target_proba * (1 / sum(target_proba))
 

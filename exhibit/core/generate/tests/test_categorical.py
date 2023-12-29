@@ -20,6 +20,7 @@ from sqlalchemy.exc import InvalidRequestError
 from exhibit.db import db_util
 from exhibit.core.sql import create_temp_table
 from exhibit.core.tests.test_reference import temp_exhibit
+from exhibit.core.constants import MISSING_DATA_STR
 
 # Module under test
 from exhibit.core.generate import categorical as tm
@@ -246,7 +247,7 @@ class categoricalTests(unittest.TestCase):
                     "type": "categorical",
                     "uniques" : 2,
                     "original_values" : pd.DataFrame(data={
-                        "gender" : ["M", "F", "Missing Data"],
+                        "gender" : ["M", "F", MISSING_DATA_STR],
                         "probability_vector" : [0.5, 0.5, 0]
                     }),
                     "paired_columns": None,
@@ -307,7 +308,7 @@ class categoricalTests(unittest.TestCase):
                     "type": "categorical",
                     "uniques" : 2,
                     "original_values" : pd.DataFrame(data={
-                        "gender" : ["M", "F", "Missing Data"],
+                        "gender" : ["M", "F", MISSING_DATA_STR],
                         "probability_vector" : [0.5, 0.5, 0]
                     }),
                     "paired_columns": None,
@@ -402,7 +403,7 @@ class categoricalTests(unittest.TestCase):
                     "type": "categorical",
                     "uniques" : 2,
                     "original_values" : pd.DataFrame(data={
-                        "age" : [1, 2, 5, 10, 17, 18, 19, 25, 50, 110, "Missing Data"],
+                        "age" : [1, 2, 5, 10, 17, 18, 19, 25, 50, 110, MISSING_DATA_STR],
                         "probability_vector" : [0.5] * 10 + [0]
                     }),
                     "paired_columns": None,
@@ -454,7 +455,7 @@ class categoricalTests(unittest.TestCase):
                     "type": "categorical",
                     "uniques" : 10,
                     "original_values" : pd.DataFrame(data={
-                        "age_at_birth" : [1, 2, 5, 10, 17, 18, 19, 25, 50, 110, "Missing Data"],
+                        "age_at_birth" : [1, 2, 5, 10, 17, 18, 19, 25, 50, 110, MISSING_DATA_STR],
                         "probability_vector" : [0.5] * 10 + [0]
                     }),
                     "paired_columns": None,
@@ -465,7 +466,7 @@ class categoricalTests(unittest.TestCase):
                     "type": "categorical",
                     "uniques" : 10,
                     "original_values" : pd.DataFrame(data={
-                        "age_at_death" : [5, 10, 25, 30, 40, 50, 60, 80, 90, 111, "Missing Data"],
+                        "age_at_death" : [5, 10, 25, 30, 40, 50, 60, 80, 90, 111, MISSING_DATA_STR],
                         "probability_vector" : [0.5] * 10 + [0]
                     }),
                     "paired_columns": None,
@@ -500,7 +501,7 @@ class categoricalTests(unittest.TestCase):
         })
 
         original_vals = pd.DataFrame(data={
-            "condition"          : ["A", "B", "C", "D", "E", "Missing Data"],
+            "condition"          : ["A", "B", "C", "D", "E", MISSING_DATA_STR],
             "probability_vector" : [0.1, 0.1, 0.5, 0.1, 0.2, 0.0],
         })
 
@@ -519,7 +520,7 @@ class categoricalTests(unittest.TestCase):
                     "type": "categorical",
                     "uniques" : 2,
                     "original_values" : pd.DataFrame(data={
-                        "gender" : ["M", "F", "Missing Data"],
+                        "gender" : ["M", "F", MISSING_DATA_STR],
                         "probability_vector" : [0.5, 0.5, 0]
                     }),
                     "paired_columns": None,

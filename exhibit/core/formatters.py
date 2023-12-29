@@ -138,12 +138,16 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
 
     total_count = len(original_series)
 
-    temp_vectors = (original_series
-                     .fillna(MISSING_DATA_STR)
-                     .value_counts()
-                     .sort_index(kind="mergesort")
-                     .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count))
-    )
+    # we need to ensure that the type of the original values is str, not mixed (object)
+    # after we've filled the NAs because otherwise NAs become 'nan' and are not handled right
+    temp_vectors_value_counts = (original_series
+                    .fillna(MISSING_DATA_STR)
+                    .value_counts())
+    
+    temp_vectors = (temp_vectors_value_counts
+                    .set_axis(temp_vectors_value_counts.index.astype(str))
+                    .sort_index(kind="mergesort")
+                    .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count)))
 
     if MISSING_DATA_STR not in temp_vectors:
         temp_vectors = pd.concat([temp_vectors, pd.Series(

@@ -193,8 +193,13 @@ class specsTests(unittest.TestCase):
         spec_dict["metadata"]["numerical_columns"] = ["price"]
         spec_dict["metadata"]["id"] = "main"
 
+        # note that even though original_values only include 2 values (+ missing data),
+        # the synthetic dataset will have more, it's just the weights / probabilities will
+        # only affect these two - to save users from listing all values if they only want to
+        # change a couple.
         menu_df = pd.DataFrame(data={
-            "menu" : ["Egg and bacon", "Lobster Thermidor", "Missing Data"],
+            "menu" : ["Egg and bacon", "Lobster Thermidor", MISSING_DATA_STR],
+            "probability_vector" : [0.5, 0.5, 0.0],
             "price": [0.5, 0.5, 0.0]
         })
 
@@ -216,7 +221,7 @@ class specsTests(unittest.TestCase):
     def test_categorical_column_initialised_from_dataframe_with_missing_data(self):
         '''
         If users don't explicitly provide a miss_proba argument to CategoricalColumn, 
-        but original_data has Missing Data value, we'll take the probability of that
+        but original_data has Missing data value, we'll take the probability of that
         and use it as miss_proba - otherwise, no missing data will be added.
         '''
 
@@ -236,7 +241,7 @@ class specsTests(unittest.TestCase):
             original_values=["spam", "ham", "eggs", "spamspam", MISSING_DATA_STR],
         )
 
-        # standard list without Missing Data, but with miss proba argument
+        # standard list without Missing data, but with miss proba argument
         spec_dict["columns"]["list_3"] = tm.CategoricalColumn("list_3",
             original_values=["spam", "ham", "eggs", "spamspam"],
             miss_proba=0.5
