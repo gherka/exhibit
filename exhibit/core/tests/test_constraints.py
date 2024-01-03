@@ -1717,6 +1717,10 @@ class constraintsTests(unittest.TestCase):
             "C" : ["spam", "spam", "ham", "ham", "ham"] * 4,
         })
 
+        # remember that all categorical data comes in as "Category" dtype which imposes
+        # limits on what you can and can't do with those columns, like adding new values.
+        test_data["A"] = test_data["A"].astype("category")
+
         test_gen = tm.ConstraintHandler(test_dict, test_data)
         result = test_gen.process_constraints()
         

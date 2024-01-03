@@ -139,8 +139,12 @@ class ConstraintHandler:
 
         source = self.input if self.output is None else self.output
         output_df = source.copy()
-        # preserve category dtypes at the end of each custom action
-        output_dtypes = output_df.dtypes[output_df.dtypes == "category"]
+        # change categorical dtype to normal object to simplify the logic, particularly for
+        # assigning new values to series affected by custom constraints. You can still set
+        # the dtype to Categorical on a case by case basis where it improves performance.
+        cat_dtype_cols = output_df.select_dtypes(include=["category"]).columns
+        for col in cat_dtype_cols:
+            output_df[col] = output_df[col].astype("object")
 
         dispatch_dict = {
             "make_outlier"         : self.make_outlier,
@@ -209,7 +213,8 @@ class ConstraintHandler:
                         # overwrite the original DF row IDs with the adjusted ones
                         output_df.loc[cc_filter_idx] = action_func(
                             output_df, cc_filter_idx, target_str,
-                            cc_partitions, **_kwargs).astype(output_dtypes)
+                            cc_partitions, **_kwargs)
+
         return output_df
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, basic_constraint):
@@ -636,9 +641,6 @@ class ConstraintHandler:
             if not group.duplicated().any():
                 return group
 
-            # make sure blank string is available as a category before replacing
-            if group.dtype.name == "category": #pragma: no cover
-                group = group.cat.add_categories([""])
             new_group = group.where(~group.duplicated(), "").tolist()
             
             return pd.Series(new_group, index=group.index, name=target_col)

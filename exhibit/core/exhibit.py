@@ -379,13 +379,16 @@ class Exhibit:
         miss_gen = MissingDataGenerator(self.spec_dict, anon_df)
         anon_df = miss_gen.add_missing_data()
 
-        #6.5) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
+        #6.1) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED
         if self.derived_columns_first: #pragma: no cover
             for name, calc in self.spec_dict["derived_columns"].items():
                 if "Example" not in name:
                     anon_df[name] = generate_derived_column(anon_df, calc)
 
         #7) PROCESS BASIC AND CUSTOM CONSTRAINTS (IF ANY)
+        # note that the ConstraintHandler changes the dtype of categorical columns from
+        # Categorical to object to reduce dtype-related bugs / unexpected behaviour, like
+        # when users supply a filter expression or want to add a new value to a column.
         ch = ConstraintHandler(self.spec_dict, anon_df)
         anon_df = ch.process_constraints()
         # if there are any constraints that affect categorical columns, we need to
@@ -406,6 +409,7 @@ class Exhibit:
         # check if there are common columns between constraint targets and cat_cols
         if cat_cols_set & set(constraint_targets):
 
+            # fill NAs with a placeholder - so that correct weights could be used
             anon_df.loc[:, cat_cols] = (
                 anon_df.loc[:, cat_cols].fillna(MISSING_DATA_STR))
             
@@ -439,7 +443,7 @@ class Exhibit:
                     if num_col in derived_def:
                         anon_df[derived_col] = generate_derived_column(anon_df, derived_def)
                         break             
-                    
+            # change the missing data placeholder back to NAs
             anon_df.loc[:, cat_cols] = anon_df.loc[:, cat_cols].applymap(
             lambda x: np.nan if x == MISSING_DATA_STR else x)
 
