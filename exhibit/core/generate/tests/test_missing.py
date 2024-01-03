@@ -571,6 +571,46 @@ class missingDataTests(unittest.TestCase):
             test_spec_dict=test_dict, return_spec=False)
 
         self.assertTrue(df.query("A == 'eggs'")["B"].isna().any())    
+
+    def test_categorical_numerical_missing_data_with_make_null_cc(self):
+        '''
+        Typing issues (categorical vs object) can cause bugs when we have categorical columns,
+        a make_null custom constraint, a filter casting categorical column to integers (which
+        assumes object, not categorical - because you can't cast categorical to int if there 
+        is a Missing data categorical value - without removing unused categories first) AND
+        a numerical column. Commenting out the numerical column used to pass the test, and
+        uncommenting it used to fail it - which is wrong.
+
+        Without extra checks, AGE.astype('int') will fail if AGE is dtype="category" because
+        it'll have numbers as strings (which can be cast to int) and "invisible" Missing data
+        which can't.
+        '''
+
+        test_df = pd.DataFrame(data={
+            "AGE": ["1", "2", "3", "4", "4"],
+            "NULLED" : list("ABCAB"),
+            "NUMS": range(5)
+        })
+
+        test_dict = {
+            "metadata" : {
+                "number_of_rows" : 10,
+                "categorical_columns": ["AGE", "NULLED"],
+                "numerical_columns" : ["NUMS"]
+            },
+            "constraints" : {
+                "custom_constraints" : {
+                    "test_nulls" : {
+                        "filter" : "AGE.astype('int') > 1",
+                        "targets" : {"NULLED" : "make_null"}
+                    }
+                }
+            }
+        }
+
+        _, df = temp_exhibit(filename=test_df, test_spec_dict=test_dict, return_spec=False)
+
+        self.assertTrue(df.NULLED.isna().any())    
         
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366

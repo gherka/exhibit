@@ -165,7 +165,7 @@ class MissingDataGenerator:
             set(self.spec_dict.get("derived_columns", {}).keys()))
 
         if not (any(self.nan_data[cat_cols].isna()) and num_cols):
-            return self.nan_data
+            return self.nan_data.astype(self.dtypes)
 
         cat_mask = self.nan_data[cat_cols].isna().any(axis=1)
         self.nan_data[cat_cols] = self.nan_data[cat_cols].fillna(MISSING_DATA_STR)
