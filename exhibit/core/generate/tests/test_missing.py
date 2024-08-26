@@ -84,7 +84,7 @@ class missingDataTests(unittest.TestCase):
 
         assert_series_equal(
             test_data.loc[result],
-            test_data.loc[[0, 1, 2, 4], "Num"])
+            test_data.loc[[0, 1, 2, 4], "Rum"])
 
     def test_paired_columns_with_missing_data_identified(self):
         '''
