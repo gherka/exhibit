@@ -1,17 +1,17 @@
-name: exhibit
+name: exhibit_latest
 channels:
   - defaults
 dependencies:
-  - dill=0.3.7
-  - numpy=1.25.2
-  - pandas=2.0.3
-  - pip=23.2.1
-  - python=3.10.13
+  - dill=0.3.8
+  - numpy=1.26.4
+  - pandas=2.2.2
+  - pip=24.2
+  - python=3.12.4
   - pyyaml=6.0.1
-  - scipy=1.11.1
-  - shapely=2.0.1
-  - sqlalchemy=1.4.39
+  - scipy=1.13.1
+  - shapely=2.0.5
+  - sqlalchemy=2.0.30
   - pip:
-      - h3==3.7.6
-      - pyarrow==14.0.1
-      - sql-metadata==2.9.0
+      - h3=3.7.7
+      - pyarrow=17.0.0
+      - sql-metadata=2.12.0
