@@ -506,7 +506,7 @@ class linkageTests(unittest.TestCase):
         #first test that high-level column (A) is correctly split ~20-80
         self.assertAlmostEqual(
             0.2/0.8,
-            result.groupby("A").size().agg(lambda x: x[0]/x[1]),
+            result.groupby("A").size().agg(lambda x: x.iloc[0]/x.iloc[1]),
             delta=0.1
         )
 
@@ -648,7 +648,7 @@ class linkageTests(unittest.TestCase):
         #between A0 and A1 + A2 (derived from children's probabilieis).
         self.assertAlmostEqual(
             0.2/0.8,
-            result.groupby("A").size().agg(lambda x: x[0] / (x[1] + x[2])),
+            result.groupby("A").size().agg(lambda x: x.iloc[0] / (x.iloc[1] + x.iloc[2])),
             delta=0.1
         )
 
@@ -709,7 +709,7 @@ class linkageTests(unittest.TestCase):
         #between A0 and A1 + A2 (derived from children's probabilieis).
         self.assertAlmostEqual(
             0.2/0.8,
-            result.groupby("A").size().agg(lambda x: x[0] / (x[1] + x[2])),
+            result.groupby("A").size().agg(lambda x: x.iloc[0] / (x.iloc[1] + x.iloc[2])),
             delta=0.1
         )
 

@@ -469,7 +469,7 @@ class referenceTests(unittest.TestCase):
         test_spec_dict = {
             "metadata": {"number_of_rows": 2000},
             "columns" : {"quarter_date": 
-                    {"from" : "2018-01-01", "frequency": "M"}
+                    {"from" : "2018-01-01", "frequency": "ME"}
                 }
             }
 

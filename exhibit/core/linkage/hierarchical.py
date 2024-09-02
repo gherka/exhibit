@@ -637,7 +637,7 @@ class _LinkedDataGenerator:
             orig_df = self.spec_dict["columns"][self.base_col]["original_values"]
             repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
             aliases = dict(zip(orig_df[self.base_col].values[:-1], repl))
-            aliased_df = orig_df.applymap(lambda x: aliases.get(x, x))
+            aliased_df = orig_df.map(lambda x: aliases.get(x, x))
             self.spec_dict["columns"][self.base_col]["original_values"] = aliased_df
             base_col_vals = aliased_df[self.base_col].iloc[:-1].unique()
 
@@ -699,7 +699,7 @@ class _LinkedDataGenerator:
             orig_df = self.spec_dict["columns"][self.base_col]["original_values"]
             repl = self.sql_df[self.base_col].unique()[0:self.base_col_unique_count]
             aliases = dict(zip(orig_df[self.base_col].values[:-1], repl))
-            aliased_df = orig_df.applymap(lambda x: aliases.get(x, x))
+            aliased_df = orig_df.map(lambda x: aliases.get(x, x))
             self.spec_dict["columns"][self.base_col]["original_values"] = aliased_df
             base_col_vals = aliased_df[self.base_col].iloc[:-1].unique()
 

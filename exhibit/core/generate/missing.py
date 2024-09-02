@@ -223,7 +223,7 @@ class MissingDataGenerator:
         # since we're applying the function across all columns, including numerical,
         # these can contain pd.NA which is a "special" type that will error out if
         # trying to evaluate it against a string. Replace with a standard np.NAN.
-        self.nan_data = self.nan_data.applymap(
+        self.nan_data = self.nan_data.map(
             lambda x: np.nan if pd.isna(x) or x == MISSING_DATA_STR else x)
 
         return self.nan_data.astype(self.dtypes)

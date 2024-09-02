@@ -210,11 +210,20 @@ class ConstraintHandler:
                         _kwargs = kwargs_dict.get(action, {})
                         _kwargs.update(spec_action_kwargs)
 
-                        # overwrite the original DF row IDs with the adjusted ones
-                        output_df.loc[cc_filter_idx] = action_func(
+                        # because the result of the action can be a different dtype compared
+                        # to the original (like int to float, particularly involving NULLs)
+                        # we need to capture the resultant dtype first, and then cast the 
+                        # original df to match it to avoid Pandas errors.
+                        action_df = action_func(
                             output_df, cc_filter_idx, target_str,
                             cc_partitions, **_kwargs)
+                        
+                        action_dtypes = action_df.dtypes
 
+                        output_df = output_df.astype(action_dtypes)
+        
+                        # overwrite the original DF row IDs with the adjusted ones
+                        output_df.loc[cc_filter_idx] = action_df
         return output_df
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, basic_constraint):
@@ -1231,12 +1240,13 @@ class ConstraintHandler:
 
                 final_result.append(new_series)
                 continue
-
+        
+        # return the DF, matching the dtypes of the original (relevant for dates)
         new_df = pd.concat(
             final_result + 
             [df.loc[filter_idx, [x for x in df.columns if x not in target_cols]]],
             axis=1
-        ).reindex(columns=df.columns)
+        ).reindex(columns=df.columns).astype(df.dtypes)
 
         return new_df
 

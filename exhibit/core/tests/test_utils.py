@@ -87,13 +87,13 @@ class utilsTests(unittest.TestCase):
         returns correct values.
         '''
         
-        test_frequencies = ["D", "M", "MS", "Q", "QS", "BA-MAR"]
+        test_frequencies = ["D", "ME", "MS", "QE", "QS", "BYE-MAR"]
         test_cases = [pd.Series(pd.date_range(start="2015/01/01", periods=12, freq=f))
                       for f in test_frequencies]
 
         result = [tm.guess_date_frequency(x) for x in test_cases]
 
-        expected = ["D", "M", "MS", "Q", "QS", "YS"]
+        expected = ["D", "ME", "MS", "QE", "QS", "YS"]
 
         self.assertEqual(result, expected)
 
@@ -154,7 +154,8 @@ class utilsTests(unittest.TestCase):
         '''
 
         test_series_1 = pd.Series([1, 2, 3, 4, 5, 0.0])
-        test_series_2 = pd.Series([1, pd.NA, 2, 3])
+        # default dtype for the below range is object rather than int64
+        test_series_2 = pd.Series([1, pd.NA, 2, 3], dtype="Int64")
         test_series_3 = pd.Series([0.1, 0.2, 3, 4])
 
         self.assertTrue(tm.float_or_int(test_series_1), "integer")
