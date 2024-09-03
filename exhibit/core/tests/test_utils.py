@@ -94,6 +94,7 @@ class utilsTests(unittest.TestCase):
         result = [tm.guess_date_frequency(x) for x in test_cases]
 
         # fixed tests to pass
+        # another commit to re-trigger checks
         expected = ["D", "ME", "MS", "QE", "QS", "YS"]
 
         self.assertEqual(result, expected)
