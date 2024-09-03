@@ -97,7 +97,8 @@ class utilsTests(unittest.TestCase):
         # another commit to re-trigger checks
         # commit to test workflow with a job name
         # break tests again
-        expected = ["D", "ME", "MS", "QE", "QS", "Y"]
+        # fix tests again
+        expected = ["D", "ME", "MS", "QE", "QS", "YS"]
 
         self.assertEqual(result, expected)
 
