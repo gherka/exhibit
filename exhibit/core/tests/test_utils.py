@@ -95,6 +95,7 @@ class utilsTests(unittest.TestCase):
 
         # fixed tests to pass
         # another commit to re-trigger checks
+        # commit to test workflow with a job name
         expected = ["D", "ME", "MS", "QE", "QS", "YS"]
 
         self.assertEqual(result, expected)
