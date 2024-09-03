@@ -385,7 +385,7 @@ class referenceTests(unittest.TestCase):
             replace=False)
 
         linked_cols = ["hb_code", "hb_name", "loc_code", "loc_name"]
-        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
+        test_dataframe.loc[rand_idx, linked_cols] = (np.nan, np.nan, np.nan, np.nan)
 
         # Gives us ~10% chance of missing data
         rand_idx2 = rng.choice(
@@ -394,7 +394,7 @@ class referenceTests(unittest.TestCase):
             replace=False)
 
         na_cols = ["sex"]
-        test_dataframe.loc[rand_idx2, na_cols] = np.NaN
+        test_dataframe.loc[rand_idx2, na_cols] = np.nan
 
         # modify CLI namespace
         fromdata_namespace = {
@@ -457,7 +457,7 @@ class referenceTests(unittest.TestCase):
             replace=False)
 
         linked_cols = ["hb_code", "hb_name", "loc_code", "loc_name"]
-        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
+        test_dataframe.loc[rand_idx, linked_cols] = (np.nan, np.nan, np.nan, np.nan)
 
         # modify CLI namespace
         fromdata_namespace = {
@@ -525,7 +525,7 @@ class referenceTests(unittest.TestCase):
             replace=False)
 
         linked_cols = ["loc_code", "loc_name"]
-        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN)
+        test_dataframe.loc[rand_idx, linked_cols] = (np.nan, np.nan)
 
         # modify CLI namespace
         fromdata_namespace = {
@@ -605,7 +605,7 @@ class referenceTests(unittest.TestCase):
             replace=False)
 
         linked_cols = ["hb_code", "hb_name", "loc_code", "loc_name"]
-        test_dataframe.loc[rand_idx, linked_cols] = (np.NaN, np.NaN, np.NaN, np.NaN)
+        test_dataframe.loc[rand_idx, linked_cols] = (np.nan, np.nan, np.nan, np.nan)
 
         # modify CLI namespace
         fromdata_namespace = {
