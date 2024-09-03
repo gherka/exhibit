@@ -9,9 +9,10 @@ updates:
     target-branch: "latest"
     directory: "/"
     schedule:
-      interval: "daily"
-      time: "15:00"
+      interval: "weekly"
+      day: "saturday"
     groups:
-      python-packages:
+      python-production:
+        dependency-type: "production"
         patterns:
           - "*"
