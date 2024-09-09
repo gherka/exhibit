@@ -1,5 +1,15 @@
 ## Release notes
 ---
+
+### 0.9.9 (September 9, 2024)
+Minor version release updating dependencies.
+
+##### Notable version upgrades
+- Default Python version used in automated tests is changed to 3.12
+- Pandas updated to 2.2.2 version
+- SQLAlchemy updated to 2.x API
+- Numpy updated to 2.x API
+
 ### 0.9.8 (November 20, 2023)
 
 ##### Enhancements
