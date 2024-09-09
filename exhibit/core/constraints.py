@@ -224,6 +224,7 @@ class ConstraintHandler:
         
                         # overwrite the original DF row IDs with the adjusted ones
                         output_df.loc[cc_filter_idx] = action_df
+
         return output_df
 
     def adjust_dataframe_to_fit_constraint(self, anon_df, basic_constraint):
