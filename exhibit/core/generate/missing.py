@@ -93,7 +93,7 @@ class MissingDataGenerator:
             miss_pct = self.spec_dict["columns"][col_name]["miss_probability"]
             rands = rng.random(size=self.nan_data.shape[0]) # pylint: disable=no-member
             col_type = self.spec_dict["columns"][col_name]["type"]
-            miss_value = pd.NaT if col_type == "date" else np.NaN
+            miss_value = pd.NaT if col_type == "date" else np.nan
             repl_column = self.nan_data[col_name]
             
             # numpy default type detection messes up date columns in Pandas
@@ -123,7 +123,7 @@ class MissingDataGenerator:
 
             self.nan_data.loc[:, list(cols)] = np.where(
                 (rands < miss_pct)[..., None],
-                (np.NaN, ) * len(cols),
+                (np.nan, ) * len(cols),
                 self.nan_data.loc[:, list(cols)]
             )
 
@@ -139,7 +139,7 @@ class MissingDataGenerator:
 
             self.nan_data.loc[:, geo_cols] = np.where(
                 (rands < miss_pct)[..., None],
-                (np.NaN, ) * len(geo_cols),
+                (np.nan, ) * len(geo_cols),
                 self.nan_data.loc[:, geo_cols]
             )
             
@@ -147,7 +147,7 @@ class MissingDataGenerator:
         make_null_idx = self._find_make_null_idx()
 
         for idx, col_name in make_null_idx:
-            self.nan_data.loc[idx, col_name] = np.NaN
+            self.nan_data.loc[idx, col_name] = np.nan
 
         #5) Re-introduce the saved no_nulls rows from the original data
         not_null_idx = self._find_not_null_idx()
@@ -223,7 +223,7 @@ class MissingDataGenerator:
         # since we're applying the function across all columns, including numerical,
         # these can contain pd.NA which is a "special" type that will error out if
         # trying to evaluate it against a string. Replace with a standard np.NAN.
-        self.nan_data = self.nan_data.applymap(
+        self.nan_data = self.nan_data.map(
             lambda x: np.nan if pd.isna(x) or x == MISSING_DATA_STR else x)
 
         return self.nan_data.astype(self.dtypes)

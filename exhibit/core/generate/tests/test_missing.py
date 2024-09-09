@@ -312,7 +312,7 @@ class missingDataTests(unittest.TestCase):
 
         expected = pd.DataFrame(data={
             "A" : ["spam", "spam", "eggs", "eggs"],
-            "B" : [pd.NA, pd.NA, "bacon", "bacon"],
+            "B" : [np.nan, np.nan, "bacon", "bacon"],
             "C" : [1, 1, 4, 4],
         })
 
@@ -456,7 +456,7 @@ class missingDataTests(unittest.TestCase):
         })
 
         expected = pd.DataFrame(data={
-            "A" : [pd.NA] * 5,
+            "A" : [np.nan] * 5,
             "B" : list("ABCDE")
         })
 

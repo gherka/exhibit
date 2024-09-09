@@ -69,7 +69,7 @@ class specsTests(unittest.TestCase):
             "ints"  : range(5),
             "floats": np.linspace(0, 1, num=5),
             "bools" : [True, True, True, True, False],
-            "dates" : pd.date_range(start="1/1/2018", periods=5, freq="M"),
+            "dates" : pd.date_range(start="1/1/2018", periods=5, freq="ME"),
             "cats"  : list("ABCDE")
         })
 

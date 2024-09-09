@@ -66,7 +66,7 @@ class derivedTests(unittest.TestCase):
         dates = pd.date_range(
             start="01-01-2022",
             periods=3,
-            freq="M",            
+            freq="ME",            
         )
 
         test_df = pd.DataFrame(

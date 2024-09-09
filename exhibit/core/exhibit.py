@@ -344,9 +344,10 @@ class Exhibit:
                             )
             
             if col in geo_action_targets:
-                # add placeholders to avoid errors when generating missing data
+                # add float placeholders to avoid errors when generating missing data
                 geo_cols = [f"{col}_latitude", f"{col}_longitude"]
-                anon_df[geo_cols] = 0
+                # use 0.0 to ensure column dtype is float so that we could null them later
+                anon_df[geo_cols] = 0.0
                 continue
 
             h3_table_name = self.spec_dict["columns"][col]["h3_table"]
@@ -444,7 +445,7 @@ class Exhibit:
                         anon_df[derived_col] = generate_derived_column(anon_df, derived_def)
                         break             
             # change the missing data placeholder back to NAs
-            anon_df.loc[:, cat_cols] = anon_df.loc[:, cat_cols].applymap(
+            anon_df.loc[:, cat_cols] = anon_df.loc[:, cat_cols].map(
             lambda x: np.nan if x == MISSING_DATA_STR else x)
 
         #8) GENERATE DERIVED COLUMNS IF ANY ARE SPECIFIED

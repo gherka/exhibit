@@ -77,8 +77,8 @@ def save_predefined_linked_cols_to_db(df, id):
     # convert the original, prefixed values first to positional labels
     # and then just to numerical IDs
     temp_df = (prefixed_df
-            .applymap(lambda x: orig_label_to_pos_label.get(x, x))
-            .applymap(lambda x: pos_label_to_id.get(x, x)))
+            .map(lambda x: orig_label_to_pos_label.get(x, x))
+            .map(lambda x: pos_label_to_id.get(x, x)))
 
     label_matrix = np.unique(temp_df.values, axis=0).astype(np.intc)
 
@@ -163,9 +163,9 @@ def generate_user_linked_anon_df(
 
     if starting_col_matrix is not None:
         starting_col_matrix = (
-            pd.DataFrame(starting_col_matrix)
+            pd.DataFrame(starting_col_matrix).infer_objects(copy=False)
             .fillna(MISSING_DATA_STR)
-            .applymap(lambda x: rev_label_lookup.get(x, x)).values.astype(np.int16)
+            .map(lambda x: rev_label_lookup.get(x, x)).values.astype(np.int16)
         )
 
     else:
@@ -192,7 +192,7 @@ def generate_user_linked_anon_df(
     new_matrix = np.stack(new_rows)
 
     new_df = pd.DataFrame(
-        new_matrix, columns=linked_cols).applymap(lambda x: new_label_lookup.get(x, x))
+        new_matrix, columns=linked_cols).map(lambda x: new_label_lookup.get(x, x))
 
     return new_df
 

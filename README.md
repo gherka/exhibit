@@ -1,12 +1,32 @@
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Build Status](https://travis-ci.com/gherka/exhibit.svg?branch=master)](https://travis-ci.com/gherka/exhibit) [![CodeQL](https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg)](https://github.com/gherka/exhibit/actions/workflows/codeql.yml) [![Coverage Status](https://coveralls.io/repos/github/gherka/exhibit/badge.svg?branch=master)](https://coveralls.io/github/gherka/exhibit?branch=master)
-
----
 ## Exhibit: Command line tool to create anonymised demonstrator data
+
+The goal of Exhibit is to make it easier to generate synthethic data at scale in a controlled and reproducible way.
+
 ---
 
-The goal of Exhibit is to make it easier to generate anonymised data at scale in a controlled and reproducible way.
+<table>
+<!-- Main branch badges -->
+<tr>
+<td style="text-align: left"><code>main</code></td>
+<td style="text-align: left; vertical-align: middle; padding: 4px; line-height: 1">
+<p style="margin:0">
+<a href="https://travis-ci.org/gherka/exhibit"><img src="https://travis-ci.org/gherka/exhibit.svg?branch=main" alt="Build Status"> <a href="https://github.com/gherka/exhibit/actions/workflows/codeql.yml"><img src="https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"> <a href="https://codecov.io/github/gherka/exhibit"><img src="https://codecov.io/github/gherka/exhibit/branch/main/graph/badge.svg?token=A5YQIV56QM" alt="codecov">
+</p>
+</td>
+</tr>
+<!-- Latest branch badges -->
+<tr>
+<td style="text-align: left;"><code>latest</code></td>
+<td style="text-align: left; vertical-align: middle; padding: 4px; line-height: 1">
+<p style="margin:0">
+<a href="https://travis-ci.org/gherka/exhibit"><img src="https://travis-ci.org/gherka/exhibit.svg?branch=latest" alt="Build Status"> <a href="https://github.com/gherka/exhibit/actions/workflows/codeql.yml"><img src="https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"> <a href="https://codecov.io/github/gherka/exhibit"><img src="https://codecov.io/github/gherka/exhibit/branch/latest/graph/badge.svg?token=A5YQIV56QM" alt="codecov">
+</p>
+</td>
+</tr>
 
-**Key features**:
+</table>
+
+## Key features
 
 - Control all aspects of the anonymisation process: which columns to anonymise and to what degree
 - Rapidly iterate on the anonymisation options
@@ -20,8 +40,7 @@ The goal of Exhibit is to make it easier to generate anonymised data at scale in
 - Augment your synthetic data with compiled machine learning models and custom functions
 - Use SQL to generate conditional values based on external tables
 
----
-### Installation:
+## Installation:
 
 To install using pip, enter the following command at a Bash or Windows command prompt:
 
@@ -29,8 +48,7 @@ To install using pip, enter the following command at a Bash or Windows command p
 
 Alternatively, download or clone the repository and run `pip install .` from the root folder.
 
----
-### Quickstart
+## Quickstart
 
 Exhibit has two principal modes of operation: 
  - `fromdata` produces a detailed, user-editable `.yml` specification
@@ -47,8 +65,7 @@ To create a demo dataset, run:\
 To create a demo specification that equialises all probabilities and weights, run:\
 `exhibit fromdata exhibit/sample/_data/inpatients.csv -ew -o demo.yml`
 
----
-### Database
+## Database
 
 Exhibit is bundled with a SQLite3 database and a Python utility tool to interact with it. Alternatively, you can connect directly to `/exhbit/db/exhibit.db`. The database contains three sample aliasing datasets: `mountains`, `birds` and `patients` designed to help you quickly alias original values without manually editing individual column values.
 
@@ -61,7 +78,6 @@ The database is also used to store temporary data for columns where the number o
 
 **Note that original, confidential data might be saved in the `exhibit/db/exhibit.db` file on your local machine. You can purge all temporary tables by calling `--purge` command from the included utility tool or by interfacing with the database directly.**
 
----
-### Disclaimer
+## Disclaimer
 
 Please note that the degree of anonymisation for each dataset produced by the tool will depend heavily on user choices in the specification. As such, there is no guarantee that confidential data will be suitably masked under all scenarios. If you intend to work with sensitive data, make sure to thoroughly evaluate the output before making it public.

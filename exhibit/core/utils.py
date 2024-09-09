@@ -208,10 +208,10 @@ def guess_date_frequency(timeseries):
 
     for period_range, period_alias in aliases.items():
         if first_period in period_range:
-            # decide whether it's period start (QS) or end (Q)
+            # decide whether it's period start or end (M/Q/YE)
             if period_alias in ["MS", "QS"]:
                 if not (timeseries.dt.day == 1).all():
-                    return period_alias[0]
+                    return period_alias[0] + "E"
             return period_alias
             
     return None #pragma: no cover
