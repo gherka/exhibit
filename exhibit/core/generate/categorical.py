@@ -277,14 +277,33 @@ class CategoricalDataGenerator:
 
         sql_df = self._generate_from_sql(col_name, col_attrs, complete=True)
 
+        # at this point, all values in sql_df should be strings
+        sql_df = sql_df.astype(str)
+
         # includes Missing data row as opposed to col_df which doesn't
         orig_df = col_attrs["original_values"]
 
-        # missing data is the last row
-        repl = sql_df[col_name].unique()
-        aliases = dict(zip(orig_df[col_name].values[:-1], repl))
-        aliased_df = orig_df.map(lambda x: aliases.get(x, x))
-        self.spec_dict["columns"][col_name]["original_values"] = aliased_df
+        # if the original_values and values from the anonymising set are the same
+        # i.e. we're not replacing Health Board names with Mountain ranges, we don't
+        # need to do any aliasing and MUST match the order of the values we get from SQL 
+        # to original_values order
+
+        # original_values values in spec order
+        orig_col_vals = orig_df[col_name].values[:-1]
+
+        if set(orig_col_vals) == set(sql_df[col_name].unique()):
+            order_dict = {val: idx for idx, val in enumerate(orig_col_vals)}
+            sql_df = sql_df.sort_values(col_name, key=lambda x: x.map(order_dict))
+
+        # when aliasing original_values based on DB-stored anonymising_set
+        # we don't care about preserving order.
+        else:
+            repl = sql_df[col_name].unique()
+
+            # missing data is the last row
+            aliases = dict(zip(orig_col_vals, repl))
+            aliased_df = orig_df.map(lambda x: aliases.get(x, x))
+            self.spec_dict["columns"][col_name]["original_values"] = aliased_df
 
         # we ignore Missing data probability when we originally create the variable
         idx = self.rng.choice(a=len(sql_df), p=col_prob, size=self.num_rows)
