@@ -21,6 +21,7 @@ from exhibit.db import db_util
 from exhibit.core.sql import create_temp_table
 from exhibit.core.tests.test_reference import temp_exhibit
 from exhibit.core.constants import MISSING_DATA_STR
+from exhibit.core.exhibit import Exhibit
 
 # Module under test
 from exhibit.core.generate import categorical as tm
@@ -707,6 +708,104 @@ class categoricalTests(unittest.TestCase):
         result = gen.generate()
 
         self.assertTrue((result["future_date"] > result["date"]).all())
+
+    def test_using_database_table_as_lookup_for_paired_categorical_columns(self):
+        '''
+        A special case for columns that are almost the same, but not quite paired or
+        hierarchical. Being paired means 1:1 match across all. Being hierarchical means one
+        to many relationship. But if you want to generate data across columns that are almost 
+        the same (like health board of residence / health board of vaccination) then they are
+        neither paired, not hierarchical.
+        
+        If you don't want to go full user_linked approach, you can use a simple lookup 
+        put into database with a single probability for the entire combination.
+        '''
+       
+        test_dict = {
+            "metadata": {
+                "number_of_rows"      : 100,
+                "inline_limit"        : 5,
+                "id"                  : 1234,
+                "random_seed"         : 0,
+                "uuid_columns"        : [],
+                "categorical_columns" : ["ref_col", "paired_A", "paired_B"],
+                "numerical_columns"   : [],
+                "date_columns"        : [],
+                "geospatial_columns"  : [],
+                },
+            "columns": {
+                "ref_col": {
+                    "type": "categorical",
+                    "paired_columns": ["paired_A", "paired_B"],
+                    "uniques" : 5,
+                    "original_values" : pd.DataFrame(data={
+                        # note that we're putting strings here to mirror what original_values
+                        # would be parsed as when you put 1, 2, 3, etc. 5 having low proba
+                        "ref_col" : ["1", "2", "3", "4", "5", MISSING_DATA_STR],
+                        "probability_vector" : [0.25] * 4 + [0.01] + [0]
+                    }),
+                    "miss_probability": 0.0,
+                    "anonymising_set" : "temp_reference",
+                    "cross_join_all_unique_values" : False,
+                },
+                "paired_A": {
+                    "type": "categorical",
+                    "paired_columns": ["ref_col"],
+                    "uniques" : 4,
+                    "original_values" : "See paired column",
+                    "anonymising_set" : "temp_reference",
+                    "miss_probability": 0.0,
+                    "cross_join_all_unique_values" : False,
+                },
+                "paired_B": {
+                    "type": "categorical",
+                    "paired_columns": ["ref_col"],
+                    "uniques" : 4,
+                    "original_values" : "See paired column",
+                    "anonymising_set" : "temp_reference",
+                    "miss_probability": 0.0,
+                    "cross_join_all_unique_values" : False,
+                },
+            },
+            "constraints": {
+                "allow_duplicates" : True,
+                "basic_constraints": [],
+                "custom_constraints":[],
+            },
+            "linked_columns" : [],
+            "derived_columns": {}
+        }
+        # note that create_temp_table will convert ints to floats so we have to 
+        # use string values directly. If using db_util to insert a CSV as a table,
+        # ints will be inserted as normal ints so this won't be an issue.
+        create_temp_table(
+            table_name="temp_reference",
+            col_names=["ref_col", "paired_A", "paired_B"],
+            data=[
+                ("1", "A", "AA"),
+                ("2", "B", "BB"),
+                ("3", "C", "CC"),
+                ("4", "D", "DD"),
+                ("5", "A", "BB"), # this is our "almost same" pairing with much lower prob                 
+            ],
+            return_table=False
+        )
+
+        args = {
+            "command"      : "fromspec",
+            "source"       : test_dict,
+            "skip_columns" : [],
+            "verbose"      : True,
+        }
+
+        # generate data
+        xA = Exhibit(**args)
+        xA.read_spec()
+        if xA.validate_spec():
+            xA.execute_spec()
+
+        # make sure the count of rows for 5 is 2 (much lower than 20-30 for other combinations)
+        self.assertEqual(2, xA.anon_df.groupby("ref_col").size().loc["5"])
 
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
