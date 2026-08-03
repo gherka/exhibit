@@ -347,8 +347,8 @@ def find_pair_linked_columns(df, ignore_cols=None):
             #column with a higher average value length is appended first
             #so that codes are paired with descriptions
             if (
-                sum(map(len, df[col1].astype(str).unique())) / df[col1].nunique() >
-                sum(map(len, df[col2].astype(str).unique())) / df[col2].nunique()
+                sum(map(len, df[col1].map(str).unique())) / df[col1].nunique() >
+                sum(map(len, df[col2].map(str).unique())) / df[col2].nunique()
             ):
 
                 linked.append([col1, col2])

@@ -32,8 +32,9 @@ def generate_uuid_column(
 
     # ensure the probabilities sum up to 1
     prob_vector = freq_df["probability_vector"].astype(float).values
-    prob_vector /= prob_vector.sum()
-    freq_df.loc[:, "probability_vector"] = prob_vector
+    prob_vector = prob_vector / prob_vector.sum()
+
+    freq_df["probability_vector"] = prob_vector
 
     # generate uuids
     rng = random.Random(seed)

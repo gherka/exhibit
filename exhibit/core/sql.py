@@ -199,7 +199,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
             # see: https://www.sqlite.org/limits.html #9
             chunk = 32_000
             #pragma: no cover
-            if (engine.dialect.name == "sqlite") and (num_records:=len(data)) > chunk:
+            if (engine.dialect.name == "sqlite") and (num_records:=len(data)) > chunk: #pragma: no cover
                 for i, _ in enumerate(range(0, num_records, chunk)):
                     from_i = i * chunk
                     to_i = (i+1) * chunk

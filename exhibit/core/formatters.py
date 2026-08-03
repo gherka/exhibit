@@ -8,6 +8,7 @@ from itertools import zip_longest
 
 # External library imports
 import pandas as pd
+import pandas.api.types as ptypes
 
 # Exhibit imports
 from exhibit.core.constants import MISSING_DATA_STR
@@ -42,7 +43,7 @@ def format_header(dataframe, series_name, prefix=None):
     Formatted string value of series_name
     '''
 
-    series = dataframe[series_name].unique().astype(str)
+    series = dataframe[series_name].map(str).unique()
 
     if prefix:
         series_name = prefix + series_name
@@ -313,7 +314,7 @@ def parse_original_values(original_values):
             columns=[x.strip() for x in original_values[0].split("|")],
         )
 
-        df.loc[:, "probability_vector"] = df["probability_vector"].astype(float)
+        df["probability_vector"] = df["probability_vector"].astype(float)
 
         return df
 
@@ -362,7 +363,7 @@ def format_df_for_export(df):
     '''
 
     for column in df.columns:
-        if df[column].dtype == "timedelta64[ns]":
+        if ptypes.is_timedelta64_dtype(df[column]):
             df[column] = df[column].astype(str).str.replace("0 days ", "")
 
     return df

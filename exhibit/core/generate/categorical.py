@@ -460,6 +460,38 @@ class CategoricalDataGenerator:
 
         return column_types
 
+    def _has_exactly_one_aliased_column(self, parser, col_name):
+        '''
+        The backend of sql-metadata parser doesn't consider identical aliases so
+        temp_linked.condition as condition will not be picked up as an alias.
+
+        To work around this, we will analyse the raw tokens for the alias pattern.
+
+        Parameters
+        ----------
+        parser : Parser object
+            Parser object with user provided SQL
+        col_name : str
+            column name we expect to be aliased
+
+        Returns
+        -------
+        Boolean
+        '''
+
+        # first check the count of properly aliased column
+        non_identical_aliases = len(parser.columns_aliases_names)
+
+        # then count the identical aliases
+        tokens = parser.tokens
+        pattern = [col_name, "as", col_name]
+        identical_aliases = sum(
+            tokens[i:i+3] == pattern
+            for i in range(len(tokens) - 2)
+        )
+
+        # between these two options, we expect only one aliased column in the SQL
+        return (non_identical_aliases + identical_aliases) == 1
     def _generate_using_external_table(self, col_name, anon_set):
         '''
         We assume that the aliased column is the one you want to pick the values from
@@ -469,10 +501,10 @@ class CategoricalDataGenerator:
 
         parser = Parser(anon_set)
         sql_tables = parser.tables
-        aliased_columns = parser.columns_aliases_names
+        aliased_columns = parser.columns_aliases_names or [col_name]
         source_table_id = self.spec_dict["metadata"]["id"]
-    
-        if len(aliased_columns) != 1 or aliased_columns[0] != col_name:
+
+        if not self._has_exactly_one_aliased_column(parser, col_name):
             raise RuntimeError(
                 f"Please make sure the SQL SELECT statement in {col_name}'s "
                 f"anonymising_set includes exactly one aliased column named {col_name}."

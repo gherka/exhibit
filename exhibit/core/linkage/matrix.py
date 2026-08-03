@@ -173,7 +173,7 @@ def generate_user_linked_anon_df(
             shape=(num_rows, len(linked_cols)), fill_value=-1)
 
     # multiprocessing only on unix
-    if sys.platform != "win32":
+    if sys.platform != "win32": #pragma: no cover
         with Pool(processes=4) as pool:
 
             new_rows = pool.map(
