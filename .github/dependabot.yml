@@ -11,6 +11,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "saturday"
+    ignore:
+    # h3 version 4.x breaks backward compatibility and it's not clear how to migrate without loss of functionality
+      - dependency-name: "h3"
+        versions: ["*"]
     groups:
       python-production:
         dependency-type: "production"
