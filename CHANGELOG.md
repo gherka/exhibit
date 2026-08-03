@@ -1,6 +1,13 @@
 ## Release notes
 ---
 
+### 0.9.10 (August 3, 2026)
+Minor version release updating dependencies.
+
+##### Notable version upgrades
+- Pandas updated to 3.0.5 major version change
+- sql-metadata updated to 3.0.1 major version change
+
 ### 0.9.9 (September 9, 2024)
 Minor version release updating dependencies.
 
@@ -68,7 +75,7 @@ Minor version release updating dependencies.
 - You can now apply a single custom action to multiple columns by providing them as a comma-separated target string. The same applies to actions. The processing of custom constraints happens in the order in which column names / actions were specified.
 
 ##### Bug fixes
-- Fixed an issue where custom constraints wouldn't always respect original column types (float or Int64). 
+- Fixed an issue where custom constraints wouldn't always respect original column types (float or Int64).
 - Fixed an issue where column values generated from a regular expression pattern were inadvertently repeated under certain conditions.
 - Fixed a bug with missing values in user linked columns.
 - Fixed a bug that could result in linked column groups being in different order when re-running the generation of the same specification.
