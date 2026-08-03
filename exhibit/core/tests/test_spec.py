@@ -84,12 +84,12 @@ class specsTests(unittest.TestCase):
 
     def test_columns_exceeding_inline_limit_are_generated_with_probabilities(self):
         '''
-        If user wants to preserve probabilities of a column with a large number of 
+        If user wants to preserve probabilities of a column with a large number of
         unique values, they can include them under save_probabilities argument. You
         only need to specify one of the paired columns - the probabilities will apply
         to all.
         '''
-        
+
         # modify CLI namespace
         fromdata_namespace = {
             "source" : Path(package_dir("sample", "_data", "prescribing.csv")),
@@ -107,7 +107,7 @@ class specsTests(unittest.TestCase):
         result = (
             temp_df["BNFItemDescription"]
             .value_counts().where(lambda x: x != 0).dropna())
-        
+
         self.assertEqual(result.min(), 5)
         self.assertEqual(result.max(), 885)
 
@@ -157,7 +157,7 @@ class specsTests(unittest.TestCase):
         weights for just one value, it doesn't matter because it has no reference point.
         If we provide weights for two values, they will be rescaled to sum to 1, while
         other values without weights, will be treated as 1, meaning providing incomplete
-        weights will lead to smaller values relative to missing values. 
+        weights will lead to smaller values relative to missing values.
         '''
 
         def _generate_spam(_):
@@ -220,7 +220,7 @@ class specsTests(unittest.TestCase):
 
     def test_categorical_column_initialised_from_dataframe_with_missing_data(self):
         '''
-        If users don't explicitly provide a miss_proba argument to CategoricalColumn, 
+        If users don't explicitly provide a miss_proba argument to CategoricalColumn,
         but original_data has Missing data value, we'll take the probability of that
         and use it as miss_proba - otherwise, no missing data will be added.
         '''
@@ -258,7 +258,7 @@ class specsTests(unittest.TestCase):
         anon_df = exhibit_data.generate()
 
         self.assertTrue(anon_df.isna().any().all())
-            
+
 if __name__ == "__main__" and __package__ is None:
     #overwrite __package__ builtin as per PEP 366
     __package__ = "exhibit"

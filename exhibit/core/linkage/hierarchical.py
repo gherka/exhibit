@@ -26,7 +26,7 @@ class LinkedColumnsTree:
     Organizes a list of tuples into a matrix of sorts
     where each row is a list of columns ordered from
     ancestor to descendants.
-    
+
     connection tuples should come in ancestor first.
 
     Think of a good test to make sure this class
@@ -47,7 +47,7 @@ class LinkedColumnsTree:
         self.chain_counter = 1
         self.chains = self.process_nodes(connections)
         self.tree = list((i, l) for i, l in self.chains.items())
-     
+
     def process_nodes(self, connections, chains=None):
         '''
         Recursively build chains from connections.
@@ -66,14 +66,14 @@ class LinkedColumnsTree:
         #create a new chain from the first pair of nodes
         chains = self.create_new_chain(connections[0], chains)
 
-        #fill the chain with the rest of the nodes, if able  
+        #fill the chain with the rest of the nodes, if able
         finished_chain, remaining_connections = self.build_chain(
             connections, chains[self.chain_counter-1])
 
         chains[self.chain_counter-1] = finished_chain
-        
-        return self.process_nodes(remaining_connections, chains)       
-        
+
+        return self.process_nodes(remaining_connections, chains)
+
     def build_chain(self, connections, chain):
         '''
         Changes to the passed in chain are happening in-place
@@ -83,7 +83,7 @@ class LinkedColumnsTree:
         initial chain was finalized.
         '''
 
-        #make a copy of connections to remove processed pairs  
+        #make a copy of connections to remove processed pairs
         inner_loop = list(connections)
 
         #if variable doesn't get overridden as part of the loop,
@@ -112,11 +112,11 @@ class LinkedColumnsTree:
             #is the connection one of two that can be merged and new node spliced-in
             if self.splice_node(connection, connections, chain, inner_loop):
                 reset = True
-        
+
         if reset:
             return self.build_chain(inner_loop, chain)
-        
-        return chain, inner_loop  
+
+        return chain, inner_loop
 
     def create_new_chain(self, connection, chains):
         '''
@@ -188,9 +188,9 @@ class LinkedColumnsTree:
 
         It's also crucial that we only create un-interrupted chains so
         [B,C] is a valid link in the [A,B,C,D] chain if there are also
-        [A,B] AND [C,D] links. 
+        [A,B] AND [C,D] links.
         '''
-        
+
         #Example: initial chain = [A, D]
         for splice_buddy in connections:
 
@@ -230,11 +230,11 @@ def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_
             tuple consisting of linked group number and a list of linked columns
         num_rows : number
             how many rows to generate
-    
+
     Returns
     -------
     Linked dataframe
-    '''  
+    '''
 
     gen = _LinkedDataGenerator(spec_dict, linked_group, num_rows)
 
@@ -251,13 +251,13 @@ def generate_linked_anon_df(spec_dict, linked_group: Tuple[int, List[str]], num_
 def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
     '''
     Given a dataframe df, return a list
-    of tuples with column names where values in 
-    the second column are always paired with the 
+    of tuples with column names where values in
+    the second column are always paired with the
     same value in the first column (many:1 relationship)
     '''
 
     linked = []
-    
+
     #single value and paired columns are ignored
     cols = set()
 
@@ -281,7 +281,7 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
     for col1, col2 in combinations(cols, 2):
         #drop NAs because replacing them with Missing data means
         #that columns that are normally linked, won't be (Missing data will
-        #appear for multiple "parent" columns) 
+        #appear for multiple "parent" columns)
         pair_df = df[[col1, col2]].dropna()
 
         #check again if after dropping NAs, the result is a single value column
@@ -289,21 +289,21 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
         #reported as not being covered so there is a pragma to get 100% coverage
         if pair_df[col1].nunique() == 1 or pair_df[col2].nunique() == 1:
             continue # pragma: no cover
-        
+
         #1:many relationship exists for one of two columns
-        if (( 
+        if ((
                 pair_df.groupby(col1)[col2].nunique().max() == 1 and
                 pair_df.groupby(col2)[col1].nunique().max() > 1
             )
-        or ( 
+        or (
                 pair_df.groupby(col1)[col2].nunique().max() > 1 and
                 pair_df.groupby(col2)[col1].nunique().max() == 1
             )):
-            
+
         #ancestor (1 in 1:many pair) is appened first
             if pair_df.groupby(col1)[col2].nunique().max() > 1:
                 linked.append((col1, col2))
-                
+
             else:
                 linked.append((col2, col1))
 
@@ -312,12 +312,12 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
 def find_pair_linked_columns(df, ignore_cols=None):
     '''
     Given a dataframe df, return a list
-    of tuples with column names where each value in 
-    one column is always paired with the 
+    of tuples with column names where each value in
+    one column is always paired with the
     same value in another.
 
     Returns a list of lists where the first column
-    in the tuple is the reference one that has the weights 
+    in the tuple is the reference one that has the weights
     and whose parameter values cascade down to other
     linked columns.
 
@@ -331,16 +331,16 @@ def find_pair_linked_columns(df, ignore_cols=None):
 
     if ignore_cols:
         all_cols = all_cols - set(ignore_cols)
-    
+
     #single value, numeric and datetime columns are ignored
     cols = [col for col in all_cols if
     df[col].nunique() > 1 and col not in df.select_dtypes(include=[np.number, "datetime"])
     ]
-    
+
     #combinations produce a pair only once (AB, not AB + BA)
     for col1, col2 in combinations(cols, 2):
-        
-        if ( 
+
+        if (
                 df.groupby(col1)[col2].nunique().max() == 1 and
                 df.groupby(col2)[col1].nunique().max() == 1
             ):
@@ -368,14 +368,14 @@ class _CustomDict(defaultdict):
     initial pairs (Location Code, Location Desc).
 
     Here we monkey-patch default dict so that on encountering a missing
-    key, the factory can make use of that key and create a custom 
+    key, the factory can make use of that key and create a custom
     ordering list allowing us to recall the original sort order of the tuples
     after they have been merged.
 
     Key-value pairs look like {"A": [n, "A"]} where n is the "A"s position
-    in the pecking order of columns.  
+    in the pecking order of columns.
     '''
-    
+
     def __init__(self, f_of_x):
         super().__init__(None) # base class doesn't get a factory
         self.f_of_x = f_of_x # save f(x)
@@ -423,7 +423,7 @@ class _LinkedDataGenerator:
                 self.base_col_pos = len(self.linked_cols) - (i + 1)
                 self.base_col_unique_count = spec_dict["columns"][col_name]["uniques"]
                 break
-    
+
         #if ALL columns in the linked group have more unique values than allowed,
         #generate uniform distribution from the most granular and do upstream lookup
         if not self.base_col:
@@ -436,15 +436,15 @@ class _LinkedDataGenerator:
             self.scenario = 3
         else:
             self.scenario = 2
-            
+
         #all relevant linked data is pulled from SQL into sql_df attribute
         self.sql_df = self.build_sql_dataframe()
 
     def build_sql_dataframe(self):
         '''
-        Values for linked columns can be drawn either from the original values stored 
+        Values for linked columns can be drawn either from the original values stored
         in the linked group's table or they can be drawn from a pre-defined set, like
-        mountaints or patients. You can also specify that only certain columns are 
+        mountaints or patients. You can also specify that only certain columns are
         extracted, like CHI number and age, even though the full patients set contains
         other columns like first and last names, etc.
         '''
@@ -462,14 +462,14 @@ class _LinkedDataGenerator:
             for col in self.linked_cols:
 
                 col_anon_set = self.spec_dict["columns"][col]["anonymising_set"]
-                
+
                 #spec column has a dot notation to reference a specific SQL column
                 if col_anon_set != self.anon_set:
                     filter_cols.append(col_anon_set.split(".")[1])
-            
+
             if filter_cols:
                 sql_df = sql_df[filter_cols]
-  
+
             #rename SQL columns to linked_group cols
             sql_df.columns = self.linked_cols
 
@@ -479,7 +479,7 @@ class _LinkedDataGenerator:
             sql_df = query_exhibit_database(table_name)
 
         return sql_df
-        
+
 
     def pick_scenario(self):
         '''
@@ -497,10 +497,10 @@ class _LinkedDataGenerator:
           - there ARE user-defined probabilities for ONE of the linked columns,
             but it's not the most granular column in the group, like NHS Board
             in the NHS Board + Hospital linked group.
-                For this scenario, we need to respect the probabilities of the 
+                For this scenario, we need to respect the probabilities of the
                 given column and only draw from uniform distribution AFTER we
                 generated the probability-driven values of the base column.
-        
+
           - The most granular column in the group has user-defined probabilities,
             like Hospital in the NHS Board + Hospital linked group.
                 This scenario is the easiest one because once we generate values
@@ -538,7 +538,7 @@ class _LinkedDataGenerator:
             result = self.add_paired_columns(linked_df)
 
             return result
-        
+
         return None # pragma: no cover
 
     def alias_linked_column_values(self, linked_df):
@@ -556,21 +556,21 @@ class _LinkedDataGenerator:
 
         There is an edge case of when user deletes or adds a row in the spec which
         would mean the number of "aliases" won't match the number of "originals" put
-        and then extracted from exhibit DB. 
+        and then extracted from exhibit DB.
 
         Make changes in-place
         '''
         # we need original values to act as reference and self.sql_df can be mountains
-        # or other aliased dataset.        
+        # or other aliased dataset.
         linked_table_name = f"temp_{self.id}_{self.linked_group[0]}"
 
         for linked_col in self.linked_cols: #noqa
 
             anon_set = self.spec_dict["columns"][linked_col]["anonymising_set"]
             orig_vals = self.spec_dict["columns"][linked_col]["original_values"]
-            
+
             if anon_set == "random" and isinstance(orig_vals, pd.DataFrame):
-                
+
                 #we need to drop missing data placeholder prior to sorting to
                 #avoid it messing up the aliasing mappings which rely on two sets
                 #of column names being in the same order.
@@ -580,7 +580,7 @@ class _LinkedDataGenerator:
                         column=linked_col.replace(" ", "$"),
                         exclude_missing=True
                     )[linked_col])
-                
+
                 #potentially, user-edited; Missind data always last
                 current_col_values = orig_vals[linked_col][:-1]
 
@@ -624,7 +624,7 @@ class _LinkedDataGenerator:
         base_col_vals = None
         base_col_df = self.spec_dict["columns"][self.base_col]["original_values"][:-1]
         base_col_prob = np.array(base_col_df["probability_vector"]).astype(float)
-        
+
         if base_col_prob.sum() != 1:
             base_col_prob /= base_col_prob.sum()
 
@@ -654,7 +654,7 @@ class _LinkedDataGenerator:
                 a=base_col_vals,
                 size=self.num_rows,
                 p=base_col_prob),
-            name=self.base_col   
+            name=self.base_col
         )
 
         # once we've satisfied the probabilities of the base column,
@@ -667,16 +667,16 @@ class _LinkedDataGenerator:
         sub_dfs = []
 
         for base_col_value, size in base_col_counts.items():
-            
+
             pool_of_idx = (
                 self.sql_df[self.sql_df[self.base_col] == base_col_value].index)
             rnd_idx = self.rng.choice(a=pool_of_idx, size=size)
             sub_dfs.append(
                 self.sql_df[self.linked_cols].iloc[rnd_idx])
-        
+
         result = pd.concat(sub_dfs)
 
-        return result       
+        return result
 
     def scenario_3(self):
         '''
@@ -684,7 +684,7 @@ class _LinkedDataGenerator:
         Note that if you delete linked column values from spec, the code
         will still run, but the aliases will be taken from the top - which
         might not be desirable if certain values have distinct meaning like
-        "other locations" or "no readmission". Should probably issue a warning. 
+        "other locations" or "no readmission". Should probably issue a warning.
         '''
 
         base_col_vals = None
@@ -718,8 +718,8 @@ class _LinkedDataGenerator:
                 a=base_col_vals,
                 size=self.num_rows,
                 p=base_col_prob),
-            name=self.base_col   
-        ) 
+            name=self.base_col
+        )
 
         #join all left-side columns to base_col_series
         #WILL PRODUCE NULLS IF BASE_COL_SERIES IS ALIASED IN THE SPEC!
@@ -729,7 +729,7 @@ class _LinkedDataGenerator:
                 how="left",
                 on=self.base_col
             )
-        
+
         return linked_df
 
     def add_paired_columns(self, linked_df):
@@ -740,7 +740,7 @@ class _LinkedDataGenerator:
         if self.anon_set != "random":
 
             for c in self.linked_cols:
-                
+
                 #just generate a DF with duplicate paired columns
                 for pair in self.spec_dict["columns"][c]["paired_columns"] or []:
 
@@ -772,7 +772,7 @@ def _merge_common_member_tuples(paired_tuples):
     Merge tuples while preserving sort order
     (codes are paired with descriptions, not the other way round)
 
-    The position in the original paried_tuples is important: 
+    The position in the original paried_tuples is important:
     it's based on the average length of all values in each column
     so in (Description, Code), Description is meant to go first
 
@@ -780,7 +780,7 @@ def _merge_common_member_tuples(paired_tuples):
     ----------
     paired_tuples : list
         list of pairs of 1:1 linked columns
-    
+
     Returns
     -------
     A list of tuples where common members have been merged into
@@ -825,7 +825,7 @@ def _merge_common_member_tuples(paired_tuples):
 def _create_paired_columns_lookup(spec_dict, base_column):
     '''
     Paired columns can either be in SQL or in original_values linked to base_column
-    
+
     Parameters
     ----------
     spec_dict : dict
@@ -865,7 +865,7 @@ def _create_paired_columns_lookup(spec_dict, base_column):
             base_df[[base_column] + [f"paired_{x}" for x in pairs]]
                 .rename(columns=lambda x: x.replace("paired_", ""))
         )
-        
+
         return paired_df
-                            
+
     return None #pragma: no cover

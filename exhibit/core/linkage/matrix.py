@@ -36,7 +36,7 @@ def save_predefined_linked_cols_to_db(df, id):
     -------
     nothing
     """
-    
+
     prefixed_df = add_prefix(df)
     orig_label_to_pos_label = {} # age__0-9 : age__0, etc.
     pos_labels_inc_column = []   # age__0, age__1, etc.
@@ -71,8 +71,8 @@ def save_predefined_linked_cols_to_db(df, id):
 
     # age__0 : 0, etc.
     pos_label_to_id = dict(
-        zip(pos_labels_inc_column, range(len(pos_labels_inc_column))) 
-        ) 
+        zip(pos_labels_inc_column, range(len(pos_labels_inc_column)))
+        )
 
     # convert the original, prefixed values first to positional labels
     # and then just to numerical IDs
@@ -118,12 +118,12 @@ def add_prefix(df, sep="__"):
     """
 
     data_dict = {}
-    
+
     for col in df.columns:
         # cast to str in case we're dealing with integer-based categorical columns, like age
         df_col_str = df[col].fillna(MISSING_DATA_STR).astype(str)
         data_dict[col] = np.add(f"{col}{sep}", df_col_str.values)
-        
+
     return pd.DataFrame(data_dict)
 
 def generate_user_linked_anon_df(
@@ -141,14 +141,14 @@ def generate_user_linked_anon_df(
         number of rows to generate
     starting_col_matrix : np.Array shaped (num_rows, len(linked_cols))
         the matrix is either filled with None values or pre-populated if the function
-        is run multiple times (like when regenerating values after applying custom 
+        is run multiple times (like when regenerating values after applying custom
         actions like make_same)
 
     Returns
     -------
     Data Frame with linked columns
     '''
-    
+
     table_id = spec_dict["metadata"]["id"]
     rng = spec_dict["_rng"]
     lookup, matrix = get_lookup_and_matrix_from_db(table_id)
@@ -210,14 +210,14 @@ def get_lookup_and_matrix_from_db(table_id):
 def process_row(
     label_matrix, proba_lookup, lcd, rng, ref_array, acc_array=None, i=0):
     '''
-    Recursive function to generate new rows of data from the 
-    existing linked matrix. It's possible the function will be 
+    Recursive function to generate new rows of data from the
+    existing linked matrix. It's possible the function will be
     called multiple times to generate a column value if there
     are no valid values that follow on from earlier values in the sequence.
 
     For example, if A => A1 => A11 and B => B2 => B12 then if the second
     column has dispersion set to > 0, the row generation might go like this:
-    A => B2 (due to dispersion) => B12 (falling back to a valid 2-member sequence 
+    A => B2 (due to dispersion) => B12 (falling back to a valid 2-member sequence
     rather than generating a random value because there isn't a A => B2 predefined
     in the linkage matrix taken from the original data).
 
@@ -239,7 +239,7 @@ def process_row(
         accummulated array that is being processed and returned
     i                 : integer
         a counter in case we need to reduce the sequence size to check for valid
-        combinations to determine the next valid value 
+        combinations to determine the next valid value
 
     Returns
     -------
@@ -248,10 +248,10 @@ def process_row(
 
     if acc_array is None:
         acc_array = np.array([])
-      
+
     arr_len = len(acc_array)
     ref_arr_len = len(ref_array)
-    
+
     if arr_len == label_matrix.shape[1]:
         return acc_array
 
@@ -261,7 +261,7 @@ def process_row(
     # to counter i and increase until you exhaust the prior possibilities. The fallback
     # is that there will always be valid targets for previous sequence length = 1 aka
     # from one column to the next.
-    
+
     _ref_array = np.where(ref_array == -1, label_matrix, ref_array)
     mask = np.all(label_matrix[:, i:ref_arr_len] == _ref_array[:, i:], axis=1)
 
@@ -272,7 +272,7 @@ def process_row(
         i = i + 1
         return process_row(
             label_matrix, proba_lookup, lcd, rng, ref_array, acc_array, i)
-        
+
     target_proba = np.array([proba_lookup[x] for x in valid_targets])
 
     # typically, there will be more than 1 value in target_proba, but we have to guard against
@@ -307,15 +307,15 @@ def process_row(
     # update the ref_array to capture the just generated value
     if ref_array[arr_len] == -1:
         ref_array[arr_len] = next_val
-    
+
     return process_row(label_matrix, proba_lookup, lcd, rng, ref_array, new_array)
 
 def build_new_lookups(spec_dict, linked_cols, original_lookup):
     '''
-    Build two lookups: 
+    Build two lookups:
         - from the numerical id to its aliased value. {0: 'hb_code__S08000015', ...}
         - from the numerical id to the probability value {0: 0.5}
-         
+
     Be mindful of all the intermediate steps. The intermediate lookup is created
     with the numerical ID to a tuple and then split into two.
 
@@ -331,7 +331,7 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
     pos_label_to_orig_tuple = {} # age__0: (age__0-9, 0.5), etc.
 
     for col in linked_cols:
-        
+
         orig_vals = spec_dict["columns"][col]["original_values"]
         prob_vector = None
 
@@ -341,7 +341,7 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
             table_id = spec_dict["metadata"]["id"]
             orig_vals_db = query_exhibit_database(table_name=f"temp_{table_id}_{safe_col}")
             orig_vals_sorted = (
-                sorted([x for x in orig_vals_db[col] if x != MISSING_DATA_STR]) + 
+                sorted([x for x in orig_vals_db[col] if x != MISSING_DATA_STR]) +
                 [MISSING_DATA_STR]
             )
 
@@ -353,13 +353,13 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
             else:
                 prob_vector = orig_vals_db["probability_vector"].astype(float).values
                 prob_vector = np.append(
-                    prob_vector, spec_dict["columns"][col]["miss_probability"])          
+                    prob_vector, spec_dict["columns"][col]["miss_probability"])
 
             prob_vector /= prob_vector.sum()
 
         if prob_vector is None:
             prob_vector = orig_vals["probability_vector"].values
-        
+
         pos_labels_temp = [f"{col}__{x}" for x in range(len(orig_vals[col].values))]
         pos_labels_inc_column.extend(pos_labels_temp)
         pos_label_to_orig_tuple.update(
@@ -372,7 +372,7 @@ def build_new_lookups(spec_dict, linked_cols, original_lookup):
     id_to_pos_label = {v:k for k, v in original_lookup.items()}
 
     # if we don't check for the user removed values here, the next line
-    # will error out with an obscure Key not found message. 
+    # will error out with an obscure Key not found message.
     if len(original_lookup) != len(pos_label_to_orig_tuple):
         raise ValueError(textwrap.dedent("""
         The number of values in user linked columns doesn't match original data.

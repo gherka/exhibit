@@ -36,10 +36,10 @@ class CategoricalDataGenerator:
 
     def __init__(self, spec_dict, core_rows, anon_df=None):
         '''
-        This class is covering the entire spec_dict as far as the 
+        This class is covering the entire spec_dict as far as the
         generation of non-numerical data is concerned.
         '''
-        
+
         self.spec_dict = spec_dict
         self.rng = spec_dict["_rng"]
         self.num_rows = core_rows
@@ -48,7 +48,7 @@ class CategoricalDataGenerator:
         # references already-generated columns in the spec
         self.generated_dfs = []
         self.anon_df = anon_df
-        
+
         (self.all_cols,
          self.complete_cols,
          self.paired_cols,
@@ -65,7 +65,7 @@ class CategoricalDataGenerator:
 
         #1) GENERATE LINKED DFs FROM EACH LINKED COLUMNS GROUP
         for linked_group in (self.spec_dict.get("linked_columns") or []):
-            
+
             # zero-numbered linked group is reserved for user-defined groupings
             if linked_group[0] == 0:
 
@@ -103,7 +103,7 @@ class CategoricalDataGenerator:
             #paired columns return None
             if not s is None:
                 complete_series.append(s)
-        
+
         #5) OUTER JOIN
         temp_anon_df["key"] = 1
 
@@ -115,7 +115,7 @@ class CategoricalDataGenerator:
                 how="outer",
                 on="key"
             )
-        
+
         #6) TIDY UP
         anon_df = temp_anon_df.drop("key", axis=1)
 
@@ -141,12 +141,12 @@ class CategoricalDataGenerator:
         # see which date parameters we have access to
         start = self.spec_dict["columns"][col_name].get("from", None)
         end = self.spec_dict["columns"][col_name].get("to", None)
-        
+
         # frequency and periods are always required
         freq = self.spec_dict["columns"][col_name]["frequency"]
         periods = self.spec_dict["columns"][col_name]["uniques"]
 
-        # if we have both start and end, we generate all values in-between and pick the 
+        # if we have both start and end, we generate all values in-between and pick the
         # dates at random to match the number of periods, without repeats
         if start is not None and end is not None:
 
@@ -172,7 +172,7 @@ class CategoricalDataGenerator:
 
         if complete:
             return pd.Series(all_pos_dates, name=col_name)
-        
+
         random_dates = self.rng.choice(all_pos_dates, self.num_rows)
 
         return shuffle_data(pd.Series(random_dates, name=col_name))
@@ -185,7 +185,7 @@ class CategoricalDataGenerator:
         and index reset. Series generated from external tables are an exception because
         their values are linked to columns that have already been generated.
 
-        The code can take different paths depending on these things: 
+        The code can take different paths depending on these things:
         - whether a the anonymising method is set to random or a custom set
         - whether the number of unique values exceeds the threshold
         - whether the column has any paired columns
@@ -208,7 +208,7 @@ class CategoricalDataGenerator:
 
         col_attrs = self.spec_dict["columns"][col_name]
         col_type = col_attrs["type"]
-        
+
         # capture categorical-only information, with fallback for date columns
         paired_cols = col_attrs.get("paired_columns", None)
         orig_vals = col_attrs.get("original_values", None)
@@ -216,7 +216,7 @@ class CategoricalDataGenerator:
 
         # typically, only categorical columns will have an anonymising set, but time
         # columns can use it for SQL to pull conditional values from external table
-        # ignoring the standard date genderation parameters, like from / to.        
+        # ignoring the standard date genderation parameters, like from / to.
         anon_set = col_attrs.get("anonymising_set", None)
 
         # Users can pass custom functions to generate categorical / date columns
@@ -230,7 +230,7 @@ class CategoricalDataGenerator:
 
         # normal date columns generated using from / to / number of uniques
         if col_type == "date":
-            return self._generate_timeseries(col_name, complete=False)  
+            return self._generate_timeseries(col_name, complete=False)
 
         # generate values based on a regular expression specified in the anonymising_set
         if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_REGEX:
@@ -249,7 +249,7 @@ class CategoricalDataGenerator:
         if col_prob.sum() != 1:
             col_prob /= col_prob.sum()
 
-        if anon_set == "random": 
+        if anon_set == "random":
 
             col_values = col_df[col_name].to_list()
 
@@ -292,7 +292,7 @@ class CategoricalDataGenerator:
         anon_df = pd.DataFrame(columns=sql_df.columns, data=anon_list)
 
         return shuffle_data(anon_df)
-        
+
     def _generate_from_sql(self, col_name, col_attrs, complete=False, db_path=None):
         '''
         Whatever the anonymising method, if a column has more unique values than
@@ -322,7 +322,7 @@ class CategoricalDataGenerator:
         if set([col_name] + paired_cols).issubset(set(sql_df.columns)):
             sql_df = sql_df[[col_name] + paired_cols]
 
-        # rename sql_df columns to be same as original + paired; zip is 
+        # rename sql_df columns to be same as original + paired; zip is
         # only going to pair up columns up to the shorter list!
         sql_df.rename(
             columns=dict(zip(
@@ -380,13 +380,13 @@ class CategoricalDataGenerator:
         stored in the DB because the number of their uniques exceeds
         category threshold or if they are anonymised using a set from DB.
         '''
-        
+
         col_attrs = self.spec_dict["columns"][col_name]
-        
+
         if col_attrs["type"] == "date":
 
-            return self._generate_timeseries(col_name, complete=True) 
-        
+            return self._generate_timeseries(col_name, complete=True)
+
         # if paired column, skip, and add pairs as part of parent column's processing
         if col_name in self.paired_cols:
             return None
@@ -430,7 +430,7 @@ class CategoricalDataGenerator:
             (self.spec_dict["metadata"].get("categorical_columns", [])) +
             (self.spec_dict["metadata"].get("date_columns", []))
         )
-        
+
         nested_linked_cols = [
             sublist for n, sublist in (self.spec_dict.get("linked_columns") or [])
             ]
@@ -438,7 +438,7 @@ class CategoricalDataGenerator:
         complete_cols = [c for c, v in get_attr_values(
             self.spec_dict,
             "cross_join_all_unique_values",
-            col_names=True, 
+            col_names=True,
             types=["categorical", "date"]) if v]
 
         list_of_orig_val_tuples = get_attr_values(
@@ -492,6 +492,7 @@ class CategoricalDataGenerator:
 
         # between these two options, we expect only one aliased column in the SQL
         return (non_identical_aliases + identical_aliases) == 1
+
     def _generate_using_external_table(self, col_name, anon_set):
         '''
         We assume that the aliased column is the one you want to pick the values from
@@ -509,7 +510,7 @@ class CategoricalDataGenerator:
                 f"Please make sure the SQL SELECT statement in {col_name}'s "
                 f"anonymising_set includes exactly one aliased column named {col_name}."
             )
-        
+
         # "join" columns are all non-aliased columns from the source table
         # "join" here refers to joining back the data from the SQL statment to the
         # original source data, not any join columns that are part of the JOIN section
@@ -521,7 +522,7 @@ class CategoricalDataGenerator:
             if table == f"temp_{source_table_id}" and column != col_name:
                 join_columns.append(column)
 
-        # "source" table aka existing table is always put into exhibit DB, but if 
+        # "source" table aka existing table is always put into exhibit DB, but if
         # SQL is trying to reference an external table, we should check if it exists
         ext_tables = [
             t for t in sql_tables if t not in ["temp_original_values", f"temp_{source_table_id}"]
@@ -534,7 +535,7 @@ class CategoricalDataGenerator:
                     f"Please make sure that {ext_table} used in the anonymising_set SQL"
                     f" for column {col_name} exists in the Exhibit database."
                 )
-        
+
         # insert the dataframe generated so far into the DB; we make sure to drop
         # duplicates in case user didn't specify DISTINCT in his SQL query;
         # the anon_df would typically be from UUIDs that are generated before
@@ -550,7 +551,7 @@ class CategoricalDataGenerator:
         else:
             existing_data = pd.concat(self.generated_dfs + [self.anon_df], axis=1)
 
-        # for convenience, we can reference original_values as a table - this could be 
+        # for convenience, we can reference original_values as a table - this could be
         # original_values as they appear in the SPEC or in the SQL (not implemented yet)
         if "temp_original_values" in sql_tables:
             ov_df = self.spec_dict["columns"][col_name]["original_values"][[col_name]]
@@ -570,7 +571,7 @@ class CategoricalDataGenerator:
                 existing_data[col] = existing_data[col].astype(str).str.strip()
 
         # dropping duplicates is a filter operation (even though it returns new data)
-        # unless we make an explicit copy of the de-duplicated dataframe, Pandas will 
+        # unless we make an explicit copy of the de-duplicated dataframe, Pandas will
         # trigger SettingWithCopy warning when trying to change any values.
         existing_data_distinct = existing_data.drop_duplicates(subset=join_columns).copy()
         existing_data_cols = list(existing_data.columns)
@@ -582,7 +583,7 @@ class CategoricalDataGenerator:
             data=existing_data_distinct
         )
 
-        # run the SQL from anon_set; note that the type of SQL query we'll likely see 
+        # run the SQL from anon_set; note that the type of SQL query we'll likely see
         # will be a cross-join (e.g. dates) so any speed optimisations would be welcome
         result = execute_sql(anon_set)
 
@@ -597,7 +598,7 @@ class CategoricalDataGenerator:
         # get the probabilities for the selected column in the external table
         # at the level of the join key - use a hash for the combination of columns!
 
-        # Rather than use existing probabilities from the spec, treat them as a weight 
+        # Rather than use existing probabilities from the spec, treat them as a weight
         # and apply them to the conditional, per-join key probabilities from external
         # table.
         probas = {}
@@ -641,14 +642,14 @@ class CategoricalDataGenerator:
 
         for group_key, group_index in groups.items():
             # if the key is missing, then the SQL filtered out the data for that key
-            # having a COALESCE in SQL would fix it, but in case it's also missing, 
-            # we try to catch this edge case in code as well. 
+            # having a COALESCE in SQL would fix it, but in case it's also missing,
+            # we try to catch this edge case in code as well.
             try:
                 new_data = self.rng.choice(
                     a=probas[group_key][0], p=probas[group_key][1], size=len(group_index))
             except KeyError: #pragma: no cover
                 new_data = [np.nan] * len(group_index)
-    
+
             temp_result.append(pd.Series(data=new_data, index=group_index, name=col_name))
 
         final_result = pd.concat(temp_result)
@@ -659,7 +660,7 @@ class CategoricalDataGenerator:
             final_result = final_result.astype("datetime64[ns]")
 
         return final_result
-    
+
     def _generate_using_custom_function(self, col_name, anon_set):
         '''
         _summary_
