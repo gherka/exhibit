@@ -20,7 +20,7 @@ def generate_uuid_column(
     # for internal use in tests or scripting
     if isinstance(frequency_distribution, pd.DataFrame):
         freq_df = frequency_distribution
-    
+
     else:
         # parse the frequency distribution into a Pandas dataframe:
         freq_df = pd.DataFrame(
@@ -32,8 +32,9 @@ def generate_uuid_column(
 
     # ensure the probabilities sum up to 1
     prob_vector = freq_df["probability_vector"].astype(float).values
-    prob_vector /= prob_vector.sum()
-    freq_df.loc[:, "probability_vector"] = prob_vector
+    prob_vector = prob_vector / prob_vector.sum()
+
+    freq_df["probability_vector"] = prob_vector
 
     # generate uuids
     rng = random.Random(seed)
@@ -93,10 +94,10 @@ def generate_uuid_column(
         repl_uuids = list(range(range_max))
         rng.shuffle(repl_uuids)
         uuids = [repl_uuids[x] for x in uuids]
-    
+
     # finally, make uuid null based on the miss_probability
     rands = np.array([rng.random() for _ in range(num_rows)])
-    data = list(np.where(rands < miss_prob, None, uuids))  
+    data = list(np.where(rands < miss_prob, None, uuids))
 
     # create a series and shuffle
     uuid_series = (
@@ -137,5 +138,5 @@ def _generate_pseudo_chis(n, seed=0):
         ).zfill(10)
 
         result.add(pseudo_chi)
-    
+
     return sorted(list(result))

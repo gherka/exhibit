@@ -8,6 +8,7 @@ from itertools import zip_longest
 
 # External library imports
 import pandas as pd
+import pandas.api.types as ptypes
 
 # Exhibit imports
 from exhibit.core.constants import MISSING_DATA_STR
@@ -15,7 +16,7 @@ from exhibit.core.constants import MISSING_DATA_STR
 class FormattedList(list):
     '''
     A special type of list to help identify formatted list of strings
-    used to construct a csv-like table in the spec. This way, we can 
+    used to construct a csv-like table in the spec. This way, we can
     separate processing for these formatted values from a basic list
     of values passed to original_values during manual column creation
     '''
@@ -27,7 +28,7 @@ def format_header(dataframe, series_name, prefix=None):
     of the header column's values
 
     Applies only to categorical columns with original_values
-    
+
     Parameters
     ----------
     dataframe : pd.DataFrame
@@ -42,7 +43,7 @@ def format_header(dataframe, series_name, prefix=None):
     Formatted string value of series_name
     '''
 
-    series = dataframe[series_name].unique().astype(str)
+    series = dataframe[series_name].map(str).unique()
 
     if prefix:
         series_name = prefix + series_name
@@ -77,7 +78,7 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
     formatted into a list of padded strings, otherwise returns
     formatted values from the original series
     '''
-    
+
     #sort paired_series based on the original
     if paired_series_name:
 
@@ -89,9 +90,9 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
             .unique()
             .tolist()
         )
-        
+
         working_name = f"paired_{paired_series_name}"
-    
+
     else:
 
         working_list = (dataframe[original_series_name]
@@ -104,7 +105,7 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
 
         working_name = original_series_name
 
-    #appending to a list is in place and returns None 
+    #appending to a list is in place and returns None
     working_list.append(MISSING_DATA_STR)
 
     longest = max(len(working_name), len(max(working_list, key=len)))
@@ -143,7 +144,7 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
     temp_vectors_value_counts = (original_series
                     .fillna(MISSING_DATA_STR)
                     .value_counts())
-    
+
     temp_vectors = (temp_vectors_value_counts
                     .set_axis(temp_vectors_value_counts.index.astype(str))
                     .sort_index(kind="mergesort")
@@ -159,11 +160,11 @@ def build_list_of_probability_vectors(dataframe, original_series_name, ew=False)
         cached = temp_vectors[temp_vectors.index.str.contains(MISSING_DATA_STR)]
         temp_vectors = temp_vectors.drop(MISSING_DATA_STR)
         temp_vectors = pd.concat([temp_vectors, cached])
-    
+
     #equalise the probability vectors if equal_weights is True, except Missing data
     if ew:
         temp_vectors.iloc[:-1] = 1 / (temp_vectors.shape[0] - 1)
-    
+
     vectors = temp_vectors.values.tolist()
 
     string_vectors = [f"{x:.3f}".ljust(len(HEADER)) for x in vectors]
@@ -178,7 +179,7 @@ def build_list_of_column_weights(weights):
     ----------
     weights : dictionary
         Expects {column_name : list_of_weights}
-    
+
     Note that PyYAML will add single quotes around strings that have a trailing
     space at the end so we need to apply rstrip() function
 
@@ -188,16 +189,16 @@ def build_list_of_column_weights(weights):
     '''
 
     sorted_temp = []
-    
+
     for key in sorted(weights):
 
         padded_key = [f"{x:.3f}".ljust(len(key)) for x in weights[key]]
         sorted_temp.append(padded_key)
-        
+
     sorted_final = [" | ".join(y for y in x).rstrip() for x in zip(*sorted_temp)]
 
     return sorted_final
-    
+
 def build_table_from_lists(
     dataframe, numerical_cols, weights, ew,
     original_series_name, paired_series_names):
@@ -238,7 +239,7 @@ def build_table_from_lists(
     p = build_list_of_probability_vectors(dataframe, original_series_name, ew=ew)
     #generate a list of value weights for each numerical column
     w = build_list_of_column_weights(weights)
-    
+
     #create padded header list
     paired_series_header = [
         format_header(dataframe, name, "paired_") for name in paired_series_names]
@@ -268,7 +269,7 @@ def build_table_from_lists(
             " | ".join(filter(None, x)) +
             " |".rjust(last_num_col_len)
         )
-    
+
     final = header + row_cols
 
     return FormattedList(final)
@@ -284,9 +285,9 @@ def parse_original_values(original_values):
     original_values : list or str or DataFrame
         If list, the first element is the header row. str could be regex, paired column
         indicator, etc. DataFrame could be passed from internal testing.
-    
+
     Because the original_table is constructed with a lot of padding,
-    each value in the list has to be stripped of spaces. 
+    each value in the list has to be stripped of spaces.
 
     The separator character between .csv-like table values is |
 
@@ -303,7 +304,7 @@ def parse_original_values(original_values):
     -------
     Pandas DataFrame or untouched string
     '''
-    
+
     if isinstance(original_values, list):
 
         df = pd.DataFrame(
@@ -313,7 +314,7 @@ def parse_original_values(original_values):
             columns=[x.strip() for x in original_values[0].split("|")],
         )
 
-        df.loc[:, "probability_vector"] = df["probability_vector"].astype(float)
+        df["probability_vector"] = df["probability_vector"].astype(float)
 
         return df
 
@@ -321,7 +322,7 @@ def parse_original_values(original_values):
 
 def build_list_of_uuid_frequencies(df, target_col):
     '''
-    Similar to how we build original_values string, here we are composing 
+    Similar to how we build original_values string, here we are composing
     a list with a header row and then rows of frequencies and their probability
     of occuring. Thus, for example "ABCDEE" has frequencies of 1 and 2 so the
     generated uuids will have 0.8 probability to never repeat and 0.2 probability
@@ -332,8 +333,8 @@ def build_list_of_uuid_frequencies(df, target_col):
     header = ["frequency | probability_vector"]
 
     if target_col not in df.columns:
-        return header 
-        
+        return header
+
     counts = Counter(df[target_col].value_counts())
 
     freq_df = pd.DataFrame(
@@ -350,19 +351,19 @@ def build_list_of_uuid_frequencies(df, target_col):
     )
 
     result = header + freq_list
-    
+
     return result
 
 def format_df_for_export(df):
     '''
     The way data is formatted is mainly controlled by the DataFrame formatting
-    classes. There is no easy way to modify it for our purposes so this is a 
+    classes. There is no easy way to modify it for our purposes so this is a
     semi-manual way of cleaning up / hiding any inconsistencies. This is a last
     resort method so try to solve any formatting / typing issues elsewhere.
     '''
 
     for column in df.columns:
-        if df[column].dtype == "timedelta64[ns]":
+        if ptypes.is_timedelta64_dtype(df[column]):
             df[column] = df[column].astype(str).str.replace("0 days ", "")
 
     return df

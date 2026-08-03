@@ -60,7 +60,7 @@ def query_exhibit_database(
 
     if db_url is None:
         db_url = make_url("sqlite:///" + db_path + "?mode=r")
-    
+
     # define fully qualified table name, including schema if provided
     table_full_name = table_name if db_schema is None else ".".join([db_schema, table_name])
 
@@ -97,14 +97,14 @@ def query_exhibit_database(
     # build a Pandas dataframe
     column_names = [col[0] for col in result.cursor.description]
     data = result.fetchall()
- 
+
     if len(column_names) == 1:
-        output = pd.DataFrame(data={column_names[0]: [x[0] for x in data]})        
+        output = pd.DataFrame(data={column_names[0]: [x[0] for x in data]})
     else:
         output = pd.DataFrame(data=data, columns=column_names)
 
     output = output.rename(columns=lambda x: x.replace("$", " "))
-    
+
     # shut down the engine which closes all associated connections
     engine.dispose()
 
@@ -129,7 +129,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
 
     Occasionally it's useful to create a temporary table
     for linked columns that user doesn't want to anonymise,
-    like Specialty and Specialty Group. To ensure that each 
+    like Specialty and Specialty Group. To ensure that each
     Specialty has the correct Specialty Group, we can store this
     information in a temporary table in a database.
 
@@ -138,9 +138,9 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
     Make sure you add "temp_" prefix to your table if you
     want it to be discovered by the automatic clean-up.
 
-    Normally, you'd pass a list as col_names and data 
+    Normally, you'd pass a list as col_names and data
     would be a list of tuples with length equal to the
-    number of columns. 
+    number of columns.
 
     On success returns True or fetches all records if return_table
     optional parameter is set to True.
@@ -155,7 +155,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
 
     # to help with managing the data, convert tuples to a dataframe
     data_df = pd.DataFrame(data) if not isinstance(data, pd.DataFrame) else data
-    
+
     # make sure that numeric columns are typed as Float, not custom np.int32, etc.
     # and strip whitespace from non-numeric values which is left over from YAML
     data_types = []
@@ -178,7 +178,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
     # ensure the correct column data type for table creation
     table = Table(
         table_name, metadata, *[Column(c, t) for c, t in zip(col_names, data_types)])
-    
+
     # connection block
     if db_url is None:
         db_url = make_url("sqlite:///" + db_path + "?mode=rw")
@@ -198,8 +198,8 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
             # sqlite has a limit on how many records can be inserted into a table at one time
             # see: https://www.sqlite.org/limits.html #9
             chunk = 32_000
-            #pragma: no cover
-            if (engine.dialect.name == "sqlite") and (num_records:=len(data)) > chunk:
+
+            if (engine.dialect.name == "sqlite") and (num_records:=len(data)) > chunk: #pragma: no cover
                 for i, _ in enumerate(range(0, num_records, chunk)):
                     from_i = i * chunk
                     to_i = (i+1) * chunk
@@ -216,7 +216,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
 
     if return_table:
         return result
-        
+
     return True
 
 def get_number_of_table_rows(table_name, column=None, db_path=None):
@@ -303,7 +303,7 @@ def get_number_of_table_columns(table_name, db_path=None):
 
     # get the table class from metadata
     table = metadata.tables[table_full_name]
-    
+
     # get the number of columns in the reflected table
     result = len(table.columns.keys())
 
@@ -323,18 +323,18 @@ def check_table_exists(table_name, db_path=None):
     if db_url is None:
         db_url = make_url("sqlite:///" + db_path + "?mode=r")
 
-    # create engine and inspect 
+    # create engine and inspect
     engine = create_engine(db_url)
     result = inspect(engine).has_table(table_name)
 
     # shut down the engine which closes all associated connections
     engine.dispose()
-    
+
     return result
 
 def execute_sql(sql, db_path=None):
     '''
-    Connect to a database and execute SQL passed in as text. 
+    Connect to a database and execute SQL passed in as text.
 
     Parameters
     ----------
@@ -349,7 +349,7 @@ def execute_sql(sql, db_path=None):
 
     if db_url is None:
         db_url = make_url("sqlite:///" + db_path + "?mode=r")
-    
+
     # create engine and connection
     engine = create_engine(db_url)
 
