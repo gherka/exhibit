@@ -10,16 +10,16 @@ The goal of Exhibit is to make it easier to generate synthethic data at scale in
 <td style="text-align: left"><code>main</code></td>
 <td style="text-align: left; vertical-align: middle; padding: 4px; line-height: 1">
 <p style="margin:0">
-<a href="https://travis-ci.org/gherka/exhibit"><img src="https://travis-ci.org/gherka/exhibit.svg?branch=main" alt="Build Status"> <a href="https://github.com/gherka/exhibit/actions/workflows/codeql.yml"><img src="https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"> <a href="https://codecov.io/github/gherka/exhibit"><img src="https://codecov.io/github/gherka/exhibit/branch/main/graph/badge.svg?token=A5YQIV56QM" alt="codecov">
+<a href="https://github.com/gherka/exhibit/actions/workflows/codeql.yml"><img src="https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"> <a href="https://codecov.io/github/gherka/exhibit"><img src="https://codecov.io/github/gherka/exhibit/branch/main/graph/badge.svg?token=A5YQIV56QM" alt="codecov">
 </p>
 </td>
 </tr>
-<!-- Latest branch badges -->
+<!-- Develop branch badges -->
 <tr>
-<td style="text-align: left;"><code>latest</code></td>
+<td style="text-align: left;"><code>develop</code></td>
 <td style="text-align: left; vertical-align: middle; padding: 4px; line-height: 1">
 <p style="margin:0">
-<a href="https://travis-ci.org/gherka/exhibit"><img src="https://travis-ci.org/gherka/exhibit.svg?branch=latest" alt="Build Status"> <a href="https://github.com/gherka/exhibit/actions/workflows/codeql.yml"><img src="https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"> <a href="https://codecov.io/github/gherka/exhibit"><img src="https://codecov.io/github/gherka/exhibit/branch/latest/graph/badge.svg?token=A5YQIV56QM" alt="codecov">
+<a href="https://github.com/gherka/exhibit/actions/workflows/codeql.yml"><img src="https://github.com/gherka/exhibit/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"> <a href="https://codecov.io/github/gherka/exhibit"><img src="https://codecov.io/github/gherka/exhibit/branch/develop/graph/badge.svg?token=A5YQIV56QM" alt="codecov">
 </p>
 </td>
 </tr>
@@ -50,7 +50,7 @@ Alternatively, download or clone the repository and run `pip install .` from the
 
 ## Quickstart
 
-Exhibit has two principal modes of operation: 
+Exhibit has two principal modes of operation:
  - `fromdata` produces a detailed, user-editable `.yml` specification
  - `fromspec` which produces the anonymised dataset from the supplied specification
 
@@ -72,7 +72,7 @@ Exhibit is bundled with a SQLite3 database and a Python utility tool to interact
  - `mountains` has 15 mountain ranges and their top 10 peaks making it useful for aliasing hierarchical pairs, like NHS Boards and Hospitals.
  - `birds` has 150 pairs of common / scientific bird names. This can be useful for 1:1 paired columns.
  - `patients` has 360 made-up patient records with details such as gender, 5-year age band, date of birth and CHI number. Fields from this dataset can be selectively pulled in when linked data is required.
-  - `dates` has dates ranging from 1900-01-01 to 2100-01-01 at a single day interval. This table is useful if you have a SQL statement in the `anonymising_set` that picks dates based on a condition. 
+  - `dates` has dates ranging from 1900-01-01 to 2100-01-01 at a single day interval. This table is useful if you have a SQL statement in the `anonymising_set` that picks dates based on a condition.
 
 The database is also used to store temporary data for columns where the number of unique values exceeds user threshold and thus not available for editing directly in the `yml` file.
 
