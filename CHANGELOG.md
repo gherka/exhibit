@@ -1,6 +1,9 @@
 ## Release notes
 ---
 
+### 0.9.11 (August 4, 2026)
+Minor version release updating CI workflows.
+
 ### 0.9.10 (August 3, 2026)
 Minor version release updating dependencies.
 
