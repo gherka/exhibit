@@ -7,8 +7,9 @@ from os.path import abspath, dirname, join, exists
 from pathlib import Path
 from functools import reduce
 from operator import mul
-from collections import namedtuple
+from collections import namedtuple, Counter
 
+import hashlib
 import re
 import datetime
 import dateutil
@@ -16,7 +17,7 @@ import dateutil
 # External library imports
 import pandas as pd
 import numpy as np
-from pandas.api.types import is_numeric_dtype, is_datetime64_any_dtype, is_bool_dtype
+from pandas.api.types import is_numeric_dtype, is_datetime64_dtype, is_bool_dtype
 
 # Exhibit imports
 from .constants import ORIGINAL_VALUES_PAIRED
@@ -29,7 +30,7 @@ def path_checker(path_string):
     ----------
     path_string : string
         raw user input
-    
+
     Returns
     -------
     Path object
@@ -39,7 +40,7 @@ def path_checker(path_string):
         msg = "Can't find specified file"
         raise FileNotFoundError(msg)
     return Path(path_string)
-    
+
 def package_dir(*args):
     '''
     Given directory / file names, find their absolute path
@@ -61,7 +62,7 @@ def package_dir(*args):
     Absolute path to package / package modules / files
     given names relative to the package root directory
     '''
-    
+
     return abspath(join(dirname(__file__), "..", *args))
 
 def date_parser(row_tuple):
@@ -76,7 +77,7 @@ def date_parser(row_tuple):
     ----------
     row_tuple : tuple
         (column_name, row_value)
-    
+
     Returns
     -------
     None or column name if the value can be usefully parsed as a date
@@ -125,16 +126,16 @@ def read_with_date_parser(path, **kwargs):
 
         skipped_cols = kwargs.get("skip_columns", set())
         discrete_cols = kwargs.get("discrete_columns", set())
-    
+
         df = pd.read_csv(path, dtype={c:str for c in discrete_cols}, low_memory=False)
-        
+
         # basic validation to ensure user didn't specify column that are missing
         for col in skipped_cols | discrete_cols:
             if col not in df.columns:
                 raise ValueError(
                     f"Can't skip / make discrete {col} column. "
                     "It's missing from the supplied file.")
-        
+
         df = df.drop(columns=skipped_cols)
 
         for col in df.columns:
@@ -145,16 +146,16 @@ def read_with_date_parser(path, **kwargs):
                     df[date_col] = pd.to_datetime(df[date_col])
 
         return df
-    
+
     raise TypeError("Only .csv file format is supported")
 
 def guess_date_frequency(timeseries):
     '''
     Try to guess if the sorted timestamps have any pattern to them.
-    
+
     Pandas diff() on the sorted duplicate-less dataframe computes
     the difference between each element with its previous row which
-    gives us the time lapsed between discrete time stamps. 
+    gives us the time lapsed between discrete time stamps.
 
     We then look at how many such differences exist and what their values
     are in days.
@@ -169,7 +170,7 @@ def guess_date_frequency(timeseries):
     timeseries : pd.Series
         only columns identified as datetime by date_parser()
         will get analysed by this function
-    
+
     Returns
     -------
     Time alias string or None
@@ -178,13 +179,13 @@ def guess_date_frequency(timeseries):
     #special case of a single date
     if len(timeseries.dropna().unique()) == 1:
         return "UNKNOWN"
-    
+
     time_diff_counts = (timeseries
                         .drop_duplicates()
                         .sort_values()
                         .diff()
                         .value_counts())
-    
+
     day_diff = (
         max(time_diff_counts.index).days -
         min(time_diff_counts.index).days
@@ -213,12 +214,12 @@ def guess_date_frequency(timeseries):
                 if not (timeseries.dt.day == 1).all():
                     return period_alias[0] + "E"
             return period_alias
-            
+
     return None #pragma: no cover
 
 def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired=True):
     '''
-    Extract all values for a given attribute in the specification 
+    Extract all values for a given attribute in the specification
 
     Parameters
     ----------
@@ -240,12 +241,12 @@ def get_attr_values(spec_dict, attr, col_names=False, types=None, include_paired
     A list with values from columns in order of appearance in the
     spec. The length of the returned list will always equal the number
     of relevant columns because if attribute is missing, we add a place
-    holder value of None in its place. 
+    holder value of None in its place.
     '''
-    
+
     if types is None:
         types = ["uuid", "categorical", "date", "continuous"]
-    
+
     if not isinstance(types, list): #pragma: no cover
         types = [types]
 
@@ -291,7 +292,7 @@ def exceeds_inline_limit(spec_dict, col):
     exceeds category threshold parameter given at spec generation
     '''
     result = (
-        spec_dict["columns"][col]["uniques"] > 
+        spec_dict["columns"][col]["uniques"] >
         spec_dict["metadata"]["inline_limit"]
     )
 
@@ -326,13 +327,13 @@ def count_core_rows(spec_dict):
     complete_cols = {c for c, v in get_attr_values(
         spec_dict,
         "cross_join_all_unique_values",
-        col_names=True, 
+        col_names=True,
         types=["categorical", "date"]) if v}
 
     paired_cols = {c for c, v in get_attr_values(
         spec_dict,
         "original_values",
-        col_names=True, 
+        col_names=True,
         types=["categorical"]) if str(v) == ORIGINAL_VALUES_PAIRED}
 
     target_cols = complete_cols - paired_cols
@@ -341,7 +342,7 @@ def count_core_rows(spec_dict):
         v["uniques"] for c, v in spec_dict["columns"].items()
         if c in target_cols
         ]
-    
+
     #reduce needs at least one value or it will error out
     if not complete_uniques: # pragma: no cover
         complete_uniques.append(1)
@@ -378,41 +379,37 @@ def is_paired(spec_dict, col_name):
     Tiny function to check if given column is a paired one
     Only categorical columns can be paired
     '''
-    
+
     if spec_dict["columns"][col_name]["type"] != "categorical":
         return False
 
     orig_vals = spec_dict["columns"][col_name]["original_values"]
-    
+
     if isinstance(orig_vals, str) and orig_vals == ORIGINAL_VALUES_PAIRED:
         return True
     return False
 
 def sort_columns_by_dtype_az(dtypes):
     '''
-    Given the output of df.dtypes, return the columns
-    sorted first by dtype and then alphabetically.
+    Given the output of df.dtypes, return the columns sorted first by
+    dtype group and then alphabetically. Numerical columns come first, then
+    dates, then everything treated as categorical (including booleans), so
+    categorical columns can read the numerical columns already registered.
     '''
 
     def _dtype_grouper(dtype):
-        '''
-        Helper function to take care of float and ints
-        or various date time formats. Categorical columns
-        including boolean, always go first, then numerical
-        and finally dates.
-        '''
+        # booleans count as numeric in pandas but CoreSpec.from_data
+        # treats them as categorical, so they must sort with categoricals
         if is_bool_dtype(dtype):
-            return 1
-        if is_numeric_dtype(dtype):
-            return 2
-        if is_datetime64_any_dtype(dtype):
             return 3
-        return 1
+        if is_numeric_dtype(dtype):
+            return 1
+        if is_datetime64_dtype(dtype):
+            return 2
+        return 3
 
-    result = dtypes.sort_index(
+    return dtypes.sort_index(
         key=lambda x: list(zip(dtypes.transform(_dtype_grouper).values, x))).index
-    
-    return result
 
 def natural_key(string_):
     '''
@@ -429,5 +426,175 @@ def shuffle_data(data):
         .sample(frac=1, random_state=np.random.PCG64(0))
         .reset_index(drop=True)
     )
-    
+
     return shuffled_series
+
+def normalise_column_data(data):
+    '''
+    Normalise flexible column-like input into a standard Pandas Series.
+
+    Note that we don't make any changes (drop NAs, etc.) to the source data,
+    just re-arrange it into a standard object (pd.Series).
+
+    Accepts:
+        - pandas Series: returns a copy
+        - list of 1-element tuples: e.g. [(1,), (2,), (3,)]
+        - plain list: e.g. [1, 2, 3]
+
+    Returns:
+        pd.Series
+    '''
+
+    if not isinstance(data, (pd.Series, list)):
+        raise TypeError(
+            f"Unsupported type for 'data': {type(data)}. "
+            "Expected Pandas Series, list of 1-element tuples, or plain list."
+        )
+
+    series = pd.Series()
+
+    if isinstance(data, pd.Series):
+        series = data.copy()
+
+    if isinstance(data, list):
+        if len(data) == 0:
+            series = pd.Series(dtype=object)
+
+        # Check if it's a list of 1-element tuples
+        elif all(isinstance(item, tuple) for item in data):
+            if not all(len(item) == 1 for item in data):
+                raise ValueError(
+                    "List of tuples must contain only 1-element tuples."
+                )
+            series = pd.Series([item[0] for item in data])
+
+        # Otherwise treat as a plain list of values
+        else:
+            series = pd.Series(data)
+
+    clean_series = series.replace(r'^\s*$', pd.NA, regex=True)
+    return clean_series
+
+def _validate_tabular_data(columns, rows):
+    '''
+    Validate that columns are non-empty and each row aligns in length.
+
+    Args:
+        columns: list of column names
+        rows: list of row-like entries (list, tuple, or dict per row)
+
+    Raises:
+        ValueError: if columns is empty, or any row's length doesn't match.
+    '''
+    if not columns:
+        raise ValueError(
+            "Column names must be a non-empty list."
+        )
+
+    n_cols = len(columns)
+    for i, row in enumerate(rows):
+        if len(row) != n_cols:
+            raise ValueError(
+                f"Row {i} has {len(row)} entries, expected {n_cols}."
+            )
+
+def normalise_tabular_data(data):
+    '''
+    Normalise flexible column-like input into a standard Pandas DataFrame.
+    We must ensure we have a source of column names because otherwise assignment to
+    ColumnRegistry won't work as we don't have any sensible defaults or placeholders for
+    column names.
+
+    Accepts:
+        - pandas DataFrame: returns a copy
+        - dictionary of the form: {"header": [], "rows": {}} to mirror csv DictWriter
+        - dictionary of the form: {"columns":[], "data": [[],]} to cover plain lists
+
+    Returns:
+        pd.DataFrame
+    '''
+
+    if not isinstance(data, (pd.DataFrame, dict)):
+
+        raise TypeError(
+            f"Unsupported type for 'data': {type(data)}. "
+            "Expected Pandas DataFrame, or a dict with 'header'/'rows' or "
+            "'columns'/'data' keys."
+        )
+
+    df = pd.DataFrame()
+
+    if isinstance(data, pd.DataFrame):
+        df = data.copy()
+
+    if isinstance(data, dict):
+        # Form 1: {"header": [...], "rows": [...]} - mirrors csv.DictWriter,
+        # where 'rows' is typically a list of dicts keyed by header names.
+        if "header" in data and "rows" in data:
+            columns = data["header"]
+            rows = list(data["rows"])
+            error_context = "{'header': [...], 'rows': [...]}"
+
+        # Form 2: {"columns": [...], "data": [[...], ...]} - plain lists of rows.
+        elif "columns" in data and "data" in data:
+            columns = data["columns"]
+            rows = list(data["data"])
+            error_context = "{'columns': [...], 'data': [...]}"
+
+        else:
+            raise ValueError(
+                "Dictionary input must be either of the form "
+                "{'header': [...], 'rows': ...} or {'columns': [...], 'data': [...]}."
+            )
+
+        try:
+            _validate_tabular_data(columns, rows)
+        except ValueError as e:
+            raise ValueError(f"Invalid {error_context} input: {e}") from e
+
+        df = pd.DataFrame(rows, columns=columns)
+
+    clean_df = df.replace(r'^\s*$', pd.NA, regex=True)
+    return clean_df
+
+def calculate_miss_proba(series):
+    '''
+    Helper function to calculate % of null rows in a given pandas Series.
+    '''
+
+    result = float(series.isna().mean())
+
+    return result
+
+def calculate_uuid_frequency_distribution(series):
+    '''
+    Calculates the frequency-of-frequencies distribution for target_col: how many
+    times each value in target_col repeats, and the probability of each
+    repeat-count occurring. E.g. for "ABCDEE", the value counts are
+    {A: 1, B: 1, C: 1, D: 1, E: 2}, so a repeat-count of 1 occurs 4 times and
+    a repeat-count of 2 occurs once - giving frequency 1 a probability of 0.8
+    and frequency 2 a probability of 0.2.
+
+    Returns a DataFrame with columns ["frequency", "count", "pct"] sorted by frequency.
+    '''
+
+    counts = Counter(series.value_counts())
+
+    freq_df = pd.DataFrame(
+        list(counts.items()),
+        columns=["frequency", "count"]
+    ).sort_values("frequency")
+
+    freq_df.loc[:, "pct"] = freq_df["count"] / freq_df["count"].sum()
+
+    return freq_df
+
+def calculate_df_hash(df):
+    '''
+    Content hash of a DataFrame: column names, column order, size and row order all matter.
+    '''
+    h = hashlib.sha256()
+    h.update(repr((tuple(df.columns), len(df))).encode())
+    edges = pd.concat([df.head(), df.tail()])
+    h.update(pd.util.hash_pandas_object(edges, index=False).to_numpy().tobytes())
+    return h.hexdigest()

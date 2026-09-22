@@ -110,6 +110,19 @@ def query_exhibit_database(
 
     return output
 
+def _make_engine(db_path=None):
+    '''
+    Helper function to isolate connection logic: external DB if configured, else local SQLite.
+    '''
+
+    db_url = os.environ.get("EXHIBIT_DB_URL", None)
+    db_path = db_path if db_path else package_dir(EXHIBIT_DB_LOCAL)
+
+    if db_url is None:
+        db_url = make_url("sqlite:///" + db_path + "?mode=rw")
+
+    return create_engine(db_url)
+
 def create_temp_table(table_name, col_names, data, return_table=False, db_path=None):
     '''
     Create a table in exhibit DB (local or external) to support data generation.
@@ -146,9 +159,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
     optional parameter is set to True.
     '''
 
-    db_url = os.environ.get("EXHIBIT_DB_URL", None)
     db_schema = os.environ.get("EXHIBIT_DB_SCHEMA", None)
-    db_path = db_path if db_path else package_dir(EXHIBIT_DB_LOCAL)
 
     # tables are created from a metadata object
     metadata = MetaData(schema=db_schema)
@@ -179,12 +190,8 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
     table = Table(
         table_name, metadata, *[Column(c, t) for c, t in zip(col_names, data_types)])
 
-    # connection block
-    if db_url is None:
-        db_url = make_url("sqlite:///" + db_path + "?mode=rw")
-
     # create engine and connection
-    engine = create_engine(db_url)
+    engine = _make_engine(db_path)
 
     with engine.connect() as conn:
 
@@ -192,7 +199,7 @@ def create_temp_table(table_name, col_names, data, return_table=False, db_path=N
 
             # drop the table from DB if it exists and then create
             conn.execute(DropTable(table, if_exists=True))
-            metadata.create_all(engine)
+            metadata.create_all(conn)
 
             # insert the values (assuming tuples in the data follow the col_names order)
             # sqlite has a limit on how many records can be inserted into a table at one time

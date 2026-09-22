@@ -26,7 +26,7 @@ def generate_weights_table(spec_dict, target_cols):
         original user spec
     target_cols:
         a subset of columns meant for the weights_table
-    
+
     Returns
     -------
     dictionary where index levels are keys and
@@ -36,18 +36,18 @@ def generate_weights_table(spec_dict, target_cols):
     even if the original, non-anonymised data has a smaller
     probability.
     '''
-    
+
     tuple_list = []
 
     #second element in the tuple is the column's equal weight
     #in case we're fitting a distribution
     Weights = namedtuple("Weights", ["weight", "equal_weight"])
-    
+
     num_cols = (
         set(spec_dict["metadata"]["numerical_columns"]) -
         set(spec_dict["derived_columns"])
     )
-    
+
     for cat_col in target_cols:
 
         val_count = spec_dict["columns"][cat_col]["uniques"]
@@ -59,28 +59,28 @@ def generate_weights_table(spec_dict, target_cols):
 
             full_anon_flag = True
             ws_df = _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols)
-            
+
         else:
             #meaning, there are original_values, including weights
             ws_df = spec_dict["columns"][cat_col]["original_values"]
 
         #get weights and values, from whatever WS was created
         for num_col in num_cols:
-            
+
             #if numerical column is missing from original_values DF (can happen when
             #spec is generated outside of CLI / manually), use equal_weights.
             if num_col not in ws_df.columns: #pragma: no cover
                 ws_df[num_col] = equal_weight
 
             ws = ws_df[num_col].astype(float)
-            # because we might've taken the FULL anon_set (150 or more), 
+            # because we might've taken the FULL anon_set (150 or more),
             # we need to make sure the weights are correct!
             if not full_anon_flag:
-                ws /= ws.sum() 
+                ws /= ws.sum()
             ws_vals = ws_df[cat_col]
 
             for val, weight in zip(ws_vals, ws):
-            
+
                 tuple_list.append(
                     (num_col, cat_col, val, Weights(weight, equal_weight))
                 )
@@ -100,8 +100,8 @@ def generate_weights_table(spec_dict, target_cols):
 
 def generate_weights(df, cat_col, num_col, ew=False):
     '''
-    Weights are generated for a each value in each categorical column
-    where 1 means 100% of the numerical column is allocated to that value
+    Weights are generated for each value in a categorical column, where 1 means
+    100% of the numerical column is allocated to that value.
 
     Parameters
     ----------
@@ -112,11 +112,15 @@ def generate_weights(df, cat_col, num_col, ew=False):
     num_col : str
         numerical column
     ew : Boolean
-        equal_weights parameter from CLI
+        equal_weights parameter from CLI; equalises only real categories.
+        MISSING keeps its observed share.
 
     Returns
     -------
-    List of weights in ascending order of values rounded to 3 digits.
+    List of weights in ascending order of category values, with the
+    MISSING_DATA_STR entry last if (and only if) cat_col has nulls. Weights are
+    unrounded and unfloored and sum to 1 (or are all zero if the numerical column
+    sums to zero). Any rounding / flooring for display belongs in the formatter.
     '''
 
     # since weights are used at a per-row basis, we need to take an average of the
@@ -124,42 +128,38 @@ def generate_weights(df, cat_col, num_col, ew=False):
     # of duplicate rows. All NAs in numerical columns are treated as zeroes.
     weights = (
         df
-        .fillna({cat_col:MISSING_DATA_STR})
+        .fillna({cat_col: MISSING_DATA_STR})
         .groupby([cat_col], observed=True)[num_col].mean().fillna(0)
     )
 
     temp_output = weights.sort_index(kind="mergesort")
 
-    if MISSING_DATA_STR not in temp_output:
-        temp_output = pd.concat([temp_output, pd.Series(
-            index=[MISSING_DATA_STR],
-            data=0
-        )])
-    
-    #pop and reinsert missing data placeholder at the end of the list
-    else:
-        cached = temp_output[temp_output.index.str.contains(MISSING_DATA_STR)]
+    # pop and reinsert missing data placeholder at the end of the list; do not add
+    # a placeholder if source cat col doesn't have any missing data
+    if MISSING_DATA_STR in temp_output.index:
+        cached = temp_output[temp_output.index == MISSING_DATA_STR]
         temp_output = temp_output.drop(MISSING_DATA_STR)
         temp_output = pd.concat([temp_output, cached])
 
-    #equalise the weights if equal_weights is True, except for Missing data
+    # normalise so the weights sum to 1; an all-zero column stays all zero
+    total = temp_output.sum()
+    temp_output = temp_output / total if total else temp_output * 0
 
-    temp_output = temp_output.transform(_weights_transform, weights=temp_output)
-
+    # equalise real categories only; MISSING keeps its normalised share, so the
+    # column still sums to 1
     if ew:
-        temp_output.iloc[:-1] = round(1 / (temp_output.shape[0] - 1), 3)    
+        real = (temp_output.index != MISSING_DATA_STR)
+        if real.any():
+            miss_weight = temp_output[~real].sum()
+            temp_output[real] = (1 - miss_weight) / real.sum()
 
-    #last item in the list must be Missing data weight for the num_col, 
-    #regardless of whether Missing data is a value in cat_col
-    output = temp_output.to_list()
-
-    return output
+    return temp_output.to_list()
 
 def target_columns_for_weights_table(spec_dict):
     '''
     Helper function to determine which columns should be used
     in the weights table.
-    
+
     Time columns and paired columns are excluded because they
     don't in themselves contribute a different weight depending
     on their value (time values are equal and paired columns have
@@ -169,7 +169,7 @@ def target_columns_for_weights_table(spec_dict):
     ----------
     spec_dict : dict
         original user specification
-    
+
     Returns
     -------
     A set of column names
@@ -199,7 +199,7 @@ def target_columns_for_weights_table(spec_dict):
             # because regex can be very variable, we assume that if anoymising set is not in
             # fixed sets, and doesn't start with SELECT, it's regex and shouldn't have weights
             (anon_set.split(".")[0] not in fixed_sql_sets and
-            anon_set.strip().upper()[:6] != "SELECT") 
+            anon_set.strip().upper()[:6] != "SELECT")
             ):
             cat_cols_set.remove(cat_col)
 
@@ -231,7 +231,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
     #determine the source of the data (table_name and sql_column)
     if anon_set != "random":
-        
+
         table_name, *sql_column = anon_set.split(".")
 
         #if column is part of linked group and set is multi-column
@@ -251,7 +251,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
                         .drop_duplicates()
                 )
             )
-            
+
             #rename columns to match the source
             ws_df.columns = [cat_col]
 
@@ -261,7 +261,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
             )
             #rename columns to match the source
             ws_df.columns = [cat_col]
-        
+
     else:
         #two options:
         #either column is part if a linked group which means
@@ -278,7 +278,7 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
 
                 table_name = f"temp_{table_id}_{linked_group[0]}"
                 sql_column = cat_col.replace(" ", "$")
-                
+
                 ws_df = pd.DataFrame(
                     data=query_exhibit_database(table_name, sql_column)
                 )
@@ -290,26 +290,25 @@ def _generate_weights_dataframe_from_sql(cat_col, spec_dict, num_cols):
             ws_df = pd.DataFrame(
                 data=query_exhibit_database(table_name)
             )
-    
+
     #Finally, generate equal weights for the column and put into weights_df
     for num_col in num_cols:
         ws_df[num_col] = 1 / val_count
-    
+
     return ws_df
 
 def _weights_transform(x, weights):
     '''
-    Transform weights values, including zeroes and NaNs, to 
+    Transform weights values, including zeroes and NaNs, to
     be betweeen 0.001 and 1.
 
     Vectorise this function!
     '''
-    
+
     if x == 0:
         return 0
 
     if np.isnan(x): # pragma: no cover
         return np.nan
-    
+
     return max(0.001, round(x / weights.sum(), 3))
-    

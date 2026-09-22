@@ -262,10 +262,15 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
     cols = set()
 
     for col in spec["metadata"]["categorical_columns"]:
-        cond = (
-            (df[col].nunique() > 1) &
-            (spec["columns"][col]["original_values"] != ORIGINAL_VALUES_PAIRED)
+
+        original_values = spec["columns"][col]["original_values"]
+
+        is_paired_child = (
+            isinstance(original_values, str)
+            and original_values == ORIGINAL_VALUES_PAIRED
         )
+
+        cond = df[col].nunique() > 1 and not is_paired_child
 
         if cond:
             cols.add(col)
@@ -309,7 +314,7 @@ def find_hierarchically_linked_columns(df, spec, user_linked_cols=None):
 
     return linked
 
-def find_pair_linked_columns(df, ignore_cols=None):
+def find_pair_linked_columns(df, ignore_cols=None, dict_output=False):
     '''
     Given a dataframe df, return a list
     of tuples with column names where each value in
@@ -357,7 +362,63 @@ def find_pair_linked_columns(df, ignore_cols=None):
 
                 linked.append([col2, col1])
 
-    return _merge_common_member_tuples(linked)
+    # first element in the group is parent, rest are paired children
+    # [[loc_name, loc_code], [hb_name, hb_code]]
+    pairs = _merge_common_member_tuples(linked)
+
+    # dict_output:
+    # {
+    #   column:
+    #       {"paired_values":
+    #           { child: [child value per parent category] } | None,
+    #       "parent": parent_name | None
+    #       }
+    # }
+    if dict_output is True:
+        dict_pairs = _build_paired_values(df, pairs)
+        return dict_pairs
+
+    return pairs
+
+def _build_paired_values(df, pairs):
+    '''
+    Convert [[parent, child_1, child_2], ...] groups into a per-column lookup:
+
+        {column: {"paired_values": {child: [child value per parent category]} | None,
+                  "parent": parent_name | None}}
+
+    - parent columns:   paired_values is a dict, parent is None
+    - child columns:    paired_values is None,   parent is the parent's name
+    - unpaired columns: both are None
+
+    Lists align by position with the parent's category_names: real categories
+    sorted, plus a trailing MISSING_DATA_STR entry if (and only if) the parent
+    has nulls, which is exactly when from_data puts MISSING in category_names.
+    '''
+    result = {col: {"paired_values": None, "parent": None} for col in df.columns}
+
+    for parent, *children in pairs:
+        if not children:
+            continue
+
+        grouped = df.groupby(parent, observed=True)[children]   # null parents are skipped
+
+        # first() skips nulls, so x wins over NaN within a parent value
+        parent_child_df = grouped.first().reset_index().astype(str)
+        parent_child_df = parent_child_df.sort_values(parent, kind="mergesort")
+
+        paired = {c: parent_child_df[c].tolist() for c in children}
+
+        # the null parent row is last in category_names and carries MISSING in every child
+        if df[parent].isna().any():
+            for values in paired.values():
+                values.append(MISSING_DATA_STR)
+
+        result[parent]["paired_values"] = paired
+        for child in children:
+            result[child]["parent"] = parent
+
+    return result
 
 # INNER MODULE METHODS & CLASSES
 # ==============================

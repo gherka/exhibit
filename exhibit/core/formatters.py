@@ -114,62 +114,58 @@ def build_list_of_values(dataframe, original_series_name, paired_series_name=Non
 
     return padded_values
 
-def build_list_of_probability_vectors(dataframe, original_series_name, ew=False):
+def build_list_of_probability_vectors(series, ew=False):
     '''
-    Feeder function for build_table_from_lists; at least 0.001
+    Feeder function for build_table_from_lists; legacy code had each value
+    floored to a minimum of 0.001 for YAML display purposes - this
+    has now been moved to the dedicated formatting function.
 
     Parameters
     ----------
-    dataframe : pd.DataFrame
-        source dataframe
-    original_series_name : str
-        Name of the column used as reference
+    series : pd.Series
+        source series
     ew: Boolean
-        equal_weight from the CLI parameters
+        equal_weight from the CLI parameters; equalises only real categories;
+        MISSING keeps its observed proportion.
+
+    Returns
+    -------
+    list of probabilities sorted in the same way as of the unique values in the series
+    name
+    '''
+
+    # we need to ensure that the type of the original values is str and that we replace NAs
+    # as they will count in the total number of rows which will skew the probabilities
+    series = series.fillna(MISSING_DATA_STR)
+    counts = series.value_counts()
+
+    vectors = (counts
+            .set_axis(counts.index.astype(str))
+            .sort_index(kind="mergesort",
+                        key=lambda x: x.where(x != MISSING_DATA_STR, "\U0010ffff"))
+            / len(series))
+
+    # equalise real categories only; MISSING keeps its observed rate
+    if ew:
+        is_miss = vectors.index == MISSING_DATA_STR # boolean filtering mask
+        n_real  = int((~is_miss).sum())
+        if n_real:
+            vectors[~is_miss] = (1 - vectors[is_miss].sum()) / n_real
+
+    return vectors.tolist()
+
+def format_list_of_probability_vectors(probas):
+    '''
+    Doc string
 
     Returns
     -------
     probability_vector formatted into a list of padded strings
-
     '''
 
     HEADER = "probability_vector"
 
-    original_series = dataframe[original_series_name]
-
-    total_count = len(original_series)
-
-    # we need to ensure that the type of the original values is str, not mixed (object)
-    # after we've filled the NAs because otherwise NAs become 'nan' and are not handled right
-    temp_vectors_value_counts = (original_series
-                    .fillna(MISSING_DATA_STR)
-                    .value_counts())
-
-    temp_vectors = (temp_vectors_value_counts
-                    .set_axis(temp_vectors_value_counts.index.astype(str))
-                    .sort_index(kind="mergesort")
-                    .apply(lambda x: 0 if x == 0 else max(0.001, x / total_count)))
-
-    if MISSING_DATA_STR not in temp_vectors:
-        temp_vectors = pd.concat([temp_vectors, pd.Series(
-            index=[MISSING_DATA_STR],
-            data=0
-        )])
-    #pop and reinsert missing data placeholder at the end of the list
-    else:
-        cached = temp_vectors[temp_vectors.index.str.contains(MISSING_DATA_STR)]
-        temp_vectors = temp_vectors.drop(MISSING_DATA_STR)
-        temp_vectors = pd.concat([temp_vectors, cached])
-
-    #equalise the probability vectors if equal_weights is True, except Missing data
-    if ew:
-        temp_vectors.iloc[:-1] = 1 / (temp_vectors.shape[0] - 1)
-
-    vectors = temp_vectors.values.tolist()
-
-    string_vectors = [f"{x:.3f}".ljust(len(HEADER)) for x in vectors]
-
-    return string_vectors
+    return [f"{x:.3f}".ljust(len(HEADER)) for x in probas]
 
 def build_list_of_column_weights(weights):
     '''
@@ -353,6 +349,24 @@ def build_list_of_uuid_frequencies(df, target_col):
     result = header + freq_list
 
     return result
+
+def format_uuid_frequency_distribution(freq_df):
+    '''
+    Formats a frequency distribution (as produced by
+    calculate_uuid_frequency_distribution) into a list of strings suitable for
+    YAML rendering: a header row followed by "frequency | probability" rows.
+    Padding is automatically adjusted by ljust even if the frequency goes
+    into double digits.
+    '''
+    header = ["frequency | probability_vector"]
+
+    freq_list = (
+        freq_df["frequency"].astype(str).str.ljust(9)
+        .str.cat(freq_df["pct"].transform(lambda x: f"{x:.3f}"), sep=" | ")
+        .tolist()
+    )
+
+    return header + freq_list
 
 def format_df_for_export(df):
     '''
