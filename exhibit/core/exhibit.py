@@ -18,7 +18,7 @@ import pandas as pd
 from exhibit.core.constants import MISSING_DATA_STR
 
 # Exhibit imports
-from .spec import Spec
+from .spec import ExhibitSpec
 from .formatters import parse_original_values, format_df_for_export
 from .validator import newValidator
 from .constraints import ConstraintHandler
@@ -44,7 +44,7 @@ from .sql import query_exhibit_database
 class Exhibit:
     '''
     The main class encapsulating the demonstrator
-    
+
     Parameters
     ----------
     command        : str
@@ -54,7 +54,7 @@ class Exhibit:
         can also accept a Pandas DataFrame directly. Required.
     output         : str
         filename of the final output. Normally, optional but if using a DataFrame
-        as source, then required. 
+        as source, then required.
         Can take two special values: "dataframe" and "specification".
         If used with "fromspec", "dataframe" will return the demonstrator dataframe
         rather than write it to a .csv.
@@ -93,7 +93,7 @@ class Exhibit:
     def __init__(
         self, command, source, output=None,
         inline_limit=30, equal_weights=False,
-        skip_columns=None, linked_columns=None, 
+        skip_columns=None, linked_columns=None,
         uuid_columns=None, discrete_columns=None,
         save_probabilities=None, derived_columns_first=False,
         verbose=False):
@@ -104,7 +104,7 @@ class Exhibit:
         # Basic error checking on the arguments
         if linked_columns is not None and len(linked_columns) < 2:
             raise RuntimeError("Please provide at least two linked columns")
-        
+
         self.command = command
         self.source = source
         self.output = output
@@ -121,7 +121,7 @@ class Exhibit:
         self.spec_dict = None
         self.df = None
         self.anon_df = None
-        
+
         #Default verbosity is set in the boostrap.py to 0
         if self.verbose:
             sys.tracebacklimit = 1000
@@ -152,19 +152,21 @@ class Exhibit:
 
         if self.df is not None:
 
-            new_spec = Spec(
+            new_spec = ExhibitSpec.from_data(
                 data=self.df,
                 inline_limit=self.inline_limit,
                 ew=self.equal_weights,
                 user_linked_cols=self.linked_columns,
                 uuid_cols=self.uuid_columns,
                 save_probabilities=self.save_probabilities
-                )
 
-            self.spec_dict = new_spec.generate()
+            )
+
+            spec_dict = new_spec.to_dict()
+            self.spec_dict = spec_dict
 
         return self
-            
+
     def write_spec(self, spec_yaml=None):
         '''
         Write the YAML string generated from the spec_dict attribute
@@ -181,7 +183,7 @@ class Exhibit:
 
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(spec_yaml)
-        
+
         print("Exhibit ready to view")
 
     def read_spec(self):
@@ -190,10 +192,10 @@ class Exhibit:
 
         Categorical columns have an "original_values" attribute set
         to be a string that can either contain original column values
-        formatted in a csv-like table or a plain string indicating 
+        formatted in a csv-like table or a plain string indicating
         how the original values were processed (either as Paired columns
         or stored away in a temporary table in the exhibit database).
-        
+
         If original values are a csv-like table, parse it early
         so that we can amend the dataframe in-place when using
         anonymised values from exhibit db in the generation process.
@@ -230,7 +232,7 @@ class Exhibit:
         for col in self.spec_dict["metadata"]["categorical_columns"]:
 
             original_values = self.spec_dict["columns"][col]["original_values"]
-    
+
             parsed_values = parse_original_values(original_values)
 
             self.spec_dict["columns"][col]["original_values"] = parsed_values
@@ -241,9 +243,9 @@ class Exhibit:
         '''
         Users can (and are encouraged to) alter the spec to suit their requirements
         which can potentially lead to unexpected formatting and parsing errors.
-        
-        To avoid this, the newValidator class contains methods that check the 
-        integrity of the specification. 
+
+        To avoid this, the newValidator class contains methods that check the
+        integrity of the specification.
 
         If validation passes, update the specification with the validated one and
         return True, else return False with earlier helpful messages from validator.
@@ -309,7 +311,7 @@ class Exhibit:
         self.spec_dict["weights_table_target_cols"] = target_cols
 
         for num_col in self.spec_dict["metadata"]["numerical_columns"]:
-            
+
             # skip derived columns; they need main columns (inc. nulls) generated first
             if num_col in (self.spec_dict.get("derived_columns", {}) or {}):
                 continue
@@ -333,7 +335,7 @@ class Exhibit:
             geo_action_targets = []
             custom_constraints = self.spec_dict["constraints"].get(
                 "custom_constraints", None)
-            
+
             if custom_constraints:
                 for _, cc in custom_constraints.items():
                     cc_targets = cc["targets"]
@@ -342,7 +344,7 @@ class Exhibit:
                             geo_action_targets.extend(
                                 [x.strip() for x in target_str.split(",")]
                             )
-            
+
             if col in geo_action_targets:
                 # add float placeholders to avoid errors when generating missing data
                 geo_cols = [f"{col}_latitude", f"{col}_longitude"]
@@ -365,10 +367,10 @@ class Exhibit:
                 h3_probs = (prob_col / prob_col.sum()).values.ravel()
 
             geo_df = generate_geospatial_column(col, h3_ids, h3_probs, num_rows, rng)
-            # due to rounding, the number of rows in anon_df can be smaller than 
+            # due to rounding, the number of rows in anon_df can be smaller than
             # the number_of_rows specified in the metadata
             anon_df = pd.concat([anon_df, geo_df.iloc[:anon_df.shape[0], :]], axis=1)
-        
+
         # Missing data can only be added after all categorical columns
         # and all continous columns have been generated. This is because
         # a categorical column might have a conditional constraint depending
@@ -401,7 +403,7 @@ class Exhibit:
         cat_cols_set = set(cat_cols)
 
         if (ccs:=self.spec_dict["constraints"]["custom_constraints"]):
-            
+
             for _, cc in ccs.items():
                 for targets_string in cc["targets"].keys():
                     constraint_targets.extend(
@@ -413,14 +415,14 @@ class Exhibit:
             # fill NAs with a placeholder - so that correct weights could be used
             anon_df.loc[:, cat_cols] = (
                 anon_df.loc[:, cat_cols].fillna(MISSING_DATA_STR))
-            
+
             # we don't want to re-create continuous columns that were subject of a cc
             num_cols = (
                 set(self.spec_dict["metadata"]["numerical_columns"]) -
                 set(constraint_targets)
             )
             for num_col in num_cols:
-                
+
                 # derived columns won't have weight so typically we ignore them, however
                 # at the end of this stage, we need to revisit those derived columns that
                 # reference re-generated columns in their definition because that might
@@ -443,7 +445,7 @@ class Exhibit:
                 for num_col in num_cols:
                     if num_col in derived_def:
                         anon_df[derived_col] = generate_derived_column(anon_df, derived_def)
-                        break             
+                        break
             # change the missing data placeholder back to NAs
             anon_df.loc[:, cat_cols] = anon_df.loc[:, cat_cols].map(
             lambda x: np.nan if x == MISSING_DATA_STR else x)
@@ -457,7 +459,7 @@ class Exhibit:
         #9) CHECK IF DUPLICATES ARE OK
         # only consider categorical columns (+uuid) for potential duplicates
         if not self.spec_dict["constraints"]["allow_duplicates"]:
-            
+
             num_cols = self.spec_dict["metadata"]["numerical_columns"]
             dup_cols = [x for x in anon_df.columns if x not in num_cols]
 
@@ -478,7 +480,7 @@ class Exhibit:
 
                 # apply the model to the anon_df
                 anon_df = model.apply_model(anon_df, **params)
-            
+
         #11) SAVE THE GENERATED DATASET AS CLASS ATTRIBUTE FOR EXPORT
         self.anon_df = anon_df
 
@@ -519,7 +521,7 @@ class Exhibit:
             self.read_spec()
             if self.validate_spec():
                 self.execute_spec()
-                
+
                 # special case for when user wants to edit demo data before saving it
                 if self.output == "dataframe": #pragma: no cover
                     return self.anon_df
@@ -529,7 +531,7 @@ class Exhibit:
 
         raise RuntimeError( #pragma: no cover
             "Generation command not recognized. Please initialise Exhibit "
-            "with a valid command.") 
+            "with a valid command.")
 
 class Specification(UserDict): #pragma: no cover
     '''
@@ -544,7 +546,7 @@ class Specification(UserDict): #pragma: no cover
 
         Parameters:
           path : str
-            Valid path where the YAML specification should be saved    
+            Valid path where the YAML specification should be saved
         '''
 
         spec_yaml = generate_YAML_string(self.data)

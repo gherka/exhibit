@@ -234,7 +234,7 @@ class BaseMapping(MutableMapping):
             )
         super().update(other, **kwargs)
 
-    def export(self):
+    def to_dict(self):
         '''
         Plain-dict rendering for serialisation (YAML/JSON). Defaults to a
         shallow copy of the mapping; subclasses override when the exported
@@ -350,24 +350,27 @@ class ExhibitSpec(SectionMapping):
         '''
         self.columns._add(column)
 
-    def export(self):
+    def to_dict(self):
         '''
         Render the spec as plain built-in types (nested dicts/lists), suitable
         for serialising to YAML/JSON. Delegates to exporting methods where possible.
 
-        Each section is converted independently, based on its export() method if available.
+        Each section is converted independently, based on its to_dict() method if available.
 
         Note: exporting may write to the Exhibit internal database (see
-        CategoricalColumn.export), so this is not a pure read.
+        CategoricalColumn.to_dict), so this is not a pure read.
         '''
-        return {
-            "metadata"        : self.metadata.export(),
-            "columns"         : {name: col.export() for name, col in self.columns.items()},
+        out = {
+            "metadata"        : self.metadata.to_dict(),
+            "columns"         : {name: col.to_dict() for name, col in self.columns.items()},
             "linked_columns"  : list(self.linked_columns),
             "derived_columns" : dict(self.derived_columns),
-            "constraints"     : self.constraints.export(),
+            "constraints"     : self.constraints.to_dict(),
             "models"          : dict(self.models),
         }
+
+        # make sure the materialised spec is detached from the ExhibitSpec object
+        return copy.deepcopy(out)
 
     @classmethod
     def from_data(cls, data, uuid_cols=(), ew=False, **kwargs):
@@ -388,12 +391,14 @@ class ExhibitSpec(SectionMapping):
         espec = cls()
 
         # optional CLI parameters
+        inline_limit     = kwargs.get("inline_limit", 30)
         user_linked_cols = kwargs.get("user_linked_cols", set())
         db_prob_cols     = kwargs.get("save_probabilities", set())
         id               = kwargs.get("id", generate_table_id())
 
         # populate metadata
         espec.metadata["number_of_rows"] = len(df)
+        espec.metadata["inline_limit"]   = inline_limit
 
         # first thing we do is handle uuid columns; if any of the
         # uuid columns are from the DF, we need to drop them after
@@ -1013,10 +1018,16 @@ class BaseColumn(BaseMapping, metaclass=_FreezeAfterInit):
         if type(self) is BaseColumn:
             raise TypeError("BaseColumn cannot be instantiated directly")
 
+        # run the parent init
+        super().__init__()
+
         # columns will be attached to ExhibitSpec on assignment to ColumnRegistry which
         # itself must hold a reference to an instance of ExhibitSpec.
         self._espec = None
-        super().__init__()
+
+        # set the type; subclass sets the concrete type, but all columns require it in the
+        # exported list of attributes so this way we make sure all column subclasses have it
+        self._attrs["type"] = self._type
 
     # a simple check to disallow renaming of the attached column to guard against subtle bugs
     # like when the same instance of a column is added multiple times to the spec under
@@ -1627,7 +1638,7 @@ class CategoricalColumn(BaseColumn):
 
         return cls(**final_params)
 
-    def export(self):
+    def to_dict(self):
         '''
         Overrite the default export of converting the Column object to a plain dict by adding
         an option to stash original_values into DB table if it's too large to be rendered in YAML
