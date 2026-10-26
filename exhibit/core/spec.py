@@ -87,7 +87,7 @@ class ColumnType(StrEnum):
 
     UUID        = "uuid"
     CATEGORICAL = "categorical"
-    NUMERICAL   = "numerical"
+    NUMERICAL   = "continuous" #TODO normalise across the codebase
     DATE        = "date"
     GEOSPATIAL  = "geospatial"
 
@@ -363,9 +363,9 @@ class ExhibitSpec(SectionMapping):
         out = {
             "metadata"        : self.metadata.to_dict(),
             "columns"         : {name: col.to_dict() for name, col in self.columns.items()},
+            "constraints"     : self.constraints.to_dict(),
             "linked_columns"  : list(self.linked_columns),
             "derived_columns" : dict(self.derived_columns),
-            "constraints"     : self.constraints.to_dict(),
             "models"          : dict(self.models),
         }
 
@@ -399,6 +399,7 @@ class ExhibitSpec(SectionMapping):
         # populate metadata
         espec.metadata["number_of_rows"] = len(df)
         espec.metadata["inline_limit"]   = inline_limit
+        espec.metadata["id"]             = id
 
         # first thing we do is handle uuid columns; if any of the
         # uuid columns are from the DF, we need to drop them after
@@ -1027,7 +1028,7 @@ class BaseColumn(BaseMapping, metaclass=_FreezeAfterInit):
 
         # set the type; subclass sets the concrete type, but all columns require it in the
         # exported list of attributes so this way we make sure all column subclasses have it
-        self._attrs["type"] = self._type
+        self._attrs["type"] = self._type.value
 
     # a simple check to disallow renaming of the attached column to guard against subtle bugs
     # like when the same instance of a column is added multiple times to the spec under
@@ -1897,8 +1898,8 @@ class DateColumn(BaseColumn):
         # canonical names that user sees in YAML spec / UI
         # exactly what is exported and how depends on the exporting method
         self["name"]                         = name
-        self["from_date"]                    = from_date
-        self["to_date"]                      = to_date
+        self["from"]                         = from_date
+        self["to"]                           = to_date
         self["uniques"]                      = uniques
         self["frequency"]                    = freq
         self["cross_join_all_unique_values"] = cross_join
