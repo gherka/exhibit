@@ -10,18 +10,25 @@ import yaml
 from yaml.representer import SafeRepresenter
 
 # Exhibit imports
-from exhibit.core.spec import (
-    UUIDColumn, CategoricalColumn, NumericalColumn, DateColumn)
 from exhibit.core.formatters import FormattedList
+
+# order of the sections in the YAML file
+SECTION_ORDER = (
+    "metadata",
+    "columns",
+    "constraints",
+    "linked_columns",
+    "derived_columns",
+    "models",
+)
 
 # EXPORTABLE METHODS
 # ==================
 class ExhibitDumper(yaml.SafeDumper):
     '''
-    Columns are subclassed dictionaries, but YAML's safe_dump will not recognize
-    them as such unless you add a specific representer for each "special" class.
+    SafeDumper only knows how to represent built-in types; FormattedList (a list
+    subclass used to mark csv-like tables) needs its own representer.
     '''
-
 
 def generate_YAML_string(spec_dict):
     '''
@@ -31,7 +38,7 @@ def generate_YAML_string(spec_dict):
     ---------
     spec_dict : dict
         complete specification of the source dataframe
-    
+
     Returns
     -------
     YAML-formatted string
@@ -39,16 +46,13 @@ def generate_YAML_string(spec_dict):
     We overwrite ignore_aliases() to output identical dictionaries
     and not have them replaced by aliases like *id001
     '''
-    
+
     yaml.SafeDumper.ignore_aliases = lambda *args: True
+
     # register custom classes so that YAML knows how to represent them
-    ExhibitDumper.add_representer(UUIDColumn, SafeRepresenter.represent_dict)
-    ExhibitDumper.add_representer(CategoricalColumn, SafeRepresenter.represent_dict)
-    ExhibitDumper.add_representer(NumericalColumn, SafeRepresenter.represent_dict)
-    ExhibitDumper.add_representer(DateColumn, SafeRepresenter.represent_dict)
     ExhibitDumper.add_representer(FormattedList, SafeRepresenter.represent_list)
 
-    yaml_list = [{key:value} for key, value in spec_dict.items()]
+    yaml_list = [{key: spec_dict[key]} for key in SECTION_ORDER]
 
     c1 = textwrap.dedent("""\
     # ----------------------------------------------------------
@@ -71,14 +75,14 @@ def generate_YAML_string(spec_dict):
     # COLUMN DETAILS
     # ==============
     #
-    # Dataset columns are categorised into one of the three types: 
+    # Dataset columns are categorised into one of the three types:
     # Categorical | Continuous | Date
     #
     # Column type determines what parameters are included in the
     # specification. When making changes to the values, please
     # note their format. Values starting with a number must be
     # enclosed in quotes as per YAML rules.
-    # 
+    #
     # CATEGORICAL COLUMNS
     # -----------
     # The default anonymising method for categorical columns is
@@ -90,8 +94,8 @@ def generate_YAML_string(spec_dict):
     # The tool comes with a number of sample anonymising sets
     # (see documentation). To use just one column from a set,
     # add a dot separator like so mountains.range
-    # 
-    # You can also use a subset of regular expression patterns 
+    #
+    # You can also use a subset of regular expression patterns
     # to generate aliasing values in non-linked columns. For example,
     # if your confidential data had Consultant GMC numbers, you can
     # anonymise them using a regex pattern GMC[0-9]{5}[XY] which
@@ -114,7 +118,7 @@ def generate_YAML_string(spec_dict):
     # The format of a UUID column in the specification is as follows. Note
     # that there is an optional "uuid_seed" parameter for cases when you want
     # to have differently seeded uuids in the same spec.
-    # 
+    #
     # record_chi:
     #  type: uuid
     #  frequency_distribution:
@@ -140,7 +144,7 @@ def generate_YAML_string(spec_dict):
     # Currently, only continuous data is supported. To use numerical
     # columns with discrete data, covert them to categorical or make
     # sure that the precision parameter is set to integer.
-    # 
+    #
     # To generate Continuous columns you have two distribution options:
     #
     # - weighted_uniform
@@ -151,16 +155,16 @@ def generate_YAML_string(spec_dict):
     # within the dispersion percentage. With dispersion set to zero,
     # you can generate identical values for any given combination of
     # categorical values on the row.
-    # 
+    #
     # A normal distribution will respect categorical weights by
     # shifting the mean accordingly. If dispersion is greater than
-    # zero, the value before scaling is perturbed within the 
+    # zero, the value before scaling is perturbed within the
     # dispersion percentage.
-    # 
+    #
     # You can also control how values are scaled by setting the
     # distribution target parameters. You must include at least one of
     # target_min, target_max, target_sum, target_mean or target_std.
-    #  
+    #
     # Note that if you include certain constraints, like ensuring values
     # in one column are always greater than values in another column,
     # the final scaling of the column being adjusted will be affected.
@@ -172,7 +176,7 @@ def generate_YAML_string(spec_dict):
     if first_num_col:
         num_col_in = yaml_columns_all.find(f"  {first_num_col}:\n    type: continuous")
         yaml_columns_all = (
-            yaml_columns_all[:num_col_in] + c2b + 
+            yaml_columns_all[:num_col_in] + c2b +
             yaml_columns_all[num_col_in:]
         )
 
@@ -188,7 +192,7 @@ def generate_YAML_string(spec_dict):
     #   from: 'yyyy-mm-dd'
     #   uniques: 4
     #   frequency: QS
-    # 
+    #
     # Frequency is based on the frequency strings of DateOffsets.
     # See Pandas documentation for more details. Times are not supported.
     # ----------------------------------------------------------
@@ -199,7 +203,7 @@ def generate_YAML_string(spec_dict):
     # ----------
     #
     # Geospatial columns are special in that they are not inferred
-    # from source data and can only be added manually. The format 
+    # from source data and can only be added manually. The format
     # of each column is as follows:
     #
     # clinic_coords:
@@ -211,8 +215,8 @@ def generate_YAML_string(spec_dict):
     # h3_table refers to H3 hexagon IDs stored in the exhibit DB. exhibit
     # doesn't come with any geospatial lookups by default, but there
     # is a recipe explaining how to create one. The format of the table
-    # is that it has to have a column named "h3" with h3 ids. 
-    # 
+    # is that it has to have a column named "h3" with h3 ids.
+    #
     # For distribution, you can either pick uniform to sample points
     # from all hexagons at random or use column weights in the h3_table,
     # like population counts.
@@ -237,7 +241,7 @@ def generate_YAML_string(spec_dict):
     # There are two types of constraints you can impose of the data:
     # - basic
     # - custom
-    # 
+    #
     # Basic constraints take the form of a simple statement of the
     # form [dependent_column] [operator] [expression / independent_column].
     # The tool will try to guess these relationships when creating a
@@ -270,12 +274,12 @@ def generate_YAML_string(spec_dict):
     # - "assign_value"
     #
     # assign_value can take an argument separated by $ (assign_value$hello_world)
-    # which will override the synthesised value in the filter selection.                   
+    # which will override the synthesised value in the filter selection.
     #
-    # Adding or banning nulls is useful when a value in one column, 
+    # Adding or banning nulls is useful when a value in one column,
     # like Readmissions Within 28 days, necessitates a valid value in
     # another, like Readmissions Within 7 days.
-    # 
+    #
     # The format for custom constraints is as follows:
     #
     # demo_constraint_name:
@@ -286,7 +290,7 @@ def generate_YAML_string(spec_dict):
     #
     # Custom constraints can target multiple columns, but each column can
     # appear only once in each custom constraint.
-    # 
+    #
     # Expressions used in the filter must be understood by Pandas eval().
     # Additionally, you can use these custom filters:
     #
@@ -295,7 +299,7 @@ def generate_YAML_string(spec_dict):
     #
     # If a column name has spaces, make sure to surround it with
     # the tilde character ~. This rule only applies when columns are used
-    # in basic constraints or filters. Targets for custom constraints must 
+    # in basic constraints or filters. Targets for custom constraints must
     # use column names as they are. When comparing a date column against a
     # fixed date, make sure it's in an ISO format and is enclosed in
     # single quotation marks like so '2018-12-01'.
@@ -318,7 +322,7 @@ def generate_YAML_string(spec_dict):
     # relationship. User defined linked columns are always put under the
     # zero indexed group.
     #
-    # Groups of hierarchically linked columns are listed together under the 
+    # Groups of hierarchically linked columns are listed together under the
     # index starting from 1. Their details are saved in the exhibit database.
     #
     # The specification format is as follows:
@@ -327,9 +331,9 @@ def generate_YAML_string(spec_dict):
     #   - - Child column
     # - - 2
     #   - - ...etc.
-    # It's possible to add a linked columns group manually by adding 
+    # It's possible to add a linked columns group manually by adding
     # a table to the exhibit databse with the hierarchical relationships.
-    # The name of this table must follow the format: id_N  where id is 
+    # The name of this table must follow the format: id_N  where id is
     # taken from the metadata section and N is the group number.
     # ----------------------------------------------------------
     """)
@@ -346,7 +350,7 @@ def generate_YAML_string(spec_dict):
     # of the dataset has been generated.
     #
     # The calculation should be in a format that Pandas' eval()
-    # method can parse and understand. 
+    # method can parse and understand.
     #
     # For example, assuming you have Numerator column A and
     # Denominator column B, you would write Rate: (A / B)
@@ -363,17 +367,17 @@ def generate_YAML_string(spec_dict):
     # ----------------------------------------------------------
     # MODELS
     # ===============
-    # 
+    #
     # You can generate columns in your dataset using custom machine
     # learning models, using the synthetic dataset generated so far
     # as input. Follow the tutorial in the recipes folder to create
     # your model and save it in the models folder. The specification
     # format is as follows:
-    # 
+    #
     # models:
     #   model_name (without .pickle extension):
     #     hyperparameter_name: hyperparameter_value
-    # 
+    #
     # You can chain models one after another - they are called in the
     # same order as they appear in the specification. Make sure that
     # the same libraries used in creating the model are available in

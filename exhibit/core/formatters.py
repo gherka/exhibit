@@ -147,7 +147,9 @@ def format_uuid_frequency_distribution(freq_df):
         .tolist()
     )
 
-    return header + freq_list
+    out = header + freq_list
+
+    return FormattedList(out)
 
 def format_original_values(df):
     '''

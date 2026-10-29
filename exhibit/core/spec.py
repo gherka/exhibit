@@ -40,6 +40,10 @@ from .linkage.hierarchical import (
 
 from .linkage.matrix import save_predefined_linked_cols_to_db
 
+from .formatters import format_original_values, format_uuid_frequency_distribution
+
+from .generate.yaml import generate_YAML_string
+
 def with_key_properties(cls):
     '''
     Class decorator: adds a property for every name in cls._ALLOWED_KEYS,
@@ -367,6 +371,38 @@ class ExhibitSpec(SectionMapping):
 
         # make sure the materialised spec is detached from the ExhibitSpec object
         return copy.deepcopy(out)
+
+    def to_yaml(self):
+        '''
+        Prepare ExhibitSpec for exporting as YAML string.
+        '''
+
+        # start with a dictionary and apply formatting / changes that are specific to YAML format
+        yaml_dict = self.to_dict()
+
+        # to_dict() returns a deep copy detached from the spec so it's safe to modify in place
+        for col_attrs in yaml_dict["columns"].values():
+
+            # categorical columns: DataFrame -> csv-like list of padded strings.
+            # Marker strings (DB table, parent column) are left as they are.
+            original_values = col_attrs.get("original_values")
+            if isinstance(original_values, pd.DataFrame):
+                col_attrs["original_values"] = format_original_values(original_values)
+
+            # UUID columns
+            freq_dist = col_attrs.get("frequency_distribution")
+            if isinstance(freq_dist, pd.DataFrame):
+                col_attrs["frequency_distribution"] = format_uuid_frequency_distribution(freq_dist)
+
+            # Treat standalone miss_probability the same way
+            # as in the string version of original_values
+            miss_proba = col_attrs.get("miss_probability")
+            col_attrs["miss_probability"] = float(
+                0 if miss_proba == 0 else max(0.001, round(miss_proba, 3)))
+
+        out = generate_YAML_string(yaml_dict)
+
+        return out
 
     @classmethod
     def from_data(cls, data, uuid_cols=(), ew=False, **kwargs):
