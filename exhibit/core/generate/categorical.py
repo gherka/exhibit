@@ -139,8 +139,8 @@ class CategoricalDataGenerator:
         '''
 
         # see which date parameters we have access to
-        start = self.spec_dict["columns"][col_name].get("from", None)
-        end = self.spec_dict["columns"][col_name].get("to", None)
+        start = self.spec_dict["columns"][col_name].get("from_date", None)
+        end = self.spec_dict["columns"][col_name].get("to_date", None)
 
         # frequency and periods are always required
         freq = self.spec_dict["columns"][col_name]["frequency"]

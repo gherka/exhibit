@@ -3,7 +3,6 @@ A collection of converters to help with outputting
 and reading back user specification
 '''
 # Standard library imports
-from collections import Counter
 from itertools import zip_longest
 
 # External library imports
@@ -56,107 +55,24 @@ def format_header(dataframe, series_name, prefix=None):
 
     return series_name.ljust(longest)
 
-def build_list_of_values(dataframe, original_series_name, paired_series_name=None):
+def _floor_for_display(x):
     '''
-    Feeder function for build_table_from_lists
-
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        source dataframe
-    original_series_name : str
-        Name of the column used as reference
-        when using together with paired_series
-        or the column whose values to format if
-        used without paired_series_name argument
-    paired_series_name : str
-        Name of the paired series
-
-    Returns
-    -------
-    If paired_series_name is given, returns paired Series values
-    formatted into a list of padded strings, otherwise returns
-    formatted values from the original series
+    Values are shown to 3 decimal places so anything below 0.001 would be displayed as
+    0.000 and, once read back, never be picked during generation. To avoid it, non-zero
+    values are floored at 0.001. Zero stays zero so that, for example, an unused MISSING
+    row remains unused.
     '''
 
-    #sort paired_series based on the original
-    if paired_series_name:
-
-        working_list = (dataframe[[original_series_name, paired_series_name]]
-            .dropna()
-            .astype(str)
-            .sort_values(by=original_series_name, kind="mergesort")
-            [paired_series_name]
-            .unique()
-            .tolist()
-        )
-
-        working_name = f"paired_{paired_series_name}"
-
-    else:
-
-        working_list = (dataframe[original_series_name]
-            .dropna()
-            .astype(str)
-            .sort_values(kind="mergesort")
-            .unique()
-            .tolist()
-        )
-
-        working_name = original_series_name
-
-    #appending to a list is in place and returns None
-    working_list.append(MISSING_DATA_STR)
-
-    longest = max(len(working_name), len(max(working_list, key=len)))
-
-    padded_values = [x.ljust(longest) for x in working_list]
-
-    return padded_values
-
-def build_list_of_probability_vectors(series, ew=False):
-    '''
-    Feeder function for build_table_from_lists; legacy code had each value
-    floored to a minimum of 0.001 for YAML display purposes - this
-    has now been moved to the dedicated formatting function.
-
-    Parameters
-    ----------
-    series : pd.Series
-        source series
-    ew: Boolean
-        equal_weight from the CLI parameters; equalises only real categories;
-        MISSING keeps its observed proportion.
-
-    Returns
-    -------
-    list of probabilities sorted in the same way as of the unique values in the series
-    name
-    '''
-
-    # we need to ensure that the type of the original values is str and that we replace NAs
-    # as they will count in the total number of rows which will skew the probabilities
-    series = series.fillna(MISSING_DATA_STR)
-    counts = series.value_counts()
-
-    vectors = (counts
-            .set_axis(counts.index.astype(str))
-            .sort_index(kind="mergesort",
-                        key=lambda x: x.where(x != MISSING_DATA_STR, "\U0010ffff"))
-            / len(series))
-
-    # equalise real categories only; MISSING keeps its observed rate
-    if ew:
-        is_miss = vectors.index == MISSING_DATA_STR # boolean filtering mask
-        n_real  = int((~is_miss).sum())
-        if n_real:
-            vectors[~is_miss] = (1 - vectors[is_miss].sum()) / n_real
-
-    return vectors.tolist()
+    return 0 if x == 0 else max(0.001, x)
 
 def format_list_of_probability_vectors(probas):
     '''
-    Doc string
+    Format probabilities for display in the YAML table; see _floor_for_display.
+
+    Parameters
+    ----------
+    probas : iterable of float
+        raw probabilities, as stored in the probability_vector column
 
     Returns
     -------
@@ -165,110 +81,9 @@ def format_list_of_probability_vectors(probas):
 
     HEADER = "probability_vector"
 
-    return [f"{x:.3f}".ljust(len(HEADER)) for x in probas]
-
-def build_list_of_column_weights(weights):
-    '''
-    Feeder function for build_table_from_lists
-
-    Parameters
-    ----------
-    weights : dictionary
-        Expects {column_name : list_of_weights}
-
-    Note that PyYAML will add single quotes around strings that have a trailing
-    space at the end so we need to apply rstrip() function
-
-    Returns
-    -------
-    weights formatted into a list of padded strings
-    '''
-
-    sorted_temp = []
-
-    for key in sorted(weights):
-
-        padded_key = [f"{x:.3f}".ljust(len(key)) for x in weights[key]]
-        sorted_temp.append(padded_key)
-
-    sorted_final = [" | ".join(y for y in x).rstrip() for x in zip(*sorted_temp)]
-
-    return sorted_final
-
-def build_table_from_lists(
-    dataframe, numerical_cols, weights, ew,
-    original_series_name, paired_series_names):
-    '''
-    Format information about a column (its values, its
-    paired values from paired columns, values' weights
-    for each numerical column, probability vectors) into
-    a csv-like table with padding.
-
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        Required downstream
-    numerical_cols : iterable
-        Numerical column names required for max length / padding checking
-    weights : dictionary
-        Required downstream. Key is numerical column, values are a list
-    ew : Boolean
-        If set to True, generate equal weights and probabilities
-    original_series_name : pd.Series
-        Values from base, reference column. Required downstream
-    paired_series_names : iterable
-        Expects a list of [paired_col_name1, paired_col_name2...]
-        or an empty list
-
-    Returns
-    -------
-    FormattedList instance
-    '''
-    #generate first column, minus the header  (original values)
-    c1 = build_list_of_values(dataframe, original_series_name)
-    #generate a list of of paired columns
-    pairs = [
-        build_list_of_values(dataframe, original_series_name, paired_name)
-        for paired_name in paired_series_names
-        ]
-    #generate a list of probabilities for the original column
-    p = build_list_of_probability_vectors(dataframe, original_series_name, ew=ew)
-    #generate a list of value weights for each numerical column
-    w = build_list_of_column_weights(weights)
-
-    #create padded header list
-    paired_series_header = [
-        format_header(dataframe, name, "paired_") for name in paired_series_names]
-
-    header_cols = (
-        [format_header(dataframe, original_series_name)] +
-        paired_series_header +
-        ["probability_vector"] +
-        #5 is a "magic" number that's reflecting the precision of the numbers and
-        #the amount of space they're taking (5 at max) in a column
-        [x.ljust(5) for x in sorted(numerical_cols)]
-    )
-
-    header = [" | ".join(header_cols) + " |".rstrip()]
-    row_cols = []
-
-    # 3 is another "magic number" to get the alignment of the last | separator right
-    for x in zip_longest(c1, *pairs, p, w):
-
-        if numerical_cols:
-            last_num_col_len = len(list(sorted(numerical_cols))[-1]) - 3
-        # none of the test datasets have only categorical columns (for now)
-        else: # pragma: no cover
-            last_num_col_len = 0
-
-        row_cols.append(
-            " | ".join(filter(None, x)) +
-            " |".rjust(last_num_col_len)
-        )
-
-    final = header + row_cols
-
-    return FormattedList(final)
+    return [
+        f"{_floor_for_display(x):.3f}".ljust(len(HEADER)) for x in probas
+    ]
 
 def parse_original_values(original_values):
     '''
@@ -316,44 +131,10 @@ def parse_original_values(original_values):
 
     return original_values
 
-def build_list_of_uuid_frequencies(df, target_col):
-    '''
-    Similar to how we build original_values string, here we are composing
-    a list with a header row and then rows of frequencies and their probability
-    of occuring. Thus, for example "ABCDEE" has frequencies of 1 and 2 so the
-    generated uuids will have 0.8 probability to never repeat and 0.2 probability
-    to be repeated once. Padding is automatically adjusted by ljust even if the
-    frequency goes into double-digits.
-    '''
-
-    header = ["frequency | probability_vector"]
-
-    if target_col not in df.columns:
-        return header
-
-    counts = Counter(df[target_col].value_counts())
-
-    freq_df = pd.DataFrame(
-        list(counts.items()),
-        columns=["frequency", "count"]
-    ).sort_values("frequency")
-
-    freq_df.loc[:, "pct"] = freq_df["count"] / freq_df["count"].sum()
-
-    freq_list = (
-        freq_df["frequency"].astype(str).str.ljust(9)
-        .str.cat(freq_df["pct"].transform(lambda x: f"{x:.3f}"), sep=" | ")
-        .tolist()
-    )
-
-    result = header + freq_list
-
-    return result
-
 def format_uuid_frequency_distribution(freq_df):
     '''
     Formats a frequency distribution (as produced by
-    calculate_uuid_frequency_distribution) into a list of strings suitable for
+    UUIDColumn.calculate_frequency_distribution) into a list of strings suitable for
     YAML rendering: a header row followed by "frequency | probability" rows.
     Padding is automatically adjusted by ljust even if the frequency goes
     into double digits.
@@ -362,11 +143,64 @@ def format_uuid_frequency_distribution(freq_df):
 
     freq_list = (
         freq_df["frequency"].astype(str).str.ljust(9)
-        .str.cat(freq_df["pct"].transform(lambda x: f"{x:.3f}"), sep=" | ")
+        .str.cat(freq_df["probability_vector"].transform(lambda x: f"{x:.3f}"), sep=" | ")
         .tolist()
     )
 
     return header + freq_list
+
+def format_original_values(df):
+    '''
+    Render an original_values table (as exported by CategoricalColumn.to_dict) into
+    the csv-like list of padded strings used in the YAML spec.
+
+    Expected layout, left to right: the column's own values, any "paired_<name>"
+    columns, probability_vector, then one weight column per numerical column. The
+    layout is taken from the DataFrame itself so the same function serves plain,
+    paired and weightless columns. Numerical weight columns are sorted by name to match
+    the legacy output.
+
+    Every cell is padded to the width of its column and each row ends with " |", which is
+    what parse_original_values expects to read back.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        original_values (see CategoricalColumn._build_original_values_df)
+
+    Returns
+    -------
+    FormattedList
+    '''
+
+    cols        = list(df.columns)
+    prob_idx    = cols.index("probability_vector")
+    value_cols  = cols[:prob_idx]
+    weight_cols = sorted(cols[prob_idx + 1:])
+
+    table = {}
+
+    for col in value_cols:
+        values = df[col].astype(str).tolist()
+        width  = max([len(col), len(MISSING_DATA_STR)] + [len(x) for x in values])
+        table[col] = [col.ljust(width)] + [x.ljust(width) for x in values]
+
+    table["probability_vector"] = (
+        ["probability_vector"] +
+        format_list_of_probability_vectors(df["probability_vector"].tolist())
+    )
+
+    for col in weight_cols:
+        # 5 is the width of a formatted weight, e.g. 0.123
+        width = max(5, len(col))
+        table[col] = (
+            [col.ljust(width)] +
+            [f"{_floor_for_display(x):.3f}".ljust(width) for x in df[col]]
+        )
+
+    ordered = value_cols + ["probability_vector"] + weight_cols
+
+    return FormattedList(" | ".join(row) + " |" for row in zip(*(table[c] for c in ordered)))
 
 def format_df_for_export(df):
     '''

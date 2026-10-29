@@ -7,6 +7,7 @@ import copy
 import math
 import re
 import warnings
+from collections import Counter
 from collections.abc import MutableMapping, Mapping
 from enum import StrEnum
 
@@ -26,12 +27,7 @@ from .utils import (
     guess_date_frequency, generate_table_id,
     float_or_int, sort_columns_by_dtype_az,
     normalise_column_data, normalise_tabular_data,
-    calculate_miss_proba, calculate_uuid_frequency_distribution,
-    calculate_df_hash)
-
-from .formatters import (
-    build_table_from_lists, build_list_of_uuid_frequencies,
-    build_list_of_probability_vectors)
+    calculate_miss_proba, calculate_df_hash)
 
 from .sql import create_temp_table
 
@@ -1131,6 +1127,30 @@ class UUIDColumn(BaseColumn):
         self["miss_probability"]       = miss_proba
         self["anonymising_set"]        = anon_set
 
+    @staticmethod
+    def calculate_frequency_distribution(series):
+        '''
+        Calculates the frequency-of-frequencies distribution: how many
+        times each value in series repeats, and the probability of each
+        repeat-count occurring. E.g. for "ABCDEE", the value counts are
+        {A: 1, B: 1, C: 1, D: 1, E: 2}, so a repeat-count of 1 occurs 4 times and
+        a repeat-count of 2 occurs once - giving frequency 1 a probability of 0.8
+        and frequency 2 a probability of 0.2.
+
+        Returns a DataFrame with columns ["frequency", "count", "pct"] sorted by frequency.
+        '''
+
+        counts = Counter(series.value_counts())
+
+        freq_df = pd.DataFrame(
+            list(counts.items()),
+            columns=["frequency", "count"]
+        ).sort_values("frequency")
+
+        freq_df.loc[:, "probability_vector"] = freq_df["count"] / freq_df["count"].sum()
+
+        return freq_df[["frequency", "probability_vector"]]
+
     @classmethod
     def from_data(cls, data, **kwargs):
         '''
@@ -1141,7 +1161,7 @@ class UUIDColumn(BaseColumn):
         series = normalise_column_data(data)
 
         inferred_params = {
-            "freq_dist"  : calculate_uuid_frequency_distribution(series),
+            "freq_dist"  : cls.calculate_frequency_distribution(series),
             "miss_proba" : calculate_miss_proba(series),
         }
 
@@ -1496,6 +1516,46 @@ class CategoricalColumn(BaseColumn):
             return self._compute_original_values()
         raise NotImplementedError(f"No computation defined for derived key {key!r}")
 
+    @staticmethod
+    def _build_list_of_probability_vectors(series, ew=False):
+        '''
+        Used in the from_data constructor to derive probabilities
+        for each category name in the series.
+
+        Parameters
+        ----------
+        series : pd.Series
+            source series
+        ew: Boolean
+            equal_weight from the CLI parameters; equalises only real categories;
+            MISSING keeps its observed proportion.
+
+        Returns
+        -------
+        list of probabilities sorted in the same way as of the unique values in the series
+        name
+        '''
+
+        # we need to ensure that the type of the original values is str and that we replace NAs
+        # as they will count in the total number of rows which will skew the probabilities
+        series = series.fillna(MISSING_DATA_STR)
+        counts = series.value_counts()
+
+        vectors = (counts
+                .set_axis(counts.index.astype(str))
+                .sort_index(kind="mergesort",
+                            key=lambda x: x.where(x != MISSING_DATA_STR, "\U0010ffff"))
+                / len(series))
+
+        # equalise real categories only; MISSING keeps its observed rate
+        if ew:
+            is_miss = vectors.index == MISSING_DATA_STR # boolean filtering mask
+            n_real  = int((~is_miss).sum())
+            if n_real:
+                vectors[~is_miss] = (1 - vectors[is_miss].sum()) / n_real
+
+        return vectors.tolist()
+
     def _build_original_values_df(self):
         '''
         Build the original_values DataFrame from the current state of the column
@@ -1523,8 +1583,8 @@ class CategoricalColumn(BaseColumn):
             probs.append(miss_probability)
 
         body = pd.concat([
-            pd.DataFrame({"category_name": names}),
-            pd.DataFrame(inputs["paired_values"]),
+            pd.DataFrame({self.name: names}),
+            pd.DataFrame(inputs["paired_values"]).add_prefix("paired_"),
             pd.DataFrame({"probability_vector": probs}),
             pd.DataFrame(numerical_weights),
         ], axis=1)
@@ -1534,8 +1594,8 @@ class CategoricalColumn(BaseColumn):
 
         # no MISSING data supplied: append row with default zero weights / live miss_proba
         missing_row = pd.DataFrame([{
-            "category_name"      : MISSING_DATA_STR,
-            **{c: MISSING_DATA_STR for c in inputs["paired_values"]},
+            self.name : MISSING_DATA_STR,
+            **{f"paired_{c}": MISSING_DATA_STR for c in inputs["paired_values"]},
             "probability_vector" : miss_probability,
             **{c: 0 for c in numerical_weights},
         }], columns=body.columns)
@@ -1547,14 +1607,18 @@ class CategoricalColumn(BaseColumn):
         (Re)create this column's DB table from the current state of the column
         and return the marker string that replaces original_values in the export.
         create_temp_table drops any existing table of the same name.
+
+        The only change to the DF built by _build_original_values_df is that we
+        make sure columns with spaces in the name are made safe by replacing the space
+        with a $.
         '''
-        safe_col_name = self["name"].replace(" ", "$")
-        table_name    = f"temp_{self._espec.metadata["id"]}_{safe_col_name}"
+        safe_col_name = self.name.replace(" ", "$")
+        table_name    = f"temp_{self._espec.metadata.id}_{safe_col_name}"
         marker        = f"{ORIGINAL_VALUES_DB}: {table_name}"
 
         # category column is named after the column; paired columns get a "paired_" prefix
-        rename = {"category_name": safe_col_name}
-        rename.update({p: f"paired_{p}".replace(" ", "$") for p in self["paired_columns"]})
+        rename = {self.name: safe_col_name}
+        rename.update({p: p.replace(" ", "$") for p in self.paired_columns})
         data = self._build_original_values_df().rename(columns=rename)
 
         # hash after the rename so the DB-facing column names are covered;
@@ -1619,7 +1683,7 @@ class CategoricalColumn(BaseColumn):
 
         # probs includes MISSING_DATA_STR if series has nulls in it
         # it will align with _miss_proba and _category_names
-        _probs = build_list_of_probability_vectors(series, ew)
+        _probs = cls._build_list_of_probability_vectors(series, ew)
 
         # parse supplied data to extract required parameters
         # note that it's not possible to infer the following params from a single column:
@@ -1898,8 +1962,8 @@ class DateColumn(BaseColumn):
         # canonical names that user sees in YAML spec / UI
         # exactly what is exported and how depends on the exporting method
         self["name"]                         = name
-        self["from"]                         = from_date
-        self["to"]                           = to_date
+        self["from_date"]                    = from_date
+        self["to_date"]                      = to_date
         self["uniques"]                      = uniques
         self["frequency"]                    = freq
         self["cross_join_all_unique_values"] = cross_join
