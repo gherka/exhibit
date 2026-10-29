@@ -2,8 +2,6 @@
 A collection of converters to help with outputting
 and reading back user specification
 '''
-# Standard library imports
-from itertools import zip_longest
 
 # External library imports
 import pandas as pd

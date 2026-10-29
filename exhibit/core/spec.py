@@ -8,41 +8,51 @@ import math
 import re
 import warnings
 from collections import Counter
-from collections.abc import MutableMapping, Mapping
+from collections.abc import Mapping, MutableMapping
 from enum import StrEnum
 
 # External imports
 import numpy as np
 import pandas as pd
-from pandas.api.types import is_numeric_dtype, is_datetime64_dtype, is_bool_dtype
+from pandas.api.types import (
+    is_bool_dtype,
+    is_datetime64_dtype,
+    is_numeric_dtype,
+)
 
-# Exhibit imports
+# Exhiit imports
 from .constants import (
-    ORIGINAL_VALUES_DB, ORIGINAL_VALUES_PAIRED, MISSING_DATA_STR,
-    ORIGINAL_VALUES_REGEX, ORIGINAL_VALUES_FUNCTION, ORIGINAL_VALUES_SQL)
-
+    MISSING_DATA_STR,
+    ORIGINAL_VALUES_DB,
+    ORIGINAL_VALUES_FUNCTION,
+    ORIGINAL_VALUES_PAIRED,
+    ORIGINAL_VALUES_REGEX,
+    ORIGINAL_VALUES_SQL,
+)
 from .constraints import find_basic_constraint_columns
-
-from .utils import (
-    guess_date_frequency, generate_table_id,
-    float_or_int, sort_columns_by_dtype_az,
-    normalise_column_data, normalise_tabular_data,
-    calculate_miss_proba, calculate_df_hash)
-
-from .sql import create_temp_table
-
+from .formatters import (
+    format_original_values,
+    format_uuid_frequency_distribution,
+)
 from .generate.weights import generate_weights
-
-from .linkage.hierarchical import (
-            LinkedColumnsTree,
-            find_hierarchically_linked_columns,
-            find_pair_linked_columns)
-
-from .linkage.matrix import save_predefined_linked_cols_to_db
-
-from .formatters import format_original_values, format_uuid_frequency_distribution
-
 from .generate.yaml import generate_YAML_string
+from .linkage.hierarchical import (
+    LinkedColumnsTree,
+    find_hierarchically_linked_columns,
+    find_pair_linked_columns,
+)
+from .linkage.matrix import save_predefined_linked_cols_to_db
+from .sql import create_temp_table
+from .utils import (
+    calculate_df_hash,
+    calculate_miss_proba,
+    float_or_int,
+    generate_table_id,
+    guess_date_frequency,
+    normalise_column_data,
+    normalise_tabular_data,
+    sort_columns_by_dtype_az,
+)
 
 def with_key_properties(cls):
     '''
